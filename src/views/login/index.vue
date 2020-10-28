@@ -55,8 +55,8 @@
 <script>
 import { validUsername } from '@/utils/validate'
 
-// import createApp from '@shopify/app-bridge'
-// import { Redirect } from '@shopify/app-bridge/actions'
+import createApp from '@shopify/app-bridge'
+import { Redirect } from '@shopify/app-bridge/actions'
 
 export default {
   name: 'Login',
