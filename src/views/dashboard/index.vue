@@ -6,13 +6,20 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
+import { testApi } from '@/api/user'
 export default {
   name: 'Dashboard',
   computed: {
     ...mapGetters([
       'name'
     ])
+  },
+  created() {
+    testApi().then(res => {
+      console.log(res.data)
+    }).catch(err => {
+      console.log(err)
+    })
   }
 }
 </script>

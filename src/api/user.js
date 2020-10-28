@@ -22,3 +22,10 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function testApi() {
+  return request({
+    url: 'http://api.dongketech.com/site/indexs',
+    method: 'get'
+  })
+}
