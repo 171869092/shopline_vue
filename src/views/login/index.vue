@@ -54,10 +54,10 @@
 </template>
 
 <script>
-import { validUsername } from '@/utils/validate'
-import { testApi, gtoken, productApi } from '@/api/user'
 import createApp from '@shopify/app-bridge'
+import { testApi, gtoken } from '@/api/user'
 import { getSessionToken } from '@shopify/app-bridge-utils'
+import { validUsername } from '@/utils/validate'
 
 export default {
   name: 'Login',
@@ -110,12 +110,12 @@ export default {
     })
     const sessionToken = await getSessionToken(app) // requires an App Bridge instance
     console.log('token', sessionToken)
-    const url = 'https://' + shopOrigin + '/admin/api/2019-10/products.json'
-    productApi(url, sessionToken, { limit: 50 }).then(res => {
-      console.log('product', res.data)
-    }).catch(err => {
-      console.log(err)
-    })
+    // const url = 'https://' + shopOrigin + '/admin/api/2019-10/products.json'
+    // productApi(url, sessionToken, { limit: 50 }).then(res => {
+    //   console.log('product', res.data)
+    // }).catch(err => {
+    //   console.log(err)
+    // })
     // eslint-disable-next-line no-prototype-builtins
     if (this.$route.query.hasOwnProperty('hmac')) {
       gtoken(this.$route.query).then(res => {
