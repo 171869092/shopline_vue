@@ -59,7 +59,7 @@ import { validUsername } from '@/utils/validate'
 // import createApp from '@shopify/app-bridge'
 // import { Redirect } from '@shopify/app-bridge/actions'
 // import { getSessionToken } from '@shopify/app-bridge-utils'
-
+import { testApi } from '@/api/user'
 export default {
   name: 'Login',
   data() {
@@ -101,6 +101,12 @@ export default {
   },
   mounted() {
     console.log(this.$route.query)
+    // console.log(this.serialize(this.$route.query))
+    testApi(this.$route.query).then(res => {
+      console.log(res.data)
+    }).catch(err => {
+      console.log(err)
+    })
     // const shopOrigin = 'live-by-test.myshopify.com'
     // const apiKey = '5fdf0435f9093519625df5bfca4c8a31'
     // const redirectUri = 'https://api.dongketech.com/site/generatr-token'
@@ -127,6 +133,16 @@ export default {
     // }
   },
   methods: {
+    serialize(obj) {
+      var str = []
+      for (var p in obj) {
+        // eslint-disable-next-line no-prototype-builtins
+        if (obj.hasOwnProperty(p)) {
+          str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]))
+        }
+      }
+      return str.join('&')
+    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
