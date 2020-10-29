@@ -56,6 +56,8 @@
 <script>
 import { validUsername } from '@/utils/validate'
 import { testApi, gtoken } from '@/api/user'
+import createApp from '@shopify/app-bridge'
+import { getSessionToken } from '@shopify/app-bridge-utils'
 
 export default {
   name: 'Login',
@@ -100,16 +102,29 @@ export default {
     console.log(this.$route.query)
     // const query = { 'code': '1c0199484a1e28854cb96d47759b61b3', 'hmac': '90bddb272fb82234eae3f8085eea0f5d86f7a76598e4467d4bcd8726b7ed8b7e', 'shop': 'live-by-test.myshopify.com', 'timestamp': '1603941523' }
     // console.log(this.serialize(this.$route.query))
-    gtoken(this.$route.query).then(res => {
-      console.log(res.data)
-      testApi({ ...this.$route.query, token: res.data }).then(res => {
+    const shopOrigin = 'live-by-test.myshopify.com'
+    const apiKey = '5fdf0435f9093519625df5bfca4c8a31'
+    const app = createApp({
+      apiKey: apiKey,
+      shopOrigin: shopOrigin
+    })
+    getSessionToken(app) // requires an App Bridge instance
+      .then((token) => {
+        console.log(token)
+      })
+    // eslint-disable-next-line no-prototype-builtins
+    if (this.$route.query.hasOwnProperty('hmac')) {
+      gtoken(this.$route.query).then(res => {
         console.log(res.data)
+        testApi({ ...this.$route.query, token: res.data }).then(res => {
+          console.log(res.data)
+        }).catch(err => {
+          console.log(err)
+        })
       }).catch(err => {
         console.log(err)
       })
-    }).catch(err => {
-      console.log(err)
-    })
+    }
   },
   methods: {
     serialize(obj) {
