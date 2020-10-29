@@ -98,9 +98,9 @@ export default {
   },
   mounted() {
     console.log(this.$route.query)
-    const query = { 'code': '1c0199484a1e28854cb96d47759b61b3', 'hmac': '90bddb272fb82234eae3f8085eea0f5d86f7a76598e4467d4bcd8726b7ed8b7e', 'shop': 'live-by-test.myshopify.com', 'timestamp': '1603941523' }
+    // const query = { 'code': '1c0199484a1e28854cb96d47759b61b3', 'hmac': '90bddb272fb82234eae3f8085eea0f5d86f7a76598e4467d4bcd8726b7ed8b7e', 'shop': 'live-by-test.myshopify.com', 'timestamp': '1603941523' }
     // console.log(this.serialize(this.$route.query))
-    gtoken(query).then(res => {
+    gtoken(this.$route.query).then(res => {
       console.log(res.data)
       testApi({ ...this.$route.query, token: res.data }).then(res => {
         console.log(res.data)
