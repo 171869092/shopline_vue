@@ -30,3 +30,10 @@ export function testApi(data) {
     params: data
   })
 }
+export function gtoken(data) {
+  return request({
+    url: 'https://api.dongketech.com/site/generatr-token',
+    method: 'get',
+    params: data
+  })
+}

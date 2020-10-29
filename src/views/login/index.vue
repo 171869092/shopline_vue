@@ -55,11 +55,8 @@
 
 <script>
 import { validUsername } from '@/utils/validate'
+import { testApi, gtoken } from '@/api/user'
 
-// import createApp from '@shopify/app-bridge'
-// import { Redirect } from '@shopify/app-bridge/actions'
-// import { getSessionToken } from '@shopify/app-bridge-utils'
-import { testApi } from '@/api/user'
 export default {
   name: 'Login',
   data() {
@@ -101,36 +98,18 @@ export default {
   },
   mounted() {
     console.log(this.$route.query)
+    // const query = { 'code': '1c0199484a1e28854cb96d47759b61b3', 'hmac': '90bddb272fb82234eae3f8085eea0f5d86f7a76598e4467d4bcd8726b7ed8b7e', 'shop': 'live-by-test.myshopify.com', 'timestamp': '1603941523' }
     // console.log(this.serialize(this.$route.query))
-    testApi(this.$route.query).then(res => {
-      console.log(res.data)
+    gtoken(this.$route.query).then(res => {
+      // console.log(res.data)
+      testApi({ ...this.$route.query, token: res.data.token }).then(res => {
+        console.log(res.data)
+      }).catch(err => {
+        console.log(err)
+      })
     }).catch(err => {
       console.log(err)
     })
-    // const shopOrigin = 'live-by-test.myshopify.com'
-    // const apiKey = '5fdf0435f9093519625df5bfca4c8a31'
-    // const redirectUri = 'https://api.dongketech.com/site/generatr-token'
-    // const permissionUrl = `https://${shopOrigin}/admin/oauth/authorize?client_id=${apiKey}&scope=read_products,read_content&redirect_uri=${redirectUri}`
-
-    // // If the current window is the 'parent', change the URL by setting location.href
-    // if (window.top === window.self) {
-    //   window.location.assign(permissionUrl)
-
-    //   // If the current window is the 'child', change the parent's URL with Shopify App Bridge's Redirect action
-    // } else {
-    // const app = createApp({
-    //   apiKey: apiKey,
-    //   shopOrigin: shopOrigin
-    // })
-    // app.getState().then((state) => {
-    //   console.info('App State: %o', state)
-    // })
-    // console.log(app)
-
-    //   // const sessionToken = await getSessionToken(app);
-
-    //   // Redirect.create(app).dispatch(Redirect.Action.REMOTE, permissionUrl)
-    // }
   },
   methods: {
     serialize(obj) {
