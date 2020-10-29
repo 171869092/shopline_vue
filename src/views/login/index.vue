@@ -112,10 +112,14 @@ export default {
 
     //   // If the current window is the 'child', change the parent's URL with Shopify App Bridge's Redirect action
     // } else {
-    //   const app = createApp({
-    //     apiKey: apiKey,
-    //     shopOrigin: shopOrigin
-    //   })
+    // const app = createApp({
+    //   apiKey: apiKey,
+    //   shopOrigin: shopOrigin
+    // })
+    // app.getState().then((state) => {
+    //   console.info('App State: %o', state)
+    // })
+    // console.log(app)
 
     //   // const sessionToken = await getSessionToken(app);
 
