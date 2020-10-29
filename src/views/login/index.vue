@@ -4,6 +4,7 @@
 
       <div class="title-container">
         <h3 class="title">Login Form</h3>
+        <h3>{{ $route.query }}</h3>
       </div>
 
       <el-form-item prop="username">
@@ -57,6 +58,7 @@ import { validUsername } from '@/utils/validate'
 
 // import createApp from '@shopify/app-bridge'
 // import { Redirect } from '@shopify/app-bridge/actions'
+// import { getSessionToken } from '@shopify/app-bridge-utils'
 
 export default {
   name: 'Login',
@@ -98,6 +100,7 @@ export default {
     }
   },
   mounted() {
+    console.log(this.$route.query)
     // const shopOrigin = 'live-by-test.myshopify.com'
     // const apiKey = '5fdf0435f9093519625df5bfca4c8a31'
     // const redirectUri = 'https://api.dongketech.com/site/generatr-token'
@@ -114,7 +117,9 @@ export default {
     //     shopOrigin: shopOrigin
     //   })
 
-    //   Redirect.create(app).dispatch(Redirect.Action.REMOTE, permissionUrl)
+    //   // const sessionToken = await getSessionToken(app);
+
+    //   // Redirect.create(app).dispatch(Redirect.Action.REMOTE, permissionUrl)
     // }
   },
   methods: {
