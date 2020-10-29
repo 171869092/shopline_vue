@@ -29,7 +29,8 @@ export function productApi(url, token, data = {}) {
     method: 'get',
     params: data,
     headers: {
-      'Authorization': `Bearer ${token}`
+      'Authorization': `Bearer ${token}`,
+      'X-Shopify-Access-Token': `${token}`
     }
   })
 }
