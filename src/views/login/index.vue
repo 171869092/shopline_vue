@@ -43,7 +43,7 @@
       </el-form-item>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
-       <el-button id="customBtn" type="button">Google登录</el-button>
+       <el-button v-google-signin-button="clientId" class="google-signin-button"> Continue with Google</el-button>
       <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
         <span> password: any</span>
@@ -58,9 +58,13 @@
 import { testApi, gtoken } from '@/api/user'
 // import { getSessionToken } from '@shopify/app-bridge-utils'
 import { validUsername } from '@/utils/validate'
-
+import GoogleSignInButton from 'vue-google-signin-button-directive'
+import jsonwebtoken from 'jsonwebtoken'
 export default {
   name: 'Login',
+  directives: {
+      GoogleSignInButton
+  },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!validUsername(value)) {
@@ -87,7 +91,8 @@ export default {
       },
       loading: false,
       passwordType: 'password',
-      redirect: undefined
+      redirect: undefined,
+      clientId: '849399331232-9d6f841g5t671s3t1ga1gvgqj99voa5n.apps.googleusercontent.com'
     }
   },
   watch: {
@@ -130,39 +135,15 @@ export default {
       })
     }
   },
-  created(){
-    var googleUser = {};
-    var startApp = function() {
-    gapi.load('auth2', function() {
-    auth2 = gapi.auth2.init({
-    client_id: '849399331232-9d6f841g5t671s3t1ga1gvgqj99voa5n.apps.googleusercontent.com', //客户端ID
-    cookiepolicy: 'single_host_origin',
-    scope: 'profile' //可以请求除了默认的'profile' and 'email'之外的数据
-    });
-    attachSignin(document.getElementById('customBtn'));
-    });
-    };
-
-    function attachSignin(element) {
-    auth2.attachClickHandler(element, {},
-    function(googleUser) {
-    var profile = auth2.currentUser.get().getBasicProfile();
-
-    console.log('ID: ' + profile.getId());
-    console.log('Full Name: ' + profile.getName());
-    console.log('Given Name: ' + profile.getGivenName());
-    console.log('Family Name: ' + profile.getFamilyName());
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail());
-    },
-    function(error) {
-    console.log(JSON.stringify(error, undefined, 2));
-    });
-    }
-    startApp();
-
-  },
   methods: {
+    //coogle
+    OnGoogleAuthSuccess (idToken) {
+        console.log(idToken,"tokesdasdasd") //返回第三方结果信息 默认是全token 要用jsonwebtoken 解析
+        // Receive the idToken and make your magic with the backend
+      },
+      OnGoogleAuthFail (error) {
+        console.log(error)
+    },
     serialize(obj) {
       var str = []
       for (var p in obj) {
