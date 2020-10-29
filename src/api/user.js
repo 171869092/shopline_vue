@@ -23,6 +23,17 @@ export function logout() {
   })
 }
 
+export function productApi(url, token, data = {}) {
+  return request({
+    url: url,
+    method: 'get',
+    params: data,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+}
+
 export function testApi(data) {
   return request({
     url: 'https://api.dongketech.com/site/indexs',
