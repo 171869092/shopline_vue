@@ -110,8 +110,8 @@ export default {
     })
     const sessionToken = await getSessionToken(app) // requires an App Bridge instance
     console.log('token', sessionToken)
-    const url = 'https://' + shopOrigin + '/admin/api/unstable/products.json'
-    productApi(url, sessionToken).then(res => {
+    const url = 'https://' + shopOrigin + '/admin/api/2019-10/products.json'
+    productApi(url, sessionToken, { limit: 50 }).then(res => {
       console.log('product', res.data)
     }).catch(err => {
       console.log(err)
