@@ -54,9 +54,9 @@
 </template>
 
 <script>
-import createApp from '@shopify/app-bridge'
+// import createApp from '@shopify/app-bridge'
 import { testApi, gtoken } from '@/api/user'
-import { getSessionToken } from '@shopify/app-bridge-utils'
+// import { getSessionToken } from '@shopify/app-bridge-utils'
 import { validUsername } from '@/utils/validate'
 
 export default {
@@ -102,14 +102,14 @@ export default {
     console.log(this.$route.query)
     // const query = { 'code': '1c0199484a1e28854cb96d47759b61b3', 'hmac': '90bddb272fb82234eae3f8085eea0f5d86f7a76598e4467d4bcd8726b7ed8b7e', 'shop': 'live-by-test.myshopify.com', 'timestamp': '1603941523' }
     // console.log(this.serialize(this.$route.query))
-    const shopOrigin = 'live-by-test.myshopify.com'
-    const apiKey = '5fdf0435f9093519625df5bfca4c8a31'
-    const app = createApp({
-      apiKey: apiKey,
-      shopOrigin: shopOrigin
-    })
-    const sessionToken = await getSessionToken(app) // requires an App Bridge instance
-    console.log('token', sessionToken)
+    // const shopOrigin = 'live-by-test.myshopify.com'
+    // const apiKey = '5fdf0435f9093519625df5bfca4c8a31'
+    // const app = createApp({
+    //   apiKey: apiKey,
+    //   shopOrigin: shopOrigin
+    // })
+    // const sessionToken = await getSessionToken(app) // requires an App Bridge instance
+    // console.log('token', sessionToken)
     // const url = 'https://' + shopOrigin + '/admin/api/2019-10/products.json'
     // productApi(url, sessionToken, { limit: 50 }).then(res => {
     //   console.log('product', res.data)
