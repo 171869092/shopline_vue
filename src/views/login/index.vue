@@ -167,6 +167,8 @@ export default {
     onSignInSuccess (response) {
         // FB.api('/me', dude => {
         console.log(response) //返回第三方的登录信息 tolen等
+        const fbtoken = jsonwebtoken.decode(response.authResponse.accessToken)
+        console.log(fbtoken);
       },
       onSignInError (error) {},
     showPwd() {
