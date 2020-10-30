@@ -44,6 +44,7 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
       <el-button v-google-signin-button="clientId" class="google-signin-button"> Continue with Google</el-button>
+      <fb-signin-button :params="fbSignInParams" @success="onSignInSuccess" @error="onSignInError">Sign in with Facebook</fb-signin-button>
       <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
         <span> password: any</span>
@@ -92,7 +93,13 @@ export default {
       loading: false,
       passwordType: 'password',
       redirect: undefined,
-      clientId: '849399331232-9d6f841g5t671s3t1ga1gvgqj99voa5n.apps.googleusercontent.com'
+      //谷歌clientId
+      clientId: '849399331232-9d6f841g5t671s3t1ga1gvgqj99voa5n.apps.googleusercontent.com',
+      // facebook配置
+      fbSignInParams: {
+          scope: 'email,user_likes',
+          return_scopes: true
+        }
     }
   },
   watch: {
@@ -136,7 +143,7 @@ export default {
     }
   },
   methods: {
-    // coogle
+    // coogle第三方返回
     OnGoogleAuthSuccess(idToken) {
       console.log(idToken, 'tokesdasdasd') // 返回第三方结果信息 默认是全token 要用jsonwebtoken 解析
       // Receive the idToken and make your magic with the backend
@@ -156,6 +163,12 @@ export default {
       }
       return str.join('&')
     },
+    //facebook
+    onSignInSuccess (response) {
+        // FB.api('/me', dude => {
+        console.log(response) //返回第三方的登录信息 tolen等
+      },
+      onSignInError (error) {},
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -296,6 +309,14 @@ $light_gray:#eee;
     color: $dark_gray;
     cursor: pointer;
     user-select: none;
+  }
+   .fb-signin-button {
+    /* This is where you control how the button looks. Be creative! */
+    display: inline-block;
+    padding: 12px 20px;
+    border-radius: 3px;
+    background-color: #4267b2;
+    color: #fff;
   }
 }
 </style>
