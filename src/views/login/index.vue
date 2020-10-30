@@ -43,7 +43,7 @@
       </el-form-item>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
-       <el-button v-google-signin-button="clientId" class="google-signin-button"> Continue with Google</el-button>
+      <el-button v-google-signin-button="clientId" class="google-signin-button"> Continue with Google</el-button>
       <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
         <span> password: any</span>
@@ -58,12 +58,12 @@
 import { testApi, gtoken } from '@/api/user'
 // import { getSessionToken } from '@shopify/app-bridge-utils'
 import { validUsername } from '@/utils/validate'
-import GoogleSignInButton from 'vue-google-signin-button-directive'
+import GoogleSignInButton from '@/directive/google-signin'
 import jsonwebtoken from 'jsonwebtoken'
 export default {
   name: 'Login',
   directives: {
-      GoogleSignInButton
+    GoogleSignInButton
   },
   data() {
     const validateUsername = (rule, value, callback) => {
@@ -136,13 +136,15 @@ export default {
     }
   },
   methods: {
-    //coogle
-    OnGoogleAuthSuccess (idToken) {
-        console.log(idToken,"tokesdasdasd") //返回第三方结果信息 默认是全token 要用jsonwebtoken 解析
-        // Receive the idToken and make your magic with the backend
-      },
-      OnGoogleAuthFail (error) {
-        console.log(error)
+    // coogle
+    OnGoogleAuthSuccess(idToken) {
+      console.log(idToken, 'tokesdasdasd') // 返回第三方结果信息 默认是全token 要用jsonwebtoken 解析
+      // Receive the idToken and make your magic with the backend
+      const detoken = jsonwebtoken.decode(idToken)
+      console.log(detoken)
+    },
+    OnGoogleAuthFail(error) {
+      console.log(error)
     },
     serialize(obj) {
       var str = []
@@ -180,9 +182,9 @@ export default {
         }
       })
     },
-    GoogleLogin(){
+    GoogleLogin() {
 
-    },
+    }
   }
 }
 </script>
