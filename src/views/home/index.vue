@@ -1,7 +1,7 @@
 <template>
   <div>
     <header>
-      <nav class="navbar navbar-expand-md fixed-top s-navbar navbar-light white-bg">
+      <nav class="navbar navbar-expand-md fixed-top s-navbar navbar-light white-bg shadow-sm">
         <div class="container">
           <a class="navbar-brand" href="#">DropShipping</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
