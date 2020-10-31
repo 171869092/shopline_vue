@@ -35,47 +35,49 @@
       </section>
       <div class="marketing">
         <section>
-          <h2 class="text-center mb-5">What is DropShipping?</h2>
-          <!-- Three columns of text below the carousel -->
-          <div class="row mb-5">
-            <div class="col-lg-3 text-center">
-              <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777" /><text x="50%" y="50%" fill="#777" dy=".3em">140x140</text></svg>
-              <h3>Heading</h3>
-            </div>
-            <div class="col-lg-3 text-center">
-              <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777" /><text x="50%" y="50%" fill="#777" dy=".3em">140x140</text></svg>
-              <h3>Heading</h3>
-            </div>
-            <div class="col-lg-3 text-center">
-              <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777" /><text x="50%" y="50%" fill="#777" dy=".3em">140x140</text></svg>
-              <h3>Heading</h3>
-            </div>
-            <div class="col-lg-3 text-center">
-              <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777" /><text x="50%" y="50%" fill="#777" dy=".3em">140x140</text></svg>
-              <h3>Heading</h3>
-            </div>
-          </div><!-- /.row -->
+          <div class="container">
+            <h2 class="text-center p-5">What is DropShipping?</h2>
+            <!-- Three columns of text below the carousel -->
+            <div class="row mb-5">
+              <div class="col-lg-3 text-center">
+                <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777" /><text x="50%" y="50%" fill="#777" dy=".3em">140x140</text></svg>
+                <h3 class="title mt-4">Heading</h3>
+              </div>
+              <div class="col-lg-3 text-center">
+                <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777" /><text x="50%" y="50%" fill="#777" dy=".3em">140x140</text></svg>
+                <h3 class="title mt-4">Heading</h3>
+              </div>
+              <div class="col-lg-3 text-center">
+                <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777" /><text x="50%" y="50%" fill="#777" dy=".3em">140x140</text></svg>
+                <h3 class="title mt-4">Heading</h3>
+              </div>
+              <div class="col-lg-3 text-center">
+                <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 140x140"><title>Placeholder</title><rect width="100%" height="100%" fill="#777" /><text x="50%" y="50%" fill="#777" dy=".3em">140x140</text></svg>
+                <h3 class="title mt-4">Heading</h3>
+              </div>
+            </div><!-- /.row -->
+          </div>
         </section>
 
         <section class="pink-bg">
-          <div class="container ">
-            <h2 class="text-center mb-5">What can you do in DropShipping?</h2>
-            <div class="row mb-5">
+          <div class="container">
+            <h2 class="text-center p-5">What can you do in DropShipping?</h2>
+            <div class="row pb-5">
               <div class="col-lg-3 text-center">
                 <svg class="bd-placeholder-img card-img-top" width="210" height="144" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="38%" y="50%" fill="#eceeef">Thumbnail</text></svg>
-                <h3>Find winning dropshipping products</h3>
+                <h5 class="title mt-4">Find winning dropshipping products</h5>
               </div>
               <div class="col-lg-3 text-center">
                 <svg class="bd-placeholder-img card-img-top" width="210" height="144" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="38%" y="50%" fill="#eceeef">Thumbnail</text></svg>
-                <h3>Try the products yourself</h3>
+                <h5 class="title mt-4">Try the products yourself</h5>
               </div>
               <div class="col-lg-3 text-center">
                 <svg class="bd-placeholder-img card-img-top" width="210" height="144" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="38%" y="50%" fill="#eceeef">Thumbnail</text></svg>
-                <h3>Connect your online store with ease</h3>
+                <h5 class="title mt-4">Connect your online store with ease</h5>
               </div>
               <div class="col-lg-3 text-center">
                 <svg class="bd-placeholder-img card-img-top" width="210" height="144" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="38%" y="50%" fill="#eceeef">Thumbnail</text></svg>
-                <h3>Discover dropshipping suppliers with fast shipping</h3>
+                <h5 class="title mt-4">Discover dropshipping suppliers with fast shipping</h5>
               </div>
             </div>
           </div>
