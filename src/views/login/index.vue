@@ -46,10 +46,10 @@
       <el-button v-google-signin-button="clientId" style="width:100%;" class="google-signin-button"> Continue with Google</el-button>
       <fb-signin-button :params="fbSignInParams" @success="onSignInSuccess" @error="onSignInError">
         <div style="display: flex;align-items: center;margin-left:100px">
-            <img src="https://static.xx.fbcdn.net/rsrc.php/v3/yN/r/szGrb_tkxMW.png">
-            <span>Sign in with Facebook</span>
+          <img src="https://static.xx.fbcdn.net/rsrc.php/v3/yN/r/szGrb_tkxMW.png">
+          <span>Sign in with Facebook</span>
         </div>
-        </fb-signin-button>
+      </fb-signin-button>
       <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
         <span> password: any</span>
@@ -98,13 +98,13 @@ export default {
       loading: false,
       passwordType: 'password',
       redirect: undefined,
-      //谷歌clientId
+      // 谷歌clientId
       clientId: '849399331232-9d6f841g5t671s3t1ga1gvgqj99voa5n.apps.googleusercontent.com',
       // facebook配置
       fbSignInParams: {
-          scope: 'email,user_likes',
-          return_scopes: true
-        }
+        scope: 'email,user_likes',
+        return_scopes: true
+      }
     }
   },
   watch: {
@@ -168,14 +168,16 @@ export default {
       }
       return str.join('&')
     },
-    //facebook
-    onSignInSuccess (response) {
-        // FB.api('/me', dude => {
-        console.log(response) //返回第三方的登录信息 tolen等
-        const fbtoken = jsonwebtoken.decode(response.authResponse.accessToken)
-        console.log(fbtoken);
-      },
-      onSignInError (error) {},
+    // facebook
+    onSignInSuccess(response) {
+      // FB.api('/me', dude => {
+      console.log(response) // 返回第三方的登录信息 tolen等
+      const fbtoken = jsonwebtoken.decode(response.authResponse.accessToken)
+      console.log(fbtoken)
+    },
+    onSignInError(error) {
+      console.log(error)
+    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
