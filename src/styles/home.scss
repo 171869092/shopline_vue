@@ -1,22 +1,28 @@
 .s-btn {
   border-color: rgb(237 122 127);
   color: rgb(239 117 58);
+
   &:hover {
     color: rgb(239 117 58);
   }
 }
-.b-text{
-  color: rgb(16, 16, 16)!important;
+
+.b-text {
+  color: rgb(16, 16, 16) !important;
 }
+
 .white-bg {
   background: #fff;
 }
+
 .pink-bg {
   background: #fbdfe4;
 }
+
 .s-navbar {
   padding: 20px;
 }
+
 .navbar-nav {
   .nav-item {
     &.active {
@@ -26,14 +32,25 @@
     }
   }
 }
+
 .login-btn {
   margin-right: 10px;
   cursor: pointer;
 }
+
 .wap {
   margin-top: 88px;
+
   .jumbotron {
     background: #e8e8e8;
     margin-bottom: 0;
   }
+}
+
+.b-footer {
+  padding: 2.5rem 0;
+  color: #fff;
+  text-align: center;
+  background-color: #4d4d4d;
+  border-top: .05rem solid #e5e5e5;
 }
