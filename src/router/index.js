@@ -42,7 +42,7 @@ export const constantRoutes = [
     path: '/login',
     component: () => import('@/views/login/index'),
     name: 'login',
-    hidden: true
+    hidden: true,
   },
 
   {
@@ -172,9 +172,9 @@ export const constantRoutes = [
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
+  mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
-  routes: constantRoutes
+  routes: constantRoutes,
 })
 
 const router = createRouter()
