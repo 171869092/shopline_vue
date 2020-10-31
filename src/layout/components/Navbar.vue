@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar">
+  <div class="b-navbar">
     <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
 
     <breadcrumb class="breadcrumb-container" />
@@ -7,7 +7,8 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+
+          <el-avatar shape="square" :size="size" src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" />
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -53,14 +54,14 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('user/logout')
-      this.$router.push(`/login`)
+      this.$router.push({ name: 'home' })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.navbar {
+.b-navbar {
   height: 50px;
   overflow: hidden;
   position: relative;

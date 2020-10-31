@@ -34,14 +34,15 @@ export const constantRoutes = [
   {
     path: '/',
     component: () => import('@/views/home/index'),
+    name: 'home',
     hidden: true
   },
 
   {
     path: '/login',
     component: () => import('@/views/login/index'),
-    hidden: true,
-    name:'login'
+    name: 'login',
+    hidden: true
   },
 
   {
@@ -57,7 +58,7 @@ export const constantRoutes = [
     children: [{
       path: '/dashboard',
       name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),
+      component: () => import('@/views/dashboard/index')
     //   meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
