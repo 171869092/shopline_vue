@@ -43,8 +43,13 @@
       </el-form-item>
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
-      <el-button v-google-signin-button="clientId" class="google-signin-button"> Continue with Google</el-button>
-      <fb-signin-button :params="fbSignInParams" @success="onSignInSuccess" @error="onSignInError">Sign in with Facebook</fb-signin-button>
+      <el-button v-google-signin-button="clientId" style="width:100%;" class="google-signin-button"> Continue with Google</el-button>
+      <fb-signin-button :params="fbSignInParams" @success="onSignInSuccess" @error="onSignInError">
+        <div style="display: flex;align-items: center;margin-left:100px">
+            <img src="https://static.xx.fbcdn.net/rsrc.php/v3/yN/r/szGrb_tkxMW.png">
+            <span>Sign in with Facebook</span>
+        </div>
+        </fb-signin-button>
       <div class="tips">
         <span style="margin-right:20px;">username: admin</span>
         <span> password: any</span>
@@ -314,11 +319,14 @@ $light_gray:#eee;
   }
    .fb-signin-button {
     /* This is where you control how the button looks. Be creative! */
-    display: inline-block;
-    padding: 12px 20px;
-    border-radius: 3px;
-    background-color: #4267b2;
+    padding: 8px 24px;
+    border-radius: 16px;
+    background-color: #67c23a;
     color: #fff;
+    span{
+      margin-left: 20px;
+      font-size: 14px;
+    }
   }
 }
 </style>
