@@ -64,19 +64,23 @@
             <h2 class="text-center p-5">What can you do in DropShipping?</h2>
             <div class="row pb-5">
               <div class="col-lg-3 text-center">
-                <svg class="bd-placeholder-img card-img-top" width="210" height="144" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="38%" y="50%" fill="#eceeef">Thumbnail</text></svg>
+                <img src="https://cdn.shopifycdn.net/shopifycloud/brochure/assets/merchants/alfred/home-example-small-4bc93b93a9d345329480ea6e387cf6890323170a70473bad69a87424cad52e28.jpg" alt="" srcset="">
+                <!-- <svg class="bd-placeholder-img card-img-top" width="210" height="144" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="38%" y="50%" fill="#eceeef">Thumbnail</text></svg> -->
                 <h5 class="title mt-4">Find winning dropshipping products</h5>
               </div>
               <div class="col-lg-3 text-center">
-                <svg class="bd-placeholder-img card-img-top" width="210" height="144" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="38%" y="50%" fill="#eceeef">Thumbnail</text></svg>
+                <img src="https://cdn.shopifycdn.net/shopifycloud/brochure/assets/merchants/corey-moranis/home-example-small-6cf57deaaf9e7c38f45de3d300080353843430c1be3ab0ed3cd5e21b93157de8.jpg" alt="" srcset="">
+                <!-- <svg class="bd-placeholder-img card-img-top" width="210" height="144" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="38%" y="50%" fill="#eceeef">Thumbnail</text></svg> -->
                 <h5 class="title mt-4">Try the products yourself</h5>
               </div>
               <div class="col-lg-3 text-center">
-                <svg class="bd-placeholder-img card-img-top" width="210" height="144" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="38%" y="50%" fill="#eceeef">Thumbnail</text></svg>
+                <img src="https://cdn.shopifycdn.net/shopifycloud/brochure/assets/merchants/then-i-met-you/home-example-small-873ea125aea32650f2e2c282609c62a63be928583b8830cc67df98feff30ca89.jpg" alt="" srcset="">
+                <!-- <svg class="bd-placeholder-img card-img-top" width="210" height="144" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="38%" y="50%" fill="#eceeef">Thumbnail</text></svg> -->
                 <h5 class="title mt-4">Connect your online store with ease</h5>
               </div>
               <div class="col-lg-3 text-center">
-                <svg class="bd-placeholder-img card-img-top" width="210" height="144" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="38%" y="50%" fill="#eceeef">Thumbnail</text></svg>
+                <img src="https://cdn.shopifycdn.net/shopifycloud/brochure/assets/merchants/miss-boon/home-example-small-8bb452f93af6069b33cdc00d9fab7cacaa32d34684bda58e13eb25faadeb2b72.jpg" alt="" srcset="">
+                <!-- <svg class="bd-placeholder-img card-img-top" width="210" height="144" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c" /><text x="38%" y="50%" fill="#eceeef">Thumbnail</text></svg> -->
                 <h5 class="title mt-4">Discover dropshipping suppliers with fast shipping</h5>
               </div>
             </div>
