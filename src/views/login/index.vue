@@ -61,11 +61,16 @@
 
 <script>
 // import createApp from '@shopify/app-bridge'
+import Vue from 'vue'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+import locale from 'element-ui/lib/locale/lang/en' // lang i18n
 import { testApi, gtoken } from '@/api/user'
 // import { getSessionToken } from '@shopify/app-bridge-utils'
 import { validUsername } from '@/utils/validate'
 import GoogleSignInButton from '@/directive/google-signin'
 import jsonwebtoken from 'jsonwebtoken'
+Vue.use(ElementUI, { locale })
 export default {
   name: 'Login',
   directives: {
