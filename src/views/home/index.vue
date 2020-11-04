@@ -15,7 +15,6 @@
             </ul>
             <form class="form-inline mt-2 mt-md-0">
               <span class="login-btn" @click="loginClick">LOGIN</span>
-                <el-button>Login</el-button>
               <button type="button" class="btn btn-lg s-btn" @click="registerClick">Get Started</button>
             </form>
           </div>
