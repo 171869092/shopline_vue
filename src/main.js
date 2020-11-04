@@ -19,12 +19,6 @@ if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
-console.log(router.options.routes[0])
-if (router) {
-  
-}
-
-
 Vue.use(FBSignInButton)
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
