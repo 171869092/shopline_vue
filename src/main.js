@@ -15,22 +15,16 @@ import router from './router'
 import '@/icons' // icon
 import '@/permission' // permission control
 import FBSignInButton from 'vue-facebook-signin-button'
-
-/**
- * If you don't want to use mock-server
- * you want to use MockJs for mock api
- * you can execute: mockXHR()
- *
- * Currently MockJs will be used in the production environment,
- * please remove it before going online ! ! !
- */
 if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
+console.log(router.options.routes[0])
+if (router) {
+  
+}
 
-// set ElementUI lang to EN
-Vue.use(ElementUI, { locale })
+
 Vue.use(FBSignInButton)
 // 如果想要中文版 element-ui，按如下方式声明
 // Vue.use(ElementUI)
@@ -41,5 +35,13 @@ new Vue({
   el: '#app',
   router,
   store,
-  render: h => h(App)
+  render: h => h(App),
+  watch: {
+    '$route.path': function (newVal, oldVal) {
+     if (newVal !== '/') {
+      console.log('欢迎进入登录页面');
+        Vue.use(ElementUI, { locale })
+     }
+    }
+   }
 })
