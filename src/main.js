@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'production') {
   const { mockXHR } = require('../mock')
   mockXHR()
 }
-
+Vue.use(ElementUI, { locale })
 
 Vue.use(FBSignInButton)
 // 如果想要中文版 element-ui，按如下方式声明
@@ -31,12 +31,5 @@ new Vue({
   el: '#app',
   router,
   store,
-  render: h => h(App),
-  watch:{
-    $route(to){
-      if(to.path != '/'){
-        Vue.use(ElementUI, { locale })
-      }
-    }
-  },
+  render: h => h(App)
 })
