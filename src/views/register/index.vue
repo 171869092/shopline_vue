@@ -86,7 +86,8 @@ export default {
   padding-top: 40px;
 }
 .imageLeft{
-  background: url('https://demo.htmlhunters.com/shopy/assets/images/demo/index2-slide-2.jpg') no-repeat;
+  background: url('https://demo.htmlhunters.com/shopy/assets/images/demo/index2-slide-2.jpg') no-repeat center;
+  background-size: cover;
   width:100%;
   height: 100%;
   display: inline-block;
