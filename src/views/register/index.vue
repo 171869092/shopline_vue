@@ -3,7 +3,8 @@
     <!-- <b-navbar /> -->
     <div class="row">
       <div class="col">
-        <img width="100%" src="https://yevgenysim.github.io/shopper/assets/img/products/product-84.jpg" alt="">
+        <!-- <img width="100%" src="https://demo.htmlhunters.com/shopy/assets/images/demo/index2-slide-2.jpg" alt=""> -->
+        <span class="imageLeft"></span>
       </div>
       <div class="col">
         <div class="container">
@@ -83,5 +84,11 @@ export default {
 }
 .register-form {
   padding-top: 40px;
+}
+.imageLeft{
+  background: url('https://demo.htmlhunters.com/shopy/assets/images/demo/index2-slide-2.jpg') no-repeat;
+  width:100%;
+  height: 100%;
+  display: inline-block;
 }
 </style>
