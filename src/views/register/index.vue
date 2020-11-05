@@ -67,8 +67,16 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.container{
+  align-items: center;
+  display: flex;
+  height: 100vh
+}
 .form {
-  padding: 60px 0;
+  // padding: 60px 0;
+  // background: rebeccapurple;
+  // position: relative;
+  // top: 50%;
 }
 .form-padding {
   padding: 70px;
