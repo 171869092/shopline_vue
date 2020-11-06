@@ -73,14 +73,14 @@ export default {
   display: flex;
   height: 100vh
 }
-.form {
-  // padding: 60px 0;
-  // background: rebeccapurple;
-  // position: relative;
-  // top: 50%;
-}
+// .form {
+//   padding: 60px 0;
+//   background: rebeccapurple;
+//   position: relative;
+//   top: 50%;
+// }
 .form-padding {
-  padding: 70px;
+  padding: 4em;
 }
 .register-form {
   padding-top: 40px;
