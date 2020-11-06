@@ -13,7 +13,7 @@
               <div class="float-left">
                 <h2>DropShipping</h2>
               </div>
-              <button type="button" class="btn btn-danger btn-md float-right">Sign in</button>
+              <button type="button" class="btn btn-danger btn-md float-right" @click="SignIn">Sign in</button>
             </div>
             <div class="form-padding">
               <h3 class="text-cetner">You’re  2 minutes away from building your ecommerce empire</h3>
@@ -64,7 +64,12 @@ export default {
   },
   computed: {},
   created() {},
-  methods: {}
+  methods: {
+    //返回登陆
+    SignIn(){
+      this.$router.push({ name: 'login' })
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>

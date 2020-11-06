@@ -13,7 +13,7 @@
               <div class="float-left">
                 <h2>DropShipping</h2>
               </div>
-              <button type="button" class="btn btn-danger btn-md float-right">Sign up</button>
+              <button type="button" class="btn btn-danger btn-md float-right" @click="SignUp">Sign up</button>
             </div>
             <div class="form-padding">
               <h3 class="text-cetner">You’re  2 minutes away from building your ecommerce empire</h3>
@@ -73,6 +73,10 @@ export default {
         // }
       // })
     },
+    // 返回注册
+    SignUp(){
+       this.$router.push({ name: 'register' })
+    }
   }
 }
 </script>
