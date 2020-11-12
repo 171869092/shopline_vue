@@ -33,6 +33,14 @@
           </div>
         </div>
       </section>
+      <section>
+        <swiper class="swiper" :options="swiperOption">
+          <swiper-slide v-for="(item, key) in swiperList" :key="key">
+            <img style="width:100%" :src="item.url" alt="">
+          </swiper-slide>
+          <div slot="pagination" class="swiper-pagination" />
+        </swiper>
+      </section>
       <section class="marketing">
         <div class="container">
           <h2 class="text-center p-5">What is DropShipping?</h2>
@@ -62,9 +70,9 @@
         <div class="container">
           <h2 class="text-center p-5">What can you do in DropShipping?</h2>
           <div class="row pb-5">
-            <div class="col-lg-3 text-center" v-for="(item,idx) in threeList" :key="idx">
+            <div v-for="(item,idx) in threeList" :key="idx" class="col-lg-3 text-center">
               <img :src="item.image">
-              <h5 class="title mt-4">{{item.name}}</h5>
+              <h5 class="title mt-4">{{ item.name }}</h5>
             </div>
           </div>
         </div>
@@ -130,16 +138,40 @@
   </div>
 </template>
 <script>
+import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+import 'swiper/swiper-bundle.css'
 export default {
+  components: {
+    Swiper,
+    SwiperSlide
+  },
   data() {
     return {
       activeIndex: 0,
       menuList: ['HOME', 'FAQ', 'CONTACT'],
-      threeList:[
-        {image:'https://cdn.shopifycdn.net/shopifycloud/brochure/assets/merchants/alfred/home-example-small-4bc93b93a9d345329480ea6e387cf6890323170a70473bad69a87424cad52e28.jpg',name:'Find winning dropshipping products'},
-        {image:'https://cdn.shopifycdn.net/shopifycloud/brochure/assets/merchants/corey-moranis/home-example-small-6cf57deaaf9e7c38f45de3d300080353843430c1be3ab0ed3cd5e21b93157de8.jpg',name:'Try the products yourself'},
-        {image:'https://cdn.shopifycdn.net/shopifycloud/brochure/assets/merchants/then-i-met-you/home-example-small-873ea125aea32650f2e2c282609c62a63be928583b8830cc67df98feff30ca89.jpg',name:'Connect your online store with ease'},
-        {image:'https://cdn.shopifycdn.net/shopifycloud/brochure/assets/merchants/miss-boon/home-example-small-8bb452f93af6069b33cdc00d9fab7cacaa32d34684bda58e13eb25faadeb2b72.jpg',name:'Discover dropshipping suppliers with fast shipping'}
+      swiperOption: {
+        slidesPerView: 3,
+        spaceBetween: 30,
+        mousewheel: true,
+        pagination: {
+          el: '.swiper-pagination',
+          clickable: true
+        }
+      },
+      threeList: [
+        { image: 'https://cdn.shopifycdn.net/shopifycloud/brochure/assets/merchants/alfred/home-example-small-4bc93b93a9d345329480ea6e387cf6890323170a70473bad69a87424cad52e28.jpg', name: 'Find winning dropshipping products' },
+        { image: 'https://cdn.shopifycdn.net/shopifycloud/brochure/assets/merchants/corey-moranis/home-example-small-6cf57deaaf9e7c38f45de3d300080353843430c1be3ab0ed3cd5e21b93157de8.jpg', name: 'Try the products yourself' },
+        { image: 'https://cdn.shopifycdn.net/shopifycloud/brochure/assets/merchants/then-i-met-you/home-example-small-873ea125aea32650f2e2c282609c62a63be928583b8830cc67df98feff30ca89.jpg', name: 'Connect your online store with ease' },
+        { image: 'https://cdn.shopifycdn.net/shopifycloud/brochure/assets/merchants/miss-boon/home-example-small-8bb452f93af6069b33cdc00d9fab7cacaa32d34684bda58e13eb25faadeb2b72.jpg', name: 'Discover dropshipping suppliers with fast shipping' }
+      ],
+      swiperList: [
+        { url: 'https://yevgenysim.github.io/shopper/assets/img/products/product-25.jpg' },
+        { url: 'https://yevgenysim.github.io/shopper/assets/img/products/product-26.jpg' },
+        { url: 'https://yevgenysim.github.io/shopper/assets/img/products/product-27.jpg' },
+        { url: 'https://yevgenysim.github.io/shopper/assets/img/products/product-28.jpg' },
+        { url: 'https://yevgenysim.github.io/shopper/assets/img/products/product-29.jpg' },
+        { url: 'https://yevgenysim.github.io/shopper/assets/img/products/product-125.jpg' },
+        { url: 'https://yevgenysim.github.io/shopper/assets/img/products/product-126.jpg' }
       ]
     }
   },
