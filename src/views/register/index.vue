@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col">
         <!-- <img width="100%" src="https://demo.htmlhunters.com/shopy/assets/images/demo/index2-slide-2.jpg" alt=""> -->
-        <span class="imageLeft"></span>
+        <span class="imageLeft" />
       </div>
       <div class="col">
         <div class="container">
@@ -65,8 +65,8 @@ export default {
   computed: {},
   created() {},
   methods: {
-    //返回登陆
-    SignIn(){
+    // 返回登陆
+    SignIn() {
       this.$router.push({ name: 'login' })
     }
   }
