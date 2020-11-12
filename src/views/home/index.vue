@@ -139,7 +139,7 @@
 </template>
 <script>
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
-import 'swiper/swiper-bundle.css'
+import 'swiper/css/swiper.css'
 export default {
   components: {
     Swiper,
@@ -150,13 +150,16 @@ export default {
       activeIndex: 0,
       menuList: ['HOME', 'FAQ', 'CONTACT'],
       swiperOption: {
-        slidesPerView: 3,
+        slidesPerView: 6,
         spaceBetween: 30,
         mousewheel: true,
-        pagination: {
-          el: '.swiper-pagination',
-          clickable: true
-        }
+        disableOnInteraction: false,
+        loop:true,
+　　　　　autoplay:{
+    　　　　　delay: 5000,
+    　　　　　stopOnLastSlide: false,
+    　　　　　disableOnInteraction: false
+　　　　　},
       },
       threeList: [
         { image: 'https://cdn.shopifycdn.net/shopifycloud/brochure/assets/merchants/alfred/home-example-small-4bc93b93a9d345329480ea6e387cf6890323170a70473bad69a87424cad52e28.jpg', name: 'Find winning dropshipping products' },
