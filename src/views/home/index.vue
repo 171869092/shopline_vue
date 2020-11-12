@@ -34,12 +34,15 @@
         </div>
       </section>
       <section>
-        <swiper class="swiper" :options="swiperOption">
-          <swiper-slide v-for="(item, key) in swiperList" :key="key">
-            <img style="width:100%" :src="item.url" alt="">
-          </swiper-slide>
-          <div slot="pagination" class="swiper-pagination" />
-        </swiper>
+        <div class="container">
+            <h2 class="text-center p-5">Product category</h2>
+            <swiper class="swiper" :options="swiperOption">
+              <swiper-slide v-for="(item, key) in swiperList" :key="key">
+                <img style="width:100%" :src="item.url" alt="">
+              </swiper-slide>
+              <div slot="pagination" class="swiper-pagination" />
+            </swiper>
+        </div>
       </section>
       <section class="marketing">
         <div class="container">
@@ -168,13 +171,13 @@ export default {
         { image: 'https://cdn.shopifycdn.net/shopifycloud/brochure/assets/merchants/miss-boon/home-example-small-8bb452f93af6069b33cdc00d9fab7cacaa32d34684bda58e13eb25faadeb2b72.jpg', name: 'Discover dropshipping suppliers with fast shipping' }
       ],
       swiperList: [
-        { url: 'https://yevgenysim.github.io/shopper/assets/img/products/product-25.jpg' },
-        { url: 'https://yevgenysim.github.io/shopper/assets/img/products/product-26.jpg' },
-        { url: 'https://yevgenysim.github.io/shopper/assets/img/products/product-27.jpg' },
-        { url: 'https://yevgenysim.github.io/shopper/assets/img/products/product-28.jpg' },
-        { url: 'https://yevgenysim.github.io/shopper/assets/img/products/product-29.jpg' },
-        { url: 'https://yevgenysim.github.io/shopper/assets/img/products/product-125.jpg' },
-        { url: 'https://yevgenysim.github.io/shopper/assets/img/products/product-126.jpg' }
+        { url: 'https://burst.shopifycdn.com/photos/well-dressed-man-looks-around-retail-store.jpg?width=300&format=pjpg&exif=0&iptc=0' },
+        { url: 'https://burst.shopifycdn.com/photos/retail-business-owner-packing-a-bag.jpg?width=300&format=pjpg&exif=0&iptc=0' },
+        { url: 'https://burst.shopifycdn.com/photos/young-man-leaves-store-with-shopping.jpg?width=300&format=pjpg&exif=0&iptc=0' },
+        { url: 'https://burst.shopifycdn.com/photos/hand-on-hip-and-posing-in-retail-store.jpg?width=300&format=pjpg&exif=0&iptc=0' },
+        { url: 'https://burst.shopifycdn.com/photos/shopper-smiling-and-waving-at-store-owner.jpg?width=300&format=pjpg&exif=0&iptc=0' },
+        { url: 'https://burst.shopifycdn.com/photos/woman-smiles-sitting-in-sunny-window.jpg?width=300&format=pjpg&exif=0&iptc=0' },
+        { url: 'https://burst.shopifycdn.com/photos/woman-looking-at-top-in-the-mirror.jpg?width=300&format=pjpg&exif=0&iptc=0' }
       ]
     }
   },
