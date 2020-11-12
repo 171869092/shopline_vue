@@ -35,7 +35,7 @@
       </section>
       <section>
         <div class="container">
-            <h2 class="text-center p-5">Product category</h2>
+            <h2 class="text-center p-5">DropShip</h2>
             <swiper class="swiper" :options="swiperOption">
               <swiper-slide v-for="(item, key) in swiperList" :key="key">
                 <img style="width:100%" :src="item.url" alt="">
