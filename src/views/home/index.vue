@@ -35,13 +35,13 @@
       </section>
       <section>
         <div class="container">
-            <h2 class="text-center p-5">Product category</h2>
-            <swiper class="swiper" :options="swiperOption">
-              <swiper-slide v-for="(item, key) in swiperList" :key="key">
-                <img style="width:100%" :src="item.url" alt="">
-              </swiper-slide>
-              <div slot="pagination" class="swiper-pagination" />
-            </swiper>
+          <h2 class="text-center p-5">Product category</h2>
+          <swiper class="swiper" :options="swiperOption">
+            <swiper-slide v-for="(item, key) in swiperList" :key="key">
+              <img style="width:100%" :src="item.url" alt="">
+            </swiper-slide>
+            <div slot="pagination" class="swiper-pagination" />
+          </swiper>
         </div>
       </section>
       <section class="marketing">
@@ -157,12 +157,12 @@ export default {
         spaceBetween: 30,
         mousewheel: true,
         disableOnInteraction: false,
-        loop:true,
-　　　　　autoplay:{
-    　　　　　delay: 5000,
-    　　　　　stopOnLastSlide: false,
-    　　　　　disableOnInteraction: false
-　　　　　},
+        loop: true,
+        autoplay: {
+          delay: 5000,
+          stopOnLastSlide: false,
+          disableOnInteraction: false
+        }
       },
       threeList: [
         { image: 'https://cdn.shopifycdn.net/shopifycloud/brochure/assets/merchants/alfred/home-example-small-4bc93b93a9d345329480ea6e387cf6890323170a70473bad69a87424cad52e28.jpg', name: 'Find winning dropshipping products' },

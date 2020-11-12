@@ -4,7 +4,7 @@
     <div class="row">
       <div class="col">
         <!-- <img width="100%" src="https://demo.htmlhunters.com/shopy/assets/images/demo/index2-slide-2.jpg" alt=""> -->
-        <span class="imageLeft"></span>
+        <span class="imageLeft" />
       </div>
       <div class="col">
         <div class="container">
@@ -27,7 +27,7 @@
                   <label for="exampleInputPassword1">Password</label>
                   <input id="exampleInputPassword1" v-model="loginForm.password" type="password" class="form-control" placeholder="Password">
                 </div>
-                <button type="button" :disabled="loading"  @click="handleLogin" class="btn btn-lg s-btn">Log In</button>
+                <button type="button" :disabled="loading" class="btn btn-lg s-btn" @click="handleLogin">Log In</button>
               </form>
             </div>
           </div>
@@ -37,9 +37,9 @@
   </div>
 </template>
 <script>
-import { testApi, gtoken } from '@/api/user'
+// import { testApi, gtoken } from '@/api/user'
 export default {
-  name: 'login',
+  name: 'Login',
   components: {
     // BNavbar
   },
@@ -48,34 +48,34 @@ export default {
     return {
       rules: {},
       loginForm: {
-          username: 'admin',
-          password: '111111'
-        },
-      loading:false
+        username: 'admin',
+        password: '111111'
+      },
+      loading: false
     }
   },
   computed: {},
   created() {},
   methods: {
-     handleLogin() {
+    handleLogin() {
       // this.$refs.loginForm.validate(valid => {
-        // if (valid) {
-          this.loading = true
-          this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ name: 'Dashboard' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
-        // } else {
-        //   console.log('error submit!!')
-        //   return false
-        // }
+      // if (valid) {
+      this.loading = true
+      this.$store.dispatch('user/login', this.loginForm).then(() => {
+        this.$router.push({ name: 'Dashboard' })
+        this.loading = false
+      }).catch(() => {
+        this.loading = false
+      })
+      // } else {
+      //   console.log('error submit!!')
+      //   return false
+      // }
       // })
     },
     // 返回注册
-    SignUp(){
-       this.$router.push({ name: 'register' })
+    SignUp() {
+      this.$router.push({ name: 'register' })
     }
   }
 }
