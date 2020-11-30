@@ -1,6 +1,7 @@
 <template>
-  <div class="b-navbar">
-    <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" />
+  <div class="b-navbar" :class="{'has-logo':showLogo}">
+    <!-- <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" /> -->
+    <logo v-if="showLogo" :collapse="false" />
 
     <breadcrumb class="breadcrumb-container" />
 
@@ -35,18 +36,23 @@
 <script>
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
-import Hamburger from '@/components/Hamburger'
+// import Hamburger from '@/components/Hamburger'
+import Logo from './Sidebar/Logo'
 
 export default {
   components: {
     Breadcrumb,
-    Hamburger
+    Logo
+    // Hamburger
   },
   computed: {
     ...mapGetters([
       'sidebar',
       'avatar'
-    ])
+    ]),
+    showLogo() {
+      return this.$store.state.settings.sidebarLogo
+    }
   },
   methods: {
     toggleSideBar() {

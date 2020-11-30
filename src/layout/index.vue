@@ -1,12 +1,14 @@
 <template>
   <div :class="classObj" class="app-wrapper">
-    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
-    <sidebar class="sidebar-container" />
-    <div class="main-container">
-      <div :class="{'fixed-header':fixedHeader}">
-        <navbar />
-      </div>
-      <app-main />
+    <!-- <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" /> -->
+    <div :class="{'fixed-header':fixedHeader}">
+      <navbar />
+    </div>
+    <div class="main-container" :class="{'fixed':fixedHeader}">
+      <el-container>
+        <el-aside width="220px"> <sidebar class="sidebar-container" /></el-aside>
+        <el-main><app-main /></el-main>
+      </el-container>
     </div>
   </div>
 </template>
@@ -54,6 +56,10 @@ export default {
   @import "~@/styles/mixin.scss";
   @import "~@/styles/variables.scss";
 
+  .fixed .el-main {
+    padding: 50px 0 0 0;
+  }
+
   .app-wrapper {
     @include clearfix;
     position: relative;
@@ -79,7 +85,8 @@ export default {
     top: 0;
     right: 0;
     z-index: 9;
-    width: calc(100% - #{$sideBarWidth});
+    // width: calc(100% - #{$sideBarWidth});
+    width: 100%;
     transition: width 0.28s;
   }
 
