@@ -189,7 +189,17 @@ export default {
   },
   created() {
     this.shopifyInit()
-    this.shipifyApp()
+  },
+  async mounted() {
+    const shopOrigin = 'live-by-test.myshopify.com'
+    const apiKey = '5fdf0435f9093519625df5bfca4c8a31'
+    const app = createApp({
+      apiKey: apiKey,
+      shopOrigin: shopOrigin
+    })
+    // requires an App Bridge instance
+    const sessionToken = await getSessionToken(app)
+    console.log('token', sessionToken)
   },
   methods: {
     shopifyInit() {
@@ -205,17 +215,6 @@ export default {
           console.log(err)
         })
       }
-    },
-    async shipifyApp() {
-      const shopOrigin = 'live-by-test.myshopify.com'
-      const apiKey = '5fdf0435f9093519625df5bfca4c8a31'
-      const app = createApp({
-        apiKey: apiKey,
-        shopOrigin: shopOrigin
-      })
-      // requires an App Bridge instance
-      const sessionToken = await getSessionToken(app)
-      console.log('token', sessionToken)
     },
     serialize(obj) {
       var str = []

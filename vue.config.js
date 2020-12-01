@@ -1,5 +1,6 @@
 'use strict'
 const path = require('path')
+const CompressionPlugin = require('compression-webpack-plugin')
 const defaultSettings = require('./src/settings.js')
 
 function resolve(dir) {
@@ -95,6 +96,12 @@ module.exports = {
               inline: /runtime\..*\.js$/
             }])
             .end()
+          config.plugin('compressionPlugin')
+            .use(new CompressionPlugin({
+              test: /\.js$|\.html$|\.css/, // 匹配文件名
+              threshold: 10240, // 对超过10k的数据压缩
+              deleteOriginalAssets: false // 不删除源文件
+            }))
           config
             .optimization.splitChunks({
               chunks: 'all',
