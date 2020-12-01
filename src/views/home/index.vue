@@ -191,6 +191,7 @@ export default {
     this.shopifyInit()
   },
   async mounted() {
+    console.log('init')
     const shopOrigin = 'live-by-test.myshopify.com'
     const apiKey = '5fdf0435f9093519625df5bfca4c8a31'
     const app = createApp({
@@ -209,7 +210,6 @@ export default {
       // eslint-disable-next-line no-prototype-builtins
       if (this.$route.query.hasOwnProperty('hmac')) {
         indexApi({ ...this.$route.query }).then(res => {
-          console.log('init')
           console.log(res)
         }).catch(err => {
           console.log(err)
