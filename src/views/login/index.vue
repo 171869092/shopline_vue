@@ -20,7 +20,7 @@
               <form class="login-form">
                 <div class="form-group">
                   <label for="exampleInputEmail1">Your Email</label>
-                  <input id="exampleInputEmail1" v-model="loginForm.username" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Your Email">
+                  <input id="exampleInputEmail1" v-model="loginForm.phone" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Your Email">
                   <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                 </div>
                 <div class="form-group">
@@ -48,8 +48,9 @@ export default {
     return {
       rules: {},
       loginForm: {
-        username: 'admin',
-        password: '111111'
+        phone: '15000000000',
+        password: '123456',
+        id: 1
       },
       loading: false
     }
@@ -99,7 +100,7 @@ export default {
   padding-top: 40px;
 }
 .imageLeft{
-  // background: url(~/assets/home/login.png) no-repeat center;
+  background: url(~@/assets/home/login.png) no-repeat center;
   background-size: cover;
   width:100%;
   height: 100%;
