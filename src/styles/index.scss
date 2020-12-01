@@ -3,6 +3,7 @@
 @import './transition.scss';
 @import './element-ui.scss';
 @import './sidebar.scss';
+@import './home.scss';
 // @import './btn.scss';
 
 body {
@@ -15,7 +16,7 @@ body {
 
 label {
   font-weight: 700;
-}ß
+}
 
 html {
   height: 100%;
@@ -77,6 +78,11 @@ div:focus {
 .app-container {
   padding: 20px;
 }
+
+.container{
+  max-width: 1600px!important;
+}
+
 
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
