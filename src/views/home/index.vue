@@ -29,6 +29,7 @@
             <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
             <hr class="my-4">
             <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
+            <p>{{ $route.query }}</p>
             <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
           </div>
         </div>
@@ -143,6 +144,11 @@
 <script>
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
+import { testApi, gtoken } from '@/api/user'
+// import createApp from '@shopify/app-bridge'
+// import { Redirect, Button } from '@shopify/app-bridge/actions'
+// import { getSessionToken } from '@shopify/app-bridge-utils'
+
 export default {
   components: {
     Swiper,
@@ -181,7 +187,37 @@ export default {
       ]
     }
   },
+  created() {
+    this.shopifyInit()
+  },
   methods: {
+    shopifyInit() {
+      const query = { 'code': '1c0199484a1e28854cb96d47759b61b3', 'hmac': '90bddb272fb82234eae3f8085eea0f5d86f7a76598e4467d4bcd8726b7ed8b7e', 'shop': 'live-by-test.myshopify.com', 'timestamp': '1603941523' }
+      console.log(this.serialize(query))
+      // eslint-disable-next-line no-prototype-builtins
+      if (this.$route.query.hasOwnProperty('hmac')) {
+        gtoken(this.$route.query).then(res => {
+          console.log(res.data)
+          testApi({ ...this.$route.query, token: res.data }).then(res => {
+            console.log(res.data)
+          }).catch(err => {
+            console.log(err)
+          })
+        }).catch(err => {
+          console.log(err)
+        })
+      }
+    },
+    serialize(obj) {
+      var str = []
+      for (var p in obj) {
+        // eslint-disable-next-line no-prototype-builtins
+        if (obj.hasOwnProperty(p)) {
+          str.push(encodeURIComponent(p) + '=' + encodeURIComponent(obj[p]))
+        }
+      }
+      return str.join('&')
+    },
     goLink(index) {
       this.activeIndex = index
     },

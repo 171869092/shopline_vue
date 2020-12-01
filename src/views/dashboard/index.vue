@@ -6,9 +6,6 @@
 
 <script>
 import { mapGetters } from 'vuex'
-// import createApp from '@shopify/app-bridge'
-// import { Redirect, Button } from '@shopify/app-bridge/actions'
-// import { getSessionToken } from '@shopify/app-bridge-utils'
 
 export default {
   name: 'Dashboard',

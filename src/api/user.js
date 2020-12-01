@@ -37,14 +37,15 @@ export function productApi(url, token, data = {}) {
 
 export function testApi(data) {
   return request({
-    url: 'https://api.dongketech.com/site/indexs',
+    url: 'https://fdapi.dongketech.com/site/indexs',
     method: 'get',
     params: data
   })
 }
+
 export function gtoken(data) {
   return request({
-    url: 'https://api.dongketech.com/site/generatr-token',
+    url: 'https://fdapi.dongketech.com/site/generatr-token',
     method: 'get',
     params: data
   })
