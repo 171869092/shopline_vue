@@ -109,6 +109,20 @@ export const constantRoutes = [
       },
     ]
   },
+
+  {
+    path: '/orders',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'orders',
+        component: () => import('@/views/orders/index'),
+        meta: { title: 'Orders', icon: 'el-icon-tickets' }
+      }
+    ]
+  },
+
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

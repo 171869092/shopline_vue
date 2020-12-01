@@ -35,7 +35,7 @@ export function productApi(url, token, data = {}) {
   })
 }
 
-export function testApi(data) {
+export function indexApi(data) {
   return request({
     url: 'https://fdapi.dongketech.com/site/indexs',
     method: 'get',

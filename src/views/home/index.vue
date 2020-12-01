@@ -144,10 +144,10 @@
 <script>
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
-import { testApi, gtoken } from '@/api/user'
-// import createApp from '@shopify/app-bridge'
+import { indexApi } from '@/api/user'
+import createApp from '@shopify/app-bridge'
 // import { Redirect, Button } from '@shopify/app-bridge/actions'
-// import { getSessionToken } from '@shopify/app-bridge-utils'
+import { getSessionToken } from '@shopify/app-bridge-utils'
 
 export default {
   components: {
@@ -190,19 +190,27 @@ export default {
   created() {
     this.shopifyInit()
   },
+  async mounted() {
+    const shopOrigin = 'live-by-test.myshopify.com'
+    const apiKey = '5fdf0435f9093519625df5bfca4c8a31'
+    const app = createApp({
+      apiKey: apiKey,
+      shopOrigin: shopOrigin
+    })
+    // requires an App Bridge instance
+    const sessionToken = await getSessionToken(app)
+    console.log('token', sessionToken)
+  },
   methods: {
     shopifyInit() {
-      const query = { 'code': '1c0199484a1e28854cb96d47759b61b3', 'hmac': '90bddb272fb82234eae3f8085eea0f5d86f7a76598e4467d4bcd8726b7ed8b7e', 'shop': 'live-by-test.myshopify.com', 'timestamp': '1603941523' }
-      console.log(this.serialize(query))
+      // const query = { 'code': 'c20411e3859748cc53f583b221048c81', 'hmac': '5cba719e7d85008aa29d7a33e946e1123595cbda5647958e40257699c4f4bb3b', 'shop': 'live-by-test.myshopify.com', 'timestamp': '1606810839' }
+      // console.log(this.serialize(query))
+
       // eslint-disable-next-line no-prototype-builtins
       if (this.$route.query.hasOwnProperty('hmac')) {
-        gtoken(this.$route.query).then(res => {
-          console.log(res.data)
-          testApi({ ...this.$route.query, token: res.data }).then(res => {
-            console.log(res.data)
-          }).catch(err => {
-            console.log(err)
-          })
+        indexApi({ ...this.$route.query }).then(res => {
+          console.log('init')
+          console.log(res)
         }).catch(err => {
           console.log(err)
         })
