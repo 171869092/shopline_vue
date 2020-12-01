@@ -68,7 +68,6 @@ export const constantRoutes = [
     //   meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
-
   {
     path: '/example',
     component: Layout,
@@ -100,10 +99,16 @@ export const constantRoutes = [
         name: 'product',
         component: () => import('@/views/product/index'),
         meta: { title: 'product', icon: 'el-icon-goods' }
-      }
+      },
+      {
+        path: 'productDetails',
+        hidden: true,
+        name: 'productDetails',
+        component: () => import('@/views/product/productDetails'),
+        meta: { title: 'productDetails' }
+      },
     ]
   },
-
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
 ]

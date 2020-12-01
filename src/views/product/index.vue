@@ -1,7 +1,7 @@
 <template>
   <div class="product">
     <div class="clearfix">
-       <el-button type="primary" size="small" class="f-r mr50 mt20">添加产品</el-button>
+       <el-button type="primary" size="small" class="f-r mr50 mt20" @click="productAdd('add')">添加产品</el-button>
     </div>
     <el-card class="box-card">
       <el-table
@@ -17,7 +17,7 @@
         <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
           <template slot-scope="scope">
             <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
-            <span v-if="item.type == 'product'">
+            <span v-if="item.type == 'product'" @click="productAdd('edit')" style="color:#ef6f38" class="pointer">
               <img :src="scope.row.image" width="50px" alt="">
               <span class="ml20">{{scope.row.name}}</span>
             </span>
@@ -83,7 +83,10 @@ export default {
     },
     productChange(val) {
         this.productSelection = val;
-    } 
+    },
+    productAdd(type){
+       this.$router.push({ name: 'productDetails', query: { type: type,}})
+    }
   }
 }
 </script>
