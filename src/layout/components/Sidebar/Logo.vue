@@ -15,7 +15,7 @@
 
 <script>
 export default {
-  name: 'SidebarLogo',
+  name: 'sidebar-logo',
   props: {
     collapse: {
       type: Boolean,
@@ -49,7 +49,6 @@ export default {
   // background: #2b2f3a;
   text-align: center;
   overflow: hidden;
-  display: inline-block;
   float: left;
 
   & .sidebar-logo-link {

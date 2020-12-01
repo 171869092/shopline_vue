@@ -1,25 +1,25 @@
 <template>
   <div class="product">
     <div class="clearfix">
-       <el-button type="primary" size="small" class="f-r mr50 mt20">添加产品</el-button>
+      <el-button type="primary" size="small" class="f-r mr50 mt20">添加产品</el-button>
     </div>
     <el-card class="box-card">
       <el-table
         ref="multipleTable"
-        :data="tableData"
         v-loading="loading"
+        :data="tableData"
         style="width: 100%"
         highlight-current-row
         fit
         @selection-change="productChange"
       >
-        <el-table-column type="selection"></el-table-column>
+        <el-table-column type="selection" />
         <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
           <template slot-scope="scope">
             <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
             <span v-if="item.type == 'product'">
               <img :src="scope.row.image" width="50px" alt="">
-              <span class="ml20">{{scope.row.name}}</span>
+              <span class="ml20">{{ scope.row.name }}</span>
             </span>
           </template>
         </el-table-column>
@@ -39,7 +39,7 @@ export default {
     return {
       // 列表表头
       labelList: [
-        { label: '产品', value: 'id' ,type:'product'},
+        { label: '产品', value: 'id', type: 'product' },
         { label: '状态', value: 'supplier_name' },
         { label: '库存', value: 'mobile' },
         { label: '类型', value: 'wechat_num' },
@@ -47,15 +47,15 @@ export default {
         { label: '操作', type: 'operation' }
       ],
       tableData: [
-        {name:'Autocollant mural décalcomanies',image:'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440'},
-        {name:'Autocollant mural décalcomanies',image:'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440'},
-        {name:'Autocollant mural décalcomanies',image:'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440'},
-        {name:'Autocollant mural décalcomanies',image:'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440'},
-        {name:'Autocollant mural décalcomanies',image:'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440'}
+        { name: 'Autocollant mural décalcomanies', image: 'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440' },
+        { name: 'Autocollant mural décalcomanies', image: 'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440' },
+        { name: 'Autocollant mural décalcomanies', image: 'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440' },
+        { name: 'Autocollant mural décalcomanies', image: 'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440' },
+        { name: 'Autocollant mural décalcomanies', image: 'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440' }
 
       ],
-      productSelection:[],
-      loading:false
+      productSelection: [],
+      loading: false
     }
   },
   created() {
@@ -82,8 +82,8 @@ export default {
       // })
     },
     productChange(val) {
-        this.productSelection = val;
-    } 
+      this.productSelection = val
+    }
   }
 }
 </script>
