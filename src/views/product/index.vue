@@ -19,9 +19,9 @@
         <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
           <template slot-scope="scope">
             <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
-            <span v-if="item.type == 'product'" @click="productAdd('edit',scope.row.name)" style="color:#ef6f38" class="pointer">
+            <span v-if="item.type == 'product'" @click="productAdd('edit',scope.row.title)" style="color:#ef6f38" class="pointer">
               <img :src="scope.row.image" width="50px" alt="">
-              <span class="ml20">{{ scope.row.name }}</span>
+              <span class="ml20">{{ scope.row.title }}</span>
             </span>
           </template>
         </el-table-column>
@@ -45,20 +45,13 @@ export default {
       // 列表表头
       labelList: [
         { label: 'Product', value: 'id', type: 'product' ,width:'300'},
-        { label: 'State', value: 'supplier_name' },
-        { label: 'Inventory', value: 'mobile' },
-        { label: 'Type', value: 'wechat_num' },
-        { label: 'Manufacturer', value: 'address' },
+        { label: 'State', value: 'state' },
+        { label: 'Inventory', value: 'stock' },
+        { label: 'Type', value: 'type' },
+        { label: 'Manufacturer', value: 'manufacturer' },
         { label: 'Operation', type: 'operation' }
       ],
-      tableData: [
-        { name: 'Autocollant mural décalcomanies', image: 'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440' },
-        { name: 'Autocollant mural décalcomanies', image: 'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440' },
-        { name: 'Autocollant mural décalcomanies', image: 'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440' },
-        { name: 'Autocollant mural décalcomanies', image: 'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440' },
-        { name: 'Autocollant mural décalcomanies', image: 'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440' }
-
-      ],
+      tableData: [],
       productSelection: [],
       loading: false,
       providerVisible: false,
@@ -84,7 +77,7 @@ export default {
       getProductList(formData).then(res => {
         if (res.code == 200) {
             this.tableData = res.data
-            this.listQuery.total = parseInt(res.total)
+            this.listQuery.total = +res.iTotalRecords
             this.loading = false
         }
       })
