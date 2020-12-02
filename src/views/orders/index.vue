@@ -33,7 +33,6 @@
     <el-dialog title="Logistics Details" :visible.sync="dialogVisible" width="700px">
       <el-timeline v-if="logisticList">
         <el-timeline-item v-for="(item,key) in logisticList" :key="key" color="#0bbd87" :timestamp="item.ProcessDate" placement="top">
-          <h4>{{ item.TrackingStatus }}</h4>
           <p>{{ item.ProcessLocation }}</p>
           <p>{{ item.ProcessContent }}</p>
         </el-timeline-item>
@@ -92,15 +91,24 @@ export default {
       })
     },
     Inquire() {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       this.formQuery.iDisplayLength = this.listQuery.limit
       this.formQuery.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
       getOrderList(this.formQuery).then(res => {
         console.log(res.data)
         if (res.code === 200) {
           this.tableData = res.data
+          this.listQuery.total = +res.total
         }
       }).catch(err => {
         console.log(err)
+      }).finally(() => {
+        loading.close()
       })
     },
     toLink(row) {

@@ -13,22 +13,24 @@
               <div class="float-left">
                 <h2>DropShipping</h2>
               </div>
-              <button type="button" class="btn btn-danger btn-md float-right" @click="SignUp">Sign up</button>
+              <!-- <button type="button" class="btn btn-danger btn-md float-right" @click="SignUp">Sign up</button> -->
+              <el-button type="primary" class="float-right" @click="SignUp">Sign Up</el-button>
             </div>
             <div class="form-padding">
               <h3 class="text-cetner">You’re  2 minutes away from building your ecommerce empire</h3>
-              <form class="login-form">
+              <el-form ref="loginForm" :model="loginForm" class="login-form">
                 <div class="form-group">
                   <label for="exampleInputEmail1">Your Email</label>
-                  <input id="exampleInputEmail1" v-model="loginForm.email" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Your Email">
+                  <el-input v-model="loginForm.email" placeholder="Your Email" />
                   <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                 </div>
                 <div class="form-group">
                   <label for="exampleInputPassword1">Password</label>
-                  <input id="exampleInputPassword1" v-model="loginForm.password" type="password" class="form-control" placeholder="Password">
+                  <el-input v-model="loginForm.password" type="password" placeholder="Password" />
                 </div>
-                <button type="button" :disabled="loading" class="btn btn-lg s-btn" @click="handleLogin">Log In</button>
-              </form>
+                <!-- <button type="button" :disabled="loading" class="btn btn-lg s-btn" @click="handleLogin">Log In</button> -->
+                <el-button class="s-btn" @click="handleLogin">Log In</el-button>
+              </el-form>
             </div>
           </div>
         </div>
@@ -59,20 +61,20 @@ export default {
   created() {},
   methods: {
     handleLogin() {
-      // this.$refs.loginForm.validate(valid => {
-      // if (valid) {
-      this.loading = true
-      this.$store.dispatch('user/login', this.loginForm).then(() => {
-        this.$router.push({ name: 'Dashboard' })
-        this.loading = false
-      }).catch(() => {
-        this.loading = false
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          this.loading = true
+          this.$store.dispatch('user/login', this.loginForm).then(() => {
+            this.$router.push({ name: 'dashboard' })
+            this.loading = false
+          }).catch(() => {
+            this.loading = false
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
       })
-      // } else {
-      //   console.log('error submit!!')
-      //   return false
-      // }
-      // })
     },
     // 返回注册
     SignUp() {

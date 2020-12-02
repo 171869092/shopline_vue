@@ -1,9 +1,13 @@
 .s-btn {
-  border-color: rgb(237 122 127);
-  color: rgb(239 117 58);
+  border: 1px solid rgb(237 122 127) !important;
+  border-color: rgb(237 122 127) !important;
+  color: rgb(239 117 58) !important;
 
   &:hover {
-    color: rgb(239 117 58);
+    color: rgb(239 117 58) !important;
+  }
+  &:focus{
+    outline: none;
   }
 }
 
@@ -39,7 +43,7 @@
 }
 
 .m-navbar-top {
-  margin-top: 88px;
+  margin-top: 80px;
 }
 
 .wap {

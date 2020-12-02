@@ -14,8 +14,13 @@
               </li>
             </ul>
             <form class="form-inline mt-2 mt-md-0">
-              <span class="login-btn" @click="loginClick">LOGIN</span>
-              <button type="button" class="btn btn-lg s-btn" @click="registerClick">Get Started</button>
+              <div v-if="isLogin">
+                <router-link class="login-btn" :to="{name: 'dashboard'}">Dashboard</router-link>
+              </div>
+              <div v-else>
+                <router-link class="login-btn" :to="{name: 'login'}">Login</router-link>
+                <el-button class="s-btn" @click="registerClick">Get Started</el-button>
+              </div>
             </form>
           </div>
         </div>
@@ -145,9 +150,9 @@
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
 import { indexApi } from '@/api/user'
-import createApp from '@shopify/app-bridge'
+// import createApp from '@shopify/app-bridge'
 // import { Redirect, Button } from '@shopify/app-bridge/actions'
-import { getSessionToken } from '@shopify/app-bridge-utils'
+// import { getSessionToken } from '@shopify/app-bridge-utils'
 
 export default {
   components: {
@@ -157,7 +162,7 @@ export default {
   data() {
     return {
       activeIndex: 0,
-      menuList: ['HOME', 'FAQ', 'CONTACT'],
+      menuList: ['Home', 'FAQ', 'Contact'],
       swiperOption: {
         slidesPerView: 6,
         spaceBetween: 30,
@@ -187,20 +192,25 @@ export default {
       ]
     }
   },
+  computed: {
+    isLogin() {
+      return !!this.$store.getters.token
+    }
+  },
   created() {
     this.shopifyInit()
   },
   async mounted() {
-    console.log('init')
-    const shopOrigin = 'live-by-test.myshopify.com'
-    const apiKey = '5fdf0435f9093519625df5bfca4c8a31'
-    const app = createApp({
-      apiKey: apiKey,
-      shopOrigin: shopOrigin
-    })
-    // requires an App Bridge instance
-    const sessionToken = await getSessionToken(app)
-    console.log('token', sessionToken)
+    // console.log('init')
+    // const shopOrigin = 'live-by-test.myshopify.com'
+    // const apiKey = '5fdf0435f9093519625df5bfca4c8a31'
+    // const app = createApp({
+    //   apiKey: apiKey,
+    //   shopOrigin: shopOrigin
+    // })
+    // // requires an App Bridge instance
+    // const sessionToken = await getSessionToken(app)
+    // console.log('token', sessionToken)
   },
   methods: {
     shopifyInit() {
@@ -229,14 +239,8 @@ export default {
     goLink(index) {
       this.activeIndex = index
     },
-    loginClick() {
-      this.$router.push({ name: 'login' })
-    },
     registerClick() {
       this.$router.push({ name: 'register' })
-    },
-    handleSelect() {
-
     }
   }
 }

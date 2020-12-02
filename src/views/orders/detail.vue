@@ -50,7 +50,7 @@
         <div class="detail-block-title mt20 mb30">Logistics Information</div>
         <div class="block">
           <div class="flexbox p20 log-title">
-            <div>Status: In Transit</div>
+            <div>Status: {{ detailInfo.track_info.TrackingStatus }}</div>
             <div class="ml50">Waybill Number：{{ detailInfo.track_info.WaybillNumber }}</div>
           </div>
           <el-timeline class="mt20 pl20">
@@ -87,7 +87,7 @@ export default {
         { label: 'Products', value: 'third_goods_name' },
         { label: 'SKU', value: 'third_sku_name' },
         { label: 'SKU Num', value: 'sku_num' },
-        { label: 'Sale Money', value: 'sale_money' },
+        { label: 'Price', value: 'third_price' },
         { label: 'The Logistics Cost', value: 'logistics_cost' },
         { label: 'Service Fee', value: 'service_fee' }
       ],
@@ -108,6 +108,12 @@ export default {
   },
   methods: {
     init() {
+      const loading = this.$loading({
+        lock: true,
+        text: 'Loading',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       getOrderInfo({ order_no: this.order_no }).then(res => {
         console.log(res.data)
         if (res.code === 200) {
@@ -115,6 +121,8 @@ export default {
         }
       }).catch(err => {
         console.log(err)
+      }).finally(() => {
+        loading.close()
       })
     }
   }
