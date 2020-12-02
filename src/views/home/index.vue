@@ -150,9 +150,9 @@
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
 import { indexApi } from '@/api/user'
-// import createApp from '@shopify/app-bridge'
+import createApp from '@shopify/app-bridge'
 // import { Redirect, Button } from '@shopify/app-bridge/actions'
-// import { getSessionToken } from '@shopify/app-bridge-utils'
+import { getSessionToken } from '@shopify/app-bridge-utils'
 
 export default {
   components: {
@@ -201,16 +201,16 @@ export default {
     this.shopifyInit()
   },
   async mounted() {
-    // console.log('init')
-    // const shopOrigin = 'live-by-test.myshopify.com'
-    // const apiKey = '5fdf0435f9093519625df5bfca4c8a31'
-    // const app = createApp({
-    //   apiKey: apiKey,
-    //   shopOrigin: shopOrigin
-    // })
-    // // requires an App Bridge instance
-    // const sessionToken = await getSessionToken(app)
-    // console.log('token', sessionToken)
+    console.log('init')
+    const shopOrigin = 'live-by-test.myshopify.com'
+    const apiKey = '5fdf0435f9093519625df5bfca4c8a31'
+    const app = createApp({
+      apiKey: apiKey,
+      shopOrigin: shopOrigin
+    })
+    // requires an App Bridge instance
+    const sessionToken = await getSessionToken(app)
+    console.log('token', sessionToken)
   },
   methods: {
     shopifyInit() {
