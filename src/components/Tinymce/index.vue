@@ -3,13 +3,13 @@
     <div :class="{fullscreen:fullscreen}" class="tinymce-container" :style="{width:containerWidth}">
       <textarea :id="tinymceId" class="tinymce-textarea" />
     </div>
-    <div class="hidden bottomText">
+    <!-- <div class="hidden bottomText">
       <span class="c_red" v-if="maxLength == 0?false:(maxLength >= valueLength?false:true)">超出 {{maxLength}} 字符</span>
       <span class="f-r">
         <span class="mr10">{{valueLength}} 字符</span>
         <span v-if="maxLength != 0" class="ml10">最大 {{maxLength}} 字符</span>
       </span>
-    </div>
+    </div> -->
   </div>
 </template>
 
