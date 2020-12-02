@@ -106,7 +106,7 @@ export const constantRoutes = [
         name: 'productDetails',
         component: () => import('@/views/product/productDetails'),
         meta: { title: 'productDetails' }
-      },
+      }
     ]
   },
 
@@ -119,6 +119,13 @@ export const constantRoutes = [
         name: 'orders',
         component: () => import('@/views/orders/index'),
         meta: { title: 'Orders', icon: 'el-icon-tickets' }
+      },
+      {
+        path: 'detail',
+        name: 'orders-detail',
+        component: () => import('@/views/orders/detail'),
+        meta: { title: 'Orders Detail', icon: 'el-icon-tickets' },
+        hidden: true
       }
     ]
   },

@@ -1,5 +1,5 @@
 <template>
-  <div class="b-navbar" :class="{'has-logo':showLogo}">
+  <div class="b-navbar shadow-sm" :class="{'has-logo':showLogo}">
     <!-- <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" /> -->
     <logo v-if="showLogo" :collapse="false" />
 
@@ -72,7 +72,7 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0,21,41,.08);
+  // box-shadow: 0 1px 4px rgba(0,21,41,.08);
 
   .hamburger-container {
     line-height: 46px;

@@ -32,7 +32,7 @@ import AppLink from './Link'
 import FixiOSBug from './FixiOSBug'
 
 export default {
-  name: 'SidebarItem',
+  name: 'sidebar-item',
   components: { Item, AppLink },
   mixins: [FixiOSBug],
   props: {

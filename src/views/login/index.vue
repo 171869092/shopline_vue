@@ -62,6 +62,7 @@ export default {
       // this.$refs.loginForm.validate(valid => {
       // if (valid) {
       this.loading = true
+      this.$router.push({ name: 'Dashboard' })
       this.$store.dispatch('user/login', this.loginForm).then(() => {
         this.$router.push({ name: 'Dashboard' })
         this.loading = false
