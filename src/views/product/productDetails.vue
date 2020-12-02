@@ -3,6 +3,8 @@
      <el-form :model="formData" :rules="formRule" ref="formData" label-width="80px">
        <div class="box-card">
            <el-button size="small" class="" icon="el-icon-back" @click="productBack"></el-button>
+           <label class="ml20">{{$route.query.name}}</label>
+            <el-button type="primary" class="f-r mr50">Submit</el-button>
        </div>
         <el-card class="box-card">
               <el-form-item label="title:" prop="title">

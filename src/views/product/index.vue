@@ -2,6 +2,7 @@
   <div class="product">
     <div class="clearfix">
        <el-button type="primary" size="small" class="f-r mr50 mt20" @click="productAdd('add')">Add products</el-button>
+       <el-button size="small" class="f-r mr50 mt20 button-border" @click="providerClick">Provider</el-button>     
     </div>
     <el-card class="box-card">
       <el-table
@@ -11,13 +12,14 @@
         style="width: 100%"
         highlight-current-row
         fit
+        :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
         @selection-change="productChange"
       >
         <el-table-column type="selection" />
         <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
           <template slot-scope="scope">
             <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
-            <span v-if="item.type == 'product'" @click="productAdd('edit')" style="color:#ef6f38" class="pointer">
+            <span v-if="item.type == 'product'" @click="productAdd('edit',scope.row.name)" style="color:#ef6f38" class="pointer">
               <img :src="scope.row.image" width="50px" alt="">
               <span class="ml20">{{ scope.row.name }}</span>
             </span>
@@ -27,6 +29,7 @@
       <!-- 分页 -->
       <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
     </el-card>
+       <provider :visible="providerVisible" @providerAdd="closeprovider" />
   </div>
 </template>
 <script>
@@ -34,17 +37,18 @@ export default {
   name: 'product',
   components: {
     Pagination: () => import('@/components/Pagination'),
+    provider: () => import('./component/provider')
   },
   data() {
     return {
       // 列表表头
       labelList: [
-        { label: '产品', value: 'id', type: 'product' ,width:'300'},
-        { label: '状态', value: 'supplier_name' },
-        { label: '库存', value: 'mobile' },
-        { label: '类型', value: 'wechat_num' },
-        { label: '厂商', value: 'address' },
-        { label: '操作', type: 'operation' }
+        { label: 'Product', value: 'id', type: 'product' ,width:'300'},
+        { label: 'State', value: 'supplier_name' },
+        { label: 'Inventory', value: 'mobile' },
+        { label: 'Type', value: 'wechat_num' },
+        { label: 'Manufacturer', value: 'address' },
+        { label: 'Operation', type: 'operation' }
       ],
       tableData: [
         { name: 'Autocollant mural décalcomanies', image: 'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440' },
@@ -56,6 +60,8 @@ export default {
       ],
       productSelection: [],
       loading: false,
+      providerVisible: false,
+      providerTitle: 'Provider',
       listQuery:{
         total:0,
         page:1,
@@ -89,8 +95,18 @@ export default {
     productChange(val) {
         this.productSelection = val;
     },
-    productAdd(type){
-       this.$router.push({ name: 'productDetails', query: { type: type,}})
+    productAdd(type,name){
+       this.$router.push({ name: 'productDetails', query: { type: type,name:name}})
+    },
+    //选择服务商
+    providerClick(type) {
+      this.providerVisible = true
+    },
+    closeprovider(type) {
+      if (type != 1) {
+        this.Inquire()
+      }
+      this.providerVisible = false
     }
   }
 }
@@ -100,5 +116,9 @@ export default {
    .box-card{
       margin: 20px 30px!important;
     }
+   .button-border{
+     border: 1px solid #ef6f38;
+     color:  #ef6f38;
+   }
 }
 </style>
