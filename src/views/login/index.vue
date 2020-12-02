@@ -29,7 +29,7 @@
                   <el-input v-model="loginForm.password" type="password" placeholder="Password" />
                 </div>
                 <!-- <button type="button" :disabled="loading" class="btn btn-lg s-btn" @click="handleLogin">Log In</button> -->
-                <el-button class="s-btn" @click="handleLogin">Log In</el-button>
+                <el-button class="s-btn" :loading="loading" @click="handleLogin">Log In</el-button>
               </el-form>
             </div>
           </div>

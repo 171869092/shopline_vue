@@ -39,7 +39,7 @@
                   <label for="exampleInputPassword1">Confirm Password</label>
                   <input id="exampleInputPassword1" type="password" class="form-control" placeholder="Confirm Password">
                 </div>
-                <el-button class="s-btn" @click="handleRegister">Get Started</el-button>
+                <el-button class="s-btn" :loading="loading" @click="handleRegister">Get Started</el-button>
               </form>
             </div>
           </div>
