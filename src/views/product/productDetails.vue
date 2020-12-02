@@ -1,81 +1,85 @@
 <template>
   <div class="productDetails">
-     <el-form :model="formData" :rules="formRule" ref="formData" label-width="80px">
+     <el-form :model="formData" :rules="formRule" ref="formData" label-width="100px">
        <div class="box-card">
-           <el-button size="small" class="" icon="el-icon-back" @click="productBack"></el-button>
+           <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack"></el-button>
            <label class="ml20">{{$route.query.name}}</label>
             <el-button type="primary" class="f-r">Submit</el-button>
        </div>
         <el-card class="box-card">
-              <el-form-item label="title:" prop="title">
-                <el-input v-model="formData.title" placeholder="产品标题" />
+              <el-form-item label="Title:" prop="title">
+                <el-input v-model="formData.title" placeholder="title" />
               </el-form-item>
-              <el-form-item label="describe:" prop="title">
-                  <tinymce v-model="formData.description" :height="250" ref="tinymces"/>
+              <el-form-item label="Description:" prop="describe">
+                  <tinymce v-model="formData.describe" :height="250" ref="tinymces"/>
               </el-form-item>
         </el-card>
+
+        <!-- 橱窗图库： -->
         <el-card class="box-card mt5">
-              <div slot="header" class="clearfix hidden">
-                <div class="f-l"><span style="color:red">*</span><label>media:</label></div>
-              </div>
-              <el-upload
-                action="https://getman.cn/echo"
-                list-type="picture-card"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove">
-                <i class="el-icon-plus"></i>
-              </el-upload>
-              <el-dialog :visible.sync="dialogVisible">
-                <img width="100%" :src="dialogImageUrl" alt="">
-              </el-dialog>
-        </el-card> 
+          <div slot="header" class="clearfix hidden">
+            <label class="step-jump"><span style="color:red">*</span>Media:</label>
+            <div class="f-r">
+              <el-button size="mini" type="primary" @click="openUploadPrint">Add image</el-button>
+            </div>
+          </div>
+          <print-popover :list="formData.images" ref="window_img" @delImg="delImg" :popoverStyle="{width:'650px',height:'650px'}"></print-popover>
+          
+        </el-card>
         <!-- 商品 -->
         <el-card class="box-card mt10">
                 <div slot="header" class="clearfix">
-                   <div class="f-l"><span style="color:red">*</span><label>sku:</label></div>
+                   <div class="f-l"><span style="color:red">*</span><label>Variants:</label></div>
                   <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button>
                 </div>
                 <el-table
                   ref="multipleTable"
-                  :data="formData.sub_sku"
+                  :data="formData.sku_list"
                   border
                   stripe
                   :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
                   style="width: 100%">
                   <el-table-column type="index" width="120" label="Serial number" />
-                  <el-table-column label="Color" prop="Color">
+                   <el-table-column label="Picture" prop="sku_image">
+                    <template slot-scope="scope">
+                      <el-popover v-if="scope.row.sku_image" placement="top" trigger="hover">
+                        <el-image slot="reference" :src="scope.row.sku_image" @click="openPrint(scope.row,scope.$index)" alt="加载失败..." style="height: 50px;width:50px"></el-image>
+                        <el-image :src="scope.row.sku_image" style="height: 200px;width: 200px"></el-image>
+                      </el-popover>
+                    </template>
+                  </el-table-column> 
+                  <el-table-column label="Color" prop="sku_color">
                     <template slot-scope="scope">
                       <el-form-item class="mb0" label-width="0">
-                        <el-input v-model="scope.row.Color"  size="mini" class="p5_input" placeholder="Color" />
+                        <el-input v-model="scope.row.sku_color"  size="mini" class="p5_input" placeholder="Color" />
                       </el-form-item>
                     </template>
                   </el-table-column>
-
-                  <el-table-column label="Size" prop="Size">
+                  <el-table-column label="Size" prop="sku_size">
                     <template slot-scope="scope">
-                      <el-form-item class="mb0" label-width="0" :prop="`sub_sku.${scope.$index}.Size`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
-                        <el-input v-model="scope.row.Size" clearable size="mini" class="p5_input" placeholder="Size" />
+                      <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_size`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
+                        <el-input v-model="scope.row.sku_size" clearable size="mini" class="p5_input" placeholder="Size" />
                       </el-form-item>
                     </template>
                   </el-table-column>
-                  <el-table-column label="Price" prop="Price">
+                  <el-table-column label="Price" prop="sku_price">
                     <template slot-scope="scope">
-                      <el-form-item class="mb0" label-width="0" :prop="`sub_sku.${scope.$index}.Price`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
-                        <el-input v-model="scope.row.Price" clearable size="mini" class="p5_input" placeholder="Price" />
+                      <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_price`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
+                        <el-input v-model="scope.row.sku_price" clearable size="mini" class="p5_input" placeholder="Price" />
                       </el-form-item>
                     </template>
                   </el-table-column>
-                  <el-table-column label="Number" prop="sku_weight">
+                  <el-table-column label="Quantity" prop="sku_number">
                     <template slot-scope="scope">
-                      <el-form-item class="mb0" label-width="0" :prop="`sub_sku.${scope.$index}.Number`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
-                        <el-input-number v-model="scope.row.Number" class="p5_input" size="mini"  :min="1" controls-position="right"></el-input-number>
+                      <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_number`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
+                        <el-input-number v-model="scope.row.sku_number" class="p5_input" size="mini"  :min="1" controls-position="right"></el-input-number>
                       </el-form-item>
                     </template>
                   </el-table-column>
-                  <el-table-column label="SKU" prop="SKU">
+                  <el-table-column label="SKU" prop="sku">
                     <template slot-scope="scope">
-                      <el-form-item class="mb0" label-width="0" :prop="`sub_sku.${scope.$index}.SKU`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
-                        <el-input v-model="scope.row.SKU" size="mini" clearable class="p5_input" placeholder="SKU" />
+                      <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
+                        <el-input v-model="scope.row.sku" size="mini" clearable class="p5_input" placeholder="SKU" />
                       </el-form-item>
                     </template>
                   </el-table-column>
@@ -88,6 +92,8 @@
                 </el-table>
         </el-card>
    </el-form>
+   <edit-print :visible="printvisible" @close="closePrint" :isUpload="editPrintUpload"></edit-print>
+   <upload-print :visible="uploadPrintvisible" @close="closeUploadPrint"></upload-print>
   </div>
 </template>
 <script>
@@ -95,23 +101,31 @@ export default {
   name: 'productDetails',
   components: {
      Tinymce:()=>import("@/components/Tinymce"),
+     EditPrint:()=>import("./component/editPrint"),
+     PrintPopover:()=>import("./component/printPopover"),
+     UploadPrint:()=>import("./component/uploadPrint"),
   },
   data() {
     return {
       formData:{
-        sub_sku:[
-          {
-            Price:'',
-            Color:'',
-            SKU:'',
-            Size:'',
-            Number:''
+        sku_list:[
+          { 
+            sku_image:'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440',
+            sku_color:'',
+            sku_size:'',
+            sku_price:'',
+            sku_number:'',
+            sku:''
           }
-        ]
+        ],
+        images:[]
       },
       formRule:{},
       dialogImageUrl: '',
-      dialogVisible: false
+      dialogVisible: false,
+      printvisible:false,
+      editPrintUpload:false,
+      uploadPrintvisible:false
     }
   },
   created() {
@@ -120,8 +134,8 @@ export default {
     //新增
     addSkuData() {
       // console.log(num)
-      this.formData.sub_sku.push(
-        this.$options.data().formData.sub_sku[0]
+      this.formData.sku_list.push(
+        this.$options.data().formData.sku_list[0]
       )
     },
     // 删除
@@ -132,21 +146,49 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          this.formData.sub_sku.splice(index, 1)
+          this.formData.sku_list.splice(index, 1)
         })
         .catch(() => {})
-    },
-    handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-    handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url;
-        this.dialogVisible = true;
     },
     //返回
     productBack(){
        this.$router.push({ name: 'product'})
-    }
+    },
+     // 关闭  图片编辑
+    closePrint(type){
+      if(type == 1) return this.printvisible = false 
+      // this.$set(this.formData.goods_sku[this.editPrintIdx],'image',type)
+      this.printvisible = false
+      
+    },
+    // 打开  图片编辑
+    openPrint(item,idx){
+      // this.editPrintIdx = idx
+      // this.editPrintSku = item.sku
+      this.editPrintUpload = true
+      // this.formData.goods_sku.image = this.formData.goods_base.image.map(item => item.img_url)
+      this.printvisible = true
+    },
+    // 打开本地上传
+    openUploadPrint(){
+      this.uploadPrintvisible = true
+    },
+     // 关闭本地上传
+    closeUploadPrint(type){
+      if(type == 1) return this.uploadPrintvisible = false
+       this.uploadPrintvisible = false
+       let list = type.map(item =>{
+         return {
+            img_url:item,
+            is_hover:false
+         }
+       })
+       this.formData.image.push(...list)
+    },
+      // 删除图片
+    delImg(idx){
+      this.formData.image.splice(idx,1)
+    },
   }
 }
 </script>
@@ -158,6 +200,10 @@ export default {
     .el-form-item__label{
       font-size: 16px!important;
       color: #000!important;
+    }
+    .button-border{
+      border: 1px solid #ef6f38;
+      color:  #ef6f38;
     }
 }
 </style>
