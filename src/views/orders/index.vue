@@ -1,8 +1,8 @@
 <template>
   <div class="my-orders">
     <el-card class="box-card">
-      <el-tabs v-model="activeName">
-        <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab" :name="key">
+      <el-tabs v-model="formQuery.logistics_status">
+        <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab" :name="String(key)">
           <el-table
             ref="multipleTable"
             v-loading="loading"
@@ -17,51 +17,68 @@
               <template slot-scope="scope">
                 <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
                 <span v-if="item.type == 'order_number'">
-                  <span class="link" @click="toLink(scope.row)">{{ scope.row.order_number }}</span>
+                  <span class="link" @click="toLink(scope.row)">{{ scope.row.order_no }}</span>
                 </span>
                 <span v-if="item.type == 'logistics_status'">
-                  <div>{{ scope.row.logistics_status }}</div>
-                  <div class="primary pointer">Logistics Details</div>
+                  <div>{{ scope.row.logistics_status_name }}</div>
+                  <div class="primary pointer" @click="logDetail(scope.row)">Logistics Details</div>
                 </span>
               </template>
             </el-table-column>
           </el-table>
+          <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
         </el-tab-pane>
       </el-tabs>
     </el-card>
+    <el-dialog title="Logistics Details" :visible.sync="dialogVisible" width="700px">
+      <el-timeline v-if="logisticList">
+        <el-timeline-item v-for="(item,key) in logisticList" :key="key" color="#0bbd87" :timestamp="item.ProcessDate" placement="top">
+          <h4>{{ item.TrackingStatus }}</h4>
+          <p>{{ item.ProcessLocation }}</p>
+          <p>{{ item.ProcessContent }}</p>
+        </el-timeline-item>
+      </el-timeline>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { getOrderTabs } from '@/api/orders'
+import { getOrderTabs, getOrderList, getLogisticInfo } from '@/api/orders'
 export default {
   name: 'orders',
+  components: {
+    Pagination: () => import('@/components/Pagination')
+  },
   props: {},
   data() {
     return {
-      activeName: '1',
+      formQuery: {
+        logistics_status: '1',
+        iDisplayStart: 0,
+        iDisplayLength: 2
+      },
+      listQuery: {
+        total: 0,
+        page: 1,
+        limit: 10
+      },
       tabList: [],
       labelList: [
-        { label: 'Order Number', value: 'order_number', type: 'order_number' },
-        { label: 'Third Party Order Number', value: 'third_party_order_number' },
-        { label: 'Order Amount', value: 'order_amount' },
-        { label: 'Order Status', value: 'order_status' },
-        { label: 'Logistics Status', value: 'logistics_status', type: 'logistics_status' }
+        { label: 'Order Number', value: 'order_no', type: 'order_number' },
+        { label: 'Third Party Order Number', value: 'thirdParty_order_on' },
+        { label: 'Order Amount', value: 'total_price' },
+        { label: 'Order Status', value: 'order_status_name' },
+        { label: 'Logistics Status', value: 'logistics_status_name', type: 'logistics_status' }
       ],
+      tableData: [],
+      logisticList: [],
       loading: false,
-      tableData: [
-        {
-          order_number: '13698846235',
-          third_party_order_number: 'H12-14432685728',
-          order_amount: '$10.00',
-          order_status: 'Complete payment',
-          logistics_status: 'In Transit'
-        }
-      ]
+      dialogVisible: false
     }
   },
   computed: {},
   created() {
     this.init()
+    this.Inquire()
   },
   methods: {
     init() {
@@ -74,8 +91,31 @@ export default {
         console.log(err)
       })
     },
+    Inquire() {
+      this.formQuery.iDisplayLength = this.listQuery.limit
+      this.formQuery.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
+      getOrderList(this.formQuery).then(res => {
+        console.log(res.data)
+        if (res.code === 200) {
+          this.tableData = res.data
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
     toLink(row) {
-      this.$router.push({ name: 'orders-detail' })
+      this.$router.push({ name: 'orders-detail', query: { order_no: row.order_no }})
+    },
+    logDetail(row) {
+      this.dialogVisible = true
+      getLogisticInfo({ logistics_no: row.logistics_no }).then(res => {
+        console.log(res.data)
+        if (res.code === 200) {
+          this.logisticList = res.data.OrderTrackingDetails
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 }

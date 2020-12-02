@@ -4,7 +4,7 @@
       <div slot="header" class="clearfix">
         <div class="flexbox">
           <div class="detail-title">Order Detail</div>
-          <div class="order-id ml30">Order ID：<span class="c_blue">13698846235</span></div>
+          <div class="order-id ml30">Order No：<span class="c_blue">{{ order_no }}</span></div>
         </div>
 
       </div>
@@ -12,13 +12,12 @@
         <div class="detail-block-title mb30">Product Information</div>
         <el-table
           ref="productTable"
-          :data="tableData"
+          :data="detailInfo.goods_info"
           style="width: 100%"
           highlight-current-row
           fit
           :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}"
         >
-          <el-table-column type="selection" />
           <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
             <template slot-scope="scope">
               <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
@@ -30,18 +29,18 @@
         <div class="detail-block-title mt30 mb30">Delivery Information</div>
         <el-row>
           <el-col :span="10">
-            <el-form ref="ruleForm" :model="form" :rules="rules" label-width="140px">
-              <el-form-item label="Receiver" prop="receiver">
-                <el-input v-model="form.name" />
+            <el-form ref="ruleForm" :model="detailInfo" label-width="140px">
+              <el-form-item label="Consignee" prop="consignee">
+                <el-input v-model="detailInfo.consignee" readonly />
               </el-form-item>
-              <el-form-item label="Shipping Address" prop="receiver">
-                <el-input v-model="form.name" />
+              <el-form-item label="Shipping Address" prop="address1">
+                <el-input v-model="detailInfo.address1" readonly />
               </el-form-item>
-              <el-form-item label="Email Address" prop="receiver">
-                <el-input v-model="form.name" />
+              <el-form-item label="Email Address" prop="email">
+                <el-input v-model="detailInfo.email" readonly />
               </el-form-item>
-              <el-form-item label="Contact" prop="receiver">
-                <el-input v-model="form.name" />
+              <el-form-item label="Contact" prop="mobile">
+                <el-input v-model="detailInfo.mobile" readonly />
               </el-form-item>
             </el-form>
           </el-col>
@@ -50,17 +49,16 @@
       <div>
         <div class="detail-block-title mt20 mb30">Logistics Information</div>
         <div class="block">
-          <el-timeline>
+          <div class="flexbox p20 log-title">
+            <div>Status: In Transit</div>
+            <div class="ml50">Waybill Number：{{ detailInfo.track_info.WaybillNumber }}</div>
+          </div>
+          <el-timeline class="mt20 pl20">
             <el-timeline-item
-              v-for="(activity, index) in activities"
+              v-for="(activity, index) in detailInfo.track_info.OrderTrackingDetails"
               :key="index"
-              :icon="activity.icon"
-              :type="activity.type"
-              :color="activity.color"
-              :size="activity.size"
-              :timestamp="activity.timestamp"
             >
-              {{ activity.content }}
+              <span>{{ activity.ProcessDate }}</span><span class="ml40">{{ activity.ProcessContent }}</span>
             </el-timeline-item>
           </el-timeline>
         </div>
@@ -69,6 +67,7 @@
   </div>
 </template>
 <script>
+import { getOrderInfo } from '@/api/orders'
 export default {
   name: 'orders-detail',
   props: {},
@@ -85,42 +84,50 @@ export default {
         }
       ],
       labelList: [
-        { label: 'Products', value: 'products' },
-        { label: 'SKU', value: 'SKU' },
-        { label: 'Quantity', value: 'quantity' },
-        { label: 'Payment Amount', value: 'payment_amount' },
-        { label: 'The Logistics Cost', value: 'the_logistics_cost' },
+        { label: 'Products', value: 'third_goods_name' },
+        { label: 'SKU', value: 'third_sku_name' },
+        { label: 'SKU Num', value: 'sku_num' },
+        { label: 'Sale Money', value: 'sale_money' },
+        { label: 'The Logistics Cost', value: 'logistics_cost' },
         { label: 'Service Fee', value: 'service_fee' }
       ],
-      form: {},
-      rules: {},
-      activities: [{
-        content: '支持使用图标',
-        timestamp: '2018-04-12 20:46',
-        size: 'large',
-        type: 'primary',
-        icon: 'el-icon-more'
-      }, {
-        content: '支持自定义颜色',
-        timestamp: '2018-04-03 20:46',
-        color: '#0bbd87'
-      }, {
-        content: '支持自定义尺寸',
-        timestamp: '2018-04-03 20:46',
-        size: 'large'
-      }, {
-        content: '默认样式的节点',
-        timestamp: '2018-04-03 20:46'
-      }]
+      detailInfo: {
+        track_info: {
+          OrderTrackingDetails: []
+        }
+      }
     }
   },
-  computed: {},
-  created() {},
-  methods: {}
+  computed: {
+    order_no() {
+      return this.$route.query.order_no
+    }
+  },
+  created() {
+    this.init()
+  },
+  methods: {
+    init() {
+      getOrderInfo({ order_no: this.order_no }).then(res => {
+        console.log(res.data)
+        if (res.code === 200) {
+          this.detailInfo = res.data
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
 .detail-block-title {
   color: #9299B0FF;
+}
+.block {
+  background: #F7F9FCFF;
+}
+.log-title {
+  border-bottom: 1px solid #DFE1E8;
 }
 </style>

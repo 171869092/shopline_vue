@@ -20,7 +20,7 @@
               <form class="login-form">
                 <div class="form-group">
                   <label for="exampleInputEmail1">Your Email</label>
-                  <input id="exampleInputEmail1" v-model="loginForm.phone" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Your Email">
+                  <input id="exampleInputEmail1" v-model="loginForm.email" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Your Email">
                   <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
                 </div>
                 <div class="form-group">
@@ -48,7 +48,7 @@ export default {
     return {
       rules: {},
       loginForm: {
-        phone: '15000000000',
+        email: '171869092@qq.com',
         password: '123456',
         id: 1
       },
@@ -62,7 +62,6 @@ export default {
       // this.$refs.loginForm.validate(valid => {
       // if (valid) {
       this.loading = true
-      this.$router.push({ name: 'Dashboard' })
       this.$store.dispatch('user/login', this.loginForm).then(() => {
         this.$router.push({ name: 'Dashboard' })
         this.loading = false
