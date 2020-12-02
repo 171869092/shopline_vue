@@ -33,11 +33,12 @@
   </div>
 </template>
 <script>
+import { getProductList } from '@/api/product'
 export default {
   name: 'product',
   components: {
     Pagination: () => import('@/components/Pagination'),
-    provider: () => import('./component/provider')
+    provider: () => import('./component/provider'),
   },
   data() {
     return {
@@ -66,31 +67,27 @@ export default {
         total:0,
         page:1,
         limit:10
-      }
+      },
+      formInline:{}
     }
   },
   created() {
-    // this.Inquire()
+    this.Inquire()
   },
   methods: {
     // 查询
     Inquire() {
-      // this.loading = true
-      // const formData = JSON.parse(JSON.stringify(this.formInline))
-      // formData.iDisplayLength = this.listQuery.limit
-      // formData.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
-      // supplierDataList(formData).then(res => {
-      //   if (res.code == 200) {
-      //     setTimeout(() => {
-      //       res.data.map(item => {
-      //         item.status = item.status == '1' ? '正常' : '暂停'
-      //       })
-      //       this.tableData = res.data
-      //       this.listQuery.total = parseInt(res.total)
-      //       this.loading = false
-      //     }, 300)
-      //   }
-      // })
+      this.loading = true
+      const formData = JSON.parse(JSON.stringify(this.formInline))
+      formData.iDisplayLength = this.listQuery.limit
+      formData.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
+      getProductList(formData).then(res => {
+        if (res.code == 200) {
+            this.tableData = res.data
+            this.listQuery.total = parseInt(res.total)
+            this.loading = false
+        }
+      })
     },
     productChange(val) {
         this.productSelection = val;
@@ -98,6 +95,7 @@ export default {
     productAdd(type,name){
        this.$router.push({ name: 'productDetails', query: { type: type,name:name}})
     },
+   
     //选择服务商
     providerClick(type) {
       this.providerVisible = true
@@ -116,9 +114,9 @@ export default {
    .box-card{
       margin: 20px 30px!important;
     }
-   .button-border{
-     border: 1px solid #ef6f38;
-     color:  #ef6f38;
-   }
+    .button-border{
+      border: 1px solid #ef6f38;
+      color:  #ef6f38;
+    }
 }
 </style>
