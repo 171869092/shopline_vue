@@ -4,7 +4,7 @@
        <div class="box-card">
            <el-button size="small" class="" icon="el-icon-back" @click="productBack"></el-button>
            <label class="ml20">{{$route.query.name}}</label>
-            <el-button type="primary" class="f-r mr50">Submit</el-button>
+            <el-button type="primary" class="f-r">Submit</el-button>
        </div>
         <el-card class="box-card">
               <el-form-item label="title:" prop="title">
@@ -40,6 +40,7 @@
                   :data="formData.sub_sku"
                   border
                   stripe
+                  :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
                   style="width: 100%">
                   <el-table-column type="index" width="120" label="Serial number" />
                   <el-table-column label="Color" prop="Color">
