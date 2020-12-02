@@ -12,7 +12,7 @@
             fit
             :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}"
           >
-            <el-table-column type="selection" />
+            <!-- <el-table-column type="selection" /> -->
             <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
               <template slot-scope="scope">
                 <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
