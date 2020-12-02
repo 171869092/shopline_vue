@@ -14,7 +14,7 @@
         </el-card>
         <el-card class="box-card mt5">
               <div slot="header" class="clearfix hidden">
-                <div class="f-l"><span style="color:red">*</span><span>media:</span></div>
+                <div class="f-l"><span style="color:red">*</span><label>media:</label></div>
               </div>
               <el-upload
                 action="https://getman.cn/echo"
@@ -30,8 +30,8 @@
         <!-- 商品 -->
         <el-card class="box-card mt10">
                 <div slot="header" class="clearfix">
-                  <span class="card-title">SKU</span>
-                  <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">新增SKU</el-button>
+                   <div class="f-l"><span style="color:red">*</span><label>sku:</label></div>
+                  <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button>
                 </div>
                 <el-table
                   ref="multipleTable"
@@ -147,10 +147,14 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .productDetails{
    .box-card{
       margin: 20px 10%!important;
+    }
+    .el-form-item__label{
+      font-size: 16px!important;
+      color: #000!important;
     }
 }
 </style>

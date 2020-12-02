@@ -1,7 +1,7 @@
 <template>
   <div class="product">
     <div class="clearfix">
-       <el-button type="primary" size="small" class="f-r mr50 mt20" @click="productAdd('add')">添加产品</el-button>
+       <el-button type="primary" size="small" class="f-r mr50 mt20" @click="productAdd('add')">Add products</el-button>
     </div>
     <el-card class="box-card">
       <el-table
@@ -25,7 +25,7 @@
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <!-- <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" /> -->
+      <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
     </el-card>
   </div>
 </template>
@@ -33,13 +33,13 @@
 export default {
   name: 'product',
   components: {
-    // Pagination: () => import('@/components/Pagination'),
+    Pagination: () => import('@/components/Pagination'),
   },
   data() {
     return {
       // 列表表头
       labelList: [
-        { label: '产品', value: 'id', type: 'product' },
+        { label: '产品', value: 'id', type: 'product' ,width:'300'},
         { label: '状态', value: 'supplier_name' },
         { label: '库存', value: 'mobile' },
         { label: '类型', value: 'wechat_num' },
@@ -55,7 +55,12 @@ export default {
 
       ],
       productSelection: [],
-      loading: false
+      loading: false,
+      listQuery:{
+        total:0,
+        page:1,
+        limit:10
+      }
     }
   },
   created() {
