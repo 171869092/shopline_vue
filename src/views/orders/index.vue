@@ -1,7 +1,7 @@
 <template>
   <div class="my-orders">
     <el-card class="box-card">
-      <el-tabs v-model="formQuery.logistics_status">
+      <el-tabs v-model="formQuery.logistics_status" @tab-click="handleClick">
         <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab" :name="String(key)">
           <el-table
             ref="multipleTable"
@@ -60,7 +60,7 @@ export default {
         page: 1,
         limit: 10
       },
-      tabList: [],
+      tabList: { 1: '待发货', 2: '已揽件', 3: '运输中', 4: '已送达', 5: '已拒收', 6: '已取消', 7: '已退回', 8: '待转单', 9: '退货在仓' },
       labelList: [
         { label: 'Order Number', value: 'order_no', type: 'order_number' },
         { label: 'Third Party Order Number', value: 'thirdParty_order_on' },
@@ -76,7 +76,7 @@ export default {
   },
   computed: {},
   created() {
-    this.init()
+    // this.init()
     this.Inquire()
   },
   methods: {
@@ -91,12 +91,13 @@ export default {
       })
     },
     Inquire() {
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
+      // const loading = this.$loading({
+      //   lock: true,
+      //   text: 'Loading',
+      //   spinner: 'el-icon-loading',
+      //   background: 'rgba(0, 0, 0, 0.7)'
+      // })
+      this.loading = true
       this.formQuery.iDisplayLength = this.listQuery.limit
       this.formQuery.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
       getOrderList(this.formQuery).then(res => {
@@ -108,8 +109,14 @@ export default {
       }).catch(err => {
         console.log(err)
       }).finally(() => {
-        loading.close()
+        // loading.close()
+        this.loading = false
       })
+    },
+    handleClick() {
+      this.listQuery.page = 1
+      this.listQuery.limit = 10
+      this.Inquire()
     },
     toLink(row) {
       this.$router.push({ name: 'orders-detail', query: { order_no: row.order_no }})
