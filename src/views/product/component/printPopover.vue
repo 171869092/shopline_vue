@@ -12,16 +12,16 @@
         }"
       > -->
           <div v-for="($item, $index) in banner_list" class="image-item mb5" :key="$index">
-            <div v-show="!isFilter || ($item.is_filter)">
-                <el-image :src="$item" :preview-src-list="banner_list"></el-image>
-                <div><el-input v-model="$item.title" size="mini" class="w-250 p5_input" v-if="titleShow"></el-input></div>
-              <div class="image_del"  :class="isBase?'top10':''" v-if="!isDisabled" v-show="$item.is_hover" 
+            <div v-show="!isFilter">
+                <el-image :src="$item.url" :preview-src-list="banner_list.map(item =>item.url)"></el-image>
+                <!-- <div><el-input v-model="$item.title" size="mini" class="w-250 p5_input" v-if="titleShow"></el-input></div> -->
+              <!-- <div class="image_del"  :class="isBase?'top10':''" v-if="!isDisabled" v-show="$item.is_hover" 
                 @mouseover.prevent="$item.is_hover = true"
                 @mouseleave.prevent="$item.is_hover = false"
               >
                 <i class=" el-icon-close" @click="delImg($index)"></i>
               </div>
-              <div class="image-text">{{$item.source}}</div>
+              <div class="image-text">{{$item.source}}</div> -->
             </div>
           </div>
       <!-- </draggable> -->
@@ -53,10 +53,6 @@ export default {
       type: Boolean,
       default:false
     },
-    titleShow:{
-      type: Boolean,
-      default:false
-    },
     placement:{
       type: String,
       default:'top'
@@ -70,10 +66,8 @@ export default {
           this.banner_list = val.filter(item => item.is_filter)
           console.log(this.isFilter);
         }else{
+          console.log(val);
           this.banner_list = val
-          console.log(this.banner_list);
-          this.banner_list = val.map(item =>item.img_url)
-          console.log(this.banner_list);
         }
       }
     }

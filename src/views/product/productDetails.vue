@@ -141,6 +141,7 @@ export default {
       printvisible:false,
       editPrintUpload:false,
       uploadPrintvisible:false,
+      editPrintIdx:''
     }
   },
   created() {
@@ -162,8 +163,9 @@ export default {
             this.formData = res.data
             this.formData.images = res.data.images.map(item =>{
               return {
-                  img_url:item.url,
-                  is_hover:false
+                  url:item.url,
+                  is_hover:false,
+                  id:item.id
                 }
             })
             loading.close();
@@ -238,36 +240,29 @@ export default {
     productBack(){
        this.$router.push({ name: 'product'})
     },
-     // 关闭  图片编辑
+     // 关闭  图片编辑 sku
     closePrint(type){
-      console.log(type);
-      if(type == 1) return this.printvisible = false 
-      console.log(type.list);
+      if (type == 1) return this.printvisible = false
       this.formData.images = type.list.map(item =>{
           return {
-            img_url:item.url,
-            is_hover:false
+            url:item.url,
+            is_hover:false,
           }
       })
-      console.log('00000');
-      console.log(this.formData.images);
       this.printvisible = false
-      
+      this.$set(this.formData.sku_list[this.editPrintIdx],'sku_image',type.check[0].url)
     },
-    // 打开  图片编辑
+    // 打开  图片编辑 sku
     openPrint(item,idx){
-      console.log('99999999');
       this.editPrintIdx = idx
-      // this.editPrintSku = item.sku
       this.editPrintUpload = true
-      // this.formData.goods_sku.image = this.formData.goods_base.image.map(item => item.img_url)
       this.printvisible = true
     },
-    // 打开本地上传
+    // 打开本地上传 橱窗
     openUploadPrint(){
       this.uploadPrintvisible = true
     },
-     // 关闭本地上传
+     // 关闭本地上传 橱窗
     closeUploadPrint(type){
       if(type == 1) return this.uploadPrintvisible = false
        this.uploadPrintvisible = false
@@ -277,8 +272,7 @@ export default {
             is_hover:false
          }
        })
-       console.log(list)
-       this.formData.images.push(...list)
+       this.formData.sku_list.push(...list)
     },
       // 删除图片
     delImg(idx){

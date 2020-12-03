@@ -48,3 +48,20 @@ export function getProductDelete(data) {
     data
   })
 }
+
+//服务商
+export function getServiceList(params) {
+  return request({
+    url: '/goods/goods/service-list',
+    method: 'get',
+    params
+  })
+}
+// 服务商
+export function getProductService(data) {
+  return request({
+    url: '/goods/goods/products-service',
+    method: 'post',
+    data
+  })
+}

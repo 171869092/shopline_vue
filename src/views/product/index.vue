@@ -19,7 +19,7 @@
         <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
           <template slot-scope="scope">
             <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
-            <span v-if="item.type == 'product'" @click="productAdd('edit',scope.row.title,scope.row.id)" style="color:#ef6f38" class="pointer">
+            <span v-if="item.type == 'product'" @click="productAdd('edit',scope.row.title,scope.row.id)" style="color:#ef6f38" class="pointer f-l ml50">
               <img :src="scope.row.img_url" width="50px" alt="">
               <span class="ml20">{{ scope.row.title }}</span>
             </span>
@@ -33,7 +33,7 @@
   </div>
 </template>
 <script>
-import { getProductList } from '@/api/product'
+import { getProductList ,getProductService} from '@/api/product'
 export default {
   name: 'product',
   components: {
@@ -48,7 +48,7 @@ export default {
         { label: 'State', value: 'status' },
         { label: 'Inventory', value: 'stock' },
         { label: 'Type', value: 'type' },
-        { label: 'Vendor', value: 'manufacturer' },
+        { label: 'Vendor', value: 'service_name' },
         { label: 'Operation', type: 'operation' }
       ],
       tableData: [],

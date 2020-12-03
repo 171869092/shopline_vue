@@ -17,11 +17,13 @@
       <div class="clearfix"> 
           <el-checkbox-group v-for="($item, $index) in pictureList" class="image-item mb5" :key="$index" v-model="checkedbox" @change="checkedChange">
             <div>
+               <!-- {{ :disabled="(!checkedbox.includes($item.url)) && (checkedbox.length > 0)"}} -->
               <el-popover :open-delay='400' placement="right" trigger="click">
                 <img :src="$item.url" style="width:650px;height:650px">
                 <el-image :src="$item.url" class="image-img" slot="reference"></el-image>
               </el-popover>
-              <el-checkbox class="mt5" :disabled="(!checkedbox.includes($item.url)) && (checkedbox.length > 1)"></el-checkbox>
+             
+              <el-checkbox class="mt5"></el-checkbox>
             </div>
           </el-checkbox-group>
       </div>
@@ -37,7 +39,6 @@
 </template>
 
 <script>
-// import { loadAllSubImg } from '@/api/amazon'
 export default {
   name: "editPrint",
   components: {
@@ -71,39 +72,13 @@ export default {
       if(val){
         let list = []
         let picture = this.$parent.formData.images.map((item,idx) =>{
-            return { url:item.img_url,  title:'图片' + (idx+1) }
+            return { url:item.url,  title:'图片' + (idx+1) }
           })
-        // list = this.$parent.formData.images[this.$parent.editPrintIdx].filter(item => !res.data.includes(item)).map((item,idx) =>{
-        //     return { url:item,  title:'本地' + (idx+1) }
-        // })
-        // console.log(this.$parent.formData.images);
+        this.checkedbox = this.$parent.formData.images
         picture = [...picture,...list]
+        let order = this.checkedbox
         this.$set(this,'pictureList',picture)
-        // console.log(this.pictureList)
-        // loadAllSubImg({sku:this.sku}).then(res =>{
-        //   let list = []
-        //   console.log(this.$parent.formData.images);
-        //     list = this.$parent.formData.goods_sku[this.$parent.editPrintIdx].image.filter(item => !res.data.includes(item)).map((item,idx) =>{
-        //       return { url:item,  title:'本地' + (idx+1) }
-        //     })
-        //   this.checkedbox = this.$parent.formData.goods_sku[this.$parent.editPrintIdx].image
-        //   let picture = res.data.map((item,idx) =>{
-        //     return { url:item,  title:'图片' + (idx+1) }
-        //   })
-        //   picture = [...picture,...list]
-        //   // 依照选择顺序 排序
-        //   let order = this.checkedbox
-        //   let picture1 = picture.filter(item => order.includes(item.url)).sort(function(a,b){
-            
-        //       return order.indexOf(a.url) - order.indexOf(b.url);
-        //   });
-        //   let picture2 = picture.filter(item => !order.includes(item.url))
-        //   this.$set(this,'pictureList',picture1.concat(picture2))
-        // })
       }else{
-        this.isCheckAll = false
-        this.checkAll = false
-        this.checkTurn = false
         this.checkedbox = []
         this.pictureList = []
       }
@@ -116,17 +91,11 @@ export default {
   methods: {
     handleClose(type){
       if(type != 1) return this.$emit('close',1)
-      // 依照列表顺序 排序
-      let order = this.pictureList.map(res => res.url)
-      this.checkedbox.sort(function(a,b){
-          return order.indexOf(a) - order.indexOf(b);
-      });
-      this.$emit('close',{type:this.checkedbox,list:this.pictureList})
+      console.log(this.checkedbox);
+      this.$emit('close',{check:this.checkedbox,list:this.pictureList})
     },
     //单选
     checkedChange(value){
-      // this.checkAll = checkedCount === this.pictureList.length;
-      // this.isCheckAll = checkedCount > 0 && checkedCount < this.pictureList.length;
       this.checkTurn = false
     },
     // 打开本地上传
@@ -144,6 +113,7 @@ export default {
       })
       this.pictureList.push(...list)
       this.checkedbox.push(...type)
+      console.log(this.checkedbox);
       this.uploadPrintvisible = false
     },
 
