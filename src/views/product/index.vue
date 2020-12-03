@@ -45,7 +45,7 @@ export default {
       // 列表表头
       labelList: [
         { label: 'Product', value: 'id', type: 'product' ,width:'500'},
-        { label: 'State', value: 'state' },
+        { label: 'State', value: 'status' },
         { label: 'Inventory', value: 'stock' },
         { label: 'Type', value: 'type' },
         { label: 'Manufacturer', value: 'manufacturer' },
@@ -76,6 +76,9 @@ export default {
       formData.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
       getProductList(formData).then(res => {
         if (res.code == 200) {
+            res.data.map(item =>{
+              item.status = item.status == '1' ? 'Active' : 'Draft'
+            })
             this.tableData = res.data
             this.listQuery.total = +res.iTotalRecords
             this.loading = false

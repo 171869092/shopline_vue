@@ -1,17 +1,20 @@
 <template>
   <div class="productDetails">
-     <el-form :model="formData" :rules="formRule" ref="formData" label-width="100px">
-       <sticky :sticky-top="200" :z-index="999999">
-            <div class="box-card"> 
-                <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack"></el-button>
-                <label class="ml20">{{$route.query.title}}</label>
-                  <el-button type="primary" class="f-r" @click="Submit" :loading="SubmitLoading">Submit</el-button>
-            </div>
-       </sticky>
-        <el-card class="box-card">
+     <el-form :model="formData" :rules="formRule" ref="formData" label-width="140px">
+        <div class="box-card"> 
+            <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack"></el-button>
+            <label class="ml20">{{$route.query.title}}</label>
+            <el-button type="primary" class="f-r" @click="Submit" :loading="SubmitLoading">Submit</el-button>
+        </div>
+        <el-card class="box-card" style="margin-top:500px">
               <el-form-item label="Title:" prop="title">
                 <el-input v-model="formData.title" placeholder="Title" />
               </el-form-item>
+              <el-form-item label="Product status:" prop="status">
+                 <el-select v-model="formData.status" class="w-480"> 
+                   <el-option  v-for="(item,idx) in statusOptions" :key="idx" :label="item" :value="String(idx + 1)"></el-option>
+                 </el-select>
+              </el-form-item>    
               <el-form-item label="Description:" prop="describe">
                   <tinymce v-model="formData.describe" :height="250" ref="tinymces"/>
               </el-form-item>
@@ -105,7 +108,6 @@ import { getProductEdit,getProductSave,getProductDelete} from '@/api/product'
 export default {
   name: 'productDetails',
   components: {
-     Sticky:()=>import("@/components/Sticky"),
      Tinymce:()=>import("@/components/Tinymce"),
      EditPrint:()=>import("./component/editPrint"),
      PrintPopover:()=>import("./component/printPopover"),
@@ -130,7 +132,11 @@ export default {
          title: [
             { required: true, message: 'Please enter a title', trigger: 'blur' },
           ],
+          status:[
+              { required: true, message: 'Please select Product status', trigger: 'change' }
+          ]
       },
+      statusOptions:['Active','Draft'],
       dialogImageUrl: '',
       SubmitLoading:false,
       dialogVisible: false,
@@ -168,9 +174,9 @@ export default {
     },
     //保存数据
     Submit(){
-        this.SubmitLoading = true
         this.$refs.formData.validate((valid) => {
           if (valid) {
+            this.SubmitLoading = true
             getProductSave(this.formData).then(res =>{
               if (res.code == 200) {
                   this.$message({message: res.message,type: 'success'});
