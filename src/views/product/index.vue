@@ -48,7 +48,7 @@ export default {
         { label: 'State', value: 'status' },
         { label: 'Inventory', value: 'stock' },
         { label: 'Type', value: 'type' },
-        { label: 'Manufacturer', value: 'manufacturer' },
+        { label: 'Vendor', value: 'manufacturer' },
         { label: 'Operation', type: 'operation' }
       ],
       tableData: [],

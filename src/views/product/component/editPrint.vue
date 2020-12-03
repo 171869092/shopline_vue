@@ -67,39 +67,37 @@ export default {
   watch: {
     visible(val){
       if(val){
-        loadAllSubImg({sku:this.sku}).then(res =>{
-          let list = []
-          console.log(this.$parent.formData.img);
-          
-          // let img = this.$parent.formData.img.map(item =>item.img_url)
-
-          if(this.$parent.editPrintIdx == 'store'){
-            // list = img.filter(item => !res.data.includes(item)).map((item,idx) =>{
-            //   return {
-            //     url:item,
-            //     title:'本地' + (idx+1)
-            //   }
-            // })
-            // this.checkedbox = img
-          }else{
-            list = this.$parent.formData.goods_sku[this.$parent.editPrintIdx].image.filter(item => !res.data.includes(item)).map((item,idx) =>{
-              return { url:item,  title:'本地' + (idx+1) }
-            })
-            this.checkedbox = this.$parent.formData.goods_sku[this.$parent.editPrintIdx].image
-          }
-          let picture = res.data.map((item,idx) =>{
-            return { url:item,  title:'图片' + (idx+1) }
+        let list = []
+        let picture = this.$parent.formData.images.map((item,idx) =>{
+            return { url:item.img_url,  title:'图片' + (idx+1) }
           })
-          picture = [...picture,...list]
-          // 依照选择顺序 排序
-          let order = this.checkedbox
-          let picture1 = picture.filter(item => order.includes(item.url)).sort(function(a,b){
+        // list = this.$parent.formData.images[this.$parent.editPrintIdx].filter(item => !res.data.includes(item)).map((item,idx) =>{
+        //     return { url:item,  title:'本地' + (idx+1) }
+        // })
+        console.log(this.$parent.formData.images);
+        picture = [...picture,...list]
+        this.$set(this,'pictureList',picture)
+        console.log(this.pictureList)
+        // loadAllSubImg({sku:this.sku}).then(res =>{
+        //   let list = []
+        //   console.log(this.$parent.formData.images);
+        //     list = this.$parent.formData.goods_sku[this.$parent.editPrintIdx].image.filter(item => !res.data.includes(item)).map((item,idx) =>{
+        //       return { url:item,  title:'本地' + (idx+1) }
+        //     })
+        //   this.checkedbox = this.$parent.formData.goods_sku[this.$parent.editPrintIdx].image
+        //   let picture = res.data.map((item,idx) =>{
+        //     return { url:item,  title:'图片' + (idx+1) }
+        //   })
+        //   picture = [...picture,...list]
+        //   // 依照选择顺序 排序
+        //   let order = this.checkedbox
+        //   let picture1 = picture.filter(item => order.includes(item.url)).sort(function(a,b){
             
-              return order.indexOf(a.url) - order.indexOf(b.url);
-          });
-          let picture2 = picture.filter(item => !order.includes(item.url))
-          this.$set(this,'pictureList',picture1.concat(picture2))
-        })
+        //       return order.indexOf(a.url) - order.indexOf(b.url);
+        //   });
+        //   let picture2 = picture.filter(item => !order.includes(item.url))
+        //   this.$set(this,'pictureList',picture1.concat(picture2))
+        // })
       }else{
         this.isCheckAll = false
         this.checkAll = false
@@ -154,7 +152,7 @@ export default {
 </script>
 
 <style scoped lang='scss'>
->>> .el-dialog__body{min-height: 600px!important;overflow: overlay!important}
+// >>> .el-dialog__body{min-height: 600px!important;overflow: hidden!important}
 .image-img{
   width: 120px;
   height: 120px;
@@ -163,7 +161,7 @@ export default {
 .image-item{
   width: 120px;
   height: 150px;
-  float: left;
+  // float: left;
   margin-right: 10px;
   position: relative;
 }

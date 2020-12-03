@@ -5,6 +5,7 @@
             <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack"></el-button>
             <label class="ml20">{{$route.query.title}}</label>
             <el-button type="primary" class="f-r" @click="Submit" :loading="SubmitLoading">Submit</el-button>
+            <el-button  class="f-r mr20 button-border" v-if="$route.query.type == 'edit'" @click="ProductDelete">Delete product</el-button>
         </div>
         <el-card class="box-card" style="margin-top:500px">
               <el-form-item label="Title:" prop="title">
@@ -16,7 +17,7 @@
                  </el-select>
               </el-form-item>    
               <el-form-item label="Description:" prop="describe">
-                  <tinymce v-model="formData.describe" :height="250" ref="tinymces"/>
+                  <tinymce v-model="formData.describe" :height="300" ref="tinymces"/>
               </el-form-item>
         </el-card>
 
@@ -47,10 +48,11 @@
                   <el-table-column type="index" width="120" label="Serial number" />
                    <el-table-column label="Picture" prop="sku_image">
                     <template slot-scope="scope">
-                      <el-popover v-if="scope.row.sku_image" placement="top" trigger="hover">
-                        <el-image slot="reference" :src="scope.row.sku_image" @click="openPrint(scope.row,scope.$index)" alt="加载失败..." style="height: 50px;width:50px"></el-image>
+                       <el-image :src="scope.row.sku_image" @click.native="openPrint(scope.row,scope.$index)" style="height: 50px;width:50px"></el-image>
+                      <!-- <el-popover  placement="top" trigger="hover">
+                        <el-image slot="reference" :src="scope.row.sku_image" @click="openPrint(scope.row,scope.$index)" style="height: 50px;width:50px"></el-image>
                         <el-image :src="scope.row.sku_image" style="height: 200px;width: 200px"></el-image>
-                      </el-popover>
+                      </el-popover> -->
                     </template>
                   </el-table-column> 
                   <el-table-column label="Color" prop="sku_color">
@@ -104,7 +106,7 @@
   </div>
 </template>
 <script>
-import { getProductEdit,getProductSave,getProductDelete} from '@/api/product'
+import { getProductEdit,getProductSave,getProductDelete,getDeleteSku} from '@/api/product'
 export default {
   name: 'productDetails',
   components: {
@@ -142,7 +144,7 @@ export default {
       dialogVisible: false,
       printvisible:false,
       editPrintUpload:false,
-      uploadPrintvisible:false
+      uploadPrintvisible:false,
     }
   },
   created() {
@@ -195,17 +197,17 @@ export default {
         this.$options.data().formData.sku_list[0]
       )
     },
-    // 删除
+    // 删除sku
     delSkuData(index, row) {
       console.log(row);
-      this.$confirm(`请确认是否删除SKU-${index + 1}，删除后无法恢复，请小心操作`, '删除SKU', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm(`Are you sure you want to delete SKU-${index + 1}？`, 'Delete SKU', {
+        confirmButtonText: 'Submit',
+        cancelButtonText: 'Cancel',
         type: 'warning'
       })
         .then(() => {
           if (row.id) {
-             getProductDelete({id:row.id}).then(res =>{
+             getDeleteSku({id:row.id}).then(res =>{
                 if (res.code == 200) {
                    this.$message({message: res.message,type: 'success'});
                     this.formData.sku_list.splice(index, 1)
@@ -216,6 +218,25 @@ export default {
           }
         })
         .catch(() => {})
+    },
+     // 删除商品
+    ProductDelete() {
+      this.$confirm(`Are you sure you want to delete this product？`, 'Delete Product', {
+        confirmButtonText: 'Submit',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      })
+        .then(() => {
+             getProductDelete({prodcut_list:[{id:this.$route.query.id}]}).then(res =>{
+                if (res.code == 200) {
+                   this.$message({message: res.message,type: 'success'});
+                    this.$router.push({ name: 'product'})
+                }
+             })
+        })
+        .catch(() => {
+          console.log('出错')
+        })
     },
     //返回
     productBack(){
@@ -230,7 +251,8 @@ export default {
     },
     // 打开  图片编辑
     openPrint(item,idx){
-      // this.editPrintIdx = idx
+      console.log('99999999');
+      this.editPrintIdx = idx
       // this.editPrintSku = item.sku
       this.editPrintUpload = true
       // this.formData.goods_sku.image = this.formData.goods_base.image.map(item => item.img_url)
@@ -246,11 +268,12 @@ export default {
        this.uploadPrintvisible = false
        let list = type.map(item =>{
          return {
-            img_url:item,
+            url:item,
             is_hover:false
          }
        })
-       this.formData.image.push(...list)
+       console.log(list)
+       this.formData.images.push(...list)
     },
       // 删除图片
     delImg(idx){

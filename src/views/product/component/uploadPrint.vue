@@ -60,11 +60,12 @@ export default {
         data.push(this.upLoad(item));
       });
       Promise.all(data).then(result => {
+        console.log(result)
         let url = "";
         let name = "";
-        list = result.map(item => item.data["data-show-file"])
+        list = result.map(item => item["data-service-file"])
         this.$emit('close',list)
-        this.$message.success('上传'+ list.length+'条成功！；  '+ (this.picUpLoadList.length - list.length) + '条失败！');
+        this.$message.success('success');
         this.picUpLoadList = [];
         this.$refs["myUpload"].clearFiles();
         this.savePicLoading = false;
