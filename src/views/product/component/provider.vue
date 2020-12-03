@@ -2,7 +2,7 @@
   <div>
     <el-dialog :title="$parent.providerTitle" :visible.sync="visible" width="700px" :before-close="providerAdd" center>
       <el-form ref="providerForm" :model="providerForm" size="small" label-width="170px" :rules="rules">
-        <el-form-item label="Provider:" prop="provider_name">
+        <el-form-item label="Vendor:" prop="provider_name">
           <el-select v-model="providerForm.value" filterable  class="w-350">
             <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
           </el-select>

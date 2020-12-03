@@ -2,7 +2,7 @@
   <div class="product">
     <div class="clearfix">
        <el-button type="primary" size="small" class="f-r mr50 mt20" @click="productAdd('add')">Add products</el-button>
-       <el-button size="small" class="f-r mr50 mt20 button-border" @click="providerClick">Provider</el-button>     
+       <el-button size="small" class="f-r mr50 mt20 button-border" @click="providerClick">Vendor</el-button>     
     </div>
     <el-card class="box-card">
       <el-table
@@ -19,8 +19,8 @@
         <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
           <template slot-scope="scope">
             <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
-            <span v-if="item.type == 'product'" @click="productAdd('edit',scope.row.title)" style="color:#ef6f38" class="pointer">
-              <img :src="scope.row.image" width="50px" alt="">
+            <span v-if="item.type == 'product'" @click="productAdd('edit',scope.row.title,scope.row.id)" style="color:#ef6f38" class="pointer">
+              <img :src="scope.row.img_url" width="50px" alt="">
               <span class="ml20">{{ scope.row.title }}</span>
             </span>
           </template>
@@ -44,7 +44,7 @@ export default {
     return {
       // 列表表头
       labelList: [
-        { label: 'Product', value: 'id', type: 'product' ,width:'300'},
+        { label: 'Product', value: 'id', type: 'product' ,width:'500'},
         { label: 'State', value: 'state' },
         { label: 'Inventory', value: 'stock' },
         { label: 'Type', value: 'type' },
@@ -55,7 +55,7 @@ export default {
       productSelection: [],
       loading: false,
       providerVisible: false,
-      providerTitle: 'Provider',
+      providerTitle: 'Vendor',
       listQuery:{
         total:0,
         page:1,
@@ -85,8 +85,8 @@ export default {
     productChange(val) {
         this.productSelection = val;
     },
-    productAdd(type,name){
-       this.$router.push({ name: 'productDetails', query: { type: type,name:name}})
+    productAdd(type,title,id){
+       this.$router.push({ name: 'productDetails', query: { type: type,title:title,id:id}})
     },
    
     //选择服务商

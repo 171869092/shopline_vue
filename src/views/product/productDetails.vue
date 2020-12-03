@@ -1,14 +1,16 @@
 <template>
   <div class="productDetails">
      <el-form :model="formData" :rules="formRule" ref="formData" label-width="100px">
-       <div class="box-card">
-           <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack"></el-button>
-           <label class="ml20">{{$route.query.name}}</label>
-            <el-button type="primary" class="f-r">Submit</el-button>
-       </div>
+       <sticky :sticky-top="200" :z-index="999999">
+            <div class="box-card"> 
+                <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack"></el-button>
+                <label class="ml20">{{$route.query.title}}</label>
+                  <el-button type="primary" class="f-r" @click="Submit" :loading="SubmitLoading">Submit</el-button>
+            </div>
+       </sticky>
         <el-card class="box-card">
               <el-form-item label="Title:" prop="title">
-                <el-input v-model="formData.title" placeholder="title" />
+                <el-input v-model="formData.title" placeholder="Title" />
               </el-form-item>
               <el-form-item label="Description:" prop="describe">
                   <tinymce v-model="formData.describe" :height="250" ref="tinymces"/>
@@ -57,7 +59,7 @@
                   </el-table-column>
                   <el-table-column label="Size" prop="sku_size">
                     <template slot-scope="scope">
-                      <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_size`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
+                      <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_size`">
                         <el-input v-model="scope.row.sku_size" clearable size="mini" class="p5_input" placeholder="Size" />
                       </el-form-item>
                     </template>
@@ -65,7 +67,9 @@
                   <el-table-column label="Price" prop="sku_price">
                     <template slot-scope="scope">
                       <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_price`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
-                        <el-input v-model="scope.row.sku_price" clearable size="mini" class="p5_input" placeholder="Price" />
+                        <el-input v-model="scope.row.sku_price" clearable size="mini" class="p5_input" placeholder="Price">
+                           <template slot="prepend">€</template>
+                        </el-input>
                       </el-form-item>
                     </template>
                   </el-table-column>
@@ -97,9 +101,11 @@
   </div>
 </template>
 <script>
+import { getProductEdit,getProductSave,getProductDelete} from '@/api/product'
 export default {
   name: 'productDetails',
   components: {
+     Sticky:()=>import("@/components/Sticky"),
      Tinymce:()=>import("@/components/Tinymce"),
      EditPrint:()=>import("./component/editPrint"),
      PrintPopover:()=>import("./component/printPopover"),
@@ -110,7 +116,7 @@ export default {
       formData:{
         sku_list:[
           { 
-            sku_image:'https://cdn.shopifycdn.net/s/files/1/0482/2024/2081/products/product-image-1526136290_350x350.jpg?v=1602045440',
+            sku_image:'',
             sku_color:'',
             sku_size:'',
             sku_price:'',
@@ -120,8 +126,13 @@ export default {
         ],
         images:[]
       },
-      formRule:{},
+      formRule:{
+         title: [
+            { required: true, message: 'Please enter a title', trigger: 'blur' },
+          ],
+      },
       dialogImageUrl: '',
+      SubmitLoading:false,
       dialogVisible: false,
       printvisible:false,
       editPrintUpload:false,
@@ -129,8 +140,48 @@ export default {
     }
   },
   created() {
+      if (this.$route.query.type == 'edit') {
+        this.getForm()
+      }
   },
   methods:{
+    // 获取草稿数据
+    getForm(){
+       const loading = this.$loading({
+          lock: true,
+          text: 'Loading',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+       getProductEdit({id:this.$route.query.id}).then(res =>{
+          if (res.code == 200) {
+            this.formData = res.data
+            this.formData.images = res.data.images.map(item =>{
+              return {
+                  img_url:item.url,
+                  is_hover:false
+                }
+            })
+            loading.close();
+          }
+       })
+    },
+    //保存数据
+    Submit(){
+        this.SubmitLoading = true
+        this.$refs.formData.validate((valid) => {
+          if (valid) {
+            getProductSave(this.formData).then(res =>{
+              if (res.code == 200) {
+                  this.$message({message: res.message,type: 'success'});
+                  this.$router.push({ name: 'product'})
+              }
+            }).finally(()=>{
+               this.SubmitLoading = false
+            })  
+          }
+       });
+    },
     //新增
     addSkuData() {
       // console.log(num)
@@ -139,14 +190,24 @@ export default {
       )
     },
     // 删除
-      delSkuData(index, row) {
+    delSkuData(index, row) {
+      console.log(row);
       this.$confirm(`请确认是否删除SKU-${index + 1}，删除后无法恢复，请小心操作`, '删除SKU', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       })
         .then(() => {
-          this.formData.sku_list.splice(index, 1)
+          if (row.id) {
+             getProductDelete({id:row.id}).then(res =>{
+                if (res.code == 200) {
+                   this.$message({message: res.message,type: 'success'});
+                    this.formData.sku_list.splice(index, 1)
+                }
+             })
+          }else{
+             this.formData.sku_list.splice(index, 1)
+          }
         })
         .catch(() => {})
     },
