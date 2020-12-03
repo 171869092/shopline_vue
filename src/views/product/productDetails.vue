@@ -29,7 +29,7 @@
               <el-button size="mini" type="primary" @click="openUploadPrint">Add image</el-button>
             </div>
           </div>
-          <print-popover :list="formData.images" ref="window_img" @delImg="delImg" :popoverStyle="{width:'650px',height:'650px'}"></print-popover>
+          <print-popover :list="formData.images" ref="window_img" @delImg="delImg"></print-popover>
           
         </el-card>
         <!-- 商品 -->
@@ -49,10 +49,6 @@
                    <el-table-column label="Picture" prop="sku_image">
                     <template slot-scope="scope">
                        <el-image :src="scope.row.sku_image" @click.native="openPrint(scope.row,scope.$index)" style="height: 50px;width:50px"></el-image>
-                      <!-- <el-popover  placement="top" trigger="hover">
-                        <el-image slot="reference" :src="scope.row.sku_image" @click="openPrint(scope.row,scope.$index)" style="height: 50px;width:50px"></el-image>
-                        <el-image :src="scope.row.sku_image" style="height: 200px;width: 200px"></el-image>
-                      </el-popover> -->
                     </template>
                   </el-table-column> 
                   <el-table-column label="Color" prop="sku_color">
@@ -245,7 +241,7 @@ export default {
      // 关闭  图片编辑
     closePrint(type){
       if(type == 1) return this.printvisible = false 
-      // this.$set(this.formData.goods_sku[this.editPrintIdx],'image',type)
+      this.formData.images = type
       this.printvisible = false
       
     },

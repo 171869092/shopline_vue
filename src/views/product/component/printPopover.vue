@@ -11,24 +11,10 @@
           disabled:isDisabled
         }"
       > -->
-          <div v-for="($item, $index) in banner_list" class="image-item mb5" :key="$index"
-              @mouseover.prevent="$item.is_hover = true" @mouseleave.prevent="$item.is_hover = false"
-          >
+          <div v-for="($item, $index) in banner_list" class="image-item mb5" :key="$index">
             <div v-show="!isFilter || ($item.is_filter)">
-              <el-popover :placement="placement" trigger="click" :open-delay="400" offset=800>
-                <el-image :src="$item.img_url" :style="popoverStyle"></el-image>
+                <el-image :src="$item" :preview-src-list="banner_list"></el-image>
                 <div><el-input v-model="$item.title" size="mini" class="w-250 p5_input" v-if="titleShow"></el-input></div>
-                
-                <div slot="reference" class='text-center' @click="clcikBaseimg($index)">
-                  <el-image class="image-img" :src="$item.img_url" lazy alt="加载失败..."  />
-                </div>
-              </el-popover>
-
-              <div class="image_main" v-if="isBase && !isDisabled">
-                <div class="c_e6a23c p_tb2" v-if="(isMainIndex == $index)&&($item.is_main == '0')">选择</div>
-                <span class="d-lb p_tb2" v-if="$item.is_main == '1'">主图</span>
-              </div>
-
               <div class="image_del"  :class="isBase?'top10':''" v-if="!isDisabled" v-show="$item.is_hover" 
                 @mouseover.prevent="$item.is_hover = true"
                 @mouseleave.prevent="$item.is_hover = false"
@@ -67,10 +53,6 @@ export default {
       type: Boolean,
       default:false
     },
-    popoverStyle:{
-      type:Object,
-      default:{}
-    },
     titleShow:{
       type: Boolean,
       default:false
@@ -86,8 +68,12 @@ export default {
       handler(val) {
         if(this.isFilter){
           this.banner_list = val.filter(item => item.is_filter)
+          console.log(this.isFilter);
         }else{
           this.banner_list = val
+          console.log(this.banner_list);
+          this.banner_list = val.map(item =>item.img_url)
+          console.log(this.banner_list);
         }
       }
     }

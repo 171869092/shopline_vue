@@ -14,15 +14,17 @@
           scrollSensitivity: 200,
         }"
       > -->
-        <el-checkbox-group v-for="($item, $index) in pictureList" class="image-item mb5" :key="$index" v-model="checkedbox" @change="checkedChange">
-          <div>
-            <el-popover :open-delay='400' placement="right" trigger="click">
-              <img :src="$item.url" style="width:650px;height:650px">
-              <el-image :src="$item.url" class="image-img" slot="reference"></el-image>
-            </el-popover>
-            <el-checkbox :label="$item.url" class="mt5" :disabled="(!checkedbox.includes($item.url)) && (checkedbox.length > 1)">{{$item.title}} </el-checkbox>
-          </div>
-        </el-checkbox-group>
+      <div class="clearfix"> 
+          <el-checkbox-group v-for="($item, $index) in pictureList" class="image-item mb5" :key="$index" v-model="checkedbox" @change="checkedChange">
+            <div>
+              <el-popover :open-delay='400' placement="right" trigger="click">
+                <img :src="$item.url" style="width:650px;height:650px">
+                <el-image :src="$item.url" class="image-img" slot="reference"></el-image>
+              </el-popover>
+              <el-checkbox class="mt5" :disabled="(!checkedbox.includes($item.url)) && (checkedbox.length > 1)"></el-checkbox>
+            </div>
+          </el-checkbox-group>
+      </div>
       <!-- </draggable> -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose" size="small">Cancel</el-button>
@@ -143,6 +145,7 @@ export default {
       this.pictureList.push(...list)
       this.checkedbox.push(...type)
       this.uploadPrintvisible = false
+      this.$emit('close',this.pictureList)
     },
 
   },
@@ -152,7 +155,7 @@ export default {
 </script>
 
 <style scoped lang='scss'>
-// >>> .el-dialog__body{min-height: 600px!important;overflow: hidden!important}
+>>> .el-dialog__body{min-height: 600px!important;max-height: 600px!important;overflow:auto!important;padding:5px 20px;}
 .image-img{
   width: 120px;
   height: 120px;
@@ -161,7 +164,7 @@ export default {
 .image-item{
   width: 120px;
   height: 150px;
-  // float: left;
+  float: left;
   margin-right: 10px;
   position: relative;
 }
