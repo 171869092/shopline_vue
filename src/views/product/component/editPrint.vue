@@ -32,7 +32,7 @@
       </span>
     </el-dialog>
     
-    <upload-print :visible="uploadPrintvisible" @close="closeUploadPrint"></upload-print>
+    <upload-print :visible="uploadPrintvisible" @close="UploadPrint"></upload-print>
   </div>
 </template>
 
@@ -76,10 +76,10 @@ export default {
         // list = this.$parent.formData.images[this.$parent.editPrintIdx].filter(item => !res.data.includes(item)).map((item,idx) =>{
         //     return { url:item,  title:'本地' + (idx+1) }
         // })
-        console.log(this.$parent.formData.images);
+        // console.log(this.$parent.formData.images);
         picture = [...picture,...list]
         this.$set(this,'pictureList',picture)
-        console.log(this.pictureList)
+        // console.log(this.pictureList)
         // loadAllSubImg({sku:this.sku}).then(res =>{
         //   let list = []
         //   console.log(this.$parent.formData.images);
@@ -121,7 +121,7 @@ export default {
       this.checkedbox.sort(function(a,b){
           return order.indexOf(a) - order.indexOf(b);
       });
-      this.$emit('close',this.checkedbox)
+      this.$emit('close',{type:this.checkedbox,list:this.pictureList})
     },
     //单选
     checkedChange(value){
@@ -134,7 +134,7 @@ export default {
       this.uploadPrintvisible = true
     },
     // 关闭本地上传
-    closeUploadPrint(type){
+    UploadPrint(type){
       if(type == 1) return this.uploadPrintvisible = false
       let list = type.map((item,idx) =>{
         return {
@@ -145,7 +145,6 @@ export default {
       this.pictureList.push(...list)
       this.checkedbox.push(...type)
       this.uploadPrintvisible = false
-      this.$emit('close',this.pictureList)
     },
 
   },

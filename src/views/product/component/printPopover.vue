@@ -108,12 +108,7 @@ export default {
       }else{
         return this.list
       }
-      
-      
     },
-
-
-
   }
 };
 </script>

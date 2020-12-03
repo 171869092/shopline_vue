@@ -240,8 +240,17 @@ export default {
     },
      // 关闭  图片编辑
     closePrint(type){
+      console.log(type);
       if(type == 1) return this.printvisible = false 
-      this.formData.images = type
+      console.log(type.list);
+      this.formData.images = type.list.map(item =>{
+          return {
+            img_url:item.url,
+            is_hover:false
+          }
+      })
+      console.log('00000');
+      console.log(this.formData.images);
       this.printvisible = false
       
     },
