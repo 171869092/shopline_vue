@@ -1,7 +1,7 @@
 <template>
   <div class="d-lb list-wrap" :style="{height}">
     <div class="pt10 d-lb w_100">
-      <!-- <draggable v-model="banner_list" class="d-lb"
+      <draggable v-model="banner_list" class="d-lb"
         :options="{
           animation: 150,
           ghostClass: 'sortable-ghost',
@@ -10,7 +10,7 @@
           scrollSensitivity: 200,
           disabled:isDisabled
         }"
-      > -->
+      >
           <div v-for="($item, $index) in banner_list" class="image-item mb5" :key="$index">
             <div v-show="!isFilter">
                 <el-image :src="$item.url" :preview-src-list="banner_list.map(item =>item.url)"></el-image>
@@ -24,14 +24,17 @@
               <div class="image-text">{{$item.source}}</div> -->
             </div>
           </div>
-      <!-- </draggable> -->
+      </draggable>
     </div>
   </div>
 </template>
-
 <script>
+import draggable from 'vuedraggable'
 export default {
   name: "PrintPopover",
+  components: {
+    draggable
+  },
   props: {
     list: {
       type: Array,
@@ -66,10 +69,14 @@ export default {
           this.banner_list = val.filter(item => item.is_filter)
           console.log(this.isFilter);
         }else{
-          console.log(val);
-          this.banner_list = val
+          this.banner_list = val   
         }
-      }
+      },
+    },
+    banner_list:{
+        handler(val){
+            this.$emit('update',val)
+        }
     }
   },
   data() {

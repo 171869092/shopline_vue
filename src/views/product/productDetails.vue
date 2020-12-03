@@ -29,7 +29,7 @@
               <el-button size="mini" type="primary" @click="openUploadPrint">Add image</el-button>
             </div>
           </div>
-          <print-popover :list="formData.images" ref="window_img" @delImg="delImg"></print-popover>
+          <print-popover :list="formData.images" ref="window_img" @delImg="delImg" @update="updateimg"></print-popover>
           
         </el-card>
         <!-- 商品 -->
@@ -171,6 +171,10 @@ export default {
             loading.close();
           }
        })
+    },
+    //拖拽监听list
+    updateimg(list){
+      this.formData.images = list
     },
     //保存数据
     Submit(){
