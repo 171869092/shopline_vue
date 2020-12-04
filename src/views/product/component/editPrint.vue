@@ -71,6 +71,7 @@ export default {
         let picture = this.$parent.formData.images.map((item,idx) =>{
             return { url:item.url,  title:'图片' + (idx+1) }
           })
+        
         this.checkedbox =  this.$parent.formData.sku_list[this.$parent.editPrintIdx].sku_image
         picture = [...picture,...list]
         this.$set(this,'pictureList',picture)
