@@ -9,10 +9,10 @@
         <div class="login-box flexbox justify-center align-center">
           <div class="login">
             <div class="login-header flexbox justify-space-between">
-              <div>
-                <img src="@/assets/home/logo@2x.png" alt="" style="width:130px">
-              </div>
-              <div><el-button @click="SignUp">Sigin in</el-button></div>
+              <router-link :to="{name: 'home'}">
+                <img class="cursor_p" src="@/assets/home/logo@2x.png" alt="" style="width:130px">
+              </router-link>
+              <div><el-button @click="SignUp">Sigin up</el-button></div>
             </div>
             <div class="login-form">
               <div class="login-tip">
@@ -115,9 +115,6 @@ export default {
 // }
 .form-padding {
   padding: 4em;
-}
-.login-form {
-  padding-top: 40px;
 }
 .imageLeft{
   background: url(~@/assets/home/login.png) no-repeat center;

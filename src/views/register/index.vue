@@ -1,47 +1,64 @@
 <template>
   <div style="overflow: hidden;">
     <!-- <b-navbar /> -->
-    <div class="row">
-      <div class="col">
+    <div class="login-container">
+      <div class="left-panel">
         <!-- <img width="100%" src="https://demo.htmlhunters.com/shopy/assets/images/demo/index2-slide-2.jpg" alt=""> -->
-        <span class="imageLeft" />
+        <div class="imageLeft" />
       </div>
-      <div class="col">
-        <div class="container">
-          <div class="form">
-            <div class="clearfix">
-              <div class="float-left">
-                <h2>DropShipping</h2>
+      <div class="right-panel">
+        <div class="login-box flexbox justify-center align-center">
+          <div class="login">
+            <div class="login-header flexbox justify-space-between">
+              <router-link :to="{name: 'home'}">
+                <img class="cursor_p" src="@/assets/home/logo@2x.png" alt="" style="width:130px">
+              </router-link>
+              <div><el-button @click="SignIn">Sigin in</el-button></div>
+            </div>
+            <div class="login-form">
+              <div class="login-tip">
+                <h5>
+                  <span class="primary">You’re 2 minutes away </span>
+                  <span>from building your ecommerce empire</span>
+                </h5>
               </div>
-              <el-button type="primary" class="float-right" @click="SignIn">Sign In</el-button>
+              <el-form ref="loginForm" class="mt40" label-position="top" :model="loginForm">
+                <el-form-item label="Your Email">
+                  <el-input v-model="loginForm.email">
+                    <el-button slot="append" class="secondary">identifying code</el-button>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="Identifying code">
+                  <el-input v-model="loginForm.code" />
+                </el-form-item>
+                <el-form-item label="Your Password">
+                  <el-input v-model="loginForm.password" type="password" />
+                </el-form-item>
+                <el-form-item label="Your Name">
+                  <el-input v-model="loginForm.name" />
+                </el-form-item>
+              </el-form>
+              <div class="btn-group mt20">
+                <el-button type="primary" :loading="loading" @click="handleRegister()">Get Started</el-button>
+                <!-- <el-button type="text">Forget Password</el-button> -->
+              </div>
             </div>
-            <div class="form-padding">
-              <h3 class="text-cetner">You’re  2 minutes away from building your ecommerce empire</h3>
-              <form class="register-form">
-                <div class="form-group">
-                  <label for="exampleInputEmail1">Your Email</label>
-                  <input id="exampleInputEmail1" type="email" class="form-control" aria-describedby="emailHelp" placeholder="Your Email">
-                  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                </div>
-                <div class="form-group">
-                  <label for="formGroupExampleInput">Identifying Code</label>
-                  <input id="formGroupExampleInput" type="text" class="form-control" placeholder="Identifying Code">
-                </div>
-                <div class="form-group">
-                  <label for="formGroupExampleInput">Your Name</label>
-                  <input id="formGroupExampleInput" type="text" class="form-control" placeholder="Your Name">
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputPassword1">Password</label>
-                  <input id="exampleInputPassword1" type="password" class="form-control" placeholder="Password">
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputPassword1">Confirm Password</label>
-                  <input id="exampleInputPassword1" type="password" class="form-control" placeholder="Confirm Password">
-                </div>
-                <el-button class="s-btn" :loading="loading" @click="handleRegister">Get Started</el-button>
-              </form>
-            </div>
+          </div>
+        </div>
+        <div class="login-footer">
+          <div class="social-icon">
+            <ul>
+              <li><img src="@/assets/home/icon-1@2x.png" alt=""></li>
+              <li><img src="@/assets/home/icon-2@2x.png" alt=""></li>
+              <li><img src="@/assets/home/icon-3@2x.png" alt=""></li>
+              <li><img src="@/assets/home/icon-4@2x.png" alt=""></li>
+              <li><img src="@/assets/home/icon-5@2x.png" alt=""></li>
+            </ul>
+          </div>
+          <hr>
+          <div class="info text-center">
+            <p>8 The Green #4638 Dover,DE 19901 (123)456-7890</p>
+            <p>@2020 dropshipping</p>
           </div>
         </div>
       </div>
@@ -58,7 +75,7 @@ export default {
   props: {},
   data() {
     return {
-      form: {},
+      loginForm: {},
       rules: {},
       loading: false
     }
@@ -98,7 +115,6 @@ export default {
   background: url(~@/assets/home/register.jpg) no-repeat center;
   background-size: cover;
   width:100%;
-  height: 100%;
-  display: inline-block;
+  height: 100vh;
 }
 </style>
