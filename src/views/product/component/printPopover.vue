@@ -121,8 +121,8 @@ export default {
   border:1px solid #c8c8c8;
 }
 .image-item {
-  width: 150px;
-  height: 150px;
+  width: 100px;
+  height: 100px;
   float: left;
   margin-right: 10px;
   position: relative;
