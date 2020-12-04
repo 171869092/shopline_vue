@@ -30,7 +30,8 @@
     </header>
     <main>
       <section class="wap m-navbar-top">
-        <div class="jumbotron">
+        <!-- <div class="jumbotron"> -->
+          <img src="@/assets/home/banner@2x.png" alt="" srcset="" style="width:100%">
           <!-- <div class="container">
             <h1 class="display-4">Hello, world!</h1>
             <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
@@ -39,7 +40,7 @@
             <p>{{ $route.query }}</p>
             <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
           </div> -->
-        </div>
+        <!-- </div> -->
       </section>
       <section>
         <div class="page-container">
