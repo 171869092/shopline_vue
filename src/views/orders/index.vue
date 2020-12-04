@@ -2,7 +2,7 @@
   <div class="my-orders">
     <el-card class="box-card">
       <el-tabs v-model="formQuery.logistics_status" @tab-click="handleClick">
-        <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab" :name="String(key)">
+        <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.label" :name="tab.name">
           <el-table
             ref="multipleTable"
             v-loading="loading"
@@ -16,11 +16,14 @@
             <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
               <template slot-scope="scope">
                 <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
-                <span v-if="item.type == 'order_number'">
+                <span v-if="item.type == 'order_no'">
                   <span class="link" @click="toLink(scope.row)">{{ scope.row.order_no }}</span>
                 </span>
+                <span v-if="item.type == 'order_status'">
+                  <div>{{ orderStatus[scope.row.order_status] }}</div>
+                </span>
                 <span v-if="item.type == 'logistics_status'">
-                  <div>{{ scope.row.logistics_status_name }}</div>
+                  <div>{{ logisticsStatus[scope.row.logistics_status] }}</div>
                   <div class="primary pointer" @click="logDetail(scope.row)">Logistics Details</div>
                 </span>
               </template>
@@ -60,12 +63,25 @@ export default {
         page: 1,
         limit: 10
       },
-      tabList: { 1: '待发货', 2: '已揽件', 3: '运输中', 4: '已送达', 5: '已拒收', 6: '已取消', 7: '已退回', 8: '待转单', 9: '退货在仓' },
+      // orderStatus: {1: "待支付", 2: "金额处理", 3: "完成支付", 4: "退款", 5: "异常", 6: "部分支付", 7: "部分退款", 8: "订单取消"},
+      logisticsStatus: { 1: 'Waiting For Delivery', 2: 'Received', 3: 'In Transit', 4: 'Delivered', 5: 'Rejected', 6: 'Canceled', 7: 'Returned', 8: 'Pending Transfer', 9: 'Return Goods In Stock' },
+      orderStatus: { 1: 'Pending payment', 2: 'Processing', 3: 'Complete payment', 4: 'Refunded', 5: 'Order exception', 6: 'Partially payment', 7: 'Partially refunded', 8: 'Order canceled' },
+      tabList: [
+        { label: 'Waiting For Delivery', name: '1' },
+        { label: 'Received', name: '2' },
+        { label: 'In Transit', name: '3' },
+        { label: 'Delivered', name: '4' },
+        { label: 'Rejected', name: '5' },
+        { label: 'Canceled', name: '6' },
+        { label: 'Returned', name: '7' },
+        { label: 'Pending Transfer', name: '8' },
+        { label: 'Return Goods In Stock', name: '9' }
+      ],
       labelList: [
-        { label: 'Order Number', value: 'order_no', type: 'order_number' },
+        { label: 'Order Number', value: 'order_no', type: 'order_no' },
         { label: 'Third Party Order Number', value: 'thirdParty_order_on' },
         { label: 'Order Amount', value: 'total_price' },
-        { label: 'Order Status', value: 'order_status_name' },
+        { label: 'Order Status', value: 'order_status_name', type: 'order_status' },
         { label: 'Logistics Status', value: 'logistics_status_name', type: 'logistics_status' }
       ],
       tableData: [],

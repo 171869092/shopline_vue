@@ -1,6 +1,6 @@
 <template>
   <div class="orders-detail p30">
-    <el-card class="box-card">
+    <el-card v-loading="loading" class="box-card">
       <div slot="header" class="clearfix">
         <div class="flexbox">
           <div class="detail-title">Order Detail</div>
@@ -18,11 +18,27 @@
           fit
           :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}"
         >
-          <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
+          <!-- <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
             <template slot-scope="scope">
               <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
             </template>
+          </el-table-column> -->
+          <el-table-column prop="third_goods_name" label="Products" />
+          <el-table-column prop="third_sku_name" label="SKU" />
+          <el-table-column prop="sku_num" label="SKU Num" />
+          <el-table-column prop="third_price" label="Price">
+            <template slot-scope="scope">
+              <span v-if="scope.row.third_price">{{ scope.row.third_price }}</span>
+              <span v-else>--</span>
+            </template>
           </el-table-column>
+          <el-table-column prop="logistics_cost" label="Logistics Cost">
+            <template slot-scope="scope">
+              <span v-if="scope.row.logistics_cost">{{ scope.row.logistics_cost }}</span>
+              <span v-else>--</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="service_fee" label="Service Charge" />
         </el-table>
       </div>
       <div>
@@ -95,7 +111,8 @@ export default {
         track_info: {
           OrderTrackingDetails: []
         }
-      }
+      },
+      loading: false
     }
   },
   computed: {
@@ -108,12 +125,13 @@ export default {
   },
   methods: {
     init() {
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
+      // const loading = this.$loading({
+      //   lock: true,
+      //   text: 'Loading',
+      //   spinner: 'el-icon-loading',
+      //   background: 'rgba(0, 0, 0, 0.7)'
+      // })
+      this.loading = true
       getOrderInfo({ order_no: this.order_no }).then(res => {
         console.log(res.data)
         if (res.code === 200) {
@@ -122,7 +140,8 @@ export default {
       }).catch(err => {
         console.log(err)
       }).finally(() => {
-        loading.close()
+        // loading.close()
+        this.loading = false
       })
     }
   }
