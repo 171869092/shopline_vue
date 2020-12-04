@@ -6,7 +6,7 @@
       </div>
 
       <!-- <draggable v-model="pictureList" class="d-lb"
-        :options="{
+        v-bind="{
           animation: 150,
           ghostClass: 'sortable-ghost',
           chosenClass: 'chosenClass',
@@ -15,17 +15,13 @@
         }"
       > -->
       <div class="clearfix"> 
-          <el-checkbox-group v-for="($item, $index) in pictureList" class="image-item mb5" :key="$index" v-model="checkedbox" @change="checkedChange">
+          <el-radio-group v-for="($item, $index) in pictureList" class="image-item mb5" :key="$index" v-model="checkedbox" @change="checkedChange">
             <div>
-               <!-- {{ :disabled="(!checkedbox.includes($item.url)) && (checkedbox.length > 0)"}} -->
-              <el-popover :open-delay='400' placement="right" trigger="click">
-                <img :src="$item.url" style="width:650px;height:650px">
-                <el-image :src="$item.url" class="image-img" slot="reference"></el-image>
-              </el-popover>
-             
-              <el-checkbox class="mt5"></el-checkbox>
+              {{checkedbox}}
+                <el-image :src="$item.url" class="image-img"></el-image>
+              <el-radio class="mt5" :label="$item.url">{{$index}}</el-radio>
             </div>
-          </el-checkbox-group>
+          </el-radio-group>
       </div>
       <!-- </draggable> -->
       <span slot="footer" class="dialog-footer">
@@ -75,9 +71,8 @@ export default {
         let picture = this.$parent.formData.images.map((item,idx) =>{
             return { url:item.url,  title:'图片' + (idx+1) }
           })
-        this.checkedbox = this.$parent.formData.images
+        this.checkedbox =  this.$parent.formData.sku_list[this.$parent.editPrintIdx].sku_image
         picture = [...picture,...list]
-        let order = this.checkedbox
         this.$set(this,'pictureList',picture)
       }else{
         this.checkedbox = []

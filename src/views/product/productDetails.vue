@@ -169,6 +169,7 @@ export default {
                 }
             })
             loading.close();
+            console.log(this.formData.images);
           }
        })
     },
@@ -180,6 +181,8 @@ export default {
     Submit(){
         this.$refs.formData.validate((valid) => {
           if (valid) {
+              console.log(this.formData.images);
+          
             this.SubmitLoading = true
             getProductSave(this.formData).then(res =>{
               if (res.code == 200) {
@@ -251,10 +254,12 @@ export default {
           return {
             url:item.url,
             is_hover:false,
+            id:''
           }
       })
       this.printvisible = false
-      this.$set(this.formData.sku_list[this.editPrintIdx],'sku_image',type.check[0].url)
+      console.log(type);
+      this.$set(this.formData.sku_list[this.editPrintIdx],'sku_image',type.check)
     },
     // 打开  图片编辑 sku
     openPrint(item,idx){
@@ -273,14 +278,16 @@ export default {
        let list = type.map(item =>{
          return {
             url:item,
-            is_hover:false
+            is_hover:false,
+            id:''
          }
        })
-       this.formData.sku_list.push(...list)
+      //  this.formData.sku_list.push(...list)
+       this.formData.images.push(...list)
     },
       // 删除图片
     delImg(idx){
-      this.formData.image.splice(idx,1)
+      this.formData.images.splice(idx,1)
     },
   }
 }

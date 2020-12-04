@@ -2,7 +2,7 @@
   <div class="d-lb list-wrap" :style="{height}">
     <div class="pt10 d-lb w_100">
       <draggable v-model="banner_list" class="d-lb"
-        :options="{
+        v-bind="{
           animation: 150,
           ghostClass: 'sortable-ghost',
           chosenClass: 'chosenClass',
@@ -11,17 +11,18 @@
           disabled:isDisabled
         }"
       >
-          <div v-for="($item, $index) in banner_list" class="image-item mb5" :key="$index">
+          <div v-for="($item, $index) in banner_list" class="image-item mb5" :key="$index" @mouseover.prevent="$item.is_hover = true" @mouseleave.prevent="$item.is_hover = false">
             <div v-show="!isFilter">
+              <!-- {{banner_list}} -->
                 <el-image :src="$item.url" :preview-src-list="banner_list.map(item =>item.url)"></el-image>
                 <!-- <div><el-input v-model="$item.title" size="mini" class="w-250 p5_input" v-if="titleShow"></el-input></div> -->
-              <!-- <div class="image_del"  :class="isBase?'top10':''" v-if="!isDisabled" v-show="$item.is_hover" 
+              <div class="image_del" v-show="$item.is_hover"
                 @mouseover.prevent="$item.is_hover = true"
                 @mouseleave.prevent="$item.is_hover = false"
               >
-                <i class=" el-icon-close" @click="delImg($index)"></i>
+                <i class="el-icon-close" @click="delImg($index)"></i>
               </div>
-              <div class="image-text">{{$item.source}}</div> -->
+              <!-- <div class="image-text">{{$item.source}}</div> -->
             </div>
           </div>
       </draggable>
@@ -70,6 +71,7 @@ export default {
           console.log(this.isFilter);
         }else{
           this.banner_list = val   
+          console.log(val);
         }
       },
     },
@@ -103,13 +105,6 @@ export default {
     setList(list){
       this.$set(this,'banner_list',list.filter(item => item.is_filter))
     },
-    getImg(){
-      if(this.list.length == this.banner_list.length){
-        return this.banner_list
-      }else{
-        return this.list
-      }
-    },
   }
 };
 </script>
@@ -126,8 +121,8 @@ export default {
   border:1px solid #c8c8c8;
 }
 .image-item {
-  width: 80px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   float: left;
   margin-right: 10px;
   position: relative;
@@ -149,12 +144,12 @@ export default {
   background:#e6a23c;
 }
 .image_del {
-  padding: 3px 4px;
+  padding: 0px 4px;
   position: absolute;
-  // top: 10px;
+  top: 10px;
   top: -8px;
   right: -8px;
-  border-radius: 50px;
+  border-radius:24px;
   background: red;
   color:#fff;
 }
