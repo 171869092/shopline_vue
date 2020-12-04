@@ -14,7 +14,7 @@
         </div>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item @click.native="logout">
-            <span style="display:block;">LogOut</span>
+            <span style="display:block;">Logout</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>

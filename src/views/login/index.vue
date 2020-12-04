@@ -1,37 +1,53 @@
 <template>
   <div style="overflow: hidden;">
     <!-- <b-navbar /> -->
-    <div class="row">
-      <div class="col">
-        <!-- <img width="100%" src="https://demo.htmlhunters.com/shopy/assets/images/demo/index2-slide-2.jpg" alt=""> -->
-        <span class="imageLeft" />
+    <div class="login-container">
+      <div class="left-panel">
+        <div class="imageLeft" />
       </div>
-      <div class="col">
-        <div class="container">
-          <div class="form">
-            <div class="clearfix">
-              <div class="float-left">
-                <h2>DropShipping</h2>
-              </div>
-              <!-- <button type="button" class="btn btn-danger btn-md float-right" @click="SignUp">Sign up</button> -->
-              <el-button type="primary" class="float-right" @click="SignUp">Sign Up</el-button>
+      <div class="right-panel">
+        <div class="login mt50">
+          <div class="login-header flexbox justify-space-between">
+            <div>
+              <img src="@/assets/home/logo@2x.png" alt="" style="width:130px">
             </div>
-            <div class="form-padding">
-              <h3 class="text-cetner">You’re  2 minutes away from building your ecommerce empire</h3>
-              <el-form ref="loginForm" :model="loginForm" class="login-form">
-                <div class="form-group">
-                  <label for="exampleInputEmail1">Your Email</label>
-                  <el-input v-model="loginForm.email" placeholder="Your Email" />
-                  <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
-                </div>
-                <div class="form-group">
-                  <label for="exampleInputPassword1">Password</label>
-                  <el-input v-model="loginForm.password" type="password" placeholder="Password" />
-                </div>
-                <!-- <button type="button" :disabled="loading" class="btn btn-lg s-btn" @click="handleLogin">Log In</button> -->
-                <el-button class="s-btn" :loading="loading" @click="handleLogin">Log In</el-button>
-              </el-form>
+            <div><el-button @click="SignUp">Sigin in</el-button></div>
+          </div>
+          <div class="login-form">
+            <div class="login-tip">
+              <h5>
+                <span class="primary">You’re 2 minutes away </span>
+                <span>from building your ecommerce empire</span>
+              </h5>
             </div>
+            <el-form ref="loginForm" class="mt40" label-position="top" :model="loginForm">
+              <el-form-item label="Your Email">
+                <el-input v-model="loginForm.email" />
+              </el-form-item>
+              <el-form-item label="Your Password">
+                <el-input v-model="loginForm.password" type="password" />
+              </el-form-item>
+            </el-form>
+            <div class="btn-group mt20">
+              <el-button type="primary" :loading="loading" @click="handleLogin()">Login</el-button>
+              <el-button type="text">Forget Password</el-button>
+            </div>
+          </div>
+        </div>
+        <div class="login-footer">
+          <div class="social-icon">
+            <ul>
+              <li><img src="@/assets/home/icon-1@2x.png" alt=""></li>
+              <li><img src="@/assets/home/icon-2@2x.png" alt=""></li>
+              <li><img src="@/assets/home/icon-3@2x.png" alt=""></li>
+              <li><img src="@/assets/home/icon-4@2x.png" alt=""></li>
+              <li><img src="@/assets/home/icon-5@2x.png" alt=""></li>
+            </ul>
+          </div>
+          <hr>
+          <div class="info text-center">
+            <p>8 The Green #4638 Dover,DE 19901 (123)456-7890</p>
+            <p>@2020 dropshipping</p>
           </div>
         </div>
       </div>
@@ -105,7 +121,6 @@ export default {
   background: url(~@/assets/home/login.png) no-repeat center;
   background-size: cover;
   width:100%;
-  height: 100%;
-  display: inline-block;
+  height: 100vh;
 }
 </style>

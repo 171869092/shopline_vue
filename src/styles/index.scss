@@ -13,6 +13,10 @@ body {
   text-rendering: optimizeLegibility;
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
 }
+html, body {
+  margin: 0;
+  padding: 0;
+}
 
 label {
   font-weight: 700;
@@ -83,9 +87,16 @@ div:focus {
   padding: 20px;
 }
 
-.container{
-  max-width: 1600px!important;
+.page-container {
+  overflow: hidden;
+  max-width: 1600px;
+  margin-left: auto;
+  margin-right: auto;
 }
+
+// .container{
+//   max-width: 1600px!important;
+// }
 
 
 input::-webkit-outer-spin-button,
@@ -179,11 +190,12 @@ input[type="number"] {
     color: #1890ff;
   }
 }
+
 .flexbox {
   display: flex;
 }
 
-$justify-list: center, start, end, flex-start, flex-end, left, right;
+$justify-list: center, start, end, flex-start, flex-end, left, right, space-between, space-around, space-evenly;
 @each $item in $justify-list {
   .justify-#{$item} {
     justify-content: #{$item};

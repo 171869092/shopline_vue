@@ -50,16 +50,87 @@
   .jumbotron {
     background: #fbf7ed;
     margin-bottom: 0;
-    // background: url('https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1604307324935&di=4bed9eac987e3649c1c772ecf8cdf933&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Fback_pic%2F05%2F41%2F05%2F985a5f12ea8f3ab.jpg')  no-repeat;
-    // background-size: cover;
-    // color: #ef753a;
+    background: url('../assets/home/banner@2x.png')  no-repeat;
+    background-size: cover;
+    color: #ef753a;
+    height: 540px;
   }
 }
 
 .b-footer {
   padding: 2.5rem 0;
-  color: #fff;
+  color: #9299B0FF;
   text-align: center;
-  background-color: #4d4d4d;
+  background-color: #F8F9FAFF;
   border-top: .05rem solid #e5e5e5;
+}
+
+.navbar-light .navbar-nav .nav-link {
+  color: #3D4157FF
+}
+
+.about-us {
+  margin-top: 50px;
+  padding-left: 50px;
+}
+.about {
+  background: #FDFBF9FF;
+}
+
+.home-logo {
+  width: 130px;
+  margin-top: -5px;
+}
+
+// login
+.login-container {
+  display: flex;
+}
+.left-panel {
+  flex: 1;
+}
+.right-panel {
+  flex: 1;
+}
+.right-panel {
+  position: relative;
+}
+.login-footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: #F8F9FAFF;
+  padding: 20px 0;
+  .info {
+    p {
+      color: #9299B0FF;
+      margin-bottom: 0;
+    }
+  }
+}
+.login {
+  width: 600px;
+  margin: auto;
+  .login-form {
+    .el-form-item__label {
+      padding-bottom: 0;
+      margin-bottom: 0;
+    }
+  }
+}
+.social-icon {
+  ul, li {
+    list-style: none;
+  }
+  ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    li {
+      padding: 0 20px;
+      img {
+        width: 24px;
+      }
+    }
+  }
 }
