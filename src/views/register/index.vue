@@ -59,7 +59,8 @@ export default {
   data() {
     return {
       form: {},
-      rules: {}
+      rules: {},
+      loading: false
     }
   },
   computed: {},

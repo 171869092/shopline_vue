@@ -112,9 +112,11 @@
     }
   }
 }
+.login-box {
+  height: calc(100vh - 146px);
+}
 .login {
   width: 600px;
-  margin: auto;
   .login-form {
     .el-form-item__label {
       padding-bottom: 0;

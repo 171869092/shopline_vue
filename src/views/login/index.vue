@@ -6,31 +6,33 @@
         <div class="imageLeft" />
       </div>
       <div class="right-panel">
-        <div class="login mt50">
-          <div class="login-header flexbox justify-space-between">
-            <div>
-              <img src="@/assets/home/logo@2x.png" alt="" style="width:130px">
+        <div class="login-box flexbox justify-center align-center">
+          <div class="login">
+            <div class="login-header flexbox justify-space-between">
+              <div>
+                <img src="@/assets/home/logo@2x.png" alt="" style="width:130px">
+              </div>
+              <div><el-button @click="SignUp">Sigin in</el-button></div>
             </div>
-            <div><el-button @click="SignUp">Sigin in</el-button></div>
-          </div>
-          <div class="login-form">
-            <div class="login-tip">
-              <h5>
-                <span class="primary">You’re 2 minutes away </span>
-                <span>from building your ecommerce empire</span>
-              </h5>
-            </div>
-            <el-form ref="loginForm" class="mt40" label-position="top" :model="loginForm">
-              <el-form-item label="Your Email">
-                <el-input v-model="loginForm.email" />
-              </el-form-item>
-              <el-form-item label="Your Password">
-                <el-input v-model="loginForm.password" type="password" />
-              </el-form-item>
-            </el-form>
-            <div class="btn-group mt20">
-              <el-button type="primary" :loading="loading" @click="handleLogin()">Login</el-button>
-              <el-button type="text">Forget Password</el-button>
+            <div class="login-form">
+              <div class="login-tip">
+                <h5>
+                  <span class="primary">You’re 2 minutes away </span>
+                  <span>from building your ecommerce empire</span>
+                </h5>
+              </div>
+              <el-form ref="loginForm" class="mt40" label-position="top" :model="loginForm">
+                <el-form-item label="Your Email">
+                  <el-input v-model="loginForm.email" />
+                </el-form-item>
+                <el-form-item label="Your Password">
+                  <el-input v-model="loginForm.password" type="password" />
+                </el-form-item>
+              </el-form>
+              <div class="btn-group mt20">
+                <el-button type="primary" :loading="loading" @click="handleLogin()">Login</el-button>
+                <el-button type="text">Forget Password</el-button>
+              </div>
             </div>
           </div>
         </div>
