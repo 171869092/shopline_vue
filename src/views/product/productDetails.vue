@@ -287,6 +287,12 @@ export default {
     },
       // 删除图片
     delImg(idx){
+      const url = this.formData.images[idx].url
+      this.formData.sku_list.forEach(item =>{
+        if (item.sku_image == url) {
+          item.sku_image = ''
+        }
+      })
       this.formData.images.splice(idx,1)
     },
   }

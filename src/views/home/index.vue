@@ -17,7 +17,7 @@
             </ul>
             <form class="form-inline mt-2 mt-md-0">
               <div v-if="isLogin">
-                <router-link class="login-btn" :to="{name: 'dashboard'}">Dashboard</router-link>
+                <router-link class="login-btn" :to="{name: 'product'}">Dashboard</router-link>
               </div>
               <div v-else>
                 <router-link class="login-btn" :to="{name: 'login'}">Login</router-link>

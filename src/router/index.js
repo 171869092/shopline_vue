@@ -57,39 +57,17 @@ export const constantRoutes = [
     hidden: true
   },
 
-  {
-    path: '',
-    component: Layout,
-    // redirect: '/dashboard',
-    children: [{
-      path: '/dashboard',
-      name: 'dashboard',
-      component: () => import('@/views/dashboard/index')
-    //   meta: { title: 'Dashboard', icon: 'dashboard' }
-    }]
-  },
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'el-icon-s-help' },
-    children: [
-      {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
-      },
-      {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
-
+  // {
+  //   path: '',
+  //   component: Layout,
+  //   // redirect: '/dashboard',
+  //   children: [{
+  //     path: '/dashboard',
+  //     name: 'dashboard',
+  //     component: () => import('@/views/dashboard/index')
+  //   //   meta: { title: 'Dashboard', icon: 'dashboard' }
+  //   }]
+  // },
   {
     path: '/product',
     component: Layout,
@@ -98,14 +76,14 @@ export const constantRoutes = [
         path: 'index',
         name: 'product',
         component: () => import('@/views/product/index'),
-        meta: { title: 'product', icon: 'el-icon-goods' }
+        meta: { title: 'Product', icon: 'el-icon-goods' }
       },
       {
         path: 'productDetails',
         hidden: true,
         name: 'productDetails',
         component: () => import('@/views/product/productDetails'),
-        meta: { title: 'productDetails' }
+        meta: { title: 'Product Detail' }
       }
     ]
   },

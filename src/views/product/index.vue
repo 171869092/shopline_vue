@@ -94,7 +94,7 @@ export default {
    
     //选择服务商
     providerClick(type) {
-      if(this.productSelection.length == 0) return  this.$message.error('Please check the product before proceeding');
+      if(this.productSelection.length == 0) return  this.$message({message: 'Please check the product before proceeding',type: 'warning'});
       this.providerVisible = true
     },
     closeprovider(type) {
