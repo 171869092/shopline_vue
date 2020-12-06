@@ -4,12 +4,14 @@
       <div slot="header" class="clearfix">
         <div class="flexbox">
           <div class="detail-title">Order Detail</div>
-          <div class="order-id ml30">Order No：<span class="c_blue">{{ order_no }}</span></div>
+          <div class="order-id ml30">Order No：<span class="primary">{{ order_no }}</span></div>
         </div>
 
       </div>
       <div>
-        <div class="detail-block-title mb30">Product Information</div>
+        <div class="detail-block-title mb30">
+          <h2>Product Information</h2>
+        </div>
         <el-table
           ref="productTable"
           :data="detailInfo.goods_info"
@@ -42,7 +44,9 @@
         </el-table>
       </div>
       <div>
-        <div class="detail-block-title mt30 mb30">Delivery Information</div>
+        <div class="detail-block-title mt30 mb30">
+          <h2>Delivery Information</h2>
+        </div>
         <el-row>
           <el-col :span="10">
             <el-form ref="ruleForm" :model="detailInfo" label-width="140px">
@@ -63,7 +67,9 @@
         </el-row>
       </div>
       <div>
-        <div class="detail-block-title mt20 mb30">Logistics Information</div>
+        <div class="detail-block-title mt20 mb30">
+          <h2>Logistics Information</h2>
+        </div>
         <div class="block">
           <div class="flexbox p20 log-title">
             <div>Status: {{ detailInfo.track_info.TrackingStatus }}</div>
@@ -149,7 +155,14 @@ export default {
 </script>
 <style lang="scss" scoped>
 .detail-block-title {
-  color: #9299B0FF;
+  // color: #9299B0FF;
+  padding: 5px 5px;
+  border-bottom: 0.1rem solid var(--p-border-subdued,#dfe3e8);
+  h2 {
+    font-size: 16px;
+    font-weight: 600;
+    // margin: 0;
+  }
 }
 .block {
   background: #F7F9FCFF;
