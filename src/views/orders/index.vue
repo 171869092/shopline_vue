@@ -44,7 +44,7 @@
               <template slot-scope="scope">
                 <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
                 <span v-if="item.type == 'order_no'">
-                  <span class="link" @click="toLink(scope.row)">{{ scope.row.thirdParty_order_on }}</span>
+                  <span class="primary pointer" @click="toLink(scope.row)">{{ scope.row.thirdParty_order_on }}</span>
                 </span>
                 <span v-if="item.type == 'order_status'">
                   <div>{{ orderStatus[scope.row.order_status] }}</div>

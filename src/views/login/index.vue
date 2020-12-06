@@ -117,7 +117,8 @@ export default {
   padding: 4em;
 }
 .imageLeft{
-  background: url(~@/assets/home/login.png) no-repeat center;
+  // background: url(~@/assets/home/login.png) no-repeat center;
+  background: url("https://dx-tech-bucket.s3.amazonaws.com/20201206040409405d56b699830e77ba53855679cb1d252da") no-repeat center;
   background-size: cover;
   width:100%;
   height: 100vh;
