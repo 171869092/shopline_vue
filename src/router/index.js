@@ -76,14 +76,14 @@ export const constantRoutes = [
         path: 'index',
         name: 'product',
         component: () => import('@/views/product/index'),
-        meta: { title: 'product', icon: 'el-icon-goods' }
+        meta: { title: 'Product', icon: 'el-icon-goods' }
       },
       {
         path: 'productDetails',
         hidden: true,
         name: 'productDetails',
         component: () => import('@/views/product/productDetails'),
-        meta: { title: 'productDetails' }
+        meta: { title: 'Product Detail' }
       }
     ]
   },
