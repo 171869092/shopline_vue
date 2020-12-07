@@ -88,7 +88,7 @@ export default {
         this.$set(this, 'pictureList', this.$parent.formData.images)
       } else {
         this.checked = ''
-        this.pictureList = []
+        // this.pictureList = []
       }
     }
   },

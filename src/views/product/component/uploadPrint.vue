@@ -84,6 +84,8 @@ export default {
       return new Promise((resolve, reject) => {
         uploadImage(formData).then(res => {
           resolve(res.data)
+        }).catch(() => {
+          this.savePicLoading = false
         })
       })
     },
