@@ -23,21 +23,9 @@ export function logout() {
   })
 }
 
-export function productApi(url, token, data = {}) {
+export function shopifyApi(data) {
   return request({
-    url: url,
-    method: 'get',
-    params: data,
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'X-Shopify-Access-Token': `${token}`
-    }
-  })
-}
-
-export function indexApi(data) {
-  return request({
-    url: 'https://fdapi.dongketech.com/site/indexs',
+    url: '/shopify/index/indexs',
     method: 'get',
     params: data
   })
@@ -45,7 +33,7 @@ export function indexApi(data) {
 
 export function gtoken(data) {
   return request({
-    url: 'https://fdapi.dongketech.com/site/generatr-token',
+    url: '/site/generatr-token',
     method: 'get',
     params: data
   })

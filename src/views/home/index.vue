@@ -31,8 +31,8 @@
     <main>
       <section class="wap m-navbar-top">
         <!-- <div class="jumbotron"> -->
-          <img src="@/assets/home/banner@2x.png" alt="" srcset="" style="width:100%">
-          <!-- <div class="container">
+        <img src="@/assets/home/banner@2x.png" alt="" srcset="" style="width:100%">
+        <!-- <div class="container">
             <h1 class="display-4">Hello, world!</h1>
             <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
             <hr class="my-4">
@@ -149,7 +149,7 @@
 <script>
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
-import { indexApi } from '@/api/user'
+import { shopifyApi } from '@/api/user'
 // import createApp from '@shopify/app-bridge'
 // import { Redirect, Button } from '@shopify/app-bridge/actions'
 // import { getSessionToken } from '@shopify/app-bridge-utils'
@@ -217,7 +217,7 @@ export default {
 
       // eslint-disable-next-line no-prototype-builtins
       if (this.$route.query.hasOwnProperty('hmac')) {
-        indexApi({ ...this.$route.query }).then(res => {
+        shopifyApi({ ...this.$route.query }).then(res => {
           console.log(res)
         }).catch(err => {
           console.log(err)
