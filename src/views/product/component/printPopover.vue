@@ -1,7 +1,9 @@
 <template>
   <div class="d-lb list-wrap" :style="{height}">
     <div class="pt10 d-lb w_100">
-      <draggable v-model="banner_list" class="d-lb"
+      <draggable
+        v-model="banner_list"
+        class="d-lb"
         v-bind="{
           animation: 150,
           ghostClass: 'sortable-ghost',
@@ -11,21 +13,29 @@
           disabled:isDisabled
         }"
       >
-          <div v-for="($item, $index) in banner_list" class="image-item mb20" :key="$index" @mouseover.prevent="$item.is_hover = true" @mouseleave.prevent="$item.is_hover = false">
-            <div v-show="!isFilter">
-              <!-- {{banner_list}} -->
-                <el-image class="image-item" :src="$item.url" :preview-src-list="banner_list.map(item =>item.url)"></el-image>
-                <!-- <div><el-input v-model="$item.title" size="mini" class="w-250 p5_input" v-if="titleShow"></el-input></div> -->
-                
-              <div class="image_del" v-show="$item.is_hover"
-                @mouseover.prevent="$item.is_hover = true"
-                @mouseleave.prevent="$item.is_hover = false"
-              >
-                <i class="el-icon-close" @click="delImg($index)"></i>
-              </div>
-              <!-- <div class="image-text">{{$item.source}}</div> -->
+        <div
+          v-for="($item, $index) in banner_list"
+          :key="$index"
+          class="image-item mb20"
+          @mouseover.prevent="$item.is_hover = true"
+          @mouseleave.prevent="$item.is_hover = false"
+        >
+          <div v-show="!isFilter">
+            <!-- {{banner_list}} -->
+            <el-image lazy class="image-item" :src="$item.url" :preview-src-list="previewList" />
+            <!-- <div><el-input v-model="$item.title" size="mini" class="w-250 p5_input" v-if="titleShow"></el-input></div> -->
+
+            <div
+              v-show="$item.is_hover"
+              class="image_del"
+              @mouseover.prevent="$item.is_hover = true"
+              @mouseleave.prevent="$item.is_hover = false"
+            >
+              <i class="el-icon-close" @click="delImg($index)" />
             </div>
+            <!-- <div class="image-text">{{$item.source}}</div> -->
           </div>
+        </div>
       </draggable>
     </div>
   </div>
@@ -33,79 +43,83 @@
 <script>
 import draggable from 'vuedraggable'
 export default {
-  name: "PrintPopover",
+  name: 'print-popover',
   components: {
     draggable
   },
   props: {
     list: {
       type: Array,
-      default: []
+      default: () => ([])
     },
-    height:{
+    height: {
       type: String,
-      default:'230px'
+      default: '230px'
     },
-    isBase:{
+    isBase: {
       type: Boolean,
-      default:false
+      default: false
     },
-    isFilter:{
+    isFilter: {
       type: Boolean,
-      default:false
+      default: false
     },
-    isDisabled:{
+    isDisabled: {
       type: Boolean,
-      default:false
+      default: false
     },
-    placement:{
+    placement: {
       type: String,
-      default:'top'
+      default: 'top'
+    }
+  },
+  data() {
+    return {
+      banner_list: [],
+      savePicLoading: false, // 本地上传 上传按钮状态
+      isMainIndex: '0' // 设置产品主图
+    }
+  },
+  computed: {
+    previewList() {
+      return this.list.map(item => item.url)
     }
   },
   watch: {
     list: {
       // immediate: true, // 这句重要
       handler(val) {
-        if(this.isFilter){
+        if (this.isFilter) {
           this.banner_list = val.filter(item => item.is_filter)
-        }else{
-          this.banner_list = val   
+        } else {
+          this.banner_list = val
         }
-      },
+      }
     },
-    banner_list:{
-        handler(val){
-            this.$emit('update',val)
-        }
+    banner_list: {
+      handler(val) {
+        this.$emit('update', val)
+      }
     }
-  },
-  data() {
-    return {
-      banner_list: [],
-      savePicLoading: false, //本地上传 上传按钮状态
-      isMainIndex:"0",        //设置产品主图
-    };
   },
   mounted() {
 
   },
-  computed: {},
 
   methods: {
-    //设置产品主图
-    clcikBaseimg(idx){
+    // 设置产品主图
+    clcikBaseimg(idx) {
       this.isMainIndex = idx
     },
-    //删除图片
-    delImg(index){
-      this.$emit('delImg',index)
+    // 删除图片
+    delImg(index) {
+      this.$emit('delImg', index)
     },
-    setList(list){
-      this.$set(this,'banner_list',list.filter(item => item.is_filter))
-    },
+    setList(list) {
+      this.$set(this, 'banner_list', list.filter(item => item.is_filter))
+    }
   }
-};
+}
 </script>
 
 <style lang='scss' scoped>

@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-dialog
-      title="Update variant image"
+      title="Select variant image"
       :visible.sync="visible"
       width="40%"
       :before-close="handleClose"

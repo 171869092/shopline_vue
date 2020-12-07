@@ -49,7 +49,11 @@
           <el-table-column type="index" width="120" label="Serial number" />
           <el-table-column label="Picture" prop="sku_image">
             <template slot-scope="scope">
-              <el-image :src="scope.row.sku_image" style="height: 50px;width:50px" @click.native="openPrint(scope.row,scope.$index)" />
+              <el-image class="sku_image" :src="scope.row.sku_image" @click.native="openPrint(scope.row,scope.$index)">
+                <div slot="error" class="image-slot">
+                  <i class="error-icon el-icon-picture-outline" />
+                </div>
+              </el-image>
             </template>
           </el-table-column>
           <el-table-column label="Color" prop="sku_color">
@@ -98,8 +102,8 @@
         </el-table>
       </el-card>
     </el-form>
-    <edit-print :visible="printvisible" :is-upload="editPrintUpload" :sku-img="skuImage" @close="closePrint" />
-    <upload-print :visible="uploadPrintvisible" @close="closeUploadPrint" />
+    <edit-print :visible.sync="printvisible" :is-upload="editPrintUpload" :sku-img="skuImage" @close="closePrint" />
+    <upload-print :visible.sync="uploadPrintvisible" @close="closeUploadPrint" />
   </div>
 </template>
 <script>
@@ -293,7 +297,7 @@ export default {
     delImg(idx) {
       const url = this.formData.images[idx].url
       this.formData.sku_list.forEach(item => {
-        if (item.sku_image == url) {
+        if (item.sku_image === url) {
           item.sku_image = ''
         }
       })
@@ -315,5 +319,21 @@ export default {
       border: 1px solid #ef6f38;
       color:  #ef6f38;
     }
+}
+.sku_image {
+  width: 50px;
+  height: 50px;
+  border-radius: 3px;
+  border: 1px solid rgba(201, 204, 207, 1);
+  background: #f9fafb;
+}
+.image-slot {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ .error-icon  {
+    font-size: 35px;
+  }
 }
 </style>

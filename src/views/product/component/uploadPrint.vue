@@ -1,22 +1,24 @@
 <template>
   <div>
-    <el-dialog title="Add image" :visible.sync="visible" width="30%" :before-close="handleClose">
+    <el-dialog title="Add image" :visible.sync="dialogVisible" width="33%">
+      <!-- accept="image/png, image/jpeg" -->
       <el-upload
         ref="myUpload"
-        action="https://httpbin.org/post"
+        action="null"
         class="uploadBox"
         list-type="picture-card"
-        :on-remove="handleRemoves"
-        :before-upload="beforeUploads"
         :multiple="true"
-        :file-list="picUpLoadFileList"
+        :on-change="handleChange"
+        :on-remove="handleRemove"
+        :before-upload="handleBeforeUpload"
+        :auto-upload="false"
       >
         <i class="el-icon-plus" />
       </el-upload>
 
       <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="handleClose(1)">Cancel</el-button>
-        <el-button type="primary" size="small" :loading="savePicLoading" @click="handleClose()">Submit</el-button>
+        <el-button type="primary" size="small" :loading="savePicLoading" @click="submit()">Submit</el-button>
       </span>
     </el-dialog>
 
@@ -33,18 +35,24 @@ export default {
       type: Boolean,
       default: false
     }
-
   },
   data() {
     return {
-      picUpLoadFileList: [],
-      picUpLoadList: [],
+      perUploadList: [],
+      uploadList: [],
       savePicLoading: false
 
     }
   },
   computed: {
-
+    dialogVisible: {
+      get() {
+        return this.visible
+      },
+      set(newVal, oldVal) {
+        this.$emit('update:visible', newVal)
+      }
+    }
   },
   mounted() {
 
@@ -52,47 +60,48 @@ export default {
   methods: {
     // 关闭弹窗
     handleClose(type) {
-      console.log('type:' + type)
       if (type === 1) {
         this.$emit('close', 1)
-        return
       }
-      const data = []
-      let list = []
-      this.savePicLoading = true
-      this.picUpLoadList.forEach(item => {
-        data.push(this.upLoad(item))
-      })
-      Promise.all(data).then(result => {
-        list = result.map(item => item['data-service-file'])
-        this.$emit('close', list)
-        this.$message.success('success')
-        this.picUpLoadList = []
-        this.$refs['myUpload'].clearFiles()
-        this.savePicLoading = false
-      })
+    },
+    handleChange(file, fileList) {
+      // console.log(file, fileList)
+      this.perUploadList = fileList
     },
     // 本地上传  数据删除
-    handleRemoves(file, fileList) {
-      this.picUpLoadList = fileList.map(item => item.raw)
+    handleRemove(file, fileList) {
+      // console.log(file, fileList)
+      this.perUploadList = fileList
     },
     // 本地上传  数据更改
-    beforeUploads(file) {
-      this.picUpLoadList.push(file)
+    handleBeforeUpload(file) {
+      // this.picUpLoadList.push(file)
     },
     // 异步上传图片
-    upLoad(file) {
-      var formData = new FormData()
-      formData.append('id', file.uid)
-      formData.append('name', file.name)
-      formData.append('type', file.type)
-      formData.append('lastModifiedDate', file.lastModifiedDate)
-      formData.append('size', file.size)
-      formData.append('file', file)
+    upload(fileObj) {
+      const formData = new FormData()
+      formData.append('file', fileObj.raw)
       return new Promise((resolve, reject) => {
         uploadImage(formData).then(res => {
           resolve(res.data)
         })
+      })
+    },
+    submit() {
+      // this.$refs.myUpload.submit()
+      const req = []
+      this.savePicLoading = true
+      this.perUploadList.forEach(item => {
+        req.push(this.upload(item))
+      })
+      Promise.all(req).then(result => {
+        const list = result.map(item => item['data-service-file'])
+        this.$emit('close', list)
+        this.$message.success('upload success')
+        this.$refs['myUpload'].clearFiles()
+        this.perUploadList = []
+      }).finally(() => {
+        this.savePicLoading = false
       })
     }
   }
