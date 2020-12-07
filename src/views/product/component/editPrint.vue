@@ -88,7 +88,6 @@ export default {
   methods: {
     handleClose(type){
       if(type != 1) return this.$emit('close',1)
-      console.log(this.checkedbox);
       this.$emit('close',{check:this.checkedbox,list:this.pictureList})
     },
     //单选
@@ -110,7 +109,6 @@ export default {
       })
       this.pictureList.push(...list)
       this.checkedbox.push(...type)
-      console.log(this.checkedbox);
       this.uploadPrintvisible = false
     },
 

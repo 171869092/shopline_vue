@@ -60,7 +60,6 @@ export default {
         data.push(this.upLoad(item));
       });
       Promise.all(data).then(result => {
-        console.log(result)
         let url = "";
         let name = "";
         list = result.map(item => item["data-service-file"])

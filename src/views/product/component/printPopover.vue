@@ -68,10 +68,8 @@ export default {
       handler(val) {
         if(this.isFilter){
           this.banner_list = val.filter(item => item.is_filter)
-          console.log(this.isFilter);
         }else{
           this.banner_list = val   
-          console.log(val);
         }
       },
     },

@@ -169,7 +169,6 @@ export default {
                 }
             })
             loading.close();
-            console.log(this.formData.images);
           }
        })
     },
@@ -179,10 +178,9 @@ export default {
     },
     //保存数据
     Submit(){
+        if(this.formData.sku_list.length == 0) return  this.$message({message: 'Fill in at least one line of variation',type: 'warning'});
         this.$refs.formData.validate((valid) => {
           if (valid) {
-              console.log(this.formData.images);
-          
             this.SubmitLoading = true
             getProductSave(this.formData).then(res =>{
               if (res.code == 200) {
@@ -197,14 +195,12 @@ export default {
     },
     //新增
     addSkuData() {
-      // console.log(num)
       this.formData.sku_list.push(
         this.$options.data().formData.sku_list[0]
       )
     },
     // 删除sku
     delSkuData(index, row) {
-      console.log(row);
       this.$confirm(`Are you sure you want to delete SKU-${index + 1}？`, 'Delete SKU', {
         confirmButtonText: 'Submit',
         cancelButtonText: 'Cancel',
@@ -258,7 +254,6 @@ export default {
           }
       })
       this.printvisible = false
-      console.log(type);
       this.$set(this.formData.sku_list[this.editPrintIdx],'sku_image',type.check)
     },
     // 打开  图片编辑 sku
