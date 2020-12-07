@@ -226,7 +226,7 @@ export default {
       // position: absolute;
       // z-index: 1;
       width: 145px;
-      height: 140.5px;
+      height: 135.5px;
       max-width: 100%;
       max-height: 100%;
     }
