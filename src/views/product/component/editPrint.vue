@@ -220,15 +220,15 @@ export default {
     width: 100%;
     border-radius: 5px;
     transform: translateZ(0px);
+    overflow: hidden;
     .image {
       // height: 120px;
       // position: absolute;
       // z-index: 1;
-      width: 100%;
+      width: 145px;
       height: 140.5px;
       max-width: 100%;
       max-height: 100%;
-      overflow: hidden;
     }
   }
   .icon {
