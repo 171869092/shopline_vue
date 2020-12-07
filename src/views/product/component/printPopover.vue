@@ -11,11 +11,12 @@
           disabled:isDisabled
         }"
       >
-          <div v-for="($item, $index) in banner_list" class="image-item mb5" :key="$index" @mouseover.prevent="$item.is_hover = true" @mouseleave.prevent="$item.is_hover = false">
+          <div v-for="($item, $index) in banner_list" class="image-item mb20" :key="$index" @mouseover.prevent="$item.is_hover = true" @mouseleave.prevent="$item.is_hover = false">
             <div v-show="!isFilter">
               <!-- {{banner_list}} -->
-                <el-image :src="$item.url" :preview-src-list="banner_list.map(item =>item.url)"></el-image>
+                <el-image class="image-item" :src="$item.url" :preview-src-list="banner_list.map(item =>item.url)"></el-image>
                 <!-- <div><el-input v-model="$item.title" size="mini" class="w-250 p5_input" v-if="titleShow"></el-input></div> -->
+                
               <div class="image_del" v-show="$item.is_hover"
                 @mouseover.prevent="$item.is_hover = true"
                 @mouseleave.prevent="$item.is_hover = false"
@@ -109,8 +110,8 @@ export default {
 
 <style lang='scss' scoped>
 .list-wrap {
-  height:180px;
-  overflow:auto;
+  height:300px!important;
+  // overflow:auto;
 }
 .image-img {
   width: 80px;
@@ -119,11 +120,12 @@ export default {
   border:1px solid #c8c8c8;
 }
 .image-item {
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   float: left;
-  margin-right: 10px;
+  // margin-right: 10px;
   position: relative;
+  margin-left: 20px;
 }
 .image_main{
   position: absolute;
@@ -144,10 +146,9 @@ export default {
 .image_del {
   padding: 0px 4px;
   position: absolute;
-  top: 10px;
   top: -8px;
-  right: -8px;
-  border-radius:24px;
+  right: -26px;
+  border-radius:16px;
   background: red;
   color:#fff;
 }

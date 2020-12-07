@@ -8,10 +8,10 @@
     >
       <!-- {{ checked }} -->
       <div class="gridbox">
-        <div class="add_img">
+        <!-- <div class="add_img">
           <span class="tip-1">Add image</span>
           <p class="tip-2">or drop images to upload</p>
-        </div>
+        </div> -->
         <div
           v-for="($item, $index) in pictureList"
           :key="$index"
