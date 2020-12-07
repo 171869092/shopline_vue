@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-dialog title="编辑图片" :visible.sync="visible" width="40%" :before-close="handleClose">
+    <el-dialog title="Update variant image" :visible.sync="visible" width="40%" :before-close="handleClose">
       <div class="hidden printTitle mb10">
         <el-button type="primary" @click="openUploadPrint" v-if="isUpload" style="float:right" size="small">Add image</el-button>
       </div>

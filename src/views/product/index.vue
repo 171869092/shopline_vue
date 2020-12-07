@@ -1,7 +1,7 @@
 <template>
   <div class="product">
     <div class="clearfix">
-       <el-button type="primary" size="small" class="f-r mr50 mt20" @click="productAdd('add')">Add products</el-button>
+       <el-button type="primary" icon="el-icon-plus" size="small" class="f-r mr50 mt20" @click="productAdd('add')">Add products</el-button>
        <el-button size="small" class="f-r mr50 mt20 button-border" @click="providerClick">Vendor</el-button>     
     </div>
     <el-card class="box-card">
