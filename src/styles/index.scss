@@ -208,3 +208,15 @@ $align-list: center, start, end, flex-start, flex-end, self-start, self-end, str
     align-items: #{$item};
   }
 }
+
+.variant-image {
+  .el-radio__input {
+    position: absolute;
+    z-index: 100;
+    top: 10px;
+    left: 10px;
+  }
+  .el-radio__label {
+    padding-left: 0px;
+  }
+}
