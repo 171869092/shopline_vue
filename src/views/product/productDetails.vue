@@ -90,7 +90,7 @@
             </template>
           </el-table-column>
 
-          <el-table-column label="Operation" width="120px">
+          <el-table-column label="Operating" width="120px">
             <template slot-scope="scope">
               <el-button type="danger" size="mini" @click="delSkuData(scope.$index, scope.row)">delete</el-button>
             </template>
