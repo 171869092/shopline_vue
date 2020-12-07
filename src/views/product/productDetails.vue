@@ -239,6 +239,8 @@ export default {
             if (res.code == 200) {
               this.$message({ message: res.message, type: 'success' })
               this.$router.push({ name: 'product' })
+            }else{
+              this.$message({message: res.message,type: 'warning'});
             }
           })
         })
