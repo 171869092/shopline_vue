@@ -3,13 +3,14 @@
     <el-dialog title="Add image" :visible.sync="visible" width="30%" :before-close="handleClose">
       <el-upload
         ref="myUpload"
-        action="https://httpbin.org/post"
+        action="null"
         class="uploadBox"
         list-type="picture-card"
         :on-remove="handleRemoves"
         :before-upload="beforeUploads"
         :multiple="true"
         :file-list="picUpLoadFileList"
+        :auto-upload="false"
       >
         <i class="el-icon-plus" />
       </el-upload>
