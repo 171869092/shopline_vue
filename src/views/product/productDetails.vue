@@ -122,7 +122,8 @@ export default {
             sku_size: '',
             sku_price: '',
             sku_number: '',
-            sku: ''
+            sku: '',
+            id:''
           }
         ],
         images: []

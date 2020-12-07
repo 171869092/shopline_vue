@@ -49,7 +49,7 @@ export default {
         { label: 'Inventory', value: 'stock' },
         { label: 'Type', value: 'type' },
         { label: 'Vendor', value: 'service_name' },
-        { label: 'Operation', type: 'operation' }
+        // { label: 'Operation', type: 'operation' }
       ],
       tableData: [],
       productSelection: [],
