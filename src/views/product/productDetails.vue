@@ -219,7 +219,9 @@ export default {
               if (res.code == 200) {
                 this.$message({ message: res.message, type: 'success' })
                 this.formData.sku_list.splice(index, 1)
-              }
+              }else{
+                  this.$message({message: res.message,type: 'warning'});
+                }
             })
           } else {
             this.formData.sku_list.splice(index, 1)
