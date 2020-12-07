@@ -45,11 +45,11 @@ export default {
       // 列表表头
       labelList: [
         { label: 'Product', value: 'id', type: 'product' ,width:'500'},
-        { label: 'State', value: 'status' },
+        { label: 'Status', value: 'status' },
         { label: 'Inventory', value: 'stock' },
         { label: 'Type', value: 'type' },
         { label: 'Vendor', value: 'service_name' },
-        { label: 'Operation', type: 'operation' }
+        // { label: 'Operating', type: 'Operating' }
       ],
       tableData: [],
       productSelection: [],
