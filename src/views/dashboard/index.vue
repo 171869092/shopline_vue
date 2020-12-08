@@ -51,11 +51,13 @@ export default {
       const shopify = getStorage('shopify')
       // eslint-disable-next-line no-prototype-builtins
       if (this.$route.query.hasOwnProperty('hmac') || shopify && shopify.hmac) {
-        shopifyPush({ shop: shopify.shop }).then(res => {
-          console.log(res.data)
-        }).catch(err => {
-          console.log(err)
-        })
+        setTimeout(() => {
+          shopifyPush({ shop: shopify.shop }).then(res => {
+            console.log(res.data)
+          }).catch(err => {
+            console.log(err)
+          })
+        }, 300000)
       }
     }
   }

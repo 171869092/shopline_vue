@@ -94,6 +94,7 @@ export default {
       logisticsStatus: { 1: 'Waiting For Delivery', 2: 'Received', 3: 'In Transit', 4: 'Delivered', 5: 'Rejected', 6: 'Canceled', 7: 'Returned', 8: 'Pending Transfer', 9: 'Return Goods In Stock' },
       orderStatus: { 1: 'Pending payment', 2: 'Processing', 3: 'Complete payment', 4: 'Refunded', 5: 'Order exception', 6: 'Partially payment', 7: 'Partially refunded', 8: 'Order canceled' },
       tabList: [
+        { label: 'All', name: '0' },
         { label: 'Waiting For Delivery', name: '1' },
         { label: 'Received', name: '2' },
         { label: 'In Transit', name: '3' },
