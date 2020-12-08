@@ -149,7 +149,7 @@
 <script>
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
-
+import { setStorage } from '@/utils/storage'
 export default {
   components: {
     Swiper,
@@ -193,6 +193,7 @@ export default {
   },
   created() {
     console.log({ ...this.$route.query })
+    setStorage('shopify', this.$route.query)
   },
   methods: {
     serialize(obj) {
