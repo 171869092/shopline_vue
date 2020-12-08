@@ -81,7 +81,7 @@ export default {
   data() {
     return {
       formQuery: {
-        logistics_status: '1',
+        logistics_status: '0',
         iDisplayStart: 0,
         iDisplayLength: 2
       },
