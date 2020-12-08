@@ -86,8 +86,8 @@ export default {
           this.$store.dispatch('user/login', this.loginForm).then(() => {
             const shopify = getStorage('shopify')
             // eslint-disable-next-line no-prototype-builtins
-            if (shopify) {
-              shopifyApi({ ...shopify }).then(res => {
+            if (this.$route.query.hasOwnProperty('hmac') || shopify && shopify.hmac) {
+              shopifyApi({ ...this.$route.query }).then(res => {
                 shopifyPush({ shop: shopify.shop }).then(res => {
                   console.log(res.data)
                 }).catch(err => {

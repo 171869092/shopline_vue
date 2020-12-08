@@ -192,8 +192,11 @@ export default {
     }
   },
   created() {
-    console.log({ ...this.$route.query })
-    setStorage('shopify', this.$route.query)
+    // console.log({ ...this.$route.query })
+    // eslint-disable-next-line no-prototype-builtins
+    if (this.$route.query.hasOwnProperty('hmac')) {
+      setStorage('shopify', this.$route.query)
+    }
   },
   methods: {
     serialize(obj) {

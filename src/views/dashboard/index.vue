@@ -6,10 +6,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { shopifyApi } from '@/api/user'
+import { shopifyPush } from '@/api/user'
 // import createApp from '@shopify/app-bridge'
 // import { Redirect, Button } from '@shopify/app-bridge/actions'
 // import { getSessionToken } from '@shopify/app-bridge-utils'
+import { getStorage } from '@/utils/storage'
 export default {
   name: 'dashboard',
   computed: {
@@ -47,16 +48,11 @@ export default {
     shopifyInit() {
       // const query = { 'code': 'c20411e3859748cc53f583b221048c81', 'hmac': '5cba719e7d85008aa29d7a33e946e1123595cbda5647958e40257699c4f4bb3b', 'shop': 'live-by-test.myshopify.com', 'timestamp': '1606810839' }
       // console.log(this.serialize(query))
-
-      // eslint-disable-next-line no-unused-vars
-      var timer = setInterval(() => {
-        console.log('100')
-      }, 3000)
-
+      const shopify = getStorage('shopify')
       // eslint-disable-next-line no-prototype-builtins
-      if (this.$route.query.hasOwnProperty('hmac')) {
-        shopifyApi({ ...this.$route.query }).then(res => {
-          console.log(res)
+      if (this.$route.query.hasOwnProperty('hmac') || shopify && shopify.hmac) {
+        shopifyPush({ shop: shopify.shop }).then(res => {
+          console.log(res.data)
         }).catch(err => {
           console.log(err)
         })
