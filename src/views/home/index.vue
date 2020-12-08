@@ -20,7 +20,7 @@
                 <router-link class="login-btn" :to="{name: 'dashboard'}">Dashboard</router-link>
               </div>
               <div v-else>
-                <router-link class="login-btn" :to="{name: 'login'}">Login</router-link>
+                <router-link class="login-btn" :to="{name: 'login', query: $route.query}">Login</router-link>
                 <el-button type="primary" @click="registerClick">Get Started</el-button>
               </div>
             </form>
@@ -191,7 +191,9 @@ export default {
       return !!this.$store.getters.token
     }
   },
-  created() {},
+  created() {
+    console.log({ ...this.$route.query })
+  },
   methods: {
     serialize(obj) {
       var str = []
