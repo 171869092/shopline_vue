@@ -12,47 +12,43 @@
             fit
             :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}"
           >
-            <!-- <el-table-column type="selection" /> -->
             <el-table-column label="Expand" type="expand" width="100">
-              <template slot-scope="props">
-                <el-form label-position="left" inline class="demo-table-expand">
-                  <el-form-item label="商品名称">
-                    <span>{{ props.row.name }}</span>
-                  </el-form-item>
-                  <el-form-item label="所属店铺">
-                    <span>{{ props.row.shop }}</span>
-                  </el-form-item>
-                  <el-form-item label="商品 ID">
-                    <span>{{ props.row.id }}</span>
-                  </el-form-item>
-                  <el-form-item label="店铺 ID">
-                    <span>{{ props.row.shopId }}</span>
-                  </el-form-item>
-                  <el-form-item label="商品分类">
-                    <span>{{ props.row.category }}</span>
-                  </el-form-item>
-                  <el-form-item label="店铺地址">
-                    <span>{{ props.row.address }}</span>
-                  </el-form-item>
-                  <el-form-item label="商品描述">
-                    <span>{{ props.row.desc }}</span>
-                  </el-form-item>
-                </el-form>
+              <template slot-scope="scope">
+                <el-table :data="scope.row.orders_sublist" style="width: 100%">
+                  <el-table-column prop="service_name" label="Service Provider" width="200">
+                    <template slot-scope="props">
+                      <div>{{ props.row.service_name || '--' }}</div>
+                    </template>
+                  </el-table-column>
+                  <el-table-column prop="total_price" label="Order Amount" width="150" />
+                  <el-table-column prop="order_status" label="Order Status" width="200" />
+                  <el-table-column prop="abnormal_reason" label="Abnormal Reason">
+                    <template slot-scope="props">
+                      <div v-html="props.row.abnormal_reason" />
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="Logistics Status" width="250">
+                    <template slot-scope="props">
+                      <div>{{ logisticsStatus[props.row.logistics_status] }}</div>
+                      <div class="primary pointer" @click="logDetail(props.row)">Logistics Details</div>
+                    </template>
+                  </el-table-column>
+                </el-table>
               </template>
             </el-table-column>
-            <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
+            <el-table-column label="Third Party Order Number">
               <template slot-scope="scope">
-                <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
-                <span v-if="item.type == 'order_no'">
-                  <span class="primary pointer" @click="toLink(scope.row)">{{ scope.row.thirdParty_order_on }}</span>
-                </span>
-                <span v-if="item.type == 'order_status'">
-                  <div>{{ orderStatus[scope.row.order_status] }}</div>
-                </span>
-                <span v-if="item.type == 'logistics_status'">
-                  <div>{{ logisticsStatus[scope.row.logistics_status] }}</div>
-                  <div class="primary pointer" @click="logDetail(scope.row)">Logistics Details</div>
-                </span>
+                <span class="primary pointer" @click="toLink(scope.row)">{{ scope.row.thirdParty_order_on }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="Order Amount">
+              <template slot-scope="scope">
+                <div>{{ scope.row.total_price }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="Order Status">
+              <template slot-scope="scope">
+                <div>{{ orderStatus[scope.row.order_status] }}</div>
               </template>
             </el-table-column>
           </el-table>
