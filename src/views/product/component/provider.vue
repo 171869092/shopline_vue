@@ -58,7 +58,7 @@ export default {
       if (type == 1) {
         this.$refs.providerForm.validate((valid) => {
           if (valid) {
-            if (this.$parent.providerTitle == 'Vendor') {
+            if (this.$parent.providerTitle == 'Hosting') {
               this.loading = true
               this.providerForm.product_list = this.$parent.productSelection.map(item =>{
                 return {
