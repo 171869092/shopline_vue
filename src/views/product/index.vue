@@ -2,7 +2,9 @@
   <div class="product">
     <div class="clearfix">
        <el-button type="primary" icon="el-icon-plus" size="small" class="f-r mr50 mt20" @click="productAdd('add')">Add products</el-button>
-       <el-button size="small" class="f-r mr50 mt20 button-border" @click="providerClick">Vendor</el-button>     
+       <el-button size="small" type="danger" class="f-r mr30 mt20" @click="CancleHostClick">Cancle Host</el-button>    
+       <el-button size="small" class="f-r mr30 mt20 button-border" @click="providerClick">Hosting</el-button>   
+         
     </div>
     <el-card class="box-card">
       <el-table
@@ -48,14 +50,14 @@ export default {
         { label: 'Status', value: 'status' },
         { label: 'Inventory', value: 'stock' },
         { label: 'Type', value: 'type' },
-        { label: 'Vendor', value: 'service_name' },
+        { label: 'Hosting', value: 'service_name' },
         // { label: 'Operating', type: 'Operating' }
       ],
       tableData: [],
       productSelection: [],
       loading: false,
       providerVisible: false,
-      providerTitle: 'Vendor',
+      providerTitle: 'Hosting',
       listQuery:{
         total:0,
         page:1,
@@ -92,7 +94,7 @@ export default {
        this.$router.push({ name: 'productDetails', query: { type: type,title:title,id:id}})
     },
    
-    //选择服务商
+    //托管
     providerClick(type) {
       if(this.productSelection.length == 0) return  this.$message({message: 'Please check the product before proceeding',type: 'warning'});
       this.providerVisible = true
@@ -102,6 +104,10 @@ export default {
         this.Inquire()
       }
       this.providerVisible = false
+    },
+    // 取消托管
+    CancleHostClick(){
+
     }
   }
 }
