@@ -8,6 +8,7 @@
       <div class="right-panel">
         <div class="login-box flexbox justify-center align-center">
           <div class="login">
+            {{ $route.query }}
             <div class="login-header flexbox justify-space-between">
               <router-link :to="{name: 'home'}">
                 <img class="cursor_p" src="@/assets/home/logo@2x.png" alt="" style="width:130px">
@@ -57,7 +58,7 @@
   </div>
 </template>
 <script>
-// import { testApi, gtoken } from '@/api/user'
+import { shopifyApi } from '@/api/user'
 export default {
   name: 'login',
   components: {
@@ -83,7 +84,15 @@ export default {
         if (valid) {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm).then(() => {
-            this.$router.push({ name: 'product' })
+            // eslint-disable-next-line no-prototype-builtins
+            if (this.$route.query.hasOwnProperty('hmac')) {
+              shopifyApi({ ...this.$route.query }).then(res => {
+                console.log(res)
+              }).catch(err => {
+                console.log(err)
+              })
+            }
+            this.$router.push({ name: 'dashboard' })
             this.loading = false
           }).catch(() => {
             this.loading = false

@@ -17,7 +17,7 @@
             </ul>
             <form class="form-inline mt-2 mt-md-0">
               <div v-if="isLogin">
-                <router-link class="login-btn" :to="{name: 'product'}">Dashboard</router-link>
+                <router-link class="login-btn" :to="{name: 'dashboard'}">Dashboard</router-link>
               </div>
               <div v-else>
                 <router-link class="login-btn" :to="{name: 'login'}">Login</router-link>
@@ -149,10 +149,6 @@
 <script>
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
-import { shopifyApi } from '@/api/user'
-// import createApp from '@shopify/app-bridge'
-// import { Redirect, Button } from '@shopify/app-bridge/actions'
-// import { getSessionToken } from '@shopify/app-bridge-utils'
 
 export default {
   components: {
@@ -195,35 +191,8 @@ export default {
       return !!this.$store.getters.token
     }
   },
-  created() {
-    this.shopifyInit()
-  },
-  async mounted() {
-    // console.log('init')
-    // const shopOrigin = 'live-by-test.myshopify.com'
-    // const apiKey = '5fdf0435f9093519625df5bfca4c8a31'
-    // const app = createApp({
-    //   apiKey: apiKey,
-    //   shopOrigin: shopOrigin
-    // })
-    // // requires an App Bridge instance
-    // const sessionToken = await getSessionToken(app)
-    // console.log('token', sessionToken)
-  },
+  created() {},
   methods: {
-    shopifyInit() {
-      // const query = { 'code': 'c20411e3859748cc53f583b221048c81', 'hmac': '5cba719e7d85008aa29d7a33e946e1123595cbda5647958e40257699c4f4bb3b', 'shop': 'live-by-test.myshopify.com', 'timestamp': '1606810839' }
-      // console.log(this.serialize(query))
-
-      // eslint-disable-next-line no-prototype-builtins
-      if (this.$route.query.hasOwnProperty('hmac')) {
-        shopifyApi({ ...this.$route.query }).then(res => {
-          console.log(res)
-        }).catch(err => {
-          console.log(err)
-        })
-      }
-    },
     serialize(obj) {
       var str = []
       for (var p in obj) {

@@ -109,7 +109,7 @@ export default {
     }
 
     .avatar-container {
-      margin-right: 30px;
+      margin-right: 40px;
 
       .avatar-wrapper {
         position: relative;
