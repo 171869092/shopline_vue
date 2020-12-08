@@ -58,7 +58,7 @@
   </div>
 </template>
 <script>
-import { shopifyApi } from '@/api/user'
+import { shopifyApi, shopifyPush } from '@/api/user'
 export default {
   name: 'login',
   components: {
@@ -87,7 +87,11 @@ export default {
             // eslint-disable-next-line no-prototype-builtins
             if (this.$route.query.hasOwnProperty('hmac')) {
               shopifyApi({ ...this.$route.query }).then(res => {
-                console.log(res)
+                shopifyPush({ shop: this.$route.query.shop }).then(res => {
+                  console.log(res.data)
+                }).catch(err => {
+                  console.log(err)
+                })
               }).catch(err => {
                 console.log(err)
               })

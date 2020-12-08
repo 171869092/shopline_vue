@@ -50,7 +50,7 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('user/logout')
-      clearInterval(window.timeId)
+      window.clearInterval(window.timer)
       this.$router.push({ name: 'home' })
     }
   }

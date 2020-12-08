@@ -25,6 +25,14 @@ export function logout() {
 
 export function shopifyApi(data) {
   return request({
+    url: '/shopify/index/indexs',
+    method: 'get',
+    params: data
+  })
+}
+
+export function shopifyPush(data) {
+  return request({
     url: '/shopify/index/push',
     method: 'get',
     params: data

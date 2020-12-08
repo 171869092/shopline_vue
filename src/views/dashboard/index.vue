@@ -48,7 +48,8 @@ export default {
       // const query = { 'code': 'c20411e3859748cc53f583b221048c81', 'hmac': '5cba719e7d85008aa29d7a33e946e1123595cbda5647958e40257699c4f4bb3b', 'shop': 'live-by-test.myshopify.com', 'timestamp': '1606810839' }
       // console.log(this.serialize(query))
 
-      window.timeId = setInterval(() => {
+      // eslint-disable-next-line no-unused-vars
+      var timer = setInterval(() => {
         console.log('100')
       }, 3000)
 
