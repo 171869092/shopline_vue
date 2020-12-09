@@ -10,11 +10,12 @@
             style="width: 100%"
             highlight-current-row
             fit
+            stripe
             :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}"
           >
             <el-table-column label="Expand" type="expand" width="100">
               <template slot-scope="scope">
-                <el-table :data="scope.row.orders_sublist" style="width: 100%">
+                <el-table border :data="scope.row.orders_sublist" style="width: 100%">
                   <el-table-column prop="service_name" label="Service Provider" width="200">
                     <template slot-scope="props">
                       <div>{{ props.row.service_name || '--' }}</div>
@@ -60,13 +61,16 @@
         </el-tab-pane>
       </el-tabs>
     </el-card>
-    <el-dialog title="Logistics Details" :visible.sync="dialogVisible" width="700px">
-      <el-timeline v-if="logisticList">
-        <el-timeline-item v-for="(item,key) in logisticList" :key="key" color="#0bbd87" :timestamp="item.ProcessDate" placement="top">
-          <p>{{ item.ProcessLocation }}</p>
-          <p>{{ item.ProcessContent }}</p>
-        </el-timeline-item>
-      </el-timeline>
+    <el-dialog class="custom-dialog" title="Logistics Details" :visible.sync="dialogVisible" width="700px" @open="handleOpen">
+      <el-scrollbar ref="myScrollbar" wrap-class="dialog-scrollbar">
+        <el-timeline class="logistics-timeline">
+          <el-timeline-item v-for="(item,key) in 20" :key="key" color="#EF6F38FF">
+            <!-- <span style="color: #909399">{{ item.ProcessDate }}</span><span class="ml40">{{ item.ProcessContent }}</span> -->
+            <p>Shipment information received</p>
+            <span style="color: #909399">2020-12-09 11:06:24</span>
+          </el-timeline-item>
+        </el-timeline>
+      </el-scrollbar>
     </el-dialog>
   </div>
 </template>
@@ -175,6 +179,11 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+    handleOpen() {
+      this.$nextTick(() => {
+        this.$refs.myScrollbar.wrap.scrollTop = 0 // 这句重置滚动条高度
+      })
     }
   }
 }
@@ -182,5 +191,8 @@ export default {
 <style scoped>
 .my-orders {
   padding: 30px;
+}
+.logistics-timeline {
+  padding-left: 20px;
 }
 </style>

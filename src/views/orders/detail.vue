@@ -96,8 +96,7 @@
             </div>
             <el-timeline class="mt20 pl20" :reverse="false">
               <el-timeline-item
-                v-for="(activity, index) in detailInfo.track_info
-                  .OrderTrackingDetails"
+                v-for="(activity, index) in detailInfo.track_info.OrderTrackingDetails"
                 :key="index"
               >
                 <span>{{ activity.ProcessDate }}</span><span class="ml40">{{ activity.ProcessContent }}</span>

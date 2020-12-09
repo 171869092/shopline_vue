@@ -151,3 +151,15 @@
     }
   }
 }
+.custom-dialog {
+  .el-dialog__body {
+    border-top: 1px solid #ddd;
+  }
+  // .el-dialog__body {
+  //   max-height: 680px !important;
+  //   overflow: overlay !important
+  // }
+}
+.dialog-scrollbar {
+  max-height: 550px;
+}
