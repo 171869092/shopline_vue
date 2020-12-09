@@ -76,7 +76,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'product',
         component: () => import('@/views/product/index'),
-        meta: { title: 'Product', icon: 'el-icon-goods' }
+        meta: { title: 'My Products', icon: 'el-icon-goods' }
       },
       {
         path: 'productDetails',
@@ -96,7 +96,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'orders',
         component: () => import('@/views/orders/index'),
-        meta: { title: 'Orders', icon: 'el-icon-tickets' }
+        meta: { title: 'My Orders', icon: 'el-icon-tickets' }
       },
       {
         path: 'detail',
