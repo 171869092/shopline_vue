@@ -6,7 +6,7 @@
     </div>
     <div class="main-container" :class="{'fixed':fixedHeader}">
       <el-container>
-        <el-aside width="220px"> <sidebar class="sidebar-container" /></el-aside>
+        <el-aside width="240px"> <sidebar class="sidebar-container" /></el-aside>
         <el-main><app-main /></el-main>
       </el-container>
     </div>
