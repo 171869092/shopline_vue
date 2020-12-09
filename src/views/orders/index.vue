@@ -62,12 +62,13 @@
       </el-tabs>
     </el-card>
     <el-dialog class="custom-dialog" title="Logistics Details" :visible.sync="dialogVisible" width="700px" @open="handleOpen">
-      <el-scrollbar ref="myScrollbar" wrap-class="dialog-scrollbar">
+      <el-scrollbar ref="myScrollbar" v-loading="timelineLoading" wrap-class="dialog-scrollbar">
         <el-timeline class="logistics-timeline">
-          <el-timeline-item v-for="(item,key) in 20" :key="key" color="#EF6F38FF">
-            <!-- <span style="color: #909399">{{ item.ProcessDate }}</span><span class="ml40">{{ item.ProcessContent }}</span> -->
-            <p>Shipment information received</p>
-            <span style="color: #909399">2020-12-09 11:06:24</span>
+          <el-timeline-item v-for="(item,key) in logisticList" :key="key" color="#EF6F38FF">
+            <!-- <p>{{ item.ProcessContent }}</p>
+            <span style="color: #909399">{{ item.ProcessDate }}</span> -->
+            <p>{{ item.ProcessContent }}</p>
+            <span style="color: #909399">{{ item.ProcessDate }}</span>
           </el-timeline-item>
         </el-timeline>
       </el-scrollbar>
@@ -119,7 +120,8 @@ export default {
       tableData: [],
       logisticList: [],
       loading: false,
-      dialogVisible: false
+      dialogVisible: false,
+      timelineLoading: false
     }
   },
   computed: {},
@@ -171,9 +173,11 @@ export default {
     },
     logDetail(row) {
       this.dialogVisible = true
+      this.timelineLoading = true
       getLogisticInfo({ logistics_no: row.logistics_no }).then(res => {
         console.log(res.data)
         if (res.code === 200) {
+          this.timelineLoading = false
           this.logisticList = res.data.OrderTrackingDetails
         }
       }).catch(err => {

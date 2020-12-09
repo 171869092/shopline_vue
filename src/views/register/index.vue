@@ -22,19 +22,19 @@
                   <span>from building your ecommerce empire</span>
                 </h5>
               </div>
-              <el-form ref="loginForm" class="mt40" label-position="top" :model="loginForm">
-                <el-form-item label="Your Email">
+              <el-form ref="loginForm" :model="loginForm" :rules="rules" class="mt40" label-position="top">
+                <el-form-item label="Your Email" prop="email">
                   <el-input v-model="loginForm.email">
                     <el-button slot="append" class="secondary">identifying code</el-button>
                   </el-input>
                 </el-form-item>
-                <el-form-item label="Identifying code">
+                <el-form-item label="Identifying code" prop="code">
                   <el-input v-model="loginForm.code" />
                 </el-form-item>
-                <el-form-item label="Your Password">
+                <el-form-item label="Your Password" prop="password">
                   <el-input v-model="loginForm.password" type="password" />
                 </el-form-item>
-                <el-form-item label="Your Name">
+                <el-form-item label="Your Name" prop="name">
                   <el-input v-model="loginForm.name" />
                 </el-form-item>
               </el-form>
@@ -67,6 +67,7 @@
 </template>
 <script>
 // import BNavbar from '@/views/home/components/navbar'
+import { register } from '@/api/user'
 export default {
   name: 'register',
   components: {
@@ -75,8 +76,24 @@ export default {
   props: {},
   data() {
     return {
-      loginForm: {},
-      rules: {},
+      loginForm: {
+        email: '',
+        code: '',
+        password: '',
+        name: ''
+      },
+      rules: {
+        email: [
+          { required: true, message: 'Can not be empty', trigger: 'blur' },
+          { pattern: /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/, message: 'Please input the correct email address', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: 'Can not be empty', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: 'Can not be empty', trigger: 'blur' }
+        ]
+      },
       loading: false
     }
   },
@@ -88,7 +105,17 @@ export default {
       this.$router.push({ name: 'login' })
     },
     handleRegister() {
-
+      this.$refs.loginForm.validate(valid => {
+        if (valid) {
+          register(this.loginForm).then(res => {
+            console.log(res.data)
+          }).catch(err => {
+            console.log(err)
+          })
+        } else {
+          console.log('err')
+        }
+      })
     }
   }
 }

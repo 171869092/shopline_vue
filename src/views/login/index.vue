@@ -21,11 +21,11 @@
                   <span>from building your ecommerce empire</span>
                 </h5>
               </div>
-              <el-form ref="loginForm" class="mt40" label-position="top" :model="loginForm">
-                <el-form-item label="Your Email">
+              <el-form ref="loginForm" :model="loginForm" :rules="rules" class="mt40" label-position="top">
+                <el-form-item label="Your Email" prop="email">
                   <el-input v-model="loginForm.email" />
                 </el-form-item>
-                <el-form-item label="Your Password">
+                <el-form-item label="Your Password" prop="password">
                   <el-input v-model="loginForm.password" type="password" />
                 </el-form-item>
               </el-form>
@@ -67,11 +67,19 @@ export default {
   props: {},
   data() {
     return {
-      rules: {},
       loginForm: {
-        email: '171869092@qq.com',
-        password: '123456',
+        email: '',
+        password: '',
         id: 1
+      },
+      rules: {
+        email: [
+          { required: true, message: 'Can not be empty', trigger: 'blur' },
+          { pattern: /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/, message: 'Please input the correct email address', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: 'Can not be empty', trigger: 'blur' }
+        ]
       },
       loading: false
     }
