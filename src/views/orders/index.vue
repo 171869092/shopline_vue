@@ -28,7 +28,7 @@
                   </el-table-column>
                   <el-table-column prop="abnormal_reason" label="Abnormal Reason">
                     <template slot-scope="props">
-                      <div v-html="props.row.abnormal_reason" />
+                      <div v-html="props.row.abnormal_reason || '--'" />
                     </template>
                   </el-table-column>
                   <el-table-column label="Logistics Status" width="250">
