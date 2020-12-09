@@ -2,7 +2,7 @@
   <div class="product">
     <div class="clearfix">
        <el-button type="primary" icon="el-icon-plus" size="small" class="f-r mr50 mt20" @click="productAdd('add')">Add products</el-button>
-       <el-button size="small" type="danger" class="f-r mr30 mt20" @click="CancleHostClick">Cancle Host</el-button>    
+       <el-button size="small" type="danger" class="f-r mr30 mt20" @click="CancleHostClick">Cancle Hosting</el-button>    
        <el-button size="small" class="f-r mr30 mt20 button-border" @click="providerClick">Hosting</el-button>   
          
     </div>
@@ -35,7 +35,7 @@
   </div>
 </template>
 <script>
-import { getProductList ,getProductService} from '@/api/product'
+import { getProductList ,getProductService ,getCancelHosting} from '@/api/product'
 export default {
   name: 'product',
   components: {
@@ -108,7 +108,28 @@ export default {
     // 取消托管
     CancleHostClick(){
          if(this.productSelection.length == 0) return  this.$message({message: 'Please check the product before proceeding',type: 'warning'});
-    }
+         this.$confirm(`Are you sure to cancel hosting？`, 'Cancle Hosting', {
+            confirmButtonText: 'Submit',
+            cancelButtonText: 'Cancel',
+            type: 'warning'
+          })
+            .then(() => {
+              const productObj = {}
+              productObj.product_list = this.productSelection.map(item =>{
+                  return {
+                    id:item.id,
+                  }
+                })
+                getCancelHosting(productObj).then(res => {
+                  if (res.code == 200) {
+                    this.$message({ message: res.message, type: 'success' })
+                    this.Inquire()
+                  }else{
+                      this.$message({message: res.message,type: 'warning'});
+                    }
+                })
+            }).catch(() => {})
+      }
   }
 }
 </script>

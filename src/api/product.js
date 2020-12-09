@@ -65,3 +65,11 @@ export function getProductService(data) {
     data
   })
 }
+// 取消托管
+export function getCancelHosting(data) {
+  return request({
+    url: '/goods/goods/cancel-hosting',
+    method: 'post',
+    data
+  })
+}
