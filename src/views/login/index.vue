@@ -87,7 +87,9 @@ export default {
             const shopify = getStorage('shopify')
             // eslint-disable-next-line no-prototype-builtins
             if (this.$route.query.hasOwnProperty('hmac') || shopify && shopify.hmac) {
-              shopifyApi({ ...this.$route.query }).then(res => {
+              // eslint-disable-next-line no-prototype-builtins
+              const query = this.$route.query.hasOwnProperty('hmac') ? this.$route.query : shopify
+              shopifyApi({ ...query }).then(res => {
                 shopifyPush({ shop: shopify.shop }).then(res => {
                   console.log(res.data)
                 }).catch(err => {

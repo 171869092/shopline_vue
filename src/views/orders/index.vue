@@ -21,7 +21,11 @@
                     </template>
                   </el-table-column>
                   <el-table-column prop="total_price" label="Order Amount" width="150" />
-                  <el-table-column prop="order_status" label="Order Status" width="200" />
+                  <el-table-column prop="order_status" label="Order Status" width="200">
+                    <template slot-scope="props">
+                      <div>{{ orderStatus[props.row.order_status] }}</div>
+                    </template>
+                  </el-table-column>
                   <el-table-column prop="abnormal_reason" label="Abnormal Reason">
                     <template slot-scope="props">
                       <div v-html="props.row.abnormal_reason" />
