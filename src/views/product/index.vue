@@ -107,7 +107,7 @@ export default {
     },
     // 取消托管
     CancleHostClick(){
-
+         if(this.productSelection.length == 0) return  this.$message({message: 'Please check the product before proceeding',type: 'warning'});
     }
   }
 }
