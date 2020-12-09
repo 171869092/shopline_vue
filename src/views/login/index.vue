@@ -91,8 +91,10 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
+          const shopify = getStorage('shopify')
+          const shop = shopify && shopify.shop ? shopify.shop : ''
+          this.loginForm.shop = shop
           this.$store.dispatch('user/login', this.loginForm).then(() => {
-            const shopify = getStorage('shopify')
             // eslint-disable-next-line no-prototype-builtins
             if (this.$route.query.hasOwnProperty('hmac') || shopify && shopify.hmac) {
               // eslint-disable-next-line no-prototype-builtins
