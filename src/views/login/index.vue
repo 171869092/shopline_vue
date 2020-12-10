@@ -26,7 +26,7 @@
                   <el-input v-model="loginForm.email" />
                 </el-form-item>
                 <el-form-item label="Your Password" prop="password">
-                  <el-input v-model="loginForm.password" type="password" />
+                  <el-input v-model="loginForm.password" type="password" @keyup.enter.native="handleLogin" />
                 </el-form-item>
               </el-form>
               <div class="btn-group mt20">

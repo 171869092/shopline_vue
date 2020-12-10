@@ -110,6 +110,8 @@ export default {
           this.loading = true
           register(this.loginForm).then(res => {
             console.log(res.data)
+            this.$refs.loginForm.resetFields()
+            this.$router.push({ name: 'login' })
           }).catch(err => {
             console.log(err)
           }).finally(() => {
