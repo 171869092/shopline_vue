@@ -35,7 +35,7 @@
   </div>
 </template>
 <script>
-import { getProductList ,getProductService ,getCancelHosting} from '@/api/product'
+import { getProductList ,getCancelHosting} from '@/api/product'
 export default {
   name: 'product',
   components: {
