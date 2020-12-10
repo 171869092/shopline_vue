@@ -3,17 +3,33 @@ import router from './router'
 // import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-// import { getToken } from '@/utils/auth' // get token from cookie
-import getPageTitle from '@/utils/get-page-title'
-
+import { getToken } from '@/utils/auth' // get token from cookie
+// import { staticMap } from '@/router'
+// import { setToken } from '@/utils/auth'
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-// const whiteList = ['/home'] // no redirect whitelist
+const whiteList = ['/login', '/registered'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
-  NProgress.start()
-  document.title = getPageTitle(to.meta.title)
-  next()
+  const hasToken = getToken()
+  // if (to.path !== '/login' && !hasToken && to.path !== '/registered') {
+  //   return next('/login')
+  // }
+  // next()
+  if (hasToken) { // 已经有token
+    next()
+  } else {
+    /* has no token*/
+    if (whiteList.indexOf(to.path) !== -1) {
+      // in the free login whitelist, go directly
+      next()
+    } else {
+      // other pages that do not have permission to access are redirected to the login page.
+      // next(`/login?redirect=${to.path}`)
+      next('/login')
+      NProgress.done()
+    }
+  }
 })
 
 router.afterEach(() => {
