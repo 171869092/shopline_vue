@@ -29,10 +29,10 @@
                   </el-input>
                 </el-form-item>
                 <el-form-item label="Identifying code" prop="code">
-                  <el-input v-model="loginForm.code" />
+                  <el-input v-model="loginForm.code" auto-complete="new-password" />
                 </el-form-item>
                 <el-form-item label="Your Password" prop="password">
-                  <el-input v-model="loginForm.password" type="password" />
+                  <el-input v-model="loginForm.password" auto-complete="new-password" type="password" />
                 </el-form-item>
                 <el-form-item label="Your Name" prop="name">
                   <el-input v-model="loginForm.name" />
