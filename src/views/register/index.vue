@@ -107,10 +107,13 @@ export default {
     handleRegister() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
+          this.loading = true
           register(this.loginForm).then(res => {
             console.log(res.data)
           }).catch(err => {
             console.log(err)
+          }).finally(() => {
+            this.loading = false
           })
         } else {
           console.log('err')
