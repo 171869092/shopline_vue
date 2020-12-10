@@ -56,9 +56,9 @@ service.interceptors.response.use(
     const res = response.data
     if (res.code === 1001 || res.code === 1002) {
       // token失效
-      MessageBox.confirm('请重新登录', '提示', {
-        confirmButtonText: '返回登录',
-        cancelButtonText: '取消',
+      MessageBox.confirm('please relogin', 'Tips', {
+        confirmButtonText: 'Back to login',
+        cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         store.dispatch('user/resetToken').then(() => {
