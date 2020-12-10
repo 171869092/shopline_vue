@@ -70,10 +70,9 @@ export default {
                   this.$emit('providerAdd')
                   this.loading = false
                   this.$message.success(res.message)
-                }else{
-                   this.loading = false
-                   this.$message({message: res.message,type: 'warning'});
                 }
+              }).catch(()=>{
+                 this.loading = false
               })
             } 
           } else {

@@ -124,9 +124,7 @@ export default {
                   if (res.code == 200) {
                     this.$message({ message: res.message, type: 'success' })
                     this.Inquire()
-                  }else{
-                      this.$message({message: res.message,type: 'warning'});
-                    }
+                  }
                 })
             }).catch(() => {})
       }
