@@ -49,7 +49,7 @@ export default {
         { label: 'Product', value: 'id', type: 'product' ,width:'500'},
         { label: 'Status', value: 'status' },
         { label: 'Inventory', value: 'stock' },
-        { label: 'Type', value: 'type' },
+        // { label: 'Type', value: 'type' },
         { label: 'Hosting', value: 'service_name' },
         // { label: 'Operating', type: 'Operating' }
       ],

@@ -8,7 +8,7 @@ import { getToken } from '@/utils/auth' // get token from cookie
 // import { setToken } from '@/utils/auth'
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/login', '/registered'] // no redirect whitelist
+const whiteList = ['/login', '/register','/'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   const hasToken = getToken()
@@ -26,7 +26,7 @@ router.beforeEach(async(to, from, next) => {
     } else {
       // other pages that do not have permission to access are redirected to the login page.
       // next(`/login?redirect=${to.path}`)
-      next('/login')
+      next('/')
       NProgress.done()
     }
   }

@@ -57,7 +57,7 @@ service.interceptors.response.use(
     if (res.code === 1001 || res.code === 1002) {
       // token失效
       MessageBox.confirm('please relogin', 'Tips', {
-        confirmButtonText: 'Back to login',
+        confirmButtonText: 'Back to home',
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
