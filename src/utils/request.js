@@ -1,82 +1,84 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
+import md5 from 'js-md5'
+import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
 
-// create an axios instance
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 50000 // request timeout
+  // withCredentials: true, // 当跨域请求时发送cookie
+  timeout: 60000, // request timeout
+  headers: {
+    // 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'       //formdata格式
+    'Content-Type': 'application/json' // json格式
+  },
+  // 在请求之前对data传参进行格式转换
+  transformRequest: [function(data, headers) {
+    if (headers['Content-Type'] === 'multipart/form-data;charset=UTF-8') {
+      return data
+    } else {
+      if (!headers.sign) {
+        const new_data = JSON.stringify(data)
+        let string = ''
+        if (!new_data) {
+          string = md5('key=f4d53fa55eab937660c088ade0ca6caa').toUpperCase()
+        } else {
+          string = md5('data=' + new_data.replace(/\s|\\/g, '') + '&key=f4d53fa55eab937660c088ade0ca6caa').toUpperCase()
+        }
+        headers.sign = string
+      }
+      return JSON.stringify(data)
+    }
+  }]
 })
-
-// request interceptor
 service.interceptors.request.use(
   config => {
-    // do something before request is sent
-
-    if (store.getters.token) {
-      // let each request carry token
-      // ['X-Token'] is a custom headers key
-      // please modify it according to the actual situation
-      config.headers['token'] = getToken()
+    config.headers.Authorization = getToken()
+    config.headers.token = getToken()
+    if (config.method === 'get') {
+      if (config.params) {
+        for (const key in config.params) {
+          config.params[key] = String(config.params[key])
+        }
+        const new_data = JSON.stringify(config.params)
+        config.headers.sign = md5('data=' + new_data.replace(/\s|\\/g, '') + '&key=f4d53fa55eab937660c088ade0ca6caa').toUpperCase()
+      }
     }
     return config
   },
   error => {
-    // do something with request error
-    console.log(error) // for debug
     return Promise.reject(error)
   }
 )
-
-// response interceptor
 service.interceptors.response.use(
-  /**
-   * If you want to get http information such as headers or status
-   * Please return  response => response
-  */
-
-  /**
-   * Determine the request status by custom code
-   * Here is just an example
-   * You can also judge the status by HTTP Status Code
-   */
+  //  获取http信息，如头信息或状态信息
   response => {
     const res = response.data
-    // return res
-
-    // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 200) {
-      Message({
-        message: res.message || 'Error',
-        type: 'warning',
-        duration: 5 * 1000
+    if (res.code === 1001 || res.code === 1002) {
+      // token失效
+      MessageBox.confirm('请重新登录', '提示', {
+        confirmButtonText: '返回登录',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        store.dispatch('user/resetToken').then(() => {
+          location.reload()
+        })
       })
-    }else{
+    } else if (res.code !== undefined && res.code !== 200 && res.code !== 4999) {
+      if (res.message || res.msg) {
+        Message({
+          message: res.message || res.msg || 'Error Request',
+          type: 'warning',
+          duration: 10 * 1000
+        })
+      }
+    } else {
       return res
     }
-
-    //   // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-    //   if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-    //     // to re-login
-    //     MessageBox.confirm('You have been logged out, you can cancel to stay on this page, or log in again', 'Confirm logout', {
-    //       confirmButtonText: 'Re-Login',
-    //       cancelButtonText: 'Cancel',
-    //       type: 'warning'
-    //     }).then(() => {
-    //       store.dispatch('user/resetToken').then(() => {
-    //         location.reload()
-    //       })
-    //     })
-    //   }
-    //   return Promise.reject(new Error(res.message || 'Error'))
-    // } else {
-    //   return res
-    // }
   },
   error => {
-    console.log('err' + error) // for debug
+    console.log('err' + error)
     Message({
       message: error.message,
       type: 'error',
@@ -85,5 +87,4 @@ service.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-
 export default service
