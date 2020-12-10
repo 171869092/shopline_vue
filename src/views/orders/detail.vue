@@ -64,17 +64,19 @@
           <el-row>
             <el-col :span="10">
               <el-form ref="ruleForm" :model="detailInfo" label-width="140px">
-                <el-form-item label="Consignee" prop="consignee">
-                  <el-input v-model="detailInfo.consignee" readonly />
+                <el-form-item label="Consignee :" prop="consignee">
+                  <div>{{ detailInfo.consignee || '--' }}</div>
                 </el-form-item>
-                <el-form-item label="Shipping Address" prop="address1">
-                  <el-input v-model="detailInfo.address1" readonly />
+                <el-form-item label="Shipping Address :" prop="address1">
+                  <div>{{ detailInfo.address1 || '--' }}</div>
                 </el-form-item>
-                <el-form-item label="Email Address" prop="email">
-                  <el-input v-model="detailInfo.email" readonly />
+                <el-form-item label="Email Address :" prop="email">
+                  <!-- <el-input v-model="detailInfo.email" readonly /> -->
+                  <div>{{ detailInfo.email || '--' }}</div>
                 </el-form-item>
-                <el-form-item label="Contact" prop="mobile">
-                  <el-input v-model="detailInfo.mobile" readonly />
+                <el-form-item label="Contact :" prop="mobile">
+                  <!-- <el-input v-model="detailInfo.mobile" readonly /> -->
+                  <div>{{ detailInfo.mobile || '--' }}</div>
                 </el-form-item>
               </el-form>
             </el-col>
@@ -89,9 +91,9 @@
           </div>
           <div class="block">
             <div class="flexbox p20 log-title">
-              <div>Status: {{ detailInfo.track_info.TrackingStatus }}</div>
+              <div>Status: {{ detailInfo.track_info.TrackingStatus || '--' }}</div>
               <div class="ml50">
-                Waybill Number：{{ detailInfo.track_info.WaybillNumber }}
+                Waybill Number：{{ detailInfo.track_info.WaybillNumber || '--' }}
               </div>
             </div>
             <el-timeline class="mt20 pl20" :reverse="false">
