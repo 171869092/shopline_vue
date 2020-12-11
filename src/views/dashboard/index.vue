@@ -111,14 +111,12 @@ export default {
       // console.log(this.serialize(query))
       const shopify = getStorage('shopify')
       // eslint-disable-next-line no-prototype-builtins
-      if (this.$route.query.hasOwnProperty('hmac') || shopify && shopify.hmac) {
-        setTimeout(() => {
-          shopifyPush({ shop: shopify.shop }).then(res => {
-            console.log(res.data)
-          }).catch(err => {
-            console.log(err)
-          })
-        }, 300000)
+      if (this.$route.query.hasOwnProperty('hmac') || shopify && shopify.shop) {
+        shopifyPush({ shop: shopify.shop }).then(res => {
+          console.log(res.data)
+        }).catch(err => {
+          console.log(err)
+        })
       }
     },
     handleSetLineChartData(type) {
