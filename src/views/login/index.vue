@@ -95,19 +95,6 @@ export default {
           const shop = shopify && shopify.shop ? shopify.shop : ''
           this.$store.dispatch('user/login', { LoginForm: this.loginForm, id: 1, shop: shop }).then(() => {
             // eslint-disable-next-line no-prototype-builtins
-            if (this.$route.query.hasOwnProperty('hmac') || shopify && shopify.hmac) {
-              // eslint-disable-next-line no-prototype-builtins
-              const query = this.$route.query.hasOwnProperty('hmac') ? this.$route.query : shopify
-              shopifyApi({ ...query }).then(res => {
-                shopifyPush({ shop: shopify.shop }).then(res => {
-                  console.log(res.data)
-                }).catch(err => {
-                  console.log(err)
-                })
-              }).catch(err => {
-                console.log(err)
-              })
-            }
             this.$router.push({ name: 'dashboard' })
             this.loading = false
           }).catch(() => {
