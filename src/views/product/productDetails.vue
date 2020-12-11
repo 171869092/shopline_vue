@@ -1,6 +1,6 @@
 <template>
   <div class="productDetails">
-    <el-form ref="formData" :model="formData" :rules="formRule" label-width="140px">
+    <el-form ref="formData" :model="formData" :rules="formRule" label-width="140px" label-position="top">
       <div class="box-card">
         <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack" />
         <label class="ml20">{{ $route.query.title }}</label>
@@ -127,7 +127,7 @@ export default {
             sku_price: '',
             sku_number: '',
             sku: '',
-            id:''
+            id: ''
           }
         ],
         images: []
@@ -152,7 +152,7 @@ export default {
     }
   },
   created() {
-    if (this.$route.query.type == 'edit') {
+    if (this.$route.query.type === 'edit') {
       this.getForm()
     }
   },
@@ -166,7 +166,7 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       })
       getProductEdit({ id: this.$route.query.id }).then(res => {
-        if (res.code == 200) {
+        if (res.code === 200) {
           this.formData = res.data
           this.formData.images = res.data.images.map(item => {
             return {
@@ -185,12 +185,12 @@ export default {
     },
     // 保存数据
     Submit() {
-      if (this.formData.sku_list.length == 0) return this.$message({ message: 'Fill in at least one line of variation', type: 'warning' })
+      if (this.formData.sku_list.length === 0) return this.$message({ message: 'Fill in at least one line of variation', type: 'warning' })
       this.$refs.formData.validate((valid) => {
         if (valid) {
           this.SubmitLoading = true
           getProductSave(this.formData).then(res => {
-            if (res.code == 200) {
+            if (res.code === 200) {
               this.$message({ message: res.message, type: 'success' })
               this.$router.push({ name: 'product' })
             }
@@ -216,7 +216,7 @@ export default {
         .then(() => {
           if (row.id) {
             getDeleteSku({ id: row.id }).then(res => {
-              if (res.code == 200) {
+              if (res.code === 200) {
                 this.$message({ message: res.message, type: 'success' })
                 this.formData.sku_list.splice(index, 1)
               }
@@ -236,7 +236,7 @@ export default {
       })
         .then(() => {
           getProductDelete({ prodcut_list: [{ id: this.$route.query.id }] }).then(res => {
-            if (res.code == 200) {
+            if (res.code === 200) {
               this.$message({ message: res.message, type: 'success' })
               this.$router.push({ name: 'product' })
             }
@@ -279,7 +279,7 @@ export default {
     },
     // 关闭本地上传 橱窗
     closeUploadPrint(type) {
-      if (type == 1) {
+      if (type === 1) {
         this.uploadPrintvisible = false
         return
       }
@@ -312,9 +312,13 @@ export default {
    .box-card{
       margin: 20px 10%!important;
     }
+    .el-form-item {
+      margin-bottom: 10px
+    }
     .el-form-item__label{
       font-size: 16px!important;
       color: #000!important;
+      padding: 0;
     }
     .button-border{
       border: 1px solid #ef6f38;

@@ -57,7 +57,6 @@
   </div>
 </template>
 <script>
-import { shopifyApi, shopifyPush } from '@/api/user'
 import { getStorage } from '@/utils/storage'
 export default {
   name: 'login',
@@ -94,7 +93,6 @@ export default {
           const shopify = getStorage('shopify')
           const shop = shopify && shopify.shop ? shopify.shop : ''
           this.$store.dispatch('user/login', { LoginForm: this.loginForm, id: 1, shop: shop }).then(() => {
-            // eslint-disable-next-line no-prototype-builtins
             this.$router.push({ name: 'dashboard' })
             this.loading = false
           }).catch(() => {
