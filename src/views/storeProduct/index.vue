@@ -5,9 +5,9 @@
        <el-button size="small" type="danger" class="f-r mr30 mt20" @click="CancleHostClick">Cancle Hosting</el-button>    
        <el-button size="small" class="f-r mr30 mt20 button-border" @click="providerClick">Hosting</el-button>          
     </div>
-    <el-card class="box-card">
+    <el-card class="box-card min_height" v-loading='tabloading'>
         <el-tabs v-model="formInline.logistics_status" @tab-click="handleClick">
-            <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.label" :name="tab.name">
+            <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.store_name" :name="tab.id">
                 <div class="flexbox mb20">
                   <div>
                     <el-input
@@ -32,11 +32,11 @@
                 </div>
                 <el-table
                   ref="multipleTable"
-                  v-loading="loading"
                   :data="tableData"
                   style="width: 100%"
                   highlight-current-row
                   fit
+                  v-loading="loading"
                   :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
                   @selection-change="productChange"
                 >
@@ -61,7 +61,7 @@
 </template>
 <script>
 import { debounce } from '@/utils'
-import { getProductList ,getCancelHosting} from '@/api/product'
+import { getProductList ,getCancelHosting ,getStoreList} from '@/api/product'
 export default {
   name: 'product',
   components: {
@@ -79,21 +79,19 @@ export default {
         { label: 'Hosting', value: 'service_name' },
         // { label: 'Operating', type: 'Operating' }
       ],
-      tabList:[
-        { label: 'Status', name: 'status' },
-        { label: 'Inventory', name: 'stock' },
-      ],
       statusOptions: ['Active', 'Draft'],
       tableData: [],
       productSelection: [],
       loading: false,
       providerVisible: false,
+      tabloading:false,
       providerTitle: 'Hosting',
       listQuery:{
         total:0,
         page:1,
         limit:10
       },
+      tabList:[],
       formInline:{
         logistics_status:'status',
         title:'',
@@ -102,9 +100,21 @@ export default {
     }
   },
   created() {
-    this.Inquire()
+    this.storeList()
   },
   methods: {
+    //获取店铺list
+    storeList(){
+        this.tabloading = true
+        getStoreList().then(res =>{
+        if (res.code == 200) {
+          this.tabList = res.data
+          this.formInline.logistics_status = res.data[0].id
+          this.tabloading = false
+          this.Inquire()
+        }
+      }) 
+    },
     // 查询
     Inquire() {
       this.loading = true
@@ -181,6 +191,9 @@ export default {
     .button-border{
       border: 1px solid #ef6f38;
       color:  #ef6f38;
+    }
+    .min_height{
+      min-height: 500px;
     }
 }
 </style>

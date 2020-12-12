@@ -24,6 +24,14 @@ export function getAllProductList(params) {
     params
   })
 }
+//获取店铺
+export function getStoreList(params) {
+  return request({
+    url: '/goods/goods/store-list ',
+    method: 'get',
+    params
+  })
+}
 //回显
 export function getProductEdit(params) {
   return request({
