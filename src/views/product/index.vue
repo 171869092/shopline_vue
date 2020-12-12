@@ -1,12 +1,31 @@
 <template>
   <div class="product">
     <div class="clearfix">
-       <el-button type="primary" icon="el-icon-plus" size="small" class="f-r mr50 mt20" @click="productAdd('add')">Add products</el-button>
-       <el-button size="small" type="danger" class="f-r mr30 mt20" @click="CancleHostClick">Cancle Hosting</el-button>    
-       <el-button size="small" class="f-r mr30 mt20 button-border" @click="providerClick">Hosting</el-button>   
-         
+       <el-button type="primary" icon="el-icon-plus" size="small" class="f-r mr50 mt20" @click="productAdd('add')">Add products</el-button>     
     </div>
     <el-card class="box-card">
+      <div class="flexbox mb20">
+          <div>
+            <el-input
+              v-model="formInline.title"
+              prefix-icon="el-icon-search"
+              placeholder="Filter products"
+              @input="filterOrders"
+              clearable
+              class="w-570"
+            />
+          </div>
+           <div>
+            <el-select v-model="formInline.status" placeholder="Status" clearable @change="filterOrders" class="ml20">
+              <el-option
+                v-for="(item,idx) in statusOptions"
+                :key="item"
+                :label="item"
+                :value="String(idx + 1)"
+              />
+            </el-select>
+          </div>
+      </div>
       <el-table
         ref="multipleTable"
         v-loading="loading"
@@ -31,16 +50,15 @@
       <!-- 分页 -->
       <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
     </el-card>
-       <provider :visible="providerVisible" @providerAdd="closeprovider" />
   </div>
 </template>
 <script>
-import { getProductList ,getCancelHosting} from '@/api/product'
+import { debounce } from '@/utils'
+import { getAllProductList } from '@/api/product'
 export default {
   name: 'product',
   components: {
     Pagination: () => import('@/components/Pagination'),
-    provider: () => import('./component/provider'),
   },
   data() {
     return {
@@ -50,20 +68,22 @@ export default {
         { label: 'Status', value: 'status' },
         { label: 'Inventory', value: 'stock' },
         // { label: 'Type', value: 'type' },
-        { label: 'Hosting', value: 'service_name' },
+        // { label: 'Hosting', value: 'service_name' },
         // { label: 'Operating', type: 'Operating' }
       ],
+      statusOptions: ['Active', 'Draft'],
       tableData: [],
       productSelection: [],
       loading: false,
-      providerVisible: false,
-      providerTitle: 'Hosting',
       listQuery:{
         total:0,
         page:1,
         limit:10
       },
-      formInline:{}
+      formInline:{
+        title:'',
+        status:''
+      }
     }
   },
   created() {
@@ -76,7 +96,7 @@ export default {
       const formData = JSON.parse(JSON.stringify(this.formInline))
       formData.iDisplayLength = this.listQuery.limit
       formData.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
-      getProductList(formData).then(res => {
+      getAllProductList(formData).then(res => {
         if (res.code == 200) {
             res.data.map(item =>{
               item.status = item.status == '1' ? 'Active' : 'Draft'
@@ -91,43 +111,11 @@ export default {
         this.productSelection = val;
     },
     productAdd(type,title,id){
-       this.$router.push({ name: 'productDetails', query: { type: type,title:title,id:id}})
+       this.$router.push({ name: 'productDetails', query: { type: type,title:title,id:id ,stroeType:'all'}})
     },
-   
-    //托管
-    providerClick(type) {
-      if(this.productSelection.length == 0) return  this.$message({message: 'Please check the product before proceeding',type: 'warning'});
-      this.providerVisible = true
-    },
-    closeprovider(type) {
-      if (type != 1) {
-        this.Inquire()
-      }
-      this.providerVisible = false
-    },
-    // 取消托管
-    CancleHostClick(){
-         if(this.productSelection.length == 0) return  this.$message({message: 'Please check the product before proceeding',type: 'warning'});
-         this.$confirm(`Are you sure to cancel hosting？`, 'Cancle Hosting', {
-            confirmButtonText: 'Submit',
-            cancelButtonText: 'Cancel',
-            type: 'warning'
-          })
-            .then(() => {
-              const productObj = {}
-              productObj.product_list = this.productSelection.map(item =>{
-                  return {
-                    id:item.id,
-                  }
-                })
-                getCancelHosting(productObj).then(res => {
-                  if (res.code == 200) {
-                    this.$message({ message: res.message, type: 'success' })
-                    this.Inquire()
-                  }
-                })
-            }).catch(() => {})
-      }
+    filterOrders: debounce(function() {
+      this.Inquire()
+    }, 1000)
   }
 }
 </script>

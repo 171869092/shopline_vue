@@ -5,7 +5,7 @@
         <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack" />
         <label class="ml20">{{ $route.query.title }}</label>
         <el-button type="primary" class="f-r" :loading="SubmitLoading" @click="Submit">Submit</el-button>
-        <el-button v-if="$route.query.type == 'edit'" class="f-r mr20 button-border" @click="ProductDelete">Delete product</el-button>
+        <el-button v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" class="f-r mr20 button-border" @click="ProductDelete">Delete product</el-button>
       </div>
       <el-card class="box-card" style="margin-top:500px">
         <el-form-item label="Title:" prop="title">
@@ -248,7 +248,7 @@ export default {
     },
     // 返回
     productBack() {
-      this.$router.push({ name: 'product' })
+      this.$router.go(-1) 
     },
     // 关闭  图片编辑 sku
     closePrint(type) {
