@@ -69,20 +69,20 @@ export const constantRoutes = [
     }]
   },
   {
-    path: '/product',
+    path: '/storeProduct',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'product',
-        component: () => import('@/views/product/index'),
-        meta: { title: 'My Products', icon: 'el-icon-goods' }
+        name: 'storeProduct',
+        component: () => import('@/views/storeProduct/index'),
+        meta: { title: 'My Store Products', icon: 'el-icon-goods' }
       },
       {
         path: 'productDetails',
         hidden: true,
         name: 'productDetails',
-        component: () => import('@/views/product/productDetails'),
+        component: () => import('@/views/storeProduct/productDetails'),
         meta: { title: 'Product Detail' }
       }
     ]
@@ -105,6 +105,18 @@ export const constantRoutes = [
         meta: { title: 'Orders Detail', icon: 'el-icon-tickets' },
         hidden: true
       }
+    ]
+  },
+  {
+    path: '/product',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'product',
+        component: () => import('@/views/product/index'),
+        meta: { title: 'My Products', icon: 'el-icon-data-line' }
+      },
     ]
   },
 

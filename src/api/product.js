@@ -8,10 +8,18 @@ export function uploadImage(data) {
     headers: { 'Content-Type': 'multipart/form-data;charset=UTF-8' },
   })
 }
-//列表
+//店铺列表
 export function getProductList(params) {
   return request({
     url: '/goods/goods/goods-list',
+    method: 'get',
+    params
+  })
+}
+//全部产品列表
+export function getAllProductList(params) {
+  return request({
+    url: '/goods/goods/all-goods-list',
     method: 'get',
     params
   })
