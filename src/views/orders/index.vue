@@ -1,87 +1,112 @@
 <template>
   <div class="my-orders">
     <el-card class="box-card">
-      <el-tabs v-model="formQuery.logistics_status" @tab-click="handleClick">
-        <div class="flexbox mb20">
-          <div class="flex-1">
-            <el-input
-              v-model="formQuery.input"
-              prefix-icon="el-icon-search"
-              placeholder="Filter orders"
-              :debounce="1000"
-              @input="filterOrders"
-            />
-          </div>
-          <!-- <div>
-            <el-select v-model="value" placeholder="请选择">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </div> -->
+      <!-- <el-tabs v-model="formQuery.logistics_status" @tab-click="handleClick"> -->
+      <div class="filter-control flexbox mb20">
+        <div class="filter-item">
+          <el-input
+            v-model="queryForm.thirdParty_order_on"
+            clearable
+            class="w-500"
+            prefix-icon="el-icon-search"
+            placeholder="Filter orders"
+            @change="filterOrders"
+          />
         </div>
-
-        <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.label" :name="tab.name">
-          <el-table
-            ref="multipleTable"
-            v-loading="loading"
-            :data="tableData"
-            style="width: 100%"
-            highlight-current-row
-            fit
-            stripe
-            :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}"
+        <div class="filter-item">
+          <el-select
+            v-model="queryForm.order_status"
+            class="w-420"
+            multiple
+            clearable
+            placeholder="Order status"
+            @change="filterOrderStatus"
           >
-            <el-table-column label="Expand" type="expand" width="100">
-              <template slot-scope="scope">
-                <el-table border :data="scope.row.orders_sublist" style="width: 100%">
-                  <el-table-column prop="service_name" label="Service Provider" width="200">
-                    <template slot-scope="props">
-                      <div>{{ props.row.service_name || '--' }}</div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column prop="total_price" label="Order Amount" width="150" />
-                  <el-table-column prop="order_status" label="Order Status" width="200">
-                    <template slot-scope="props">
-                      <div>{{ orderStatus[props.row.order_status] }}</div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column prop="abnormal_reason" label="Abnormal Reason">
-                    <template slot-scope="props">
-                      <div v-html="props.row.abnormal_reason || '--'" />
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="Logistics Status" width="250">
-                    <template slot-scope="props">
-                      <div>{{ logisticsStatus[props.row.logistics_status] }}</div>
-                      <div class="primary pointer" @click="logDetail(props.row)">Logistics Details</div>
-                    </template>
-                  </el-table-column>
-                </el-table>
-              </template>
-            </el-table-column>
-            <el-table-column label="Third Party Order Number">
-              <template slot-scope="scope">
-                <span class="primary pointer" @click="toLink(scope.row)">{{ scope.row.thirdParty_order_on }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="Order Amount">
-              <template slot-scope="scope">
-                <div>{{ scope.row.total_price }}</div>
-              </template>
-            </el-table-column>
-            <el-table-column label="Order Status">
-              <template slot-scope="scope">
-                <div>{{ orderStatus[scope.row.order_status] }}</div>
-              </template>
-            </el-table-column>
-          </el-table>
-          <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
-        </el-tab-pane>
-      </el-tabs>
+            <el-option
+              v-for="(item, key) in orderStatus"
+              :key="key"
+              :label="item"
+              :value="key"
+            />
+          </el-select>
+        </div>
+        <div class="filter-item">
+          <el-select
+            v-model="queryForm.logistics_status"
+            class="w-400"
+            multiple
+            clearable
+            placeholder="Logistics status"
+            @change="filterLogisticsStatus"
+          >
+            <el-option
+              v-for="(item, key) in logisticsStatus"
+              :key="key"
+              :label="item"
+              :value="key"
+            />
+          </el-select>
+        </div>
+      </div>
+
+      <!-- <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.label" :name="tab.name"> -->
+      <el-table
+        ref="multipleTable"
+        v-loading="loading"
+        :data="tableData"
+        style="width: 100%"
+        highlight-current-row
+        fit
+        stripe
+        :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}"
+      >
+        <el-table-column label="Expand" type="expand" width="100">
+          <template slot-scope="scope">
+            <el-table border :data="scope.row.orders_sublist" style="width: 100%">
+              <el-table-column prop="service_name" label="Service Provider" width="200">
+                <template slot-scope="props">
+                  <div>{{ props.row.service_name || '--' }}</div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="total_price" label="Order Amount" width="150" />
+              <el-table-column prop="order_status" label="Order Status" width="200">
+                <template slot-scope="props">
+                  <div>{{ orderStatus[props.row.order_status] }}</div>
+                </template>
+              </el-table-column>
+              <el-table-column prop="abnormal_reason" label="Abnormal Reason">
+                <template slot-scope="props">
+                  <div v-html="props.row.abnormal_reason || '--'" />
+                </template>
+              </el-table-column>
+              <el-table-column label="Logistics Status" width="250">
+                <template slot-scope="props">
+                  <div>{{ logisticsStatus[props.row.logistics_status] }}</div>
+                  <div class="primary pointer" @click="logDetail(props.row)">Logistics Details</div>
+                </template>
+              </el-table-column>
+            </el-table>
+          </template>
+        </el-table-column>
+        <el-table-column label="Third Party Order Number">
+          <template slot-scope="scope">
+            <span class="primary pointer" @click="toLink(scope.row)">{{ scope.row.thirdParty_order_on }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="Order Amount">
+          <template slot-scope="scope">
+            <div>{{ scope.row.total_price }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="Order Status">
+          <template slot-scope="scope">
+            <div>{{ orderStatus[scope.row.order_status] }}</div>
+          </template>
+        </el-table-column>
+      </el-table>
+      <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
+      <!-- </el-tab-pane> -->
+      <!-- </el-tabs> -->
     </el-card>
     <el-dialog class="custom-dialog" title="Logistics Details" :visible.sync="dialogVisible" width="700px" @open="handleOpen">
       <el-scrollbar ref="myScrollbar" v-loading="timelineLoading" wrap-class="dialog-scrollbar">
@@ -108,8 +133,15 @@ export default {
   props: {},
   data() {
     return {
+      queryForm: {
+        thirdParty_order_on: '',
+        order_status: [],
+        logistics_status: []
+      },
       formQuery: {
-        logistics_status: '0',
+        thirdParty_order_on: '',
+        order_status: '',
+        logistics_status: '',
         iDisplayStart: 0,
         iDisplayLength: 2
       },
@@ -118,8 +150,9 @@ export default {
         page: 1,
         limit: 10
       },
-      // orderStatus: {1: "待支付", 2: "金额处理", 3: "完成支付", 4: "退款", 5: "异常", 6: "部分支付", 7: "部分退款", 8: "订单取消"},
+      // logisticsStatus: {1: "待发货", 2: "已揽件", 3: "运输中", 4: "已送达", 5: "已拒收", 6: "已取消", 7: "已退回", 8: "待转单", 9: "退货在仓"},
       logisticsStatus: { 1: 'Waiting For Delivery', 2: 'Received', 3: 'In Transit', 4: 'Delivered', 5: 'Rejected', 6: 'Canceled', 7: 'Returned', 8: 'Pending Transfer', 9: 'Return Goods In Stock' },
+      // orderStatus: {1: "待支付", 2: "金额处理", 3: "完成支付", 4: "退款", 5: "异常", 6: "部分支付", 7: "部分退款", 8: "订单取消"},
       orderStatus: { 1: 'Pending payment', 2: 'Processing', 3: 'Complete payment', 4: 'Refunded', 5: 'Order exception', 6: 'Partially payment', 7: 'Partially refunded', 8: 'Order canceled' },
       tabList: [
         { label: 'All', name: '0' },
@@ -186,9 +219,12 @@ export default {
         this.loading = false
       })
     },
-    handleClick() {
+    resetPageLimit() {
       this.listQuery.page = 1
       this.listQuery.limit = 10
+    },
+    handleClick() {
+      this.resetPageLimit()
       this.Inquire()
     },
     toLink(row) {
@@ -213,16 +249,36 @@ export default {
       })
     },
     filterOrders: debounce(function() {
+      this.formQuery.thirdParty_order_on = this.queryForm.thirdParty_order_on
+      this.resetPageLimit()
       this.Inquire()
-    }, 1000)
+    }, 500),
+    filterOrderStatus: debounce(function() {
+      this.formQuery.order_status = this.queryForm.order_status.toString()
+      this.resetPageLimit()
+      this.Inquire()
+    }, 500),
+    filterLogisticsStatus: debounce(function() {
+      this.formQuery.logistics_status = this.queryForm.logistics_status.toString()
+      this.resetPageLimit()
+      this.Inquire()
+    }, 500)
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .my-orders {
   padding: 30px;
 }
 .logistics-timeline {
   padding-left: 20px;
+}
+.filter-control {
+  .filter-item {
+    &:first-child {
+      margin-left: 0;
+    }
+     margin-left: 15px;
+  }
 }
 </style>
