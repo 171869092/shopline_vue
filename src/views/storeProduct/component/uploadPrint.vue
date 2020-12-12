@@ -1,7 +1,6 @@
 <template>
   <div>
     <el-dialog title="Add image" :visible.sync="dialogVisible" width="33%">
-      <!-- accept="image/png, image/jpeg" -->
       <el-upload
         ref="myUpload"
         action="null"
@@ -110,7 +109,3 @@ export default {
 
 }
 </script>
-
-<style scoped lang="scss">
-// >>> .el-dialog__body{min-height: 500px!important;overflow: overlay!important}
-</style>

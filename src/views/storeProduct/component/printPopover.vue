@@ -21,10 +21,7 @@
           @mouseleave.prevent="$item.is_hover = false"
         >
           <div v-show="!isFilter">
-            <!-- {{banner_list}} -->
             <el-image lazy class="image-item" :src="$item.url" :preview-src-list="previewList" />
-            <!-- <div><el-input v-model="$item.title" size="mini" class="w-250 p5_input" v-if="titleShow"></el-input></div> -->
-
             <div
               v-show="$item.is_hover"
               class="image_del"

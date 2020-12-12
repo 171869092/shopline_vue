@@ -33,7 +33,7 @@ export default {
       ServiceList:[],
       rules: {
         service_id: [
-          { required: true, message: '请填写店铺代号', trigger: 'blur' }
+          { required: true, message: 'please choose', trigger: 'blur' }
         ],
       },
       loading:false
@@ -42,7 +42,6 @@ export default {
   watch: {
     visible(val) {
       if (val) {
-        
          getServiceList().then(res =>{
             if (res.code == 200) {
               this.ServiceList = res.data
