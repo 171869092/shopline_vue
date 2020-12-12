@@ -6,8 +6,8 @@
        <el-button size="small" class="f-r mr30 mt20 button-border" @click="providerClick">Hosting</el-button>          
     </div>
     <el-card class="box-card min_height" v-loading='tabloading'>
-        <el-tabs v-model="formInline.logistics_status" @tab-click="handleClick">
-            <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.store_name" :name="tab.id">
+        <el-tabs v-model="formInline.store_url" @tab-click="handleClick">
+            <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.store_name" :name="tab.store_url">
                 <div class="flexbox mb20">
                   <div>
                     <el-input
@@ -93,7 +93,7 @@ export default {
       },
       tabList:[],
       formInline:{
-        logistics_status:'status',
+        store_url:'',
         title:'',
         status:''
       }
@@ -109,7 +109,7 @@ export default {
         getStoreList().then(res =>{
         if (res.code == 200) {
           this.tabList = res.data
-          this.formInline.logistics_status = res.data[0].id
+          this.formInline.store_url = res.data[0].store_url
           this.tabloading = false
           this.Inquire()
         }
@@ -141,6 +141,8 @@ export default {
     handleClick() {
       this.listQuery.page = 1
       this.listQuery.limit = 10
+      this.formInline.title = ''
+      this.formInline.status = ''
       this.Inquire()
     },
     filterOrders: debounce(function() {
@@ -193,7 +195,7 @@ export default {
       color:  #ef6f38;
     }
     .min_height{
-      min-height: 500px;
+      min-height: 300px;
     }
 }
 </style>
