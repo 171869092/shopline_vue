@@ -2,6 +2,28 @@
   <div class="my-orders">
     <el-card class="box-card">
       <el-tabs v-model="formQuery.logistics_status" @tab-click="handleClick">
+        <div class="flexbox mb20">
+          <div class="flex-1">
+            <el-input
+              v-model="formQuery.input"
+              prefix-icon="el-icon-search"
+              placeholder="Filter orders"
+              :debounce="1000"
+              @input="filterOrders"
+            />
+          </div>
+          <!-- <div>
+            <el-select v-model="value" placeholder="请选择">
+              <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </div> -->
+        </div>
+
         <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.label" :name="tab.name">
           <el-table
             ref="multipleTable"
@@ -76,6 +98,7 @@
   </div>
 </template>
 <script>
+import { debounce } from '@/utils'
 import { getOrderTabs, getOrderList, getLogisticInfo } from '@/api/orders'
 export default {
   name: 'orders',
@@ -188,7 +211,10 @@ export default {
       this.$nextTick(() => {
         this.$refs.myScrollbar.wrap.scrollTop = 0 // 这句重置滚动条高度
       })
-    }
+    },
+    filterOrders: debounce(function() {
+      this.Inquire()
+    }, 1000)
   }
 }
 </script>

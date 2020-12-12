@@ -142,7 +142,8 @@ export function debounce(func, wait, immediate) {
     }
   }
 
-  return function(...args) {
+  return function() {
+    args = arguments
     context = this
     timestamp = +new Date()
     const callNow = immediate && !timeout
@@ -154,5 +155,19 @@ export function debounce(func, wait, immediate) {
     }
 
     return result
+  }
+}
+
+export function debounce2(fn, delay = 300) { // 默认300毫秒
+  // console.log(fn)
+  let timer
+  return function() {
+    const args = arguments
+    if (timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(() => {
+      fn.apply(this, args) // this 指向vue
+    }, delay)
   }
 }

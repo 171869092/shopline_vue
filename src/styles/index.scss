@@ -191,8 +191,26 @@ input[type="number"] {
   }
 }
 
+.variant-image {
+  .el-radio__input {
+    position: absolute;
+    z-index: 100;
+    top: 10px;
+    left: 10px;
+  }
+  .el-radio__label {
+    padding-left: 0px;
+  }
+}
+
 .flexbox {
   display: flex;
+}
+
+@for $i from 1 through 5 {
+  .flex-#{$i} {
+    flex: #{$i} 1 auto;
+  }
 }
 
 $justify-list: center, start, end, flex-start, flex-end, left, right, space-between, space-around, space-evenly;
@@ -206,17 +224,5 @@ $align-list: center, start, end, flex-start, flex-end, self-start, self-end, str
 @each $item in $align-list {
   .align-#{$item} {
     align-items: #{$item};
-  }
-}
-
-.variant-image {
-  .el-radio__input {
-    position: absolute;
-    z-index: 100;
-    top: 10px;
-    left: 10px;
-  }
-  .el-radio__label {
-    padding-left: 0px;
   }
 }
