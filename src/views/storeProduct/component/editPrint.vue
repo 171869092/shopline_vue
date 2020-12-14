@@ -22,8 +22,8 @@
               alt=""
             >
           </div>
-          <div class="icon">
-            <img v-if="checked === $item.url" src="https://cdn.shopify.com/shopifycloud/web/assets/v1/7a68ccb72ddf127282b5994dd9eedf27.svg" alt="">
+          <div v-if="checked === $item.url" class="icon">
+            <svg-icon icon-class="gou" />
           </div>
         </div>
       </div>
