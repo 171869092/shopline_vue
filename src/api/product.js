@@ -8,23 +8,7 @@ export function uploadImage(data) {
     headers: { 'Content-Type': 'multipart/form-data;charset=UTF-8' }
   })
 }
-// 店铺列表
-export function getProductList(params) {
-  return request({
-    url: '/goods_list',
-    method: 'get',
-    params
-  })
-}
-// 全部产品列表
-export function getAllProductList(params) {
-  return request({
-    url: '/all_goods',
-    method: 'get',
-    params
-  })
-}
-// 获取店铺
+// 获取店铺信息
 export function getStoreList(params) {
   return request({
     url: '/goods/goods/store-list ',
@@ -32,18 +16,50 @@ export function getStoreList(params) {
     params
   })
 }
-// 回显
-export function getProductEdit(params) {
+// 店铺商品列表
+export function getStoreProductList(params) {
+  return request({
+    url: '/goods_list',
+    method: 'get',
+    params
+  })
+}
+// 店铺商品回显
+export function getStoreProductEdit(params) {
+  return request({
+    url: '/goods_edit',
+    method: 'get',
+    params
+  })
+}
+// 店铺商品新增
+export function getStoreProductSave(data) {
+  return request({
+    url: '/goods_save',
+    method: 'post',
+    data
+  })
+}
+// 全部商品列表
+export function getAllProductList(params) {
+  return request({
+    url: '/all_goods',
+    method: 'get',
+    params
+  })
+}
+// 全部商品回显
+export function getAllProductEdit(params) {
   return request({
     url: '/all_goods_edit',
     method: 'get',
     params
   })
 }
-// 新增产品
-export function getProductSave(data) {
+// 全部商品新增
+export function getAllProductSave(data) {
   return request({
-    url: '/goods_save',
+    url: '/all_goods_save',
     method: 'post',
     data
   })
@@ -57,7 +73,7 @@ export function allProductDelete(data) {
   })
 }
 
-// 服务商列表
+// 获取服务商列表
 export function getServiceList(params) {
   return request({
     url: '/goods/goods/service-list',

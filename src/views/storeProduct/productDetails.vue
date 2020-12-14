@@ -107,7 +107,7 @@
   </div>
 </template>
 <script>
-import { getProductEdit, getProductSave, getProductDelete, getDeleteSku } from '@/api/product'
+import { getAllProductEdit,getStoreProductEdit, getAllProductSave,getStoreProductSave, allProductDelete, getDeleteSku } from '@/api/product'
 export default {
   name: 'product-details',
   components: {
@@ -165,19 +165,35 @@ export default {
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
-      getProductEdit({ id: this.$route.query.id }).then(res => {
-        if (res.code === 200) {
-          this.formData = res.data
-          this.formData.images = res.data.images.map(item => {
-            return {
-              url: item.url,
-              is_hover: false,
-              id: item.id
+      if (this.$route.query.stroeType === 'all') {
+          getAllProductEdit({ id: this.$route.query.id }).then(res => {
+            if (res.code === 200) {
+              this.formData = res.data
+              this.formData.images = res.data.images.map(item => {
+                return {
+                  url: item.url,
+                  is_hover: false,
+                  id: item.id
+                }
+              })
+              loading.close()
             }
           })
-          loading.close()
-        }
-      })
+      }else{
+         getStoreProductEdit({ id: this.$route.query.id }).then(res => {
+            if (res.code === 200) {
+              this.formData = res.data
+              this.formData.images = res.data.images.map(item => {
+                return {
+                  url: item.url,
+                  is_hover: false,
+                  id: item.id
+                }
+              })
+              loading.close()
+            }
+          })
+      }
     },
     // 拖拽监听list
     updateimg(list) {
@@ -189,14 +205,25 @@ export default {
       this.$refs.formData.validate((valid) => {
         if (valid) {
           this.SubmitLoading = true
-          getProductSave(this.formData).then(res => {
-            if (res.code === 200) {
-              this.$message({ message: res.message, type: 'success' })
-              this.$router.push({ name: 'product' })
-            }
-          }).finally(() => {
-            this.SubmitLoading = false
-          })
+          if (this.$route.query.stroeType === 'all') {
+              getAllProductSave(this.formData).then(res => {
+                  if (res.code === 200) {
+                    this.$message({ message: res.message, type: 'success' })
+                    this.$router.push({ name: 'product' })
+                  }
+                }).finally(() => {
+                  this.SubmitLoading = false
+              })
+          }else{
+              getStoreProductSave(this.formData).then(res => {
+                  if (res.code === 200) {
+                    this.$message({ message: res.message, type: 'success' })
+                    this.$router.push({ name: 'storeProduct' })
+                  }
+                }).finally(() => {
+                  this.SubmitLoading = false
+              })
+          }
         }
       })
     },
@@ -235,7 +262,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          getProductDelete({ prodcut_list: [{ id: this.$route.query.id }] }).then(res => {
+          allProductDelete({ prodcut_list: [{ id: this.$route.query.id }] }).then(res => {
             if (res.code === 200) {
               this.$message({ message: res.message, type: 'success' })
               this.$router.push({ name: 'product' })
