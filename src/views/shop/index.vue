@@ -36,6 +36,7 @@
 </template>
 <script>
 import { shopList } from '@/api/shop'
+import { install } from '@/api/user'
 export default {
   name: 'shop',
   components: {
@@ -84,7 +85,7 @@ export default {
       this.$prompt('Shopify Store URL', 'Connect New Shop', {
         confirmButtonText: 'Confirm',
         cancelButtonText: 'Cancel',
-        inputPattern: /.myshopify.com/g,
+        inputPattern: /.myshopify.com/,
         inputErrorMessage: 'The entered store url is incorrect',
         inputPlaceholder: 'xxxx.myshopify.com'
       }).then(({ value }) => {
@@ -92,7 +93,13 @@ export default {
           type: 'success',
           message: '你的邮箱是: ' + value
         })
-        window.open(`https://fdapi.dongketech.com/site/install?shop=${value}`)
+        // window.open(`https://fdapi.dongketech.com/l?shop=${value}`)
+        install({ shop: value }).then(res => {
+          // console.log(res.data)
+          window.open(res.data)
+        }).catch(err => {
+          console.log(err)
+        })
       }).catch(() => {})
     }
   }

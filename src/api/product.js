@@ -11,7 +11,7 @@ export function uploadImage(data) {
 // 店铺列表
 export function getProductList(params) {
   return request({
-    url: '/goods/goods/goods-list',
+    url: '/goods_list',
     method: 'get',
     params
   })
@@ -19,7 +19,7 @@ export function getProductList(params) {
 // 全部产品列表
 export function getAllProductList(params) {
   return request({
-    url: '/goods/goods/all-goods-list',
+    url: '/all_goods',
     method: 'get',
     params
   })
@@ -35,7 +35,7 @@ export function getStoreList(params) {
 // 回显
 export function getProductEdit(params) {
   return request({
-    url: '/goods/goods/good-edit',
+    url: '/all_goods_edit',
     method: 'get',
     params
   })
@@ -43,29 +43,21 @@ export function getProductEdit(params) {
 // 新增产品
 export function getProductSave(data) {
   return request({
-    url: '/goods/goods/goods-save',
+    url: '/goods_save',
     method: 'post',
     data
   })
 }
-// 删除sku
-export function getDeleteSku(params) {
+// 批量删除商品
+export function allProductDelete(data) {
   return request({
-    url: '/goods/goods/delete-sku',
-    method: 'get',
-    params
-  })
-}
-// 删除商品
-export function getProductDelete(data) {
-  return request({
-    url: '/goods/goods/delete-product',
+    url: '/all_goods_delete',
     method: 'post',
     data
   })
 }
 
-// 服务商
+// 服务商列表
 export function getServiceList(params) {
   return request({
     url: '/goods/goods/service-list',
@@ -73,7 +65,8 @@ export function getServiceList(params) {
     params
   })
 }
-// 服务商
+
+// 托管服务商
 export function getProductService(data) {
   return request({
     url: '/goods/goods/products-service',

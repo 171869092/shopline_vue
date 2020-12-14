@@ -10,7 +10,7 @@ export function login(data) {
 
 export function register(data) {
   return request({
-    url: '/site/register-user',
+    url: '/register',
     method: 'post',
     data
   })
@@ -50,6 +50,14 @@ export function shopifyPush(data) {
 export function gtoken(data) {
   return request({
     url: '/site/generatr-token',
+    method: 'get',
+    params: data
+  })
+}
+
+export function install(data) {
+  return request({
+    url: '/l',
     method: 'get',
     params: data
   })
