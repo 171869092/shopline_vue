@@ -67,6 +67,7 @@
 </template>
 <script>
 // import BNavbar from '@/views/home/components/navbar'
+import { getSession } from '@/utils/session'
 import { register } from '@/api/user'
 export default {
   name: 'register',
@@ -108,7 +109,9 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          register(this.loginForm).then(res => {
+          const shopify = getSession('shopify')
+          const shop = shopify && shopify.shop ? shopify.shop : ''
+          register({ LoginForm: this.loginForm, shop: shop }).then(res => {
             console.log(res.data)
             this.$refs.loginForm.resetFields()
             this.$router.push({ name: 'login' })

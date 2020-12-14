@@ -149,7 +149,7 @@
 <script>
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
-import { setStorage } from '@/utils/storage'
+import { setSession } from '@/utils/session'
 export default {
   components: {
     Swiper,
@@ -195,7 +195,7 @@ export default {
     // console.log({ ...this.$route.query })
     // eslint-disable-next-line no-prototype-builtins
     if (this.$route.query.hasOwnProperty('hmac')) {
-      setStorage('shopify', this.$route.query)
+      setSession('shopify', this.$route.query)
     }
   },
   methods: {

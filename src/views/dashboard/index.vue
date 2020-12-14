@@ -40,7 +40,7 @@ import { shopifyApi, shopifyPush } from '@/api/user'
 // import createApp from '@shopify/app-bridge'
 // import { Redirect, Button } from '@shopify/app-bridge/actions'
 // import { getSessionToken } from '@shopify/app-bridge-utils'
-import { getStorage } from '@/utils/storage'
+import { getSession } from '@/utils/session'
 const lineChartData = {
   newVisitis: {
     expectedData: [100, 120, 161, 134, 105, 160, 165],
@@ -107,14 +107,9 @@ export default {
   },
   methods: {
     shopifyInit() {
-      // const query = { 'code': 'c20411e3859748cc53f583b221048c81', 'hmac': '5cba719e7d85008aa29d7a33e946e1123595cbda5647958e40257699c4f4bb3b', 'shop': 'live-by-test.myshopify.com', 'timestamp': '1606810839' }
-      // console.log(this.serialize(query))
-      const shopify = getStorage('shopify')
-      // eslint-disable-next-line no-prototype-builtins
-      if (this.$route.query.hasOwnProperty('hmac') || shopify && shopify.hmac) {
-        // eslint-disable-next-line no-prototype-builtins
-        const query = this.$route.query.hasOwnProperty('hmac') ? this.$route.query : shopify
-        shopifyApi({ ...query }).then(res => {
+      const shopify = getSession('shopify')
+      if (shopify && shopify.hmac) {
+        shopifyApi({ ...shopify }).then(res => {
           shopifyPush({ shop: shopify.shop }).then(res => {
             console.log(res.data)
           }).catch(err => {
