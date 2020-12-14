@@ -1,5 +1,8 @@
 <template>
   <div class="my-shop">
+    <div class="shop-btn-group">
+      <el-button type="primary" size="small" icon="el-icon-plus" @click="ConnectShop">Connect New Shop</el-button>
+    </div>
     <el-card class="box-card">
       <el-table
         ref="multipleTable"
@@ -11,42 +14,95 @@
         stripe
         :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}"
       >
-        <el-table-column label="Shop Type">
+        <el-table-column label="Shop ID">
           <template slot-scope="scope">
-            <span class="primary pointer" @click="toLink(scope.row)">{{ scope.row.thirdParty_order_on }}</span>
+            <span>{{ scope.row.id }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="Shop url">
+        <el-table-column label="Shop Url">
           <template slot-scope="scope">
-            <div>{{ scope.row.total_price }}</div>
+            <div>{{ scope.row.store_url }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="Operation">
+        <el-table-column label="Create Time">
           <template slot-scope="scope">
-            <div>{{ orderStatus[scope.row.order_status] }}</div>
+            <div>{{ scope.row.create_time | parseTime }}</div>
           </template>
         </el-table-column>
       </el-table>
+      <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
     </el-card>
   </div>
 </template>
 <script>
+import { shopList } from '@/api/shop'
 export default {
-  name: '',
+  name: 'shop',
+  components: {
+    Pagination: () => import('@/components/Pagination')
+  },
   props: {},
   data() {
     return {
       tableData: [],
+      formQuery: {
+        iDisplayStart: 0,
+        iDisplayLength: 10
+      },
+      listQuery: {
+        total: 0,
+        page: 1,
+        limit: 10
+      },
       loading: false
     }
   },
   computed: {},
-  created() {},
-  methods: {}
+  created() {
+    this.Inquire()
+  },
+  methods: {
+    Inquire() {
+      this.loading = true
+      this.formQuery.iDisplayLength = this.listQuery.limit
+      this.formQuery.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
+      shopList(this.formQuery).then(res => {
+        console.log(res.data)
+        if (res.code === 200) {
+          this.tableData = res.data.data
+          this.listQuery.total = +res.data.pagination.totalCount
+        }
+      }).catch(err => {
+        console.log(err)
+      }).finally(() => {
+        // loading.close()
+        this.loading = false
+      })
+    },
+    ConnectShop() {
+      // https://fdapi.dongketech.com/site/install?shop=live-by-test.myshopify.com
+      this.$prompt('Shopify Store URL', 'Connect New Shop', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+        // inputErrorMessage: '邮箱格式不正确'
+        inputPlaceholder: 'xxxx.myshopify.com'
+      }).then(({ value }) => {
+        this.$message({
+          type: 'success',
+          message: '你的邮箱是: ' + value
+        })
+        window.open(`https://fdapi.dongketech.com/site/install?shop=${value}`)
+      }).catch(() => {})
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
 .my-shop {
   padding: 30px;
+}
+.shop-btn-group {
+  margin-bottom: 20px;
 }
 </style>

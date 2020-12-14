@@ -89,6 +89,19 @@ export const constantRoutes = [
   },
 
   {
+    path: '/product',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'product',
+        component: () => import('@/views/product/index'),
+        meta: { title: 'My Products', icon: 'el-icon-data-line' }
+      }
+    ]
+  },
+
+  {
     path: '/orders',
     component: Layout,
     children: [
@@ -104,18 +117,6 @@ export const constantRoutes = [
         component: () => import('@/views/orders/detail'),
         meta: { title: 'Orders Detail', icon: 'el-icon-tickets' },
         hidden: true
-      }
-    ]
-  },
-  {
-    path: '/product',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'product',
-        component: () => import('@/views/product/index'),
-        meta: { title: 'My Products', icon: 'el-icon-data-line' }
       }
     ]
   },

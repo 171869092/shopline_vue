@@ -1,30 +1,30 @@
 <template>
   <div class="product">
     <div class="clearfix">
-       <el-button type="primary" icon="el-icon-plus" size="small" class="f-r mr50 mt20" @click="productAdd('add')">Add products</el-button>     
+      <el-button type="primary" icon="el-icon-plus" size="small" class="f-r mr50 mt20" @click="productAdd('add')">Add products</el-button>
     </div>
     <el-card class="box-card">
       <div class="flexbox mb20">
-          <div>
-            <el-input
-              v-model="formInline.title"
-              prefix-icon="el-icon-search"
-              placeholder="Filter products"
-              @input="filterOrders"
-              clearable
-              class="w-570"
+        <div>
+          <el-input
+            v-model="formInline.title"
+            prefix-icon="el-icon-search"
+            placeholder="Filter products"
+            clearable
+            class="w-570"
+            @input="filterOrders"
+          />
+        </div>
+        <div>
+          <el-select v-model="formInline.status" placeholder="Status" clearable class="ml20" @change="filterOrders">
+            <el-option
+              v-for="(item,idx) in statusOptions"
+              :key="item"
+              :label="item"
+              :value="String(idx + 1)"
             />
-          </div>
-           <div>
-            <el-select v-model="formInline.status" placeholder="Status" clearable @change="filterOrders" class="ml20">
-              <el-option
-                v-for="(item,idx) in statusOptions"
-                :key="item"
-                :label="item"
-                :value="String(idx + 1)"
-              />
-            </el-select>
-          </div>
+          </el-select>
+        </div>
       </div>
       <el-table
         ref="multipleTable"
@@ -40,7 +40,7 @@
         <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
           <template slot-scope="scope">
             <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
-            <span v-if="item.type == 'product'" @click="productAdd('edit',scope.row.title,scope.row.id)" style="color:#ef6f38" class="pointer f-l ml50">
+            <span v-if="item.type == 'product'" style="color:#ef6f38" class="pointer f-l ml50" @click="productAdd('edit',scope.row.title,scope.row.id)">
               <img :src="scope.row.img_url" width="50px" alt="">
               <span class="ml20">{{ scope.row.title }}</span>
             </span>
@@ -58,15 +58,15 @@ import { getAllProductList } from '@/api/product'
 export default {
   name: 'product',
   components: {
-    Pagination: () => import('@/components/Pagination'),
+    Pagination: () => import('@/components/Pagination')
   },
   data() {
     return {
       // 列表表头
       labelList: [
-        { label: 'Product', value: 'id', type: 'product' ,width:'500'},
+        { label: 'Product', value: 'id', type: 'product', width: '500' },
         { label: 'Status', value: 'status' },
-        { label: 'Inventory', value: 'stock' },
+        { label: 'Inventory', value: 'stock' }
         // { label: 'Type', value: 'type' },
         // { label: 'Hosting', value: 'service_name' },
         // { label: 'Operating', type: 'Operating' }
@@ -75,14 +75,14 @@ export default {
       tableData: [],
       productSelection: [],
       loading: false,
-      listQuery:{
-        total:0,
-        page:1,
-        limit:10
+      listQuery: {
+        total: 0,
+        page: 1,
+        limit: 10
       },
-      formInline:{
-        title:'',
-        status:''
+      formInline: {
+        title: '',
+        status: ''
       }
     }
   },
@@ -97,21 +97,21 @@ export default {
       formData.iDisplayLength = this.listQuery.limit
       formData.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
       getAllProductList(formData).then(res => {
-        if (res.code == 200) {
-            res.data.map(item =>{
-              item.status = item.status == '1' ? 'Active' : 'Draft'
-            })
-            this.tableData = res.data
-            this.listQuery.total = +res.iTotalRecords
-            this.loading = false
+        if (res.code === 200) {
+          res.data.map(item => {
+            item.status = item.status === '1' ? 'Active' : 'Draft'
+          })
+          this.tableData = res.data
+          this.listQuery.total = +res.iTotalRecords
+          this.loading = false
         }
       })
     },
     productChange(val) {
-        this.productSelection = val;
+      this.productSelection = val
     },
-    productAdd(type,title,id){
-       this.$router.push({ name: 'productDetails', query: { type: type,title:title,id:id ,stroeType:'all'}})
+    productAdd(type, title, id) {
+      this.$router.push({ name: 'productDetails', query: { type: type, title: title, id: id, stroeType: 'all' }})
     },
     filterOrders: debounce(function() {
       this.Inquire()
