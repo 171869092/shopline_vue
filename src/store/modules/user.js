@@ -1,10 +1,12 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import { setSession, getSession } from '@/utils/session'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
+    uid: getSession('uid'),
     name: '',
     avatar: ''
   }
@@ -15,6 +17,9 @@ const state = getDefaultState()
 const mutations = {
   RESET_STATE: (state) => {
     Object.assign(state, getDefaultState())
+  },
+  SET_UID: (state, uid) => {
+    state.uid = uid
   },
   SET_TOKEN: (state, token) => {
     state.token = token
@@ -36,7 +41,9 @@ const actions = {
         const { data } = response
         console.log(data)
         commit('SET_TOKEN', data.token)
+        commit('SET_UID', data.u)
         setToken(data.token)
+        setSession('uid', data.u)
         resolve()
       }).catch(error => {
         reject(error)
