@@ -128,8 +128,7 @@ export default {
 
 <style scoped lang='scss'>
 >>> .el-dialog__body {
-  min-height: 600px !important;
-  max-height: 600px !important;
+  min-height: 400px !important;
   overflow: auto !important;
   padding: 5px 20px;
 }
