@@ -61,7 +61,7 @@
 </template>
 <script>
 import { debounce } from '@/utils'
-import { getProductList ,getCancelHosting ,getStoreList} from '@/api/product'
+import { getStoreProductList ,getCancelHosting ,getStoreList} from '@/api/product'
 export default {
   name: 'product',
   components: {
@@ -121,7 +121,7 @@ export default {
       const formData = JSON.parse(JSON.stringify(this.formInline))
       formData.iDisplayLength = this.listQuery.limit
       formData.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
-      getProductList(formData).then(res => {
+      getStoreProductList(formData).then(res => {
         if (res.code == 200) {
             res.data.map(item =>{
               item.status = item.status == '1' ? 'Active' : 'Draft'
