@@ -84,8 +84,8 @@ export default {
       this.$prompt('Shopify Store URL', 'Connect New Shop', {
         confirmButtonText: 'Confirm',
         cancelButtonText: 'Cancel',
-        // inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
-        // inputErrorMessage: '邮箱格式不正确'
+        inputPattern: /.myshopify.com/g,
+        inputErrorMessage: 'The entered store url is incorrect',
         inputPlaceholder: 'xxxx.myshopify.com'
       }).then(({ value }) => {
         this.$message({
