@@ -43,15 +43,14 @@
                 <span v-else>--</span>
               </template>
             </el-table-column>
-            <el-table-column prop="logistics_cost" label="Logistics Cost">
+            <el-table-column prop="purchase_price" label="Cost">
               <template slot-scope="scope">
-                <span v-if="scope.row.logistics_cost">{{
-                  scope.row.logistics_cost
+                <span v-if="scope.row.purchase_price">{{
+                  scope.row.purchase_price
                 }}</span>
                 <span v-else>--</span>
               </template>
             </el-table-column>
-            <el-table-column prop="service_fee" label="Service Charge" />
           </el-table>
         </el-card>
 
