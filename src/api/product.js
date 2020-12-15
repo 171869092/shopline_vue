@@ -64,6 +64,14 @@ export function getAllProductSave(data) {
     data
   })
 }
+// 删除产品sku
+export function getDeleteSku(params) {
+  return request({
+    url: '/goods/goods/delete-sku',
+    method: 'get',
+    params
+  })
+}
 // 批量删除商品
 export function allProductDelete(data) {
   return request({

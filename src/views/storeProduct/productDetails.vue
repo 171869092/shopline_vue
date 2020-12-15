@@ -262,7 +262,7 @@ export default {
         type: 'warning'
       })
         .then(() => {
-          allProductDelete({ prodcut_list: [{ id: this.$route.query.id }] }).then(res => {
+          allProductDelete({ product_list: [{ id: this.$route.query.id }] }).then(res => {
             if (res.code === 200) {
               this.$message({ message: res.message, type: 'success' })
               this.$router.push({ name: 'product' })
