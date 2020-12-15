@@ -10,7 +10,7 @@
             @click="$router.back()"
           />
           <div class="order-id ml20">
-            Order No：<span class="primary">{{ order_no }}</span>
+            Order No：<span class="primary">{{ order_name }}</span>
           </div>
         </div>
         <el-card class="box-card mt20">
@@ -147,6 +147,9 @@ export default {
   computed: {
     order_no() {
       return this.$route.query.order_no
+    },
+    order_name() {
+      return this.$route.query.order_name
     }
   },
   created() {

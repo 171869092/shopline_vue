@@ -1,7 +1,10 @@
 <template>
   <div class="product">
-    <div class="clearfix">
-      <el-button type="primary" icon="el-icon-plus" size="small" class="f-r mr50 mt20" @click="productAdd('add')">Add products</el-button>
+    <div class="mb20">
+      <div class="flexbox justify-flex-end">
+        <el-button type="primary" icon="el-icon-connection" size="small" class="" @click="assignStore('add')">Assign store</el-button>
+        <el-button type="primary" icon="el-icon-plus" size="small" class="" @click="productAdd('add')">Add products</el-button>
+      </div>
     </div>
     <el-card class="box-card">
       <div class="flexbox mb20">
@@ -50,11 +53,33 @@
       <!-- 分页 -->
       <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
     </el-card>
+    <el-dialog title="Select Store" :visible.sync="dialogvisible" width="500px">
+      <el-form ref="dialogForm" :model="dialogForm" label-width="60px">
+        <el-form-item
+          label="Store"
+          prop="store_id"
+          :rules="{required: true, message: 'Please select a store', trigger: 'blur'}"
+        >
+          <el-select v-model="dialogForm.store_id" placeholder="Select Store" style="width:100%">
+            <el-option
+              v-for="(item, key) in storeList"
+              :key="key"
+              :label="item.store_url"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogvisible = false">取 消</el-button>
+        <el-button type="primary" @click="submit('dialogForm')">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { debounce } from '@/utils'
-import { getAllProductList } from '@/api/product'
+import { getStoreList, getAllProductList, allGoodsSelectStore } from '@/api/product'
 export default {
   name: 'product',
   components: {
@@ -75,6 +100,7 @@ export default {
       tableData: [],
       productSelection: [],
       loading: false,
+      dialogvisible: false,
       listQuery: {
         total: 0,
         page: 1,
@@ -83,13 +109,27 @@ export default {
       formInline: {
         title: '',
         status: ''
-      }
+      },
+      dialogForm: {
+        store_id: '',
+        product_list: []
+      },
+      storeList: []
     }
   },
   created() {
+    this.initData()
     this.Inquire()
   },
   methods: {
+    // 获取店铺list
+    initData() {
+      getStoreList().then(res => {
+        if (res.code === 200) {
+          this.storeList = res.data
+        }
+      })
+    },
     // 查询
     Inquire() {
       this.loading = true
@@ -113,6 +153,33 @@ export default {
     productAdd(type, title, id) {
       this.$router.push({ name: 'productDetails', query: { type: type, title: title, id: id, stroeType: 'all' }})
     },
+    assignStore() {
+      if (this.productSelection.length === 0) {
+        this.$message({ message: 'Please check the product before', type: 'warning' })
+        return
+      }
+      this.dialogvisible = true
+      this.dialogForm.product_list = this.productSelection.map(i => i.id)
+    },
+    submit(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          allGoodsSelectStore(this.dialogForm).then(res => {
+            console.log(res.data)
+            if (res.code === 200) {
+              this.$message.success(res.message)
+              this.$refs[formName].resetFields()
+              this.dialogvisible = false
+            }
+          }).catch(err => {
+            console.log(err)
+          })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
     filterOrders: debounce(function() {
       this.Inquire()
     }, 1000)
@@ -121,9 +188,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .product{
-   .box-card{
-      margin: 20px 30px!important;
-    }
+   margin: 20px 30px!important;
     .button-border{
       border: 1px solid #ef6f38;
       color:  #ef6f38;

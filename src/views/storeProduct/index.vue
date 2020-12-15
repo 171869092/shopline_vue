@@ -122,9 +122,9 @@ export default {
       formData.iDisplayLength = this.listQuery.limit
       formData.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
       getStoreProductList(formData).then(res => {
-        if (res.code == 200) {
+        if (res.code === 200) {
           res.data.map(item => {
-            item.status = item.status == '1' ? 'Active' : 'Draft'
+            item.status = item.status === '1' ? 'Active' : 'Draft'
           })
           this.tableData = res.data
           this.listQuery.total = +res.iTotalRecords
@@ -150,18 +150,24 @@ export default {
     }, 1000),
     // 托管
     providerClick(type) {
-      if (this.productSelection.length == 0) return this.$message({ message: 'Please check the product before proceeding', type: 'warning' })
+      if (this.productSelection.length === 0) {
+        this.$message({ message: 'Please check the product before', type: 'warning' })
+        return
+      }
       this.providerVisible = true
     },
     closeprovider(type) {
-      if (type != 1) {
+      if (type !== 1) {
         this.Inquire()
       }
       this.providerVisible = false
     },
     // 取消托管
     CancleHostClick() {
-      if (this.productSelection.length == 0) return this.$message({ message: 'Please check the product before proceeding', type: 'warning' })
+      if (this.productSelection.length === 0) {
+        this.$message({ message: 'Please check the product before', type: 'warning' })
+        return
+      }
       this.$confirm(`Are you sure to cancel hosting？`, 'Cancle Hosting', {
         confirmButtonText: 'Submit',
         cancelButtonText: 'Cancel',
@@ -175,7 +181,7 @@ export default {
             }
           })
           getCancelHosting(productObj).then(res => {
-            if (res.code == 200) {
+            if (res.code === 200) {
               this.$message({ message: res.message, type: 'success' })
               this.Inquire()
             }

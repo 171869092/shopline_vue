@@ -98,3 +98,11 @@ export function getCancelHosting(data) {
     data
   })
 }
+// 全部商品分配店铺
+export function allGoodsSelectStore(data) {
+  return request({
+    url: '/all_goods_select_store ',
+    method: 'post',
+    data
+  })
+}
