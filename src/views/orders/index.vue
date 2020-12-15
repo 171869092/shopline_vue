@@ -5,7 +5,7 @@
       <div class="filter-control flexbox mb20">
         <div class="filter-item">
           <el-input
-            v-model="queryForm.thirdParty_order_on"
+            v-model="queryForm.order_name"
             clearable
             class="w-500"
             prefix-icon="el-icon-search"
@@ -16,7 +16,6 @@
         <div class="filter-item">
           <el-select
             v-model="queryForm.order_status"
-            class="w-420"
             multiple
             clearable
             placeholder="Order status"
@@ -33,7 +32,6 @@
         <div class="filter-item">
           <el-select
             v-model="queryForm.logistics_status"
-            class="w-400"
             multiple
             clearable
             placeholder="Logistics status"
@@ -44,6 +42,21 @@
               :key="key"
               :label="item"
               :value="key"
+            />
+          </el-select>
+        </div>
+        <div class="filter-item">
+          <el-select
+            v-model="queryForm.store_url"
+            clearable
+            placeholder="Select Store"
+            @change="filterStoreUrl"
+          >
+            <el-option
+              v-for="(item, key) in storeList"
+              :key="key"
+              :label="item.store_url"
+              :value="item.store_url"
             />
           </el-select>
         </div>
@@ -88,14 +101,19 @@
             </el-table>
           </template>
         </el-table-column>
-        <el-table-column label="Third Party Order Number">
+        <el-table-column label="Order">
           <template slot-scope="scope">
-            <span class="primary pointer" @click="toLink(scope.row)">{{ scope.row.thirdParty_order_on }}</span>
+            <span class="primary pointer" @click="toLink(scope.row)">{{ scope.row.order_name }}</span>
           </template>
         </el-table-column>
         <el-table-column label="Order Amount">
           <template slot-scope="scope">
             <div>{{ scope.row.total_price }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="Store">
+          <template slot-scope="scope">
+            <div>{{ scope.row.store_url }}</div>
           </template>
         </el-table-column>
         <el-table-column label="Order Status">
@@ -124,7 +142,8 @@
 </template>
 <script>
 import { debounce } from '@/utils'
-import { getOrderTabs, getOrderList, getLogisticInfo } from '@/api/orders'
+import { getOrderList, getLogisticInfo } from '@/api/orders'
+import { getStoreList } from '@/api/product'
 export default {
   name: 'orders',
   components: {
@@ -134,13 +153,15 @@ export default {
   data() {
     return {
       queryForm: {
-        thirdParty_order_on: '',
+        order_name: '',
+        store_url: '',
         order_status: [],
         logistics_status: []
       },
       formQuery: {
-        thirdParty_order_on: '',
+        order_name: '',
         order_status: '',
+        store_url: '',
         logistics_status: '',
         iDisplayStart: 0,
         iDisplayLength: 2
@@ -175,6 +196,7 @@ export default {
       ],
       tableData: [],
       logisticList: [],
+      storeList: [],
       loading: false,
       dialogVisible: false,
       timelineLoading: false
@@ -182,15 +204,14 @@ export default {
   },
   computed: {},
   created() {
-    // this.init()
+    this.init()
     this.Inquire()
   },
   methods: {
     init() {
-      getOrderTabs().then(res => {
-        console.log(res.data)
+      getStoreList().then(res => {
         if (res.code === 200) {
-          this.tabList = res.data
+          this.storeList = res.data
         }
       }).catch(err => {
         console.log(err)
@@ -249,7 +270,7 @@ export default {
       })
     },
     filterOrders: debounce(function() {
-      this.formQuery.thirdParty_order_on = this.queryForm.thirdParty_order_on
+      this.formQuery.order_name = this.queryForm.order_name
       this.resetPageLimit()
       this.Inquire()
     }, 500),
@@ -260,6 +281,11 @@ export default {
     }, 500),
     filterLogisticsStatus: debounce(function() {
       this.formQuery.logistics_status = this.queryForm.logistics_status.toString()
+      this.resetPageLimit()
+      this.Inquire()
+    }, 500),
+    filterStoreUrl: debounce(function() {
+      this.formQuery.store_url = this.queryForm.store_url
       this.resetPageLimit()
       this.Inquire()
     }, 500)
