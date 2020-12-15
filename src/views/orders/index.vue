@@ -13,12 +13,14 @@
             @change="filterOrders"
           />
         </div>
-        <div class="filter-item">
+        <div class="filter-item w-250">
           <el-select
             v-model="queryForm.order_status"
             multiple
             clearable
+            collapse-tags
             placeholder="Order status"
+            style="width:100%"
             @change="filterOrderStatus"
           >
             <el-option
@@ -29,12 +31,14 @@
             />
           </el-select>
         </div>
-        <div class="filter-item">
+        <div class="filter-item w-250">
           <el-select
             v-model="queryForm.logistics_status"
             multiple
             clearable
+            collapse-tags
             placeholder="Logistics status"
+            style="width:100%"
             @change="filterLogisticsStatus"
           >
             <el-option
