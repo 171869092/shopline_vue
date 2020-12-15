@@ -2,7 +2,7 @@
   <div class="product">
     <div class="mb20">
       <div class="flexbox justify-flex-end">
-        <el-button type="primary" icon="el-icon-connection" size="small" class="" @click="assignStore('add')">Assign store</el-button>
+        <el-button icon="el-icon-connection" size="small" class="button-border" @click="assignStore('add')">Assign store</el-button>
         <el-button type="primary" icon="el-icon-plus" size="small" class="" @click="productAdd('add')">Add products</el-button>
       </div>
     </div>
