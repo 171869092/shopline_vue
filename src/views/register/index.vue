@@ -25,12 +25,12 @@
               <el-form ref="loginForm" :model="loginForm" :rules="rules" class="mt40" label-position="top">
                 <el-form-item label="Your Email" prop="email">
                   <el-input v-model="loginForm.email">
-                    <el-button slot="append" class="secondary">identifying code</el-button>
+                    <!-- <el-button slot="append" class="secondary">identifying code</el-button> -->
                   </el-input>
                 </el-form-item>
-                <el-form-item label="Identifying code" prop="code">
+                <!-- <el-form-item label="Identifying code" prop="code">
                   <el-input v-model="loginForm.code" auto-complete="new-password" />
-                </el-form-item>
+                </el-form-item> -->
                 <el-form-item label="Your Password" prop="password">
                   <el-input v-model="loginForm.password" auto-complete="new-password" type="password" />
                 </el-form-item>
@@ -67,7 +67,7 @@
 </template>
 <script>
 // import BNavbar from '@/views/home/components/navbar'
-import { getSession } from '@/utils/session'
+// import { getSession } from '@/utils/session'
 import { register } from '@/api/user'
 export default {
   name: 'register',
@@ -109,9 +109,9 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          const shopify = getSession('shopify')
-          const shop = shopify && shopify.shop ? shopify.shop : ''
-          register({ LoginForm: this.loginForm, shop: shop }).then(res => {
+          // const shopify = getSession('shopify')
+          // const shop = shopify && shopify.shop ? shopify.shop : ''
+          register(this.loginForm).then(res => {
             console.log(res.data)
             this.$refs.loginForm.resetFields()
             this.$router.push({ name: 'login' })

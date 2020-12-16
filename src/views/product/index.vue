@@ -53,7 +53,7 @@
       <!-- 分页 -->
       <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
     </el-card>
-    <el-dialog title="Select Store" :visible.sync="dialogvisible" width="500px">
+    <el-dialog title="Assign Store" :visible.sync="dialogvisible" width="500px">
       <el-form ref="dialogForm" :model="dialogForm" label-width="60px">
         <el-form-item
           label="Store"
@@ -71,8 +71,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogvisible = false">取 消</el-button>
-        <el-button type="primary" @click="submit('dialogForm')">确 定</el-button>
+        <el-button @click="dialogvisible = false">Cancel</el-button>
+        <el-button type="primary" :loading="submitLoading" @click="submit('dialogForm')">Submit</el-button>
       </div>
     </el-dialog>
   </div>
@@ -101,6 +101,7 @@ export default {
       productSelection: [],
       loading: false,
       dialogvisible: false,
+      submitLoading: false,
       listQuery: {
         total: 0,
         page: 1,
@@ -164,6 +165,7 @@ export default {
     submit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
+          this.submitLoading = true
           allGoodsSelectStore(this.dialogForm).then(res => {
             console.log(res.data)
             if (res.code === 200) {
@@ -173,6 +175,8 @@ export default {
             }
           }).catch(err => {
             console.log(err)
+          }).finally(() => {
+            this.submitLoading = false
           })
         } else {
           console.log('error submit!!')

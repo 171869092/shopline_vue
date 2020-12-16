@@ -107,7 +107,7 @@
   </div>
 </template>
 <script>
-import { getAllProductEdit,getStoreProductEdit, getAllProductSave,getStoreProductSave, allProductDelete, getDeleteSku } from '@/api/product'
+import { getAllProductEdit, getStoreProductEdit, getAllProductSave, getStoreProductSave, allProductDelete, getDeleteSku } from '@/api/product'
 export default {
   name: 'product-details',
   components: {
@@ -119,6 +119,7 @@ export default {
   data() {
     return {
       formData: {
+        status: '2',
         sku_list: [
           {
             sku_image: '',
@@ -166,33 +167,33 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       })
       if (this.$route.query.stroeType === 'all') {
-          getAllProductEdit({ id: this.$route.query.id }).then(res => {
-            if (res.code === 200) {
-              this.formData = res.data
-              this.formData.images = res.data.images.map(item => {
-                return {
-                  url: item.url,
-                  is_hover: false,
-                  id: item.id
-                }
-              })
-              loading.close()
-            }
-          })
-      }else{
-         getStoreProductEdit({ id: this.$route.query.id }).then(res => {
-            if (res.code === 200) {
-              this.formData = res.data
-              this.formData.images = res.data.images.map(item => {
-                return {
-                  url: item.url,
-                  is_hover: false,
-                  id: item.id
-                }
-              })
-              loading.close()
-            }
-          })
+        getAllProductEdit({ id: this.$route.query.id }).then(res => {
+          if (res.code === 200) {
+            this.formData = res.data
+            this.formData.images = res.data.images.map(item => {
+              return {
+                url: item.url,
+                is_hover: false,
+                id: item.id
+              }
+            })
+            loading.close()
+          }
+        })
+      } else {
+        getStoreProductEdit({ id: this.$route.query.id }).then(res => {
+          if (res.code === 200) {
+            this.formData = res.data
+            this.formData.images = res.data.images.map(item => {
+              return {
+                url: item.url,
+                is_hover: false,
+                id: item.id
+              }
+            })
+            loading.close()
+          }
+        })
       }
     },
     // 拖拽监听list
@@ -206,23 +207,23 @@ export default {
         if (valid) {
           this.SubmitLoading = true
           if (this.$route.query.stroeType === 'all') {
-              getAllProductSave(this.formData).then(res => {
-                  if (res.code === 200) {
-                    this.$message({ message: res.message, type: 'success' })
-                    this.$router.push({ name: 'product' })
-                  }
-                }).finally(() => {
-                  this.SubmitLoading = false
-              })
-          }else{
-              getStoreProductSave(this.formData).then(res => {
-                  if (res.code === 200) {
-                    this.$message({ message: res.message, type: 'success' })
-                    this.$router.push({ name: 'storeProduct' })
-                  }
-                }).finally(() => {
-                  this.SubmitLoading = false
-              })
+            getAllProductSave(this.formData).then(res => {
+              if (res.code === 200) {
+                this.$message({ message: res.message, type: 'success' })
+                this.$router.push({ name: 'product' })
+              }
+            }).finally(() => {
+              this.SubmitLoading = false
+            })
+          } else {
+            getStoreProductSave(this.formData).then(res => {
+              if (res.code === 200) {
+                this.$message({ message: res.message, type: 'success' })
+                this.$router.push({ name: 'storeProduct' })
+              }
+            }).finally(() => {
+              this.SubmitLoading = false
+            })
           }
         }
       })
@@ -275,7 +276,7 @@ export default {
     },
     // 返回
     productBack() {
-      this.$router.go(-1) 
+      this.$router.go(-1)
     },
     // 关闭  图片编辑 sku
     closePrint(type) {
