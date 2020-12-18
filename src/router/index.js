@@ -121,14 +121,14 @@ export const constantRoutes = [
     ]
   },
   {
-    path: '/shop',
+    path: '/store',
     component: Layout,
     children: [
       {
         path: 'index',
-        name: 'shop',
+        name: 'store',
         component: () => import('@/views/shop/index'),
-        meta: { title: 'My Shop', icon: 'el-icon-s-shop' }
+        meta: { title: 'My Store', icon: 'el-icon-s-shop' }
       }
     ]
   },
