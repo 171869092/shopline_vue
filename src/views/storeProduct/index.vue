@@ -10,7 +10,7 @@
     </div>
     <el-card v-loading="tabloading" class="box-card min_height">
       <el-tabs v-model="formInline.store_url" @tab-click="handleClick">
-        <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.store_url" :name="tab.store_url">
+        <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.store_name" :name="tab.store_url">
           <div class="flexbox mb20">
             <div>
               <el-input
@@ -48,7 +48,7 @@
               <template slot-scope="scope">
                 <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
                 <span v-if="item.type == 'product'" style="color:#ef6f38" class="pointer f-l ml50" @click="productAdd('edit',scope.row.title,scope.row.id)">
-                  <img :src="scope.row.img_url" width="50px" alt="">
+                  <img :src="scope.row.img_url + '_50x50.jpg_.webp'" width="50px" alt="">
                   <span class="ml20">{{ scope.row.title }}</span>
                 </span>
               </template>
