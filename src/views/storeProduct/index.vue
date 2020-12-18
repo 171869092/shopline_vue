@@ -1,13 +1,16 @@
 <template>
   <div class="product">
-    <div class="clearfix">
-      <!-- <el-button type="primary" icon="el-icon-plus" size="small" class="f-r mr50 mt20" @click="productAdd('add')">Add products</el-button> -->
-      <el-button size="small" type="danger" class="f-r mr30 mt20" @click="CancleHostClick">Cancle Hosting</el-button>
-      <el-button size="small" class="f-r mr30 mt20 button-border" @click="providerClick">Hosting</el-button>
+    <div class="mt20 mr30">
+        <div class="flexbox justify-flex-end">
+            <!-- <el-button type="primary" icon="el-icon-plus" size="small" class="f-r mr50 mt20" @click="productAdd('add')">Add products</el-button> -->
+            <el-button size="small" class="button-border" @click="providerClick">Hosting</el-button> 
+            <el-button size="small" type="danger" @click="CancleHostClick">Cancle Hosting</el-button>
+            <el-button size="small" type="primary" icon="el-icon-top" :loading="shopifyLoading" @click="pushShopify">Push to shopify</el-button>
+        </div>
     </div>
     <el-card v-loading="tabloading" class="box-card min_height">
       <el-tabs v-model="formInline.store_url" @tab-click="handleClick">
-        <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.store_name" :name="tab.store_url">
+        <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.store_url" :name="tab.store_url">
           <div class="flexbox mb20">
             <div>
               <el-input
@@ -61,7 +64,7 @@
 </template>
 <script>
 import { debounce } from '@/utils'
-import { getStoreProductList, getCancelHosting, getStoreList } from '@/api/product'
+import { getStoreProductList, getCancelHosting, getStoreList,getStorePushProduct } from '@/api/product'
 export default {
   name: 'product',
   components: {
@@ -85,6 +88,7 @@ export default {
       loading: false,
       providerVisible: false,
       tabloading: false,
+      shopifyLoading:false,
       providerTitle: 'Hosting',
       listQuery: {
         total: 0,
@@ -162,6 +166,30 @@ export default {
       }
       this.providerVisible = false
     },
+    // push to shopify
+    pushShopify(){
+      if (this.productSelection.length === 0) {
+        this.$message({ message: 'Please check the product before', type: 'warning' })
+        return
+      }else{
+        this.shopifyLoading = true
+        const pushProduct = {}
+        this.tabList.find(item =>{
+          if(item.store_url === this.formInline.store_url){
+            pushProduct.store_id = item.id;
+          }
+        });
+        pushProduct.product_list = this.productSelection.map(item => item.id)
+        getStorePushProduct(pushProduct).then(res =>{
+            if (res.code == 200) {
+               this.shopifyLoading = false
+               this.$message({ message: res.message, type: 'success' })
+            }
+        }).catch(() => {
+            this.shopifyLoading = false
+        })
+      }
+    },
     // 取消托管
     CancleHostClick() {
       if (this.productSelection.length === 0) {
@@ -187,7 +215,7 @@ export default {
             }
           })
         }).catch(() => {})
-    }
+    },
   }
 }
 </script>

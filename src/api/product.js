@@ -40,6 +40,14 @@ export function getStoreProductSave(data) {
     data
   })
 }
+// 店铺产品推送shopify
+export function getStorePushProduct(data) {
+  return request({
+    url: '/push_products',
+    method: 'post',
+    data
+  })
+}
 // 全部商品列表
 export function getAllProductList(params) {
   return request({
