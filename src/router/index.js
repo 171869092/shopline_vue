@@ -32,7 +32,7 @@ import Layout from '@/layout'
  */
 export const constantRoutes = [
   {
-    path: '/',
+    path: '/home',
     component: () => import('@/views/home/index'),
     name: 'home',
     hidden: true
@@ -52,17 +52,24 @@ export const constantRoutes = [
   },
 
   {
+    path: '/auth',
+    component: () => import('@/views/auth/index'),
+    name: 'auth',
+    hidden: true
+  },
+
+  {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
   },
 
   {
-    path: '',
+    path: '/',
     component: Layout,
     // redirect: '/dashboard',
     children: [{
-      path: '/dashboard',
+      path: '',
       name: 'dashboard',
       component: () => import('@/views/dashboard/index'),
       meta: { title: 'Dashboard', icon: 'el-icon-s-home' }
@@ -76,7 +83,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'storeProduct',
         component: () => import('@/views/storeProduct/index'),
-        meta: { title: 'My Store Products', icon: 'el-icon-goods' }
+        meta: { title: 'Store Products', icon: 'el-icon-goods' }
       },
       {
         path: 'productDetails',
@@ -96,7 +103,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'product',
         component: () => import('@/views/product/index'),
-        meta: { title: 'My Products', icon: 'el-icon-data-line' }
+        meta: { title: 'Products', icon: 'el-icon-data-line' }
       }
     ]
   },
@@ -109,7 +116,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'orders',
         component: () => import('@/views/orders/index'),
-        meta: { title: 'My Orders', icon: 'el-icon-tickets' }
+        meta: { title: 'Orders', icon: 'el-icon-tickets' }
       },
       {
         path: 'detail',
@@ -128,7 +135,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'store',
         component: () => import('@/views/shop/index'),
-        meta: { title: 'My Store', icon: 'el-icon-s-shop' }
+        meta: { title: 'Store', icon: 'el-icon-s-shop' }
       }
     ]
   },
