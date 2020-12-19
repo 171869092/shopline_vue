@@ -1,12 +1,12 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
-import { setSession, getSession } from '@/utils/session'
+import { getCookies, setCookies } from '@/utils/cookies'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
-    uid: getSession('uid'),
+    uid: getCookies('uid'),
     name: '',
     avatar: ''
   }
@@ -43,7 +43,7 @@ const actions = {
         commit('SET_TOKEN', data.token)
         commit('SET_UID', data.u)
         setToken(data.token)
-        setSession('uid', data.u)
+        setCookies('uid', data.u)
         resolve()
       }).catch(error => {
         reject(error)
