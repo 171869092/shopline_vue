@@ -26,7 +26,7 @@ router.beforeEach(async(to, from, next) => {
     } else {
       // other pages that do not have permission to access are redirected to the login page.
       // next(`/login?redirect=${to.path}`)
-      next('/login')
+      next('/home')
       NProgress.done()
     }
   }
