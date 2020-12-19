@@ -12,7 +12,7 @@ const whiteList = ['/login', '/register', '/auth', '/'] // no redirect whitelist
 
 router.beforeEach(async(to, from, next) => {
   const hasToken = getToken()
-  // if (to.path !== '/login' && !hasToken && to.path !== '/registered') {
+  // if (to.path !== '/login' && !hasToken && to.path !== '/register') {
   //   return next('/login')
   // }
   // next()

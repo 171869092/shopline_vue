@@ -56,11 +56,13 @@ service.interceptors.response.use(
     const res = response.data
     if (res.code === 1001 || res.code === 1002) {
       // token失效
-      MessageBox.confirm('please relogin', 'Tips', {
-        confirmButtonText: 'Back to home',
-        cancelButtonText: 'Cancel',
+      MessageBox.confirm('Invalid authentication, please login again!', 'Tips', {
+        confirmButtonText: 'Re login',
+        // cancelButtonText: 'Cancel',
+        showCancelButton: false,
         type: 'warning'
       }).then(() => {
+        Promise.reject()
         store.dispatch('user/resetToken').then(() => {
           location.reload()
         })
@@ -70,7 +72,8 @@ service.interceptors.response.use(
         Message({
           message: res.message || res.msg || 'Error Request',
           type: 'warning',
-          duration: 10 * 1000
+          duration: 3 * 1000,
+          showClose: true
         })
       }
     } else {
@@ -82,7 +85,8 @@ service.interceptors.response.use(
     Message({
       message: error.message,
       type: 'error',
-      duration: 5 * 1000
+      duration: 3 * 1000,
+      showClose: true
     })
     return Promise.reject(error)
   }

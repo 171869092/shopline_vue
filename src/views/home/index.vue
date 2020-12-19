@@ -20,7 +20,7 @@
                 <router-link class="login-btn" :to="{name: 'dashboard'}">Dashboard</router-link>
               </div>
               <div v-else>
-                <router-link class="login-btn" :to="{name: 'login', query: $route.query}">Login</router-link>
+                <router-link class="login-btn" :to="{name: 'login'}">Login</router-link>
                 <el-button type="primary" @click="registerClick">Get Started</el-button>
               </div>
             </form>
@@ -149,7 +149,7 @@
 <script>
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
-import { setSession } from '@/utils/session'
+import { setCookies } from '@/utils/cookies'
 export default {
   components: {
     Swiper,
@@ -193,9 +193,9 @@ export default {
   },
   created() {
     // console.log({ ...this.$route.query })
-    // eslint-disable-next-line no-prototype-builtins
-    if (this.$route.query.hasOwnProperty('hmac')) {
-      setSession('shopify', this.$route.query)
+    const query = this.$route.query
+    if (Object.hasOwnProperty.call(query, 'hmac')) {
+      setCookies('shopify', query)
     }
   },
   methods: {

@@ -37,7 +37,7 @@ import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
 import { mapGetters } from 'vuex'
 import { shopifyApi, shopifyPush } from '@/api/user'
-import { getSession } from '@/utils/session'
+import { getCookies } from '@/utils/cookies'
 const lineChartData = {
   newVisitis: {
     expectedData: [100, 120, 161, 134, 105, 160, 165],
@@ -81,11 +81,10 @@ export default {
   },
   methods: {
     shopifyInit() {
-      const shopify = getSession('shopify')
-      if (shopify && shopify.hmac) {
+      const shopify = getCookies('shopify')
+      if (shopify && shopify.code && shopify.hmac) {
         shopifyApi({ ...shopify }).then(res => {
           shopifyPush({ shop: shopify.shop }).then(res => {
-            console.log(res.data)
           }).catch(err => {
             console.log(err)
           })
