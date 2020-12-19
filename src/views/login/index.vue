@@ -90,8 +90,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          const shopify = getCookies('shopify')
-          const shop = shopify && shopify.shop ? shopify.shop : ''
+          const shop = getCookies('shop') || ''
           this.$store.dispatch('user/login', { LoginForm: this.loginForm, id: 1, shop: shop }).then(() => {
             this.$router.push({ name: 'dashboard' })
             this.loading = false

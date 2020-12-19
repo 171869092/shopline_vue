@@ -86,21 +86,25 @@ export default {
       const query = this.$route.query
       if (Object.hasOwnProperty.call(query, 'hmac')) {
         setCookies('shopify', query)
+        setCookies('shop', query.shop)
       }
     },
     shopifyInit() {
       const shopify = getCookies('shopify')
-      if (shopify && shopify.code && shopify.hmac) {
-        shopifyApi({ ...shopify }).then(res => {
+      if (shopify) {
+        const query = JSON.parse(shopify)
+        if (query.code && query.hmac) {
+          shopifyApi({ ...query }).then(res => {
           // commit('SET_TOKEN', res.data.token)
           // getToken(res.data.token)
-          shopifyPush({ shop: shopify.shop }).then(res => {
+            shopifyPush({ shop: query.shop }).then(res => {
+            }).catch(err => {
+              console.log(err)
+            })
           }).catch(err => {
             console.log(err)
           })
-        }).catch(err => {
-          console.log(err)
-        })
+        }
       }
     },
     handleSetLineChartData(type) {

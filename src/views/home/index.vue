@@ -196,6 +196,7 @@ export default {
     const query = this.$route.query
     if (Object.hasOwnProperty.call(query, 'hmac')) {
       setCookies('shopify', query)
+      setCookies('shop', query.shop)
     }
   },
   methods: {
