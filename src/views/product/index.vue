@@ -172,6 +172,7 @@ export default {
               this.$message.success(res.message)
               this.$refs[formName].resetFields()
               this.dialogvisible = false
+              this.Inquire()
             }
           }).catch(err => {
             console.log(err)
