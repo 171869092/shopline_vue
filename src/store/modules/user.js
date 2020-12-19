@@ -1,13 +1,14 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
-import { getCookies, setCookies } from '@/utils/cookies'
+import { getCookies, setCookies, removeAllCookies } from '@/utils/cookies'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     uid: getCookies('uid'),
     name: '',
+    email: getCookies('email'),
     avatar: ''
   }
 }
@@ -27,6 +28,9 @@ const mutations = {
   SET_NAME: (state, name) => {
     state.name = name
   },
+  SET_EMAIL: (state, email) => {
+    state.email = email
+  },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
   }
@@ -39,11 +43,14 @@ const actions = {
     return new Promise((resolve, reject) => {
       login(userInfo).then(response => {
         const { data } = response
-        console.log(data)
         commit('SET_TOKEN', data.token)
+        commit('SET_NAME', data.username)
+        commit('SET_EMAIL', data.email)
         commit('SET_UID', data.u)
         setToken(data.token)
         setCookies('uid', data.u)
+        setCookies('email', data.email)
+        setCookies('name', data.username)
         resolve()
       }).catch(error => {
         reject(error)
@@ -78,6 +85,7 @@ const actions = {
       logout(state.token).then(() => {
         removeToken() // must remove  token  first
         resetRouter()
+        removeAllCookies()
         commit('RESET_STATE')
         resolve()
       }).catch(error => {
@@ -92,6 +100,7 @@ const actions = {
       commit('SET_TOKEN', '')
       commit('SET_ROLES', [])
       removeToken()
+      removeAllCookies()
       resolve()
     })
   }
