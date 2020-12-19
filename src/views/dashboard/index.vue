@@ -37,7 +37,7 @@ import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
 import { mapGetters } from 'vuex'
 import { shopifyApi, shopifyPush } from '@/api/user'
-import { getToken } from '@/utils/auth'
+// import { getToken } from '@/utils/auth'
 import { getCookies, setCookies } from '@/utils/cookies'
 const lineChartData = {
   newVisitis: {
