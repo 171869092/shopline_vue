@@ -1,33 +1,36 @@
+<template>
+  <h2>Authorizing</h2>
+</template>
 <script>
-import createApp from '@shopify/app-bridge'
-import { Redirect } from '@shopify/app-bridge/actions'
-// import { getSessionToken } from '@shopify/app-bridge-utils'
+import { setCookies } from '@/utils/cookies'
+import { shopifyApi } from '@/api/user'
 export default {
   data() {
     return {}
   },
   created() {
-    const shopOrigin = 'live-by-test.myshopify.com'
-    const apiKey = '5fdf0435f9093519625df5bfca4c8a31'
-    const redirectUri = 'https://f9afcc25fbc1.ap.ngrok.io'
-    const permissionUrl = `https://${shopOrigin}/admin/oauth/authorize?client_id=${apiKey}&scope=read_products,read_content&redirect_uri=${redirectUri}`
-
-    // If the current window is the 'parent', change the URL by setting location.href
-    if (window.top === window.self) {
-      console.log('redirect')
-      window.location.assign(permissionUrl)
-      // If the current window is the 'child', change the parent's URL with Shopify App Bridge's Redirect action
-    } else {
-      console.log('init')
-      const app = createApp({
-        apiKey: apiKey,
-        shopOrigin: shopOrigin
-      })
-      console.log(app)
-
-      Redirect.create(app).dispatch(Redirect.Action.REMOTE, permissionUrl)
-    }
+    this.shopifyInit()
   },
-  methods: {}
+  methods: {
+    shopifyInit() {
+      const query = this.$route.query
+      if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
+        setCookies('shopify', query)
+        setCookies('shop', query.shop)
+        shopifyApi({ ...query }).then(res => {
+          console.log(res)
+          this.$store.commit('SET_TOKEN', res.data.token)
+          this.$store.commit('SET_EMAIL', res.data.email)
+          // getToken(res.data.token)
+          setCookies('token', res.data.token)
+          setCookies('email', res.data.email)
+        }).catch(err => {
+          console.log(err)
+        })
+      } else {
+        window.location = '/'
+      }
+    }
+  }
 }
 </script>
