@@ -112,10 +112,12 @@ export default {
       this.tabloading = true
       getStoreList().then(res => {
         if (res.code === 200) {
-          this.tabList = res.data
-          this.formInline.store_url = res.data[0].store_url
+          if (res.data.length>0) {
+            this.tabList = res.data
+            this.formInline.store_url = res.data[0].store_url
+            this.Inquire()
+          }    
           this.tabloading = false
-          this.Inquire()
         }
       })
     },
