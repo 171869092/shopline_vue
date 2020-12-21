@@ -1,5 +1,7 @@
 <template>
-  <h2>Redirecting...</h2>
+  <div style="padding:10px">
+    <h3>Redirecting...</h3>
+  </div>
 </template>
 <script>
 import { setCookies } from '@/utils/cookies'
