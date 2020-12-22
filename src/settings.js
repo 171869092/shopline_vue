@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'DropShipping',
+  title: 'Fbali',
 
   /**
    * @type {boolean} true | false

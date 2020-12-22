@@ -232,7 +232,7 @@ export default {
       this.formQuery.iDisplayLength = this.listQuery.limit
       this.formQuery.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
       getOrderList(this.formQuery).then(res => {
-        console.log(res.data)
+        // console.log(res.data)
         if (res.code === 200) {
           this.tableData = res.data
           this.listQuery.total = +res.total

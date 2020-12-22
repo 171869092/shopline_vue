@@ -165,7 +165,7 @@ export default {
       this.loading = true
       getOrderInfo({ order_no: this.order_no })
         .then((res) => {
-          console.log(res.data)
+          // console.log(res.data)
           if (res.code === 200) {
             this.detailInfo = res.data
           }
