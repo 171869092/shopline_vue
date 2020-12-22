@@ -1,5 +1,5 @@
 <template>
-  <div style="padding:10px">
+  <div class="redirecting" style="padding:10px">
     <h3>Redirecting...</h3>
   </div>
 </template>
@@ -22,8 +22,8 @@ export default {
         shopifyApi({ ...query }).then(res => {
           console.log(res)
           if (res.code === 200) {
-            this.$store.commit('SET_TOKEN', res.data.token)
-            this.$store.commit('SET_EMAIL', res.data.email)
+            this.$store.commit('user/SET_TOKEN', res.data.token)
+            this.$store.commit('user/SET_EMAIL', res.data.email)
             // getToken(res.data.token)
             setCookies('token', res.data.token)
             setCookies('email', res.data.email)
@@ -41,3 +41,10 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+.redirecting {
+  width: 100%;
+  height: 100vh;
+  cursor: progress;
+}
+</style>
