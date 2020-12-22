@@ -20,7 +20,6 @@ export default {
         setCookies('shopify', query)
         setCookies('shop', query.shop)
         shopifyApi({ ...query }).then(res => {
-          console.log(res)
           if (res.code === 200) {
             this.$store.commit('user/SET_TOKEN', res.data.token)
             this.$store.commit('user/SET_EMAIL', res.data.email)
