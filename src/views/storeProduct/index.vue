@@ -10,7 +10,7 @@
     </div>
     <el-card v-loading="tabloading" class="box-card min_height">
       <el-tabs v-model="formInline.store_url" @tab-click="handleClick">
-        <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.store_name" :name="tab.store_url">
+        <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="String(tab.store_name)" :name="tab.store_url">
           <div class="flexbox mb20">
             <div>
               <el-input
