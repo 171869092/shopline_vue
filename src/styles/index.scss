@@ -179,6 +179,9 @@ input[type="number"] {
 }
 .primary {
   color: $--color-primary;
+  &:hover {
+    color: $--color-primary;
+  }
 }
 
 .link {
@@ -226,4 +229,12 @@ $align-list: center, start, end, flex-start, flex-end, self-start, self-end, str
   .align-#{$item} {
     align-items: #{$item};
   }
+}
+.nodata {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #ccc;
+  font-size: 16px;
+  padding: 50px;
 }
