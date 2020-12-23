@@ -73,8 +73,13 @@
   border-top: .05rem solid #e5e5e5;
 }
 
-.navbar-light .navbar-nav .nav-link {
-  color: #3D4157FF
+.navbar-light {
+  .navbar-brand {
+    padding: 0;
+  }
+  .navbar-nav .nav-link {
+    color: #3D4157FF
+  }
 }
 
 .about-us {
@@ -86,8 +91,8 @@
 }
 
 .home-logo {
-  width: 130px;
-  margin-top: -5px;
+  width: 120px;
+  // margin-top: -5px;
 }
 
 // login
