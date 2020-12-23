@@ -88,21 +88,31 @@
               <h2>Timeline</h2>
             </div>
           </div>
-          <div class="block">
-            <div class="flexbox p20 log-title">
-              <div>Status: {{ detailInfo.track_info.TrackingStatus || '--' }}</div>
-              <div class="ml50">
-                Waybill Number：{{ detailInfo.track_info.WaybillNumber || '--' }}
+          <div v-if="track_info.length > 0">
+            <div v-for="(track, key) in track_info" :key="key" class="block mb20">
+              <div class="flexbox p15 log-title cursor_p" @click="toggleTheTimeline(track)">
+                <div><span class="text-subdued">Service Provider:</span> {{ track.service_name || '--' }}</div>
+                <div><span class="text-subdued">Status:</span> {{ track.TrackingStatus || '--' }}</div>
+                <div><span class="text-subdued">Waybill Number：</span>{{ track.WaybillNumber || '--' }}</div>
               </div>
+              <el-collapse-transition>
+                <div v-show="track.show">
+                  <el-timeline class="mt20 pl20" :reverse="false">
+                    <el-timeline-item v-for="(item, index) in track.OrderTrackingDetails" :key="index">
+                      <span>{{ item.ProcessDate }}</span><span class="ml40">{{ item.ProcessContent }}</span>
+                    </el-timeline-item>
+                  </el-timeline>
+                </div>
+              </el-collapse-transition>
             </div>
-            <el-timeline class="mt20 pl20" :reverse="false">
-              <el-timeline-item
-                v-for="(activity, index) in detailInfo.track_info.OrderTrackingDetails"
-                :key="index"
-              >
-                <span>{{ activity.ProcessDate }}</span><span class="ml40">{{ activity.ProcessContent }}</span>
-              </el-timeline-item>
-            </el-timeline>
+          </div>
+          <div v-else>
+            <div class="empty-text">
+              <div class="empty-icon">
+                <svg-icon icon-class="nodata" />
+              </div>
+              <div class="empty-normal">No Data</div>
+            </div>
           </div>
         </el-card>
       </el-col>
@@ -116,17 +126,7 @@ export default {
   props: {},
   data() {
     return {
-      tableData: [
-        {
-          products:
-            'SYLLABLE S101 Strong bass TWS wireless headset noise reduction for music QCC3020',
-          SKU: 'CUP- C',
-          quantity: '6',
-          payment_amount: '$120.00',
-          the_logistics_cost: '$5.00',
-          service_fee: '$5.00'
-        }
-      ],
+      tableData: [],
       labelList: [
         { label: 'Products', value: 'third_goods_name' },
         { label: 'SKU', value: 'third_sku_name' },
@@ -135,12 +135,10 @@ export default {
         { label: 'The Logistics Cost', value: 'logistics_cost' },
         { label: 'Service Fee', value: 'service_fee' }
       ],
-      detailInfo: {
-        track_info: {
-          OrderTrackingDetails: []
-        }
-      },
-      loading: false
+      detailInfo: {},
+      track_info: [],
+      loading: false,
+      trackList: []
     }
   },
   computed: {
@@ -168,6 +166,11 @@ export default {
           // console.log(res.data)
           if (res.code === 200) {
             this.detailInfo = res.data
+            this.track_info = res.data.track_info.map(item => {
+              this.$set(item, 'show', true)
+              return item
+            })
+            console.log(this.track_info)
           }
         })
         .catch((err) => {
@@ -177,6 +180,13 @@ export default {
           loading.close()
           this.loading = false
         })
+    },
+    toggleTheTimeline(track) {
+      if (track.show) {
+        this.$set(track, 'show', false)
+      } else {
+        this.$set(track, 'show', true)
+      }
     }
   }
 }
@@ -206,6 +216,27 @@ export default {
   background: #f7f9fcff;
 }
 .log-title {
-  border-bottom: 1px solid #dfe1e8;
+  border-bottom: 1px solid #ddd;
+  .text-subdued {
+    color: #637381;
+  }
+  div {
+    &:first-child {
+      margin-left: 0;
+    }
+    margin-left: 20px;
+  }
 }
+.empty-text {
+  text-align: center;
+  .empty-icon {
+    svg {
+      font-size: 55px;
+    }
+  }
+  .empty-normal {
+    color: rgba(0,0,0,.25);
+  }
+}
+
 </style>
