@@ -56,20 +56,13 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column label="Color" prop="sku_color">
-            <template slot-scope="scope">
-              <el-form-item class="mb0" label-width="0">
-                <el-input v-model="scope.row.sku_color" size="mini" class="p5_input" placeholder="Color" />
-              </el-form-item>
-            </template>
-          </el-table-column>
-          <el-table-column label="Size" prop="sku_size">
-            <template slot-scope="scope">
-              <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_size`">
-                <el-input v-model="scope.row.sku_size" clearable size="mini" class="p5_input" placeholder="Size" />
-              </el-form-item>
-            </template>
-          </el-table-column>
+          <el-table-column v-for="d in Variantslist" :prop="d" :label="d" :key="d" min-width="140">
+              <template slot-scope="scope">
+                <el-form-item :prop="'sku_list.' + scope.$index + '.option.' + d">
+                   <el-input v-model="scope.row.option[d]" size="mini" clearable class="p5_input"></el-input>
+                 </el-form-item>
+              </template>  
+            </el-table-column>
           <el-table-column label="Price" prop="sku_price">
             <template slot-scope="scope">
               <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_price`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
@@ -128,7 +121,8 @@ export default {
             sku_price: '',
             sku_number: '',
             sku: '',
-            id: ''
+            id: '',
+            option:{}
           }
         ],
         images: []
@@ -141,6 +135,7 @@ export default {
           { required: true, message: 'Please select Product status', trigger: 'change' }
         ]
       },
+      Variantslist:[],
       statusOptions: ['Active', 'Draft'],
       dialogImageUrl: '',
       SubmitLoading: false,
@@ -169,15 +164,22 @@ export default {
       if (this.$route.query.stroeType === 'all') {
         getAllProductEdit({ id: this.$route.query.id }).then(res => {
           if (res.code === 200) {
-            this.formData = res.data
-            this.formData.images = res.data.images.map(item => {
-              return {
-                url: item.url,
-                is_hover: false,
-                id: item.id
-              }
-            })
-            loading.close()
+            let objHead = JSON.parse(res.data.sku_list[0].option)
+            this.Variantslist = Object.keys(objHead)
+            console.log(this.Variantslist);
+              res.data.sku_list.forEach(item =>{
+                item.option = JSON.parse(item.option)
+                console.log(item.option);
+              })
+              this.formData = res.data
+              this.formData.images = res.data.images.map(item => {
+                return {
+                  url: item.url,
+                  is_hover: false,
+                  id: item.id
+                }
+              })
+              loading.close()
           }
         })
       } else {
