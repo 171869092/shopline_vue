@@ -1,107 +1,115 @@
 <template>
-  <div class="productDetails">
-    <el-form ref="formData" :model="formData" :rules="formRule" label-width="140px" label-position="top">
-      <div class="box-card">
-        <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack" />
-        <label class="ml20">{{ $route.query.title }}</label>
-        <el-button type="primary" class="f-r" :loading="SubmitLoading" @click="Submit">Submit</el-button>
-        <el-button v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" class="f-r mr20 button-border" @click="ProductDelete">Delete product</el-button>
-      </div>
-      <el-card class="box-card" style="margin-top:500px">
-        <el-form-item label="Title:" prop="title">
-          <el-input v-model="formData.title" placeholder="Title" />
-        </el-form-item>
-        <el-form-item label="Product status:" prop="status">
-          <el-select v-model="formData.status" class="w-480">
-            <el-option v-for="(item,idx) in statusOptions" :key="idx" :label="item" :value="String(idx + 1)" />
-          </el-select>
-        </el-form-item>
-        <el-form-item label="Description:" prop="describe">
-          <tinymce ref="tinymces" v-model="formData.describe" :height="300" />
-        </el-form-item>
-      </el-card>
-
-      <!-- 橱窗图库： -->
-      <el-card class="box-card mt5">
-        <div slot="header" class="clearfix hidden">
-          <label class="step-jump"><span style="color:red">*</span>Media:</label>
-          <div class="f-r">
-            <el-button size="mini" type="primary" @click="openUploadPrint">Add image</el-button>
+  <div v-loading="loading" class="productDetails p30">
+    <el-row :gutter="20">
+      <el-col :span="20" :offset="2">
+        <el-form ref="formData" :model="formData" :rules="formRule" label-width="140px" label-position="top">
+          <div class="product-header mb20 flexbox justify-space-between">
+            <div>
+              <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack" />
+              <label class="ml20">{{ $route.query.title }}</label>
+            </div>
+            <div>
+              <el-button size="small" type="primary" :loading="SubmitLoading" @click="Submit">Submit</el-button>
+              <el-button v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" size="small" class="button-border" @click="ProductDelete">Delete product</el-button>
+            </div>
           </div>
-        </div>
-        <print-popover ref="window_img" :list="formData.images" @delImg="delImg" @update="updateimg" />
+          <el-card class="box-card">
+            <el-form-item label="Title:" prop="title">
+              <el-input v-model="formData.title" placeholder="Title" />
+            </el-form-item>
+            <el-form-item label="Product status:" prop="status">
+              <el-select v-model="formData.status" class="w-480">
+                <el-option v-for="(item,idx) in statusOptions" :key="idx" :label="item" :value="String(idx + 1)" />
+              </el-select>
+            </el-form-item>
+            <el-form-item label="Description:" prop="describe">
+              <tinymce ref="tinymces" v-model="formData.describe" :height="300" />
+            </el-form-item>
+          </el-card>
 
-      </el-card>
-      <!-- 商品 -->
-      <el-card class="box-card mt10">
-        <div slot="header" class="clearfix">
-          <div class="f-l"><span style="color:red">*</span><label>Variants:</label></div>
-          <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button>
-        </div>
-        <el-table
-          ref="multipleTable"
-          :data="formData.sku_list"
-          border
-          stripe
-          :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
-          style="width: 100%"
-        >
-          <el-table-column type="index" width="120" label="Serial number" />
-          <el-table-column label="Picture" prop="sku_image">
-            <template slot-scope="scope">
-              <el-image class="sku_image" :src="scope.row.sku_image" @click.native="openPrint(scope.row,scope.$index)">
-                <div slot="error" class="image-slot">
-                  <i class="error-icon el-icon-picture-outline" />
-                </div>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column label="Color" prop="sku_color">
-            <template slot-scope="scope">
-              <el-form-item class="mb0" label-width="0">
-                <el-input v-model="scope.row.sku_color" size="mini" class="p5_input" placeholder="Color" />
-              </el-form-item>
-            </template>
-          </el-table-column>
-          <el-table-column label="Size" prop="sku_size">
-            <template slot-scope="scope">
-              <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_size`">
-                <el-input v-model="scope.row.sku_size" clearable size="mini" class="p5_input" placeholder="Size" />
-              </el-form-item>
-            </template>
-          </el-table-column>
-          <el-table-column label="Price" prop="sku_price">
-            <template slot-scope="scope">
-              <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_price`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
-                <el-input v-model="scope.row.sku_price" clearable size="mini" class="p5_input" placeholder="Price">
-                  <template slot="prepend">€</template>
-                </el-input>
-              </el-form-item>
-            </template>
-          </el-table-column>
-          <el-table-column label="Quantity" prop="sku_number">
-            <template slot-scope="scope">
-              <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_number`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
-                <el-input-number v-model="scope.row.sku_number" class="p5_input" size="mini" :min="1" controls-position="right" />
-              </el-form-item>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku">
-            <template slot-scope="scope">
-              <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
-                <el-input v-model="scope.row.sku" size="mini" clearable class="p5_input" placeholder="SKU" />
-              </el-form-item>
-            </template>
-          </el-table-column>
+          <!-- 橱窗图库： -->
+          <el-card class="box-card">
+            <div slot="header" class="clearfix hidden">
+              <label class="step-jump"><span style="color:red">*</span>Media:</label>
+              <div class="f-r">
+                <el-button size="mini" type="primary" @click="openUploadPrint">Add image</el-button>
+              </div>
+            </div>
+            <print-popover ref="window_img" :list="formData.images" @delImg="delImg" @update="updateimg" />
 
-          <el-table-column label="Operating" width="120px">
-            <template slot-scope="scope">
-              <el-button type="danger" size="mini" @click="delSkuData(scope.$index, scope.row)">delete</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
-      </el-card>
-    </el-form>
+          </el-card>
+          <!-- 商品 -->
+          <el-card class="box-card">
+            <div slot="header" class="clearfix">
+              <div class="f-l"><span style="color:red">*</span><label>Variants:</label></div>
+              <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button>
+            </div>
+            <el-table
+              ref="multipleTable"
+              :data="formData.sku_list"
+              border
+              stripe
+              :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
+              style="width: 100%"
+            >
+              <el-table-column type="index" width="120" label="Serial number" />
+              <el-table-column label="Picture" prop="sku_image">
+                <template slot-scope="scope">
+                  <el-image class="sku_image" :src="scope.row.sku_image" @click.native="openPrint(scope.row,scope.$index)">
+                    <div slot="error" class="image-slot">
+                      <i class="error-icon el-icon-picture-outline" />
+                    </div>
+                  </el-image>
+                </template>
+              </el-table-column>
+              <el-table-column label="Color" prop="sku_color">
+                <template slot-scope="scope">
+                  <el-form-item class="mb0" label-width="0">
+                    <el-input v-model="scope.row.sku_color" size="mini" class="p5_input" placeholder="Color" />
+                  </el-form-item>
+                </template>
+              </el-table-column>
+              <el-table-column label="Size" prop="sku_size">
+                <template slot-scope="scope">
+                  <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_size`">
+                    <el-input v-model="scope.row.sku_size" clearable size="mini" class="p5_input" placeholder="Size" />
+                  </el-form-item>
+                </template>
+              </el-table-column>
+              <el-table-column label="Price" prop="sku_price">
+                <template slot-scope="scope">
+                  <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_price`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
+                    <el-input v-model="scope.row.sku_price" clearable size="mini" class="p5_input" placeholder="Price">
+                      <template slot="prepend">€</template>
+                    </el-input>
+                  </el-form-item>
+                </template>
+              </el-table-column>
+              <el-table-column label="Quantity" prop="sku_number">
+                <template slot-scope="scope">
+                  <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_number`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
+                    <el-input-number v-model="scope.row.sku_number" class="p5_input" size="mini" :min="1" controls-position="right" />
+                  </el-form-item>
+                </template>
+              </el-table-column>
+              <el-table-column label="SKU" prop="sku">
+                <template slot-scope="scope">
+                  <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
+                    <el-input v-model="scope.row.sku" size="mini" clearable class="p5_input" placeholder="SKU" />
+                  </el-form-item>
+                </template>
+              </el-table-column>
+
+              <el-table-column label="Operating" width="120px">
+                <template slot-scope="scope">
+                  <el-button type="danger" size="mini" @click="delSkuData(scope.$index, scope.row)">delete</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </el-card>
+        </el-form>
+      </el-col>
+    </el-row>
     <edit-print :visible.sync="printvisible" :is-upload="editPrintUpload" :sku-img="skuImage" @close="closePrint" />
     <upload-print :visible.sync="uploadPrintvisible" @close="closeUploadPrint" />
   </div>
@@ -160,12 +168,13 @@ export default {
   methods: {
     // 获取草稿数据
     getForm() {
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
+      // const loading = this.$loading({
+      //   lock: true,
+      //   text: 'Loading',
+      //   spinner: 'el-icon-loading',
+      //   background: 'rgba(0, 0, 0, 0.7)'
+      // })
+      this.loading = true
       if (this.$route.query.stroeType === 'all') {
         getAllProductEdit({ id: this.$route.query.id }).then(res => {
           if (res.code === 200) {
@@ -177,8 +186,10 @@ export default {
                 id: item.id
               }
             })
-            loading.close()
           }
+        }).finally(() => {
+          // loading.close()
+          this.loading = false
         })
       } else {
         getStoreProductEdit({ id: this.$route.query.id }).then(res => {
@@ -191,8 +202,10 @@ export default {
                 id: item.id
               }
             })
-            loading.close()
           }
+        }).finally(() => {
+          // loading.close()
+          this.loading = false
         })
       }
     },
@@ -337,21 +350,21 @@ export default {
 </script>
 <style lang="scss">
 .productDetails{
-   .box-card{
-      margin: 20px 10%!important;
-    }
-    .el-form-item {
-      margin-bottom: 10px
-    }
-    .el-form-item__label{
-      font-size: 16px!important;
-      color: #000!important;
-      padding: 0;
-    }
-    .button-border{
-      border: 1px solid #ef6f38;
-      color:  #ef6f38;
-    }
+  .box-card {
+    margin-top: 20px;
+  }
+  .el-form-item {
+    margin-bottom: 10px
+  }
+  .el-form-item__label{
+    font-size: 16px!important;
+    color: #000!important;
+    padding: 0;
+  }
+  .button-border{
+    border: 1px solid #ef6f38;
+    color:  #ef6f38;
+  }
 }
 .sku_image {
   width: 50px;

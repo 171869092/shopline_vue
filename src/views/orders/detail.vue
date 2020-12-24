@@ -1,5 +1,5 @@
 <template>
-  <div class="order-detail p30">
+  <div v-loading="loading" class="order-detail p30">
     <el-row :gutter="20">
       <el-col :span="20" :offset="2">
         <div class="order-header flexbox">
@@ -154,12 +154,12 @@ export default {
   },
   methods: {
     init() {
-      const loading = this.$loading({
-        lock: true,
-        text: 'Loading',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      })
+      // const loading = this.$loading({
+      //   lock: true,
+      //   text: 'Loading',
+      //   spinner: 'el-icon-loading',
+      //   background: 'rgba(0, 0, 0, 0.7)'
+      // })
       this.loading = true
       getOrderInfo({ order_no: this.order_no })
         .then((res) => {
@@ -177,7 +177,7 @@ export default {
           console.log(err)
         })
         .finally(() => {
-          loading.close()
+          // loading.close()
           this.loading = false
         })
     },
