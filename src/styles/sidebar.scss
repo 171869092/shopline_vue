@@ -68,6 +68,27 @@
       border: none;
       height: 100%;
       width: 100% !important;
+      .el-menu-item {
+        height: 45px;
+        line-height: 45px;
+        padding: 0;
+        &:hover {
+          padding-left: 16px!important;
+          border-left: 4px solid $subMenuActiveText !important;
+          opacity: 1!important;
+          background-color: rgba(237, 238, 239, .5)!important;
+          color: $subMenuActiveText !important;
+          font-weight: 600!important; 
+        }
+        &.is-active {
+          padding-left: 16px!important;
+          border-left: 4px solid $subMenuActiveText !important;
+          opacity: 1!important;
+          background-color: rgba(237, 238, 239, .5)!important;
+          // color: #8144e5!important;
+          font-weight: 600!important; 
+        }
+      }
     }
 
     // menu hover
