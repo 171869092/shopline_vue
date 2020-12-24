@@ -8,7 +8,7 @@
         <el-button size="small" type="primary" icon="el-icon-top" :loading="shopifyLoading" @click="pushShopify">Push to shopify</el-button>
       </div>
     </div>
-    <el-card v-loading="tabloading" class="box-card min_height">
+    <el-card v-loading="tabloading" class="dataloading box-card min_height">
       <el-tabs v-if="tabList.length > 0" v-model="formInline.store_url" @tab-click="handleClick">
         <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.store_name" :name="tab.store_url">
           <div class="flexbox mb20">
