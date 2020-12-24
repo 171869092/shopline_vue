@@ -37,61 +37,61 @@
             </div>
             <print-popover ref="window_img" :list="formData.images" @delImg="delImg" @update="updateimg" />
 
-      </el-card>
-      <!-- 商品 -->
-      <el-card class="box-card mt10">
-        <div slot="header" class="clearfix">
-          <div class="f-l"><span style="color:red">*</span><label>Variants:</label></div>
-          <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button>
-        </div>
-        <el-table
-          ref="multipleTable"
-          :data="formData.sku_list"
-          border
-          stripe
-          :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
-          style="width: 100%"
-        >
-          <el-table-column type="index" width="120" label="Serial number" />
-          <el-table-column label="Picture" prop="sku_image">
-            <template slot-scope="scope">
-              <el-image class="sku_image" :src="scope.row.sku_image" @click.native="openPrint(scope.row,scope.$index)">
-                <div slot="error" class="image-slot">
-                  <i class="error-icon el-icon-picture-outline" />
-                </div>
-              </el-image>
-            </template>
-          </el-table-column>
-          <el-table-column v-for="d in Variantslist" :prop="d" :label="d" :key="d">
-              <template slot-scope="scope">
-                <el-form-item :prop="'sku_list.' + scope.$index + '.option.' + d">
-                   <el-input v-model="scope.row.option[d]" size="mini" clearable class="p5_input"></el-input>
-                 </el-form-item>
-              </template>  
-            </el-table-column>
-          <el-table-column label="Price" prop="sku_price">
-            <template slot-scope="scope">
-              <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_price`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
-                <el-input v-model="scope.row.sku_price" clearable size="mini" class="p5_input" placeholder="Price">
-                  <template slot="prepend">€</template>
-                </el-input>
-              </el-form-item>
-            </template>
-          </el-table-column>
-          <el-table-column label="Quantity" prop="sku_number">
-            <template slot-scope="scope">
-              <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_number`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
-                <el-input-number v-model="scope.row.sku_number" class="p5_input" size="mini" :min="1" controls-position="right" />
-              </el-form-item>
-            </template>
-          </el-table-column>
-          <el-table-column label="SKU" prop="sku">
-            <template slot-scope="scope">
-              <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
-                <el-input v-model="scope.row.sku" size="mini" clearable class="p5_input" placeholder="SKU" />
-              </el-form-item>
-            </template>
-          </el-table-column>
+          </el-card>
+          <!-- 商品 -->
+          <el-card class="box-card mt10">
+            <div slot="header" class="clearfix">
+              <div class="f-l"><span style="color:red">*</span><label>Variants:</label></div>
+              <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button>
+            </div>
+            <el-table
+              ref="multipleTable"
+              :data="formData.sku_list"
+              border
+              stripe
+              :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
+              style="width: 100%"
+            >
+              <el-table-column type="index" width="120" label="Serial number" />
+              <el-table-column label="Picture" prop="sku_image">
+                <template slot-scope="scope">
+                  <el-image class="sku_image" :src="scope.row.sku_image" @click.native="openPrint(scope.row,scope.$index)">
+                    <div slot="error" class="image-slot">
+                      <i class="error-icon el-icon-picture-outline" />
+                    </div>
+                  </el-image>
+                </template>
+              </el-table-column>
+              <el-table-column v-for="d in Variantslist" :key="d" :prop="d" :label="d">
+                <template slot-scope="scope">
+                  <el-form-item :prop="'sku_list.' + scope.$index + '.option.' + d">
+                    <el-input v-model="scope.row.option[d]" size="mini" clearable class="p5_input" />
+                  </el-form-item>
+                </template>
+              </el-table-column>
+              <el-table-column label="Price" prop="sku_price">
+                <template slot-scope="scope">
+                  <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_price`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
+                    <el-input v-model="scope.row.sku_price" clearable size="mini" class="p5_input" placeholder="Price">
+                      <template slot="prepend">€</template>
+                    </el-input>
+                  </el-form-item>
+                </template>
+              </el-table-column>
+              <el-table-column label="Quantity" prop="sku_number">
+                <template slot-scope="scope">
+                  <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_number`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
+                    <el-input-number v-model="scope.row.sku_number" class="p5_input" size="mini" :min="1" controls-position="right" />
+                  </el-form-item>
+                </template>
+              </el-table-column>
+              <el-table-column label="SKU" prop="sku">
+                <template slot-scope="scope">
+                  <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
+                    <el-input v-model="scope.row.sku" size="mini" clearable class="p5_input" placeholder="SKU" />
+                  </el-form-item>
+                </template>
+              </el-table-column>
 
               <el-table-column label="Operating" width="120px">
                 <template slot-scope="scope">
@@ -130,7 +130,7 @@ export default {
             sku_number: '',
             sku: '',
             id: '',
-            option:{}
+            option: {}
           }
         ],
         images: []
@@ -143,7 +143,7 @@ export default {
           { required: true, message: 'Please select Product status', trigger: 'change' }
         ]
       },
-      Variantslist:[],
+      Variantslist: [],
       statusOptions: ['Active', 'Draft'],
       dialogImageUrl: '',
       SubmitLoading: false,
@@ -173,22 +173,22 @@ export default {
       if (this.$route.query.stroeType === 'all') {
         getAllProductEdit({ id: this.$route.query.id }).then(res => {
           if (res.code === 200) {
-            let objHead = JSON.parse(res.data.sku_list[0].option)
+            const objHead = JSON.parse(res.data.sku_list[0].option)
             this.Variantslist = Object.keys(objHead)
-            console.log(this.Variantslist);
-              res.data.sku_list.forEach(item =>{
-                item.option = JSON.parse(item.option)
-                console.log(item.option);
-              })
-              this.formData = res.data
-              this.formData.images = res.data.images.map(item => {
-                return {
-                  url: item.url,
-                  is_hover: false,
-                  id: item.id
-                }
-              })
-              loading.close()
+            console.log(this.Variantslist)
+            res.data.sku_list.forEach(item => {
+              item.option = JSON.parse(item.option)
+              console.log(item.option)
+            })
+            this.formData = res.data
+            this.formData.images = res.data.images.map(item => {
+              return {
+                url: item.url,
+                is_hover: false,
+                id: item.id
+              }
+            })
+            this.loading = false
           }
         }).finally(() => {
           // loading.close()
@@ -205,6 +205,7 @@ export default {
                 id: item.id
               }
             })
+            this.loading = false
           }
         }).finally(() => {
           // loading.close()
