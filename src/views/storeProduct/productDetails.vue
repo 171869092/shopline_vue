@@ -62,7 +62,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column v-for="d in Variantslist" :prop="d" :label="d" :key="d" min-width="140">
+          <el-table-column v-for="d in Variantslist" :prop="d" :label="d" :key="d">
               <template slot-scope="scope">
                 <el-form-item :prop="'sku_list.' + scope.$index + '.option.' + d">
                    <el-input v-model="scope.row.option[d]" size="mini" clearable class="p5_input"></el-input>
