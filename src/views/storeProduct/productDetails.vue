@@ -311,6 +311,9 @@ export default {
     },
      //属性交叉
     whatever(list,...arrs) { 
+      list.map(item =>{
+        
+      })
       return arrs.reduce((arr1, arr2) => arr1.flatMap(e => arr2.map(e2 => `${e}-${e2}`))) 
     },
     //属性
