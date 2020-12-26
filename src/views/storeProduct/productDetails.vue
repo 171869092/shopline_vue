@@ -42,8 +42,47 @@
           <el-card class="box-card mt10">
             <div slot="header" class="clearfix">
               <div class="f-l"><span style="color:red">*</span><label>Variants:</label></div>
-              <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button>
+              <!-- <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button> -->
             </div>
+            <div>
+              <el-checkbox v-model="variantsEheck">This product has multiple options, like different sizes or colors</el-checkbox>
+              <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()" v-if="variantsEheck">Add another option</el-button>
+            </div>
+            <!-- 新增属性 -->
+              <el-table
+              ref="optionsTable"
+              :data="formData.optionsList"
+              :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
+              style="width: 60%"
+              v-if="variantsEheck"
+              class="mt20"
+            >
+              <el-table-column type="index" width="120" />
+              <el-table-column  prop="option" label="Option">
+                <template slot-scope="scope">
+                  <el-form-item class="mb0" label-width="0" :prop="`optionsList.${scope.$index}.option`">
+                    <el-select v-model="scope.row.option" size="mini" filterable>
+                      <el-option  v-for="(item,key) in options" :key="key" :label="item" :value="item"></el-option>
+                    </el-select>
+                  </el-form-item>
+                </template>
+              </el-table-column>
+     
+              <el-table-column  prop="optionVlue">
+                <template slot-scope="scope">
+                  <el-form-item class="mb0" label-width="0" :prop="`optionsList.${scope.$index}.optionVlue`">
+                    <el-input-tag  v-model="scope.row.tags" @change="tagsChange"></el-input-tag>
+                    <!-- <el-input v-model="scope.row.optionVlue" size="mini" clearable class="p5_input" placeholder="Separate options with a comma"  type="textarea" :rows="2"/> -->
+                  </el-form-item>
+                </template>
+              </el-table-column>
+              <el-table-column label="Operating" width="120px">
+                <template slot-scope="scope">
+                  <el-button type="danger" size="mini" @click="RemoveOption(scope.$index, scope.row)">Remove</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+  <!-- 生成属性 -->
             <el-table
               ref="multipleTable"
               :data="formData.sku_list"
@@ -62,7 +101,7 @@
                   </el-image>
                 </template>
               </el-table-column>
-              <el-table-column v-for="d in Variantslist" :key="d" :prop="d" :label="d">
+              <el-table-column v-for="(d,idx) in Variantslist" :key="idx" :prop="d" :label="d">
                 <template slot-scope="scope">
                   <el-form-item :prop="'sku_list.' + scope.$index + '.option.' + d">
                     <el-input v-model="scope.row.option[d]" size="mini" clearable class="p5_input" />
@@ -112,6 +151,7 @@ import { getAllProductEdit, getStoreProductEdit, getAllProductSave, getStoreProd
 export default {
   name: 'product-details',
   components: {
+    ElInputTag: () => import('@/components/ElInputTag'),
     Tinymce: () => import('@/components/Tinymce'),
     EditPrint: () => import('./component/editPrint'),
     PrintPopover: () => import('./component/printPopover'),
@@ -120,7 +160,7 @@ export default {
   data() {
     return {
       formData: {
-        status: '2',
+        status: '2',  
         sku_list: [
           {
             sku_image: '',
@@ -133,7 +173,10 @@ export default {
             option: {}
           }
         ],
-        images: []
+        images: [],
+        optionsList:[
+          {option:'',tags:[]}
+        ],
       },
       formRule: {
         title: [
@@ -143,10 +186,14 @@ export default {
           { required: true, message: 'Please select Product status', trigger: 'change' }
         ]
       },
+
+      variantsEheck:true,
+      options:['Size','Color','Material','Style','Title'],
       Variantslist: [],
       statusOptions: ['Active', 'Draft'],
       dialogImageUrl: '',
       SubmitLoading: false,
+      loading: false,
       dialogVisible: false,
       printvisible: false,
       editPrintUpload: false,
@@ -218,7 +265,7 @@ export default {
       this.formData.images = list
     },
     // 保存数据
-    Submit() {
+    Submit() { 
       if (this.formData.sku_list.length === 0) return this.$message({ message: 'Fill in at least one line of variation', type: 'warning' })
       this.$refs.formData.validate((valid) => {
         if (valid) {
@@ -250,6 +297,45 @@ export default {
       this.formData.sku_list.push(
         this.$options.data().formData.sku_list[0]
       )
+    },
+    //新增属性
+    addOption(){
+      this.formData.optionsList.push(
+        this.$options.data().formData.optionsList[0]
+      )
+    },
+    // 删除属性
+    RemoveOption(idx){
+      this.formData.optionsList.splice(idx, 1)
+      this.tagsChange()
+    },
+     //属性交叉
+    whatever(list,...arrs) { 
+      return arrs.reduce((arr1, arr2) => arr1.flatMap(e => arr2.map(e2 => `${e}-${e2}`))) 
+    },
+    //属性
+    tagsChange(){
+      this.Variantslist = this.formData.optionsList.map(item =>item.option)
+      let arr = this.formData.optionsList.map(item =>item.tags)
+      let result = this.whatever(this.Variantslist,...arr)
+//  [
+//    '0-1=9',
+//    '1-2=9'
+//  ]
+//   [
+//     {pic:'',option:{op1:'0',op2:'1',op3:'9',},sku:''},
+//     {pic:'',option:{op1:'1',op2:'2',op3:'9',},sku:''}
+//   ]
+
+
+      result.map(item =>{
+        //  console.log(item.split('-'))
+  
+        //      item = item.split('-')
+
+      })
+      console.log(result)
+      // this.formData.sku_list = result
     },
     // 删除sku
     delSkuData(index, row) {
