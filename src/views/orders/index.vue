@@ -301,6 +301,7 @@ export default {
           this.refreshLoading = false
         }).catch(err => {
           console.log(err)
+          this.refreshLoading = false
         })
       }).catch(() => {
         this.$message({
