@@ -123,14 +123,19 @@
         <el-table-column label="Order Status">
           <template slot-scope="scope">
             <div>
-              <!-- <i class="el-icon-loading" /> -->
               <span>{{ orderStatus[scope.row.order_status] }}</span>
             </div>
           </template>
         </el-table-column>
         <el-table-column label="Operations">
           <template v-if="scope.row.order_status == 5" slot-scope="scope">
-            <el-button type="text" size="small" @click="handleRefreshClick(scope.row)">Refresh</el-button>
+            <i v-show="scopeIndex == scope.$index && refreshLoading" class="el-icon-loading" />
+            <el-button
+              type="text"
+              :disabled="scopeIndex == scope.$index && refreshLoading"
+              size="small"
+              @click="handleRefreshClick(scope.row, scope.$index)"
+            >Refresh</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -209,9 +214,11 @@ export default {
       tableData: [],
       logisticList: [],
       storeList: [],
+      scopeIndex: '',
       loading: false,
       dialogVisible: false,
-      timelineLoading: false
+      timelineLoading: false,
+      refreshLoading: false
     }
   },
   computed: {},
@@ -281,14 +288,17 @@ export default {
         this.$refs.myScrollbar.wrap.scrollTop = 0 // 这句重置滚动条高度
       })
     },
-    handleRefreshClick(row) {
+    handleRefreshClick(row, index) {
       this.$confirm('This will permanently delete the file. Continue?', 'Warning', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
+        this.scopeIndex = index
+        this.refreshLoading = true
         clearOrderException({ order_no: row.order_no }).then(res => {
           console.log(res.data)
+          this.refreshLoading = false
         }).catch(err => {
           console.log(err)
         })
