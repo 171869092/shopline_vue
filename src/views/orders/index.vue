@@ -122,7 +122,15 @@
         </el-table-column>
         <el-table-column label="Order Status">
           <template slot-scope="scope">
-            <div>{{ orderStatus[scope.row.order_status] }}</div>
+            <div>
+              <!-- <i class="el-icon-loading" /> -->
+              <span>{{ orderStatus[scope.row.order_status] }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="Operations">
+          <template v-if="scope.row.order_status == 5" slot-scope="scope">
+            <el-button type="text" size="small" @click="handleRefreshClick(scope.row)">Refresh</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -146,7 +154,7 @@
 </template>
 <script>
 import { debounce } from '@/utils'
-import { getOrderList, getLogisticInfo } from '@/api/orders'
+import { getOrderList, getLogisticInfo, clearOrderException } from '@/api/orders'
 import { getStoreList } from '@/api/product'
 export default {
   name: 'orders',
@@ -271,6 +279,24 @@ export default {
     handleOpen() {
       this.$nextTick(() => {
         this.$refs.myScrollbar.wrap.scrollTop = 0 // 这句重置滚动条高度
+      })
+    },
+    handleRefreshClick(row) {
+      this.$confirm('This will permanently delete the file. Continue?', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(() => {
+        clearOrderException({ order_no: row.order_no }).then(res => {
+          console.log(res.data)
+        }).catch(err => {
+          console.log(err)
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: 'Delete canceled'
+        })
       })
     },
     filterOrders: debounce(function() {
