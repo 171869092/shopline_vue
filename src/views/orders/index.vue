@@ -298,6 +298,10 @@ export default {
         this.refreshLoading = true
         clearOrderException({ order_no: row.order_no }).then(res => {
           console.log(res.data)
+          if (res.code === 200) {
+            this.$message.success(res.message)
+            this.init()
+          }
           this.refreshLoading = false
         }).catch(err => {
           console.log(err)
