@@ -300,7 +300,7 @@ export default {
           console.log(res.data)
           if (res.code === 200) {
             this.$message.success(res.message)
-            this.init()
+            this.Inquire()
           }
           this.refreshLoading = false
         }).catch(err => {
