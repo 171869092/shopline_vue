@@ -289,7 +289,7 @@ export default {
       })
     },
     handleRefreshClick(row, index) {
-      this.$confirm('This will permanently delete the file. Continue?', 'Warning', {
+      this.$confirm('Try to refresh the abnormal status of the order?', 'Warning', {
         confirmButtonText: 'OK',
         cancelButtonText: 'Cancel',
         type: 'warning'
