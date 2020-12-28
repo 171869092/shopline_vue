@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: 'Fbali',
+  title: 'FbAli',
 
   /**
    * @type {boolean} true | false

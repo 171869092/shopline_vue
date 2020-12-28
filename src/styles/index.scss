@@ -216,6 +216,18 @@ input[type="number"] {
     flex: #{$i} 1 auto;
   }
 }
+$mlist: 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 100;
+@each $item in $mlist {
+  .m#{$item} {
+    margin: #{$item} !important;
+  }
+}
+$mtlist: 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 100;
+@each $item in $mtlist {
+  .mt#{$item} {
+    margin-top: #{$item}px !important;
+  }
+}
 
 $justify-list: center, start, end, flex-start, flex-end, left, right, space-between, space-around, space-evenly;
 @each $item in $justify-list {
