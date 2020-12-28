@@ -288,14 +288,13 @@ export default {
     },
     // 保存数据
     Submit() { 
-      // console.log(this.formData)
-      // return
-      if (this.formData.sku_list.length === 0) return this.$message({ message: 'Fill in at least one line of variation', type: 'warning' })
+      if (this.formData.sku_list.length == 0) return this.$message({ message: 'Fill in at least one line of variation', type: 'warning' })
+       console.log(this.formData)
       this.$refs.formData.validate((valid) => {
         if (valid) {
           this.SubmitLoading = true
           if (this.$route.query.stroeType === 'all') {
-            delete this.formData.optionsList
+            // delete this.formData.optionsList
             getAllProductSave(this.formData).then(res => {
               if (res.code === 200) {
                 this.$message({ message: res.message, type: 'success' })
