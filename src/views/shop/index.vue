@@ -32,7 +32,7 @@
       </el-table>
       <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
     </el-card>
-    <el-dialog title="Connect to Shopify" width="500px" :visible.sync="dialogvisible" :close-on-click-modal="false">
+    <el-dialog title="Connect to Shopify" width="500px" :visible.sync="dialogvisible" :close-on-click-modal="false" @close="closeDialog">
       <el-form :model="storeForm" :rules="rules">
         <el-form-item>
           <el-input v-model="storeForm.store_url" autocomplete="off" placeholder="Shopify store URL">
@@ -40,7 +40,7 @@
           </el-input>
         </el-form-item>
         <el-form-item>
-           <el-input v-model="storeForm.api_token" autocomplete="off" placeholder="api_token" />
+          <el-input v-model="storeForm.api_token" autocomplete="off" placeholder="API Token" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -75,7 +75,7 @@ export default {
       dialogvisible: false,
       storeForm: {
         store_url: '',
-        api_token:'',
+        api_token: ''
       },
       rules: {}
     }
@@ -124,7 +124,7 @@ export default {
       this.storeForm.store_url = ''
       this.dialogvisible = false
       setTimeout(() => {
-        window.open(`${process.env.VUE_APP_BASE_API}/l?shop=${url}&uid=${this.uid}`)
+        window.open(`${process.env.VUE_APP_BASE_API}/l?shop=${url}&uid=${this.uid}&type=1`)
       }, 300)
     },
     closeDialog() {
