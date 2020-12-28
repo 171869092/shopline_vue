@@ -56,11 +56,6 @@ module.exports = {
     // when there are many pages, it will cause too many meaningless requests
     config.plugins.delete('preload')
     config.plugins.delete('prefetch')
-    
-    if (process.env.NODE_ENV === 'production') {
-      config.optimization.minimizer[0].options.terserOptions.compress.drop_console = true
-    }
-
     // set svg-sprite-loader
     config.module
       .rule('svg')
