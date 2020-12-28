@@ -39,10 +39,13 @@
             <template slot="append">.myshopify.com</template>
           </el-input>
         </el-form-item>
+        <el-form-item>
+           <el-input v-model="storeForm.api_token" autocomplete="off" placeholder="api_token" />
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="closeDialog">Cancel</el-button>
-        <el-button size="small" type="primary" :disabled="!storeForm.store_url" @click="submitConnect">Confirm</el-button>
+        <el-button size="small" type="primary" :disabled="!(storeForm.store_url && storeForm.api_token)" @click="submitConnect">Confirm</el-button>
       </div>
     </el-dialog>
   </div>
@@ -71,7 +74,8 @@ export default {
       loading: false,
       dialogvisible: false,
       storeForm: {
-        store_url: ''
+        store_url: '',
+        api_token:'',
       },
       rules: {}
     }
@@ -125,6 +129,7 @@ export default {
     },
     closeDialog() {
       this.storeForm.store_url = ''
+      this.storeForm.api_token = ''
       this.dialogvisible = false
     }
   }

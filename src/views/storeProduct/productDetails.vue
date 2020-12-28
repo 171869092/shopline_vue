@@ -236,11 +236,11 @@ export default {
             if (res.data.sku_list.length > 0) {
               const objHead = JSON.parse(res.data.sku_list[0].option)
               this.Variantslist = Object.keys(objHead)
-            }
-            res.data.sku_list.forEach(item => {
-              item.option = JSON.parse(item.option)
-              console.log(item.option)
-            })
+               res.data.sku_list.forEach(item => {
+                  item.option = JSON.parse(item.option)
+                  console.log(item.option)
+                })
+              }  
             this.formData = res.data
             this.formData.images = res.data.images.map(item => {
               return {
@@ -261,11 +261,11 @@ export default {
             if (res.data.sku_list.length > 0) {
               const objHead = JSON.parse(res.data.sku_list[0].option)
               this.Variantslist = Object.keys(objHead)
+              res.data.sku_list.forEach(item => {
+                item.option = JSON.parse(item.option)
+                console.log(item.option)
+              })
             }
-            res.data.sku_list.forEach(item => {
-              item.option = JSON.parse(item.option)
-              console.log(item.option)
-            })
             this.formData = res.data
             this.formData.images = res.data.images.map(item => {
               return {
