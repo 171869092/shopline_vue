@@ -120,7 +120,7 @@ export default {
       this.storeForm.store_url = ''
       this.dialogvisible = false
       setTimeout(() => {
-        window.open(`https://fdapi.dongketech.com/l?shop=${url}&uid=${this.uid}`)
+        window.open(`${process.env.VUE_APP_BASE_API}/l?shop=${url}&uid=${this.uid}`)
       }, 300)
     },
     closeDialog() {
