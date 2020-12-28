@@ -1,6 +1,7 @@
 <template>
   <div class="redirecting" style="padding:10px">
-    <h3>Redirecting...</h3>
+    <!-- <h3>Redirecting...</h3> -->
+    <div />
   </div>
 </template>
 <script>

@@ -122,7 +122,20 @@
         </el-table-column>
         <el-table-column label="Order Status">
           <template slot-scope="scope">
-            <div>{{ orderStatus[scope.row.order_status] }}</div>
+            <div>
+              <span>{{ orderStatus[scope.row.order_status] }}</span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column label="Operations">
+          <template v-if="scope.row.order_status == 5" slot-scope="scope">
+            <i v-show="scopeIndex == scope.$index && refreshLoading" class="el-icon-loading" />
+            <el-button
+              type="text"
+              :disabled="scopeIndex == scope.$index && refreshLoading"
+              size="small"
+              @click="handleRefreshClick(scope.row, scope.$index)"
+            >Refresh</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -146,7 +159,7 @@
 </template>
 <script>
 import { debounce } from '@/utils'
-import { getOrderList, getLogisticInfo } from '@/api/orders'
+import { getOrderList, getLogisticInfo, clearOrderException } from '@/api/orders'
 import { getStoreList } from '@/api/product'
 export default {
   name: 'orders',
@@ -201,9 +214,11 @@ export default {
       tableData: [],
       logisticList: [],
       storeList: [],
+      scopeIndex: '',
       loading: false,
       dialogVisible: false,
-      timelineLoading: false
+      timelineLoading: false,
+      refreshLoading: false
     }
   },
   computed: {},
@@ -271,6 +286,32 @@ export default {
     handleOpen() {
       this.$nextTick(() => {
         this.$refs.myScrollbar.wrap.scrollTop = 0 // 这句重置滚动条高度
+      })
+    },
+    handleRefreshClick(row, index) {
+      this.$confirm('Try to refresh the abnormal status of the order?', 'Warning', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning'
+      }).then(() => {
+        this.scopeIndex = index
+        this.refreshLoading = true
+        clearOrderException({ order_no: row.order_no }).then(res => {
+          console.log(res.data)
+          if (res.code === 200) {
+            this.$message.success(res.message)
+            this.Inquire()
+          }
+          this.refreshLoading = false
+        }).catch(err => {
+          console.log(err)
+          this.refreshLoading = false
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: 'Delete canceled'
+        })
       })
     },
     filterOrders: debounce(function() {
