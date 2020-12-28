@@ -1,6 +1,6 @@
 <template>
   <div class="dashboard-editor-container">
-    <div v-if="show0">
+    <div v-if="isdev">
       <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
       <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
@@ -69,7 +69,8 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineChartData: lineChartData.newVisitis,
+      isdev: false
     }
   },
   computed: {
