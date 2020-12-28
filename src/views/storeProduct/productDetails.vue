@@ -55,7 +55,7 @@
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
               style="width: 60%"
               v-if="variantsEheck"
-              class="mt20"
+              class="mt20 variantsTabel"
             >
               <el-table-column type="index" width="120" />
               <el-table-column  prop="option" label="Option">
@@ -88,8 +88,7 @@
               </el-table-column>
             </el-table>
   <!-- 生成属性 -->
-        <div class="variantsTabel" v-if="variantsEheck && Variantslist.length > 0 ||  $route.query.type === 'edit'">
-            <div class="f-l mt20"><label>Preview</label></div>
+            <div class="f-l mt20"  v-if="variantsEheck && Variantslist.length > 0 && $route.query.type === 'add'"><label>Preview</label></div>
             <el-table
               ref="multipleTable"
               :data="formData.sku_list"
@@ -98,6 +97,7 @@
               class="mt20"
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
               style="width: 100%"
+              v-if="variantsEheck && Variantslist.length > 0 ||  $route.query.type === 'edit'"
             >
               <el-table-column type="index" width="120" label="Serial number" />
               <el-table-column label="Picture" prop="sku_image">
@@ -146,7 +146,6 @@
                 </template>
               </el-table-column>
             </el-table>
-           </div>
             
           </el-card>
         </el-form>
@@ -491,8 +490,8 @@ export default {
 <style lang="scss">
 .productDetails{
   .variantsTabel{
-    border-top: 1px solid #EBEEF5;
-    margin-top: 50px;
+    // border-bottom: 1px solid #EBEEF5;
+    margin-bottom: 30px;
   }
   .box-card {
     margin-top: 20px;
