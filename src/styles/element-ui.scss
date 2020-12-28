@@ -20,6 +20,15 @@ td {
   text-align: center !important;
 }
 
+.el-table td {
+  &.is-center {
+    text-align: center!important;
+  }
+  &.is-left {
+    text-align: left!important;
+  }
+}
+
 // to fixed https://github.com/ElemeFE/element/issues/2461
 .el-dialog {
   transform: none;

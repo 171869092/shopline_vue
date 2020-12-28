@@ -3,31 +3,34 @@
   <div
     class="el-input-tag input-tag-wrapper"
     :class="[size ? 'el-input-tag--' + size : '']"
-    @click="foucusTagInput">
+    @click="foucusTagInput"
+  >
     <el-tag
       v-for="(tag, idx) in innerTags"
-      v-bind="$attrs"
       :key="tag"
+      v-bind="$attrs"
       :size="size"
       type="info"
       :closable="!readOnly"
       :disable-transitions="false"
-      @close="remove(idx)">
-      {{tag}}
+      @close="remove(idx)"
+    >
+      {{ tag }}
     </el-tag>
     <input
       v-if="!readOnly"
-      class="tag-input"
       v-model="newTag"
-      @keydown.delete.stop = "removeLastTag"
-      @keydown = "addNew"
-      @blur = "addNew"/>
+      class="tag-input"
+      @keydown.delete.stop="removeLastTag"
+      @keydown="addNew"
+      @blur="addNew"
+    >
   </div>
 </template>
 
 <script>
 export default {
-  name: 'ElInputTag',
+  name: 'el-input-tag',
   props: {
     value: {
       type: Array,
@@ -43,26 +46,26 @@ export default {
     },
     size: String
   },
-  data () {
+  data() {
     return {
       newTag: '',
       innerTags: [...this.value]
     }
   },
   watch: {
-    value () {
+    value() {
       this.innerTags = [...this.value]
     }
   },
   methods: {
-    foucusTagInput () {
-      console.log('00000');
+    foucusTagInput() {
+      console.log('00000')
       if (this.readOnly || !this.$el.querySelector('.tag-input')) {
       } else {
         this.$el.querySelector('.tag-input').focus()
       }
     },
-    addNew (e) {
+    addNew(e) {
       if (e && (!this.addTagOnKeys.includes(e.keyCode)) && (e.type !== 'blur')) {
         return
       }
@@ -88,7 +91,7 @@ export default {
         this.$emit('change')
       }
     },
-    addTag (tag) {
+    addTag(tag) {
       tag = tag.trim()
       if (tag && !this.innerTags.includes(tag)) {
         this.innerTags.push(tag)
@@ -96,19 +99,19 @@ export default {
       }
       return false
     },
-    remove (index) {
+    remove(index) {
       this.innerTags.splice(index, 1)
       this.tagChange()
       this.$emit('change')
     },
-    removeLastTag () {
+    removeLastTag() {
       if (this.newTag) {
         return
       }
       this.innerTags.pop()
       this.tagChange()
     },
-    tagChange () {
+    tagChange() {
       this.$emit('input', this.innerTags)
     }
   }
@@ -143,9 +146,12 @@ export default {
     padding-left: 0;
     width: 93%;
   }
-  .el-input-tag {
-    /* height: 40px; */
-    /* line-height: 40px; */
+  /* .el-input-tag {
+    height: 40px;
+    line-height: 40px;
+  } */
+  .tag-input {
+    padding: 5px;
   }
   .el-input-tag--mini {
     height: 28px;

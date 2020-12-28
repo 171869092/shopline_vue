@@ -46,50 +46,51 @@
             </div>
             <div v-if="$route.query.type === 'add'">
               <el-checkbox v-model="variantsEheck" @change="variantsChage">This product has multiple options, like different sizes or colors</el-checkbox>
-              <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()" v-if="variantsEheck && formData.optionsList.length < 3 ">Add another option</el-button>
+              <el-button v-if="variantsEheck && formData.optionsList.length < 3 " class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
             </div>
             <!-- 新增属性 -->
-              <el-table
+            <el-table
+              v-if="variantsEheck"
               ref="optionsTable"
               :data="formData.optionsList"
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
-              style="width: 60%"
-              v-if="variantsEheck"
+              style="width: 62%"
               class="mt20 variantsTabel"
             >
               <el-table-column type="index" width="120" />
-              <el-table-column  prop="option" label="Option">
+              <el-table-column prop="option" label="Option">
                 <template slot-scope="scope">
                   <el-form-item class="mb0" label-width="0" :prop="`optionsList.${scope.$index}.option`">
-                  <el-autocomplete
-                    class="inline-input"
-                     v-model="scope.row.option"
-                    :fetch-suggestions="querySearch"
-                  ></el-autocomplete>
+                    <el-autocomplete
+                      v-model="scope.row.option"
+                      class="inline-input"
+                      :fetch-suggestions="querySearch"
+                    />
                     <!-- <el-select v-model="scope.row.option" size="mini" filterable>
                       <el-option  v-for="(item,key) in options" :key="key" :label="item" :value="item"></el-option>
                     </el-select> -->
                   </el-form-item>
                 </template>
               </el-table-column>
-     
-              <el-table-column  prop="optionVlue">
+
+              <el-table-column prop="optionVlue" align="left">
                 <template slot-scope="scope">
                   <el-form-item class="mb0" label-width="0" :prop="`optionsList.${scope.$index}.optionVlue`">
-                    <el-input-tag  v-model="scope.row.tags" @change="tagsChange"></el-input-tag>
+                    <el-input-tag v-model="scope.row.tags" @change="tagsChange" />
                     <!-- <el-input v-model="scope.row.optionVlue" size="mini" clearable class="p5_input" placeholder="Separate options with a comma"  type="textarea" :rows="2"/> -->
                   </el-form-item>
                 </template>
               </el-table-column>
               <el-table-column label="Operating" width="120px">
                 <template slot-scope="scope">
-                  <el-button type="danger" size="mini" v-if="formData.optionsList.length > 1" @click="RemoveOption(scope.$index, scope.row)">Remove</el-button>
+                  <el-button v-if="formData.optionsList.length > 1" type="danger" size="mini" @click="RemoveOption(scope.$index, scope.row)">Remove</el-button>
                 </template>
               </el-table-column>
             </el-table>
-  <!-- 生成属性 -->
-            <div class="f-l mt20"  v-if="variantsEheck && Variantslist.length > 0 && $route.query.type === 'add'"><label>Preview</label></div>
+            <!-- 生成属性 -->
+            <div v-if="variantsEheck && Variantslist.length > 0 && $route.query.type === 'add'" class="f-l mt20"><label>Preview</label></div>
             <el-table
+              v-if="variantsEheck && Variantslist.length > 0 || $route.query.type === 'edit'"
               ref="multipleTable"
               :data="formData.sku_list"
               border
@@ -97,7 +98,6 @@
               class="mt20"
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
               style="width: 100%"
-              v-if="variantsEheck && Variantslist.length > 0 ||  $route.query.type === 'edit'"
             >
               <el-table-column type="index" width="120" label="Serial number" />
               <el-table-column label="Picture" prop="sku_image">
@@ -146,7 +146,7 @@
                 </template>
               </el-table-column>
             </el-table>
-            
+
           </el-card>
         </el-form>
       </el-col>
@@ -169,7 +169,7 @@ export default {
   data() {
     return {
       formData: {
-        status: '2',  
+        status: '2',
         sku_list: [
           {
             sku_image: '',
@@ -181,9 +181,9 @@ export default {
           }
         ],
         images: [],
-        optionsList:[
-          {option:'',tags:[]}
-        ],
+        optionsList: [
+          { option: '', tags: [] }
+        ]
       },
       formRule: {
         title: [
@@ -194,14 +194,14 @@ export default {
         ]
       },
 
-      variantsEheck:false,
-       options:[
-         {value:'Size'},
-         {value:'Color'},
-         {value:'Material'},
-         {value:'Style'},
-         {value:'Title'},
-       ],
+      variantsEheck: false,
+      options: [
+        { value: 'Size' },
+        { value: 'Color' },
+        { value: 'Material' },
+        { value: 'Style' },
+        { value: 'Title' }
+      ],
       Variantslist: [],
       statusOptions: ['Active', 'Draft'],
       dialogImageUrl: '',
@@ -212,7 +212,7 @@ export default {
       editPrintUpload: false,
       uploadPrintvisible: false,
       skuIndex: '',
-      skuImage: '',
+      skuImage: ''
     }
   },
   created() {
@@ -236,11 +236,11 @@ export default {
             if (res.data.sku_list.length > 0) {
               const objHead = JSON.parse(res.data.sku_list[0].option)
               this.Variantslist = Object.keys(objHead)
-               res.data.sku_list.forEach(item => {
-                  item.option = JSON.parse(item.option)
-                  console.log(item.option)
-                })
-              }  
+              res.data.sku_list.forEach(item => {
+                item.option = JSON.parse(item.option)
+                console.log(item.option)
+              })
+            }
             this.formData = res.data
             this.formData.images = res.data.images.map(item => {
               return {
@@ -287,9 +287,9 @@ export default {
       this.formData.images = list
     },
     // 保存数据
-    Submit() { 
+    Submit() {
       if (this.formData.sku_list.length == 0) return this.$message({ message: 'Fill in at least one line of variation', type: 'warning' })
-       console.log(this.formData)
+      console.log(this.formData)
       this.$refs.formData.validate((valid) => {
         if (valid) {
           this.SubmitLoading = true
@@ -322,65 +322,65 @@ export default {
         this.$options.data().formData.sku_list[0]
       )
     },
-    //选择框
-     querySearch(queryString, cb) {
-        var restaurants = this.options;
-        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
-        // 调用 callback 返回建议列表的数据
-        cb(results);
-      },
-      createFilter(queryString) {
-        return (restaurant) => {
-          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
-        };
-      },
-    //新增属性
-    addOption(){
+    // 选择框
+    querySearch(queryString, cb) {
+      var restaurants = this.options
+      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+      // 调用 callback 返回建议列表的数据
+      cb(results)
+    },
+    createFilter(queryString) {
+      return (restaurant) => {
+        return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    // 新增属性
+    addOption() {
       this.formData.optionsList.push(
         this.$options.data().formData.optionsList[0]
       )
     },
-    //属性清空
-    variantsChage(val){
+    // 属性清空
+    variantsChage(val) {
       if (!val) {
         this.formData.sku_list = []
         this.formData.optionsList = [
-          {option:'',tags:[]}
+          { option: '', tags: [] }
         ]
         this.variantsEheck = false
       }
     },
     // 删除属性
-    RemoveOption(idx){
+    RemoveOption(idx) {
       this.formData.optionsList.splice(idx, 1)
       this.tagsChange()
     },
 
-     //属性交叉
-    whatever(...arrs) { 
-        return arrs.reduce((arr1, arr2) => arr1.flatMap(e => arr2.map(e2 => `${e}/${e2}`))) 
+    // 属性交叉
+    whatever(...arrs) {
+      return arrs.reduce((arr1, arr2) => arr1.flatMap(e => arr2.map(e2 => `${e}/${e2}`)))
     },
-    //属性
-    tagsChange(){
-      this.Variantslist = this.formData.optionsList.map(item =>item.option)
-      let arr = this.formData.optionsList.map(item =>item.tags)
-      let result = this.whatever(...arr)
+    // 属性
+    tagsChange() {
+      this.Variantslist = this.formData.optionsList.map(item => item.option)
+      const arr = this.formData.optionsList.map(item => item.tags)
+      const result = this.whatever(...arr)
       const newArr = result.map(item => ({
-          obj:item,
-          sku_image: '',
-          sku_color: '',
-          sku_size: '',
-          sku_price: '',
-          sku_number: '',
-          sku: '',
-          id: '',
-      }))    
-      newArr.forEach((val,y) =>{
-          val.option = {}
-          val.obj = val && val.obj.split('/')
-          this.Variantslist.forEach((item,i) =>{
-            val.option[this.Variantslist[i]] = val.obj[i];
-          })
+        obj: item,
+        sku_image: '',
+        sku_color: '',
+        sku_size: '',
+        sku_price: '',
+        sku_number: '',
+        sku: '',
+        id: ''
+      }))
+      newArr.forEach((val, y) => {
+        val.option = {}
+        val.obj = val && val.obj.split('/')
+        this.Variantslist.forEach((item, i) => {
+          val.option[this.Variantslist[i]] = val.obj[i]
+        })
       })
       console.log(newArr)
       this.formData.sku_list = newArr
