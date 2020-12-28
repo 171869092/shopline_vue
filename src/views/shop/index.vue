@@ -52,7 +52,7 @@
 </template>
 <script>
 import { shopList } from '@/api/shop'
-// import { install } from '@/api/user'
+import { connectStore } from '@/api/user'
 export default {
   name: 'shop',
   components: {
@@ -121,11 +121,23 @@ export default {
     },
     submitConnect() {
       const url = `${this.storeForm.store_url}.myshopify.com`
+      const api_token = this.storeForm.api_token
       this.storeForm.store_url = ''
+      this.storeForm.api_token = ''
       this.dialogvisible = false
-      setTimeout(() => {
-        window.open(`${process.env.VUE_APP_BASE_API}/l?shop=${url}&uid=${this.uid}&type=1`)
-      }, 300)
+      connectStore({
+        shop: url,
+        api_token: api_token,
+        uid: this.uid,
+        type: 1
+      }).then(res => {
+        console.log(res.data)
+      }).catch(err => {
+        console.log(err)
+      })
+      // setTimeout(() => {
+      //   window.open(`${process.env.VUE_APP_BASE_API}/l?shop=${url}&uid=${this.uid}&type=1`)
+      // }, 300)
     },
     closeDialog() {
       this.storeForm.store_url = ''

@@ -55,7 +55,7 @@ export function gtoken(data) {
   })
 }
 
-export function install(data) {
+export function connectStore(data) {
   return request({
     url: '/l',
     method: 'get',
