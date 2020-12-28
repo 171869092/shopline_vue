@@ -99,6 +99,7 @@ export default {
     remove (index) {
       this.innerTags.splice(index, 1)
       this.tagChange()
+      this.$emit('change')
     },
     removeLastTag () {
       if (this.newTag) {

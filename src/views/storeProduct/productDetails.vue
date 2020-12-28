@@ -44,9 +44,9 @@
               <div class="f-l"><span style="color:red">*</span><label>Variants:</label></div>
               <!-- <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button> -->
             </div>
-            <div>
-              <el-checkbox v-model="variantsEheck">This product has multiple options, like different sizes or colors</el-checkbox>
-              <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()" v-if="variantsEheck">Add another option</el-button>
+            <div v-if="$route.query.type === 'add'">
+              <el-checkbox v-model="variantsEheck" @change="variantsChage">This product has multiple options, like different sizes or colors</el-checkbox>
+              <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()" v-if="variantsEheck && formData.optionsList.length < 3 ">Add another option</el-button>
             </div>
             <!-- 新增属性 -->
               <el-table
@@ -61,9 +61,14 @@
               <el-table-column  prop="option" label="Option">
                 <template slot-scope="scope">
                   <el-form-item class="mb0" label-width="0" :prop="`optionsList.${scope.$index}.option`">
-                    <el-select v-model="scope.row.option" size="mini" filterable>
+                  <el-autocomplete
+                    class="inline-input"
+                     v-model="scope.row.option"
+                    :fetch-suggestions="querySearch"
+                  ></el-autocomplete>
+                    <!-- <el-select v-model="scope.row.option" size="mini" filterable>
                       <el-option  v-for="(item,key) in options" :key="key" :label="item" :value="item"></el-option>
-                    </el-select>
+                    </el-select> -->
                   </el-form-item>
                 </template>
               </el-table-column>
@@ -78,16 +83,19 @@
               </el-table-column>
               <el-table-column label="Operating" width="120px">
                 <template slot-scope="scope">
-                  <el-button type="danger" size="mini" @click="RemoveOption(scope.$index, scope.row)">Remove</el-button>
+                  <el-button type="danger" size="mini" v-if="formData.optionsList.length > 1" @click="RemoveOption(scope.$index, scope.row)">Remove</el-button>
                 </template>
               </el-table-column>
             </el-table>
   <!-- 生成属性 -->
+        <div class="variantsTabel" v-if="variantsEheck && Variantslist.length > 0 ||  $route.query.type === 'edit'">
+            <div class="f-l mt20"><label>Preview</label></div>
             <el-table
               ref="multipleTable"
               :data="formData.sku_list"
               border
               stripe
+              class="mt20"
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
               style="width: 100%"
             >
@@ -104,7 +112,7 @@
               <el-table-column v-for="(d,idx) in Variantslist" :key="idx" :prop="d" :label="d">
                 <template slot-scope="scope">
                   <el-form-item :prop="'sku_list.' + scope.$index + '.option.' + d">
-                    <el-input v-model="scope.row.option[d]" size="mini" clearable class="p5_input" />
+                    <el-input v-model="scope.row.option[d]" size="mini" clearable :disabled="$route.query.type === 'add'" class="p5_input" />
                   </el-form-item>
                 </template>
               </el-table-column>
@@ -126,7 +134,7 @@
               </el-table-column>
               <el-table-column label="SKU" prop="sku">
                 <template slot-scope="scope">
-                  <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
+                  <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku`">
                     <el-input v-model="scope.row.sku" size="mini" clearable class="p5_input" placeholder="SKU" />
                   </el-form-item>
                 </template>
@@ -138,6 +146,8 @@
                 </template>
               </el-table-column>
             </el-table>
+           </div>
+            
           </el-card>
         </el-form>
       </el-col>
@@ -164,8 +174,6 @@ export default {
         sku_list: [
           {
             sku_image: '',
-            sku_color: '',
-            sku_size: '',
             sku_price: '',
             sku_number: '',
             sku: '',
@@ -187,8 +195,14 @@ export default {
         ]
       },
 
-      variantsEheck:true,
-      options:['Size','Color','Material','Style','Title'],
+      variantsEheck:false,
+       options:[
+         {value:'Size'},
+         {value:'Color'},
+         {value:'Material'},
+         {value:'Style'},
+         {value:'Title'},
+       ],
       Variantslist: [],
       statusOptions: ['Active', 'Draft'],
       dialogImageUrl: '',
@@ -199,7 +213,7 @@ export default {
       editPrintUpload: false,
       uploadPrintvisible: false,
       skuIndex: '',
-      skuImage: ''
+      skuImage: '',
     }
   },
   created() {
@@ -220,9 +234,10 @@ export default {
       if (this.$route.query.stroeType === 'all') {
         getAllProductEdit({ id: this.$route.query.id }).then(res => {
           if (res.code === 200) {
-            const objHead = JSON.parse(res.data.sku_list[0].option)
-            this.Variantslist = Object.keys(objHead)
-            console.log(this.Variantslist)
+            if (res.data.sku_list.length > 0) {
+              const objHead = JSON.parse(res.data.sku_list[0].option)
+              this.Variantslist = Object.keys(objHead)
+            }
             res.data.sku_list.forEach(item => {
               item.option = JSON.parse(item.option)
               console.log(item.option)
@@ -244,6 +259,14 @@ export default {
       } else {
         getStoreProductEdit({ id: this.$route.query.id }).then(res => {
           if (res.code === 200) {
+            if (res.data.sku_list.length > 0) {
+              const objHead = JSON.parse(res.data.sku_list[0].option)
+              this.Variantslist = Object.keys(objHead)
+            }
+            res.data.sku_list.forEach(item => {
+              item.option = JSON.parse(item.option)
+              console.log(item.option)
+            })
             this.formData = res.data
             this.formData.images = res.data.images.map(item => {
               return {
@@ -266,11 +289,14 @@ export default {
     },
     // 保存数据
     Submit() { 
+      // console.log(this.formData)
+      // return
       if (this.formData.sku_list.length === 0) return this.$message({ message: 'Fill in at least one line of variation', type: 'warning' })
       this.$refs.formData.validate((valid) => {
         if (valid) {
           this.SubmitLoading = true
           if (this.$route.query.stroeType === 'all') {
+            delete this.formData.optionsList
             getAllProductSave(this.formData).then(res => {
               if (res.code === 200) {
                 this.$message({ message: res.message, type: 'success' })
@@ -298,47 +324,68 @@ export default {
         this.$options.data().formData.sku_list[0]
       )
     },
+    //选择框
+     querySearch(queryString, cb) {
+        var restaurants = this.options;
+        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants;
+        // 调用 callback 返回建议列表的数据
+        cb(results);
+      },
+      createFilter(queryString) {
+        return (restaurant) => {
+          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0);
+        };
+      },
     //新增属性
     addOption(){
       this.formData.optionsList.push(
         this.$options.data().formData.optionsList[0]
       )
     },
+    //属性清空
+    variantsChage(val){
+      if (!val) {
+        this.formData.sku_list = []
+        this.formData.optionsList = [
+          {option:'',tags:[]}
+        ]
+        this.variantsEheck = false
+      }
+    },
     // 删除属性
     RemoveOption(idx){
       this.formData.optionsList.splice(idx, 1)
       this.tagsChange()
     },
+
      //属性交叉
-    whatever(list,...arrs) { 
-      list.map(item =>{
-        
-      })
-      return arrs.reduce((arr1, arr2) => arr1.flatMap(e => arr2.map(e2 => `${e}-${e2}`))) 
+    whatever(...arrs) { 
+        return arrs.reduce((arr1, arr2) => arr1.flatMap(e => arr2.map(e2 => `${e}/${e2}`))) 
     },
     //属性
     tagsChange(){
       this.Variantslist = this.formData.optionsList.map(item =>item.option)
       let arr = this.formData.optionsList.map(item =>item.tags)
-      let result = this.whatever(this.Variantslist,...arr)
-//  [
-//    '0-1=9',
-//    '1-2=9'
-//  ]
-//   [
-//     {pic:'',option:{op1:'0',op2:'1',op3:'9',},sku:''},
-//     {pic:'',option:{op1:'1',op2:'2',op3:'9',},sku:''}
-//   ]
-
-
-      result.map(item =>{
-        //  console.log(item.split('-'))
-  
-        //      item = item.split('-')
-
+      let result = this.whatever(...arr)
+      const newArr = result.map(item => ({
+          obj:item,
+          sku_image: '',
+          sku_color: '',
+          sku_size: '',
+          sku_price: '',
+          sku_number: '',
+          sku: '',
+          id: '',
+      }))    
+      newArr.forEach((val,y) =>{
+          val.option = {}
+          val.obj = val && val.obj.split('/')
+          this.Variantslist.forEach((item,i) =>{
+            val.option[this.Variantslist[i]] = val.obj[i];
+          })
       })
-      console.log(result)
-      // this.formData.sku_list = result
+      console.log(newArr)
+      this.formData.sku_list = newArr
     },
     // 删除sku
     delSkuData(index, row) {
@@ -443,6 +490,10 @@ export default {
 </script>
 <style lang="scss">
 .productDetails{
+  .variantsTabel{
+    border-top: 1px solid #EBEEF5;
+    margin-top: 50px;
+  }
   .box-card {
     margin-top: 20px;
   }
@@ -473,6 +524,25 @@ export default {
   align-items: center;
  .error-icon  {
     font-size: 35px;
+  }
+  .my-autocomplete {
+    li {
+      line-height: normal;
+      padding: 7px;
+
+      .name {
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+      .addr {
+        font-size: 12px;
+        color: #b4b4b4;
+      }
+
+      .highlighted .addr {
+        color: #ddd;
+      }
+    }
   }
 }
 </style>
