@@ -54,7 +54,6 @@
               ref="optionsTable"
               :data="formData.optionsList"
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
-              style="width: 62%"
               class="mt20 variantsTabel"
             >
               <el-table-column type="index" width="120" />
