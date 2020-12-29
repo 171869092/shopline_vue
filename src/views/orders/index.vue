@@ -85,7 +85,7 @@
                   <div>{{ props.row.service_name || '--' }}</div>
                 </template>
               </el-table-column>
-              <el-table-column prop="total_price" label="Order Amount" width="150" />
+              <!-- <el-table-column prop="total_price" label="Order Amount" width="150" /> -->
               <el-table-column prop="order_status" label="Order Status" width="200">
                 <template slot-scope="props">
                   <div>{{ orderStatus[props.row.order_status] }}</div>

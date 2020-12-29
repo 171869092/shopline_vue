@@ -288,7 +288,7 @@ export default {
     },
     // 保存数据
     Submit() {
-      if (this.formData.sku_list.length == 0) return this.$message({ message: 'Fill in at least one line of variation', type: 'warning' })
+      if (this.formData.sku_list.length === 0) return this.$message({ message: 'Fill in at least one line of variation', type: 'warning' })
       console.log(this.formData)
       this.$refs.formData.validate((valid) => {
         if (valid) {

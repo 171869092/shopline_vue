@@ -44,7 +44,10 @@ export default {
       type: Boolean,
       default: false
     },
-    size: String
+    size: {
+      type: String,
+      default: ''
+    }
   },
   data() {
     return {
@@ -61,6 +64,7 @@ export default {
     foucusTagInput() {
       console.log('00000')
       if (this.readOnly || !this.$el.querySelector('.tag-input')) {
+        console.log()
       } else {
         this.$el.querySelector('.tag-input').focus()
       }
@@ -87,7 +91,7 @@ export default {
       }
       if (addSuucess) {
         this.tagChange()
-        this.newTag = '',
+        this.newTag = ''
         this.$emit('change')
       }
     },
