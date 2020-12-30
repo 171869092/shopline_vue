@@ -33,19 +33,35 @@
       <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
     </el-card>
     <el-dialog title="Connect to Shopify" width="500px" :visible.sync="dialogvisible" :close-on-click-modal="false" @close="closeDialog">
-      <el-form :model="storeForm" :rules="rules">
-        <el-form-item>
+      <el-form :model="storeForm" :rules="rules" ref="storeForm">
+        <el-form-item prop="store_url">
           <el-input v-model="storeForm.store_url" autocomplete="off" placeholder="Shopify store URL">
             <template slot="append">.myshopify.com</template>
           </el-input>
         </el-form-item>
-        <el-form-item>
+        <el-form-item prop="api_token">
           <el-input v-model="storeForm.api_token" autocomplete="off" placeholder="API Token" />
         </el-form-item>
+        <el-form-item prop="api_key">
+          <el-input v-model="storeForm.api_key" autocomplete="off" placeholder="API Key" />
+        </el-form-item>
+         <el-form-item prop="password">
+          <el-input v-model="storeForm.password" autocomplete="off" placeholder="password" />
+        </el-form-item>
+         <el-form-item prop="shared_secret">
+          <el-input v-model="storeForm.shared_secret" autocomplete="off" placeholder="Shared Secret" />
+        </el-form-item>
+         <el-form-item prop="api_version">
+          <el-input v-model="storeForm.api_version" autocomplete="off" placeholder="API Version" />
+        </el-form-item>
+         <el-form-item prop="location_id">
+          <el-input v-model="storeForm.location_id" autocomplete="off" placeholder="Location Id" />
+        </el-form-item>
+        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="closeDialog">Cancel</el-button>
-        <el-button size="small" type="primary" :disabled="!(storeForm.store_url && storeForm.api_token)" @click="submitConnect">Confirm</el-button>
+        <el-button size="small" type="primary"  @click="submitConnect" :loading="submitLoading">Confirm</el-button>
       </div>
     </el-dialog>
   </div>
@@ -73,11 +89,39 @@ export default {
       },
       loading: false,
       dialogvisible: false,
+      submitLoading: false,
       storeForm: {
         store_url: '',
-        api_token: ''
+        api_token: '',
+        api_key:'',
+        password:'',
+        shared_secret:'',
+        api_version:'',
+        location_id:''
       },
-      rules: {}
+      rules: {
+         store_url: [
+            { required: true, message: 'store_url', trigger: 'blur' },
+          ],
+        api_token: [
+            { required: true, message: 'api_token', trigger: 'blur' },
+          ],
+        api_key: [
+            { required: true, message: 'api_key', trigger: 'blur' },
+          ],
+        password: [
+            { required: true, message: 'password', trigger: 'blur' },
+          ],
+        shared_secret: [
+            { required: true, message: 'shared_secret', trigger: 'blur' },
+          ],
+        api_version: [
+            { required: true, message: 'api_version', trigger: 'blur' },
+          ],
+        location_id: [
+            { required: true, message: 'location_id', trigger: 'blur' },
+          ],
+      }
     }
   },
   computed: {
@@ -120,28 +164,35 @@ export default {
       // }).catch(() => {})
     },
     submitConnect() {
-      const url = `${this.storeForm.store_url}.myshopify.com`
-      const api_token = this.storeForm.api_token
-      this.storeForm.store_url = ''
-      this.storeForm.api_token = ''
-      this.dialogvisible = false
-      connectStore({
-        shop: url,
-        api_token: api_token,
-        uid: this.uid,
-        type: 1
-      }).then(res => {
-        console.log(res.data)
-      }).catch(err => {
-        console.log(err)
-      })
+       this.$refs.storeForm.validate((valid) => {
+          if (valid) {
+              this.submitLoading = true
+              const url = `${this.storeForm.store_url}.myshopify.com`
+              this.storeForm.type = 1
+              this.storeForm.uid = this.uid,
+              this.storeForm.shop = url,
+              connectStore(this.storeForm).then(res => {
+                if(res.code == 200){
+                  this.dialogvisible = false
+                  this.submitLoading = false
+                  this.Inquire()
+                  this.$message({ message: res.message, type: 'success' })    
+                }
+                console.log(res.data)
+              }).catch(err => {
+                console.log(err)
+                this.submitLoading = false
+              })
+          }
+       })
+
       // setTimeout(() => {
       //   window.open(`${process.env.VUE_APP_BASE_API}/l?shop=${url}&uid=${this.uid}&type=1`)
       // }, 300)
     },
     closeDialog() {
-      this.storeForm.store_url = ''
-      this.storeForm.api_token = ''
+      //  this.storeForm = this.$options.data().storeForm[0]
+      this.$refs.storeForm.resetFields()
       this.dialogvisible = false
     }
   }
