@@ -26,7 +26,7 @@
         </el-table-column>
         <el-table-column label="Create Time">
           <template slot-scope="scope">
-            <div>{{ scope.row.create_time | parseTime }}</div>
+            <div>{{ scope.row.create_time }}</div>
           </template>
         </el-table-column>
       </el-table>
