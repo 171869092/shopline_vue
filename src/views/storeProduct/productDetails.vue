@@ -28,14 +28,17 @@
           </el-card>
 
           <!-- 橱窗图库： -->
-          <el-card class="box-card">
+          <el-card
+            class="box-card"
+          >
             <div slot="header" class="clearfix hidden">
               <label class="step-jump"><span style="color:red">*</span>Media:</label>
               <div class="f-r">
                 <el-button size="mini" type="primary" @click="openUploadPrint">Add image</el-button>
               </div>
             </div>
-            <print-popover ref="window_img" :list="formData.images" @delImg="delImg" @update="updateimg" />
+            <!-- <print-popover ref="window_img" :list="formData.images" @delImg="delImg" @update="updateimg" /> -->
+            <shop-window :img-list="formData.images" @update="updateImgList" @delete="deleteImg" />
 
           </el-card>
           <!-- 商品 -->
@@ -150,20 +153,30 @@
         </el-form>
       </el-col>
     </el-row>
-    <edit-print :visible.sync="printvisible" :is-upload="editPrintUpload" :sku-img="skuImage" @close="closePrint" />
-    <upload-print :visible.sync="uploadPrintvisible" @close="closeUploadPrint" />
+    <!-- <edit-print :visible.sync="printvisible" :is-upload="editPrintUpload" :sku-img="skuImage" @close="closePrint" />
+    <upload-print :visible.sync="uploadPrintvisible" @close="closeUploadPrint" /> -->
+    <select-pictures
+      :visible.sync="printvisible"
+      :form-data="formData.images"
+      :checked="skuImage"
+      @select="selectedImg"
+      @update="updateImgList"
+    />
   </div>
 </template>
 <script>
+
 import { getAllProductEdit, getStoreProductEdit, getAllProductSave, getStoreProductSave, allProductDelete, getDeleteSku } from '@/api/product'
 export default {
   name: 'product-details',
   components: {
     ElInputTag: () => import('@/components/ElInputTag'),
     Tinymce: () => import('@/components/Tinymce'),
-    EditPrint: () => import('./component/editPrint'),
-    PrintPopover: () => import('./component/printPopover'),
-    UploadPrint: () => import('./component/uploadPrint')
+    // EditPrint: () => import('./component/editPrint'),
+    // PrintPopover: () => import('./component/printPopover'),
+    // UploadPrint: () => import('./component/uploadPrint'),
+    ShopWindow: () => import('./component/shop-window'),
+    SelectPictures: () => import('./component/select-pictures')
   },
   data() {
     return {
@@ -211,7 +224,8 @@ export default {
       editPrintUpload: false,
       uploadPrintvisible: false,
       skuIndex: '',
-      skuImage: ''
+      skuImage: '',
+      imgList: []
     }
   },
   created() {
@@ -446,6 +460,7 @@ export default {
     },
     // 打开  sku图片编辑
     openPrint(item, idx) {
+      console.log(item.sku_image)
       this.skuIndex = idx
       this.skuImage = item.sku_image
       this.editPrintUpload = true
@@ -481,6 +496,21 @@ export default {
         }
       })
       this.formData.images.splice(idx, 1)
+    },
+    updateImgList(list) {
+      console.log(list)
+      this.imgList = list
+      this.formData.images = this.imgList
+    },
+    selectedImg(val) {
+      this.formData.sku_list[this.skuIndex].sku_image = val
+    },
+    deleteImg(val) {
+      this.formData.sku_list.forEach(sku => {
+        if (sku.sku_image === val) {
+          sku.sku_image = ''
+        }
+      })
     }
   }
 }

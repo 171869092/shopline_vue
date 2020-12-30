@@ -1,11 +1,12 @@
 import request from '@/utils/request'
 // 上传图片接口
-export function uploadImage(data) {
+export function uploadImage(data, cb) {
   return request({
     url: '/image_upload',
     method: 'post',
     data: data,
-    headers: { 'Content-Type': 'multipart/form-data;charset=UTF-8' }
+    headers: { 'Content-Type': 'multipart/form-data;charset=UTF-8' },
+    onUploadProgress: progressEvent => cb(progressEvent)
   })
 }
 // 获取店铺信息
