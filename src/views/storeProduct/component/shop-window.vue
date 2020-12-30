@@ -93,6 +93,10 @@ export default {
   },
   created() {},
   methods: {
+    preupload() {
+      // console.log(this.$refs.upload)
+      this.$refs.upload.$children[0].$el.click()
+    },
     handleChange(file, fileList) {
       // console.log('change', file)
     },

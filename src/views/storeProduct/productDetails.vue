@@ -38,7 +38,7 @@
               </div>
             </div>
             <!-- <print-popover ref="window_img" :list="formData.images" @delImg="delImg" @update="updateimg" /> -->
-            <shop-window :img-list="formData.images" @update="updateImgList" @delete="deleteImg" />
+            <shop-window ref="shopWindow" :img-list="formData.images" @update="updateImgList" @delete="deleteImg" />
 
           </el-card>
           <!-- 商品 -->
@@ -442,22 +442,6 @@ export default {
     productBack() {
       this.$router.go(-1)
     },
-    // 关闭  图片编辑 sku
-    closePrint(type) {
-      if (type === 1) {
-        this.printvisible = false
-        return
-      }
-      this.formData.images = type.list.map(item => {
-        return {
-          url: item.url,
-          is_hover: false,
-          id: ''
-        }
-      })
-      this.$set(this.formData.sku_list[this.skuIndex], 'sku_image', type.checked)
-      this.printvisible = false
-    },
     // 打开  sku图片编辑
     openPrint(item, idx) {
       console.log(item.sku_image)
@@ -468,34 +452,9 @@ export default {
     },
     // 打开本地上传 橱窗
     openUploadPrint() {
-      this.uploadPrintvisible = true
-    },
-    // 关闭本地上传 橱窗
-    closeUploadPrint(type) {
-      if (type === 1) {
-        this.uploadPrintvisible = false
-        return
-      }
-      this.uploadPrintvisible = false
-      const list = type.map(item => {
-        return {
-          url: item,
-          is_hover: false,
-          id: ''
-        }
-      })
-      //  this.formData.sku_list.push(...list)
-      this.formData.images.push(...list)
-    },
-    // 删除图片
-    delImg(idx) {
-      const url = this.formData.images[idx].url
-      this.formData.sku_list.forEach(item => {
-        if (item.sku_image === url) {
-          item.sku_image = ''
-        }
-      })
-      this.formData.images.splice(idx, 1)
+      // this.uploadPrintvisible = true
+      // console.log(this.$refs.shopWindow)
+      this.$refs.shopWindow.preupload()
     },
     updateImgList(list) {
       console.log(list)
