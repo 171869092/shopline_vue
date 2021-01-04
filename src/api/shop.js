@@ -7,3 +7,10 @@ export function shopList(params) {
     params
   })
 }
+export function shopPush(params) {
+  return request({
+    url: '/shopify/index/push',
+    method: 'get',
+    params
+  })
+}

@@ -67,7 +67,7 @@
   </div>
 </template>
 <script>
-import { shopList } from '@/api/shop'
+import { shopList ,shopPush} from '@/api/shop'
 import { connectStore } from '@/api/user'
 export default {
   name: 'shop',
@@ -173,6 +173,7 @@ export default {
               this.storeForm.shop = url,
               connectStore(this.storeForm).then(res => {
                 if(res.code == 200){
+                  shopPush({shop:url}).then(v =>{})
                   this.dialogvisible = false
                   this.submitLoading = false
                   this.Inquire()
