@@ -8,6 +8,14 @@ export function shopList(params) {
   })
 }
 
+export function connectStore(data) {
+  return request({
+    url: '/l',
+    method: 'get',
+    params: data
+  })
+}
+
 export function testStoreConnect(params) {
   return request({
     url: '/testing',
@@ -16,3 +24,10 @@ export function testStoreConnect(params) {
   })
 }
 
+export function shopPush(params) {
+  return request({
+    url: '/shopify/index/push',
+    method: 'get',
+    params
+  })
+}

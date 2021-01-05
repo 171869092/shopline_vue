@@ -60,7 +60,7 @@
 
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="small" type="success" @click="testConnect">Test Connect</el-button>
+        <el-button size="small" type="success" :loading="testLoading" @click="testConnect">Test Connect</el-button>
         <el-button size="small" @click="closeDialog">Cancel</el-button>
         <el-button size="small" type="primary" :loading="submitLoading" @click="submitConnect">Confirm</el-button>
       </div>
@@ -68,8 +68,8 @@
   </div>
 </template>
 <script>
-import { shopList } from '@/api/shop'
-import { testStoreConnect, connectStore } from '@/api/user'
+import { shopList, shopPush, testStoreConnect, connectStore } from '@/api/shop'
+import { } from '@/api/user'
 export default {
   name: 'shop',
   components: {
@@ -91,6 +91,7 @@ export default {
       loading: false,
       dialogvisible: false,
       submitLoading: false,
+      testLoading: false,
       storeForm: {
         store_url: '',
         api_token: '',
@@ -167,22 +168,20 @@ export default {
     testConnect() {
       this.$refs.storeForm.validate((valid) => {
         if (valid) {
-          this.submitLoading = true
+          this.testLoading = true
           const url = `${this.storeForm.store_url}.myshopify.com`
           this.storeForm.type = 1
           this.storeForm.uid = this.uid
           this.storeForm.shop = url
           testStoreConnect(this.storeForm).then(res => {
             if (res.code === 200) {
-              this.dialogvisible = false
-              this.submitLoading = false
-              this.Inquire()
+              this.testLoading = false
               this.$message({ message: res.message, type: 'success' })
             }
             console.log(res.data)
           }).catch(err => {
             console.log(err)
-            this.submitLoading = false
+            this.testLoading = false
           })
         }
       })
@@ -197,6 +196,7 @@ export default {
           this.storeForm.shop = url
           connectStore(this.storeForm).then(res => {
             if (res.code === 200) {
+              shopPush({ shop: url }).then(v => {})
               this.dialogvisible = false
               this.submitLoading = false
               this.Inquire()

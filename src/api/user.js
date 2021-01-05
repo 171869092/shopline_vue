@@ -54,11 +54,3 @@ export function gtoken(data) {
     params: data
   })
 }
-
-export function connectStore(data) {
-  return request({
-    url: '/l',
-    method: 'get',
-    params: data
-  })
-}
