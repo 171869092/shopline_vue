@@ -58,41 +58,62 @@
               :data="formData.optionsList"
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
               class="mt20 variantsTabel"
+              style="width:850px"
             >
-              <el-table-column type="index" width="120" />
-              <el-table-column prop="option" label="Option">
+              <el-table-column prop="option" label="OPTIONS" width="280">
                 <template slot-scope="scope">
+                  <span>Option {{ scope.$index + 1 }}</span>
                   <el-form-item class="mb0" label-width="0" :prop="`optionsList.${scope.$index}.option`">
-                    <el-autocomplete
+                    <!-- <el-autocomplete
                       v-model="scope.row.option"
                       class="inline-input"
                       :fetch-suggestions="querySearch"
-                    />
+                    /> -->
                     <!-- <el-select v-model="scope.row.option" size="mini" filterable>
                       <el-option  v-for="(item,key) in options" :key="key" :label="item" :value="item"></el-option>
                     </el-select> -->
+                    <el-popover
+                      v-model="scope.row.isShow"
+                      placement="bottom-end"
+                      width="250"
+                      trigger="click"
+                    >
+                      <ul class="option-list">
+                        <li
+                          v-for="(item, key) in options"
+                          :key="key"
+                          class="option-item"
+                          :class="[scope.row.option == item.value ? 'active' : '']"
+                          @click="selectOption(scope.row, item.value)"
+                        >
+                          <span>{{ item.value }}</span>
+                        </li>
+                      </ul>
+                      <!-- <el-button slot="reference">click 激活</el-button> -->
+                      <el-input slot="reference" v-model="scope.row.option" class="w-250" placeholder="请输入内容" />
+                    </el-popover>
                   </el-form-item>
                 </template>
               </el-table-column>
 
               <el-table-column prop="optionVlue" align="left">
                 <template slot-scope="scope">
+                  <span v-show="formData.optionsList.length > 2" class="primary cursor_p" @click="RemoveOption(scope.$index, scope.row)">Remove</span>
                   <el-form-item class="mb0" label-width="0" :prop="`optionsList.${scope.$index}.optionVlue`">
                     <el-input-tag v-model="scope.row.tags" @change="tagsChange" />
-                    <!-- <el-input v-model="scope.row.optionVlue" size="mini" clearable class="p5_input" placeholder="Separate options with a comma"  type="textarea" :rows="2"/> -->
                   </el-form-item>
                 </template>
               </el-table-column>
-              <el-table-column label="Operating" width="120px">
+              <!-- <el-table-column label="Operating" width="120px">
                 <template slot-scope="scope">
-                  <el-button v-if="formData.optionsList.length > 1" type="danger" size="mini" @click="RemoveOption(scope.$index, scope.row)">Remove</el-button>
+
                 </template>
-              </el-table-column>
+              </el-table-column> -->
             </el-table>
             <!-- 生成属性 -->
-            <div v-if="variantsEheck && Variantslist.length > 0 && $route.query.type === 'add'" class="f-l mt20"><label>Preview</label></div>
+            <div v-if="variantsEheck && $route.query.type === 'add'" class="f-l mt20"><label>Preview</label></div>
             <el-table
-              v-if="variantsEheck && Variantslist.length > 0 || $route.query.type === 'edit'"
+              v-if="variantsEheck || $route.query.type === 'edit'"
               ref="multipleTable"
               :data="formData.sku_list"
               border
@@ -111,10 +132,17 @@
                   </el-image>
                 </template>
               </el-table-column>
-              <el-table-column v-for="(d,idx) in Variantslist" :key="idx" :prop="d" :label="d">
+              <!-- <el-table-column v-for="(d,idx) in Variantslist" :key="idx" :prop="d" :label="d">
                 <template slot-scope="scope">
                   <el-form-item :prop="'sku_list.' + scope.$index + '.option.' + d">
                     <el-input v-model="scope.row.option[d]" size="mini" clearable :disabled="$route.query.type === 'add'" class="p5_input" />
+                  </el-form-item>
+                </template>
+              </el-table-column> -->
+              <el-table-column label="Variants">
+                <template slot-scope="scope">
+                  <el-form-item>
+                    <span>{{ scope.row.variant }}</span>
                   </el-form-item>
                 </template>
               </el-table-column>
@@ -165,7 +193,7 @@
   </div>
 </template>
 <script>
-
+// import _ from 'lodash'
 import { getAllProductEdit, getStoreProductEdit, getAllProductSave, getStoreProductSave, allProductDelete, getDeleteSku } from '@/api/product'
 export default {
   name: 'product-details',
@@ -194,7 +222,7 @@ export default {
         ],
         images: [],
         optionsList: [
-          { option: '', tags: [] }
+          { isShow: false, option: '', tags: [] }
         ]
       },
       formRule: {
@@ -223,6 +251,7 @@ export default {
       printvisible: false,
       editPrintUpload: false,
       uploadPrintvisible: false,
+      showList: false,
       skuIndex: '',
       skuImage: '',
       imgList: []
@@ -353,13 +382,17 @@ export default {
         this.$options.data().formData.optionsList[0]
       )
     },
+    selectOption(row, val) {
+      // console.log(row)
+      // console.log(val)
+      row.option = val
+      row.isShow = false
+    },
     // 属性清空
     variantsChage(val) {
       if (!val) {
         this.formData.sku_list = []
-        this.formData.optionsList = [
-          { option: '', tags: [] }
-        ]
+        this.formData.optionsList = [{ isShow: false, option: '', tags: [] }]
         this.variantsEheck = false
       }
     },
@@ -370,16 +403,28 @@ export default {
     },
 
     // 属性交叉
-    whatever(...arrs) {
-      return arrs.reduce((arr1, arr2) => arr1.flatMap(e => arr2.map(e2 => `${e}/${e2}`)))
+    whatever(arrs) {
+      if (Object.prototype.toString.call(arrs) === '[object Array]' && arrs.length < 2) {
+        return [...arrs[0].map((el) => el)]
+      }
+      return arrs.reduce((arr1, arr2) => {
+        const result = []
+        arr1.forEach(item => {
+          arr2.forEach(item2 => {
+            result.push(`${item}/${item2}`)
+          })
+        })
+        return result
+      })
     },
     // 属性
     tagsChange() {
-      this.Variantslist = this.formData.optionsList.map(item => item.option)
-      const arr = this.formData.optionsList.map(item => item.tags)
-      const result = this.whatever(...arr)
+      const arr = this.formData.optionsList.map(item => item.tags.length > 0 ? item.tags : '').filter(e => e)
+      console.log('arr', arr)
+      const result = this.whatever(arr)
+      console.log('result', result)
       const newArr = result.map(item => ({
-        obj: item,
+        variant: item,
         sku_image: '',
         sku_color: '',
         sku_size: '',
@@ -388,14 +433,14 @@ export default {
         sku: '',
         id: ''
       }))
-      newArr.forEach((val, y) => {
-        val.option = {}
-        val.obj = val && val.obj.split('/')
-        this.Variantslist.forEach((item, i) => {
-          val.option[this.Variantslist[i]] = val.obj[i]
-        })
-      })
-      console.log(newArr)
+      // newArr.forEach((val, y) => {
+      //   val.option = {}
+      //   val.obj = val && val.obj.split('/')
+      //   this.Variantslist.forEach((item, i) => {
+      //     val.option[this.Variantslist[i]] = val.obj[i]
+      //   })
+      // })
+      // console.log(newArr)
       this.formData.sku_list = newArr
     },
     // 删除sku
@@ -528,6 +573,34 @@ export default {
       .highlighted .addr {
         color: #ddd;
       }
+    }
+  }
+}
+.option-list {
+  list-style: none;
+  padding-left: 0px;
+  margin-bottom: 0;
+  .option-item {
+    line-height: 2;
+    padding: 5px;
+    cursor: pointer;
+    position: relative;
+    &.active {
+      &::before {
+        content: "";
+        background-color: #2c6ecb;
+        position: absolute;
+        top: 0;
+        left: -12px;
+        height: 100%;
+        display: block;
+        width: 3px;
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+      }
+    }
+    &:hover {
+      background: #eee;
     }
   }
 }

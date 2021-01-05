@@ -7,3 +7,12 @@ export function shopList(params) {
     params
   })
 }
+
+export function testStoreConnect(params) {
+  return request({
+    url: '/testing',
+    method: 'post',
+    data: params
+  })
+}
+
