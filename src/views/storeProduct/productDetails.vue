@@ -49,7 +49,7 @@
             </div>
             <div v-if="$route.query.type === 'add'">
               <el-checkbox v-model="variantsEheck" @change="variantsChage">This product has multiple options, like different sizes or colors</el-checkbox>
-              <el-button v-if="variantsEheck && formData.optionsList.length < 3 " class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
+              <el-button v-if="variantsEheck && optionsList.length < 3 " class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
             </div>
             <!-- 新增属性 -->
             <el-alert
@@ -64,7 +64,7 @@
             <el-table
               v-if="variantsEheck"
               ref="optionsTable"
-              :data="formData.optionsList"
+              :data="optionsList"
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
               class="mt20 variantsTabel"
               style="width:850px"
@@ -72,7 +72,7 @@
               <el-table-column prop="option" label="OPTIONS" width="280">
                 <template slot-scope="scope">
                   <div class="d-height f-l mb5 ml5">Option {{ scope.$index + 1 }}</div>
-                  <el-form-item class="mb0" label-width="0" :prop="`optionsList.${scope.$index}.option`">
+                  <el-form-item class="mb0" label-width="0">
                     <el-popover
                       v-model="scope.row.isShow"
                       placement="bottom-end"
@@ -100,10 +100,10 @@
               <el-table-column prop="optionVlue" align="left">
                 <template slot-scope="scope">
                   <div class="flexbox justify-flex-end d-height">
-                    <span v-if="formData.optionsList.length > 1" class="primary cursor_p f-r" @click="RemoveOption(scope.$index, scope.row)">Remove</span>
+                    <span v-if="optionsList.length > 1" class="primary cursor_p f-r" @click="RemoveOption(scope.$index, scope.row)">Remove</span>
                     <div v-else />
                   </div>
-                  <el-form-item class="mb0" label-width="0" :prop="`optionsList.${scope.$index}.optionVlue`">
+                  <el-form-item class="mb0" label-width="0">
                     <!-- <el-input-tag v-model="scope.row.tags" @input="tagsChange" /> -->
                     <!-- <input-tag v-model="scope.row.tags" class="option-input-tag" :add-tag-on-blur="true" :limit="20" @update:tags="tagsChange" /> -->
                     <input-tag v-model="scope.row.tags" class="option-input-tag" :add-tag-on-blur="true" :limit="20" @input="tagsChange" />
@@ -133,7 +133,7 @@
               <vxe-table-column v-for="(variant, idx) in variantsTitle" :key="idx" :title="variant">
                 <template v-slot="{ row }">
                   <el-form-item class="mb0" label-width="0">
-                    <el-input v-model="row.variants[variant]" size="mini" clearable :disabled="$route.query.type === 'add'" class="p5_input" />
+                    <el-input v-model="row.option[variant]" size="mini" clearable :disabled="$route.query.type === 'add'" class="p5_input" />
                   </el-form-item>
                 </template>
               </vxe-table-column>
@@ -270,20 +270,7 @@ export default {
             variants: {}
           }
         ],
-        images: [],
-        optionsList: [
-          {
-            option: 'Size',
-            tags: ['aaa', 'bbb', 'ccc', 'ddd', 'eee', 'fff']
-          },
-          {
-            option: 'Color',
-            tags: ['ggg', 'hhh', 'iii', 'jjj', 'kkk', 'lll'] },
-          {
-            option: 'Title',
-            tags: ['mmm', 'nnn', 'ooo', 'ppp', 'qqq', 'xxx']
-          }
-        ]
+        images: []
       },
       formRule: {
         title: [
@@ -293,8 +280,9 @@ export default {
           { required: true, message: 'Please select Product status', trigger: 'change' }
         ]
       },
-
-      variantsEheck: true,
+      optionsList: [],
+      variantsTitle: [],
+      variantsEheck: false,
       options: ['Size', 'Color', 'Material', 'Style', 'Title'],
       statusOptions: ['Active', 'Draft'],
       dialogImageUrl: '',
@@ -312,18 +300,23 @@ export default {
     }
   },
   computed: {
-    variantsTitle() {
-      return this.formData.optionsList.map(item => item.option)
-    },
     sourceArr() {
-      return this.formData.optionsList.map(item => item.tags).filter(String)
+      return this.optionsList.map(item => item.tags).filter(String)
     },
     sourceObj() {
       const sourceObj = {}
-      this.formData.optionsList.forEach((item) => {
+      this.optionsList.forEach((item) => {
         sourceObj[item.option] = item.tags
       })
       return sourceObj
+    }
+  },
+  watch: {
+    optionsList: {
+      handler(val) {
+        this.variantsTitle = val.map(item => item.option)
+      },
+      deep: true
     }
   },
   created() {
@@ -344,10 +337,13 @@ export default {
               this.variantsTitle = Object.keys(objHead)
               res.data.sku_list.forEach(item => {
                 item.option = JSON.parse(item.option)
-                console.log(item.option)
               })
             }
             this.formData = res.data
+            const xTable = this.$refs.xTable
+            if (xTable) {
+              this.$refs.xTable.loadData(res.data.sku_list)
+            }
             this.formData.images = res.data.images.map(item => {
               return {
                 url: item.url,
@@ -367,12 +363,17 @@ export default {
             if (res.data.sku_list.length > 0) {
               const objHead = JSON.parse(res.data.sku_list[0].option)
               this.variantsTitle = Object.keys(objHead)
+              console.log(this.variantsTitle)
               res.data.sku_list.forEach(item => {
                 item.option = JSON.parse(item.option)
-                console.log(item.option)
               })
+              console.log(res.data.sku_list)
             }
             this.formData = res.data
+            const xTable = this.$refs.xTable
+            if (xTable) {
+              this.$refs.xTable.loadData(res.data.sku_list)
+            }
             this.formData.images = res.data.images.map(item => {
               return {
                 url: item.url,
@@ -388,6 +389,7 @@ export default {
         })
       }
     },
+
     // 拖拽监听list
     updateimg(list) {
       this.formData.images = list
@@ -423,13 +425,11 @@ export default {
     },
     // 新增属性
     addOption() {
-      const length = this.formData.optionsList.length
+      const length = this.optionsList.length
       const name = this.options[length]
-      this.formData.optionsList.push({ isShow: false, option: name, tags: [] })
+      this.optionsList.push({ isShow: false, option: name, tags: [] })
     },
     selectOption(row, val) {
-      // console.log(row)
-      // console.log(val)
       row.option = val
       row.isShow = false
     },
@@ -437,15 +437,15 @@ export default {
     variantsChage(val) {
       if (val) {
         this.formData.sku_list = []
-        // this.formData.optionsList.push({ isShow: false, option: 'Size', tags: [] })
+        this.optionsList.push({ isShow: false, option: 'Size', tags: [] })
       } else {
         this.formData.sku_list = []
-        this.formData.optionsList = []
+        this.optionsList = []
       }
     },
     // 删除属性
     RemoveOption(idx) {
-      this.formData.optionsList.splice(idx, 1)
+      this.optionsList.splice(idx, 1)
       this.tagsChange()
     },
     tagsChanges(val) {
@@ -461,24 +461,24 @@ export default {
       // console.log('arr', arr)
       // const result = this.whatever(this.skuArr)
       this.preLoading = true
-      console.log(this.sourceObj)
       this.descartes_obj(this.sourceObj).then(data => {
         this.allData = data
         const xTable = this.$refs.xTable
-        let time = 0
         const startTime = Date.now()
-        console.log(this.allData)
-        if (this.allData.length < 100 && this.allData.length > 50) {
-          time = 500
-        }
         if (xTable) {
           // xTable.loadData(data)
-          setTimeout(() => {
-            this.$refs.xTable.loadData(this.allData).then(() => {
-              this.$message.info(`渲染用时 ${Date.now() - startTime}毫秒`)
-              this.preLoading = false
-            })
-          }, time)
+          console.log(this.allData)
+          if (this.allData.length > 30 && this.allData.length < 110) {
+            setTimeout(() => {
+              xTable.loadData(this.allData).then(() => {
+                this.$message.info(`渲染用时 ${Date.now() - startTime}毫秒`)
+                this.preLoading = false
+              })
+            }, 500)
+          } else {
+            xTable.loadData(this.allData)
+            this.preLoading = false
+          }
         }
         // this.$set(this.formData, 'sku_list', data)
         // this.preLoading = false
@@ -535,7 +535,7 @@ export default {
         const newArr = result.map(item => ({
           id: '',
           sku: '',
-          variants: item,
+          option: item,
           sku_image: '',
           sku_color: '',
           sku_size: '',
