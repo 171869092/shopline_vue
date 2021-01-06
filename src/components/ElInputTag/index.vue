@@ -2,17 +2,15 @@
 <template>
   <div
     class="el-input-tag input-tag-wrapper"
-    :class="[size ? 'el-input-tag--' + size : '']"
     @click="foucusTagInput"
   >
     <el-tag
       v-for="(tag, idx) in innerTags"
-      :key="tag"
+      :key="idx"
       v-bind="$attrs"
-      :size="size"
       type="info"
       :closable="!readOnly"
-      :disable-transitions="false"
+      :disable-transitions="true"
       @close="remove(idx)"
     >
       {{ tag }}
@@ -43,10 +41,6 @@ export default {
     readOnly: {
       type: Boolean,
       default: false
-    },
-    size: {
-      type: String,
-      default: ''
     }
   },
   data() {
@@ -62,12 +56,10 @@ export default {
   },
   methods: {
     foucusTagInput() {
-      console.log('00000')
       if (this.readOnly || !this.$el.querySelector('.tag-input')) {
-        console.log()
-      } else {
-        this.$el.querySelector('.tag-input').focus()
+        return
       }
+      this.$el.querySelector('.tag-input').focus()
     },
     addNew(e) {
       if (e && (!this.addTagOnKeys.includes(e.keyCode)) && (e.type !== 'blur')) {
@@ -92,7 +84,6 @@ export default {
       if (addSuucess) {
         this.tagChange()
         this.newTag = ''
-        this.$emit('change')
       }
     },
     addTag(tag) {
@@ -106,7 +97,6 @@ export default {
     remove(index) {
       this.innerTags.splice(index, 1)
       this.tagChange()
-      this.$emit('change')
     },
     removeLastTag() {
       if (this.newTag) {
@@ -134,12 +124,13 @@ export default {
     color: #606266;
     display: inline-block;
     outline: none;
+    line-height: 34px;
     /* padding: 0 10px 0 5px; */
     transition: border-color .2s cubic-bezier(.645,.045,.355,1);
     width: 100%;
   }
   .el-tag {
-    margin-right: 5px;
+    margin-top: 5px;
     margin-left: 5px;
   }
   .tag-input {
@@ -150,24 +141,7 @@ export default {
     padding-left: 0;
     width: 93%;
   }
-  /* .el-input-tag {
-    height: 40px;
-    line-height: 40px;
-  } */
   .tag-input {
     padding: 5px;
-  }
-  .el-input-tag--mini {
-    height: 28px;
-    line-height: 28px;
-    font-size: 12px;
-  }
-  .el-input-tag--small {
-    height: 32px;
-    line-height: 32px;
-  }
-  .el-input-tag--medium {
-    height: 36px;
-    line-height: 36px;
   }
 </style>
