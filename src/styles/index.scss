@@ -372,3 +372,9 @@ $align-list: center, start, end, flex-start, flex-end, self-start, self-end, str
     }
   }
 }
+.vxe-table {
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif!important;
+  .vxe-body--column {
+    padding: 5px 0;
+  }
+}
