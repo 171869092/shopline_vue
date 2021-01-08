@@ -32,7 +32,7 @@
       </el-table>
       <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
     </el-card>
-    <el-dialog title="Connect to Shopify" width="500px" :visible.sync="dialogvisible" :close-on-click-modal="false" @close="closeDialog">
+    <el-dialog title="Connect to Shopify" width="650px" :visible.sync="dialogvisible" :close-on-click-modal="false" @close="closeDialog">
       <el-form ref="storeForm" :model="storeForm" :rules="rules">
         <el-form-item prop="store_url">
           <el-input v-model="storeForm.store_url" autocomplete="off" placeholder="Shopify store URL">
@@ -56,6 +56,14 @@
         </el-form-item>
         <el-form-item prop="location_id">
           <el-input v-model="storeForm.location_id" autocomplete="off" placeholder="Location Id" />
+        </el-form-item>
+        <el-form-item prop="pull_date" label="Import Orders:">
+           <el-radio-group v-model="storeForm.pull_date" class="mt10 ml20">
+              <el-radio v-for="(item,key) in importList" :key="key" :label="item.value">{{item.label}}</el-radio>
+            </el-radio-group>
+        </el-form-item>
+         <el-form-item prop="Orders_by_date" v-if="storeForm.pull_date == 'Orders'">
+          <el-input v-model="storeForm.Orders_by_date" autocomplete="off" placeholder="Orders by date" />
         </el-form-item>
 
       </el-form>
@@ -99,8 +107,14 @@ export default {
         password: '',
         shared_secret: '',
         api_version: '',
-        location_id: ''
+        location_id: '',
+        pull_date:''
       },
+      importList:[
+        {label:'7 days',value:'7'},
+        {label:'1month',value:'30'},
+        {label:'Orders by date',value:'Orders'},
+      ],
       rules: {
         store_url: [
           { required: true, message: 'store_url', trigger: 'blur' }
@@ -122,6 +136,12 @@ export default {
         ],
         location_id: [
           { required: true, message: 'location_id', trigger: 'blur' }
+        ],
+        pull_date: [
+          { required: true, message: '请选择', trigger: 'change' }
+        ],
+        Orders_by_date:[
+           { required: true, message: '11', trigger: 'blur' }
         ]
       }
     }
@@ -186,15 +206,20 @@ export default {
         }
       })
     },
-    submitConnect() {
+    submitConnect() { 
       this.$refs.storeForm.validate((valid) => {
         if (valid) {
           this.submitLoading = true
+          let params = JSON.parse(JSON.stringify(this.storeForm))
           const url = `${this.storeForm.store_url}.myshopify.com`
-          this.storeForm.type = 1
-          this.storeForm.uid = this.uid
-          this.storeForm.shop = url
-          connectStore(this.storeForm).then(res => {
+          if (this.storeForm.pull_date == 'Orders') {
+           params.pull_date = this.storeForm.Orders_by_date
+          }  
+          params.type = 1
+          params.uid = this.uid
+          params.shop = url
+          delete params.Orders_by_date
+          connectStore(params).then(res => {
             if (res.code === 200) {
               shopPush({ shop: url }).then(v => {})
               this.dialogvisible = false
