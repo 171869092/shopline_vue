@@ -253,7 +253,7 @@ $align-list: center, start, end, flex-start, flex-end, self-start, self-end, str
 
 .grid-content {
   position: relative;
-  height: 300px;
+  // height: 300px;
 }
 
 .uploading {
@@ -305,7 +305,7 @@ $align-list: center, start, end, flex-start, flex-end, self-start, self-end, str
   }
 
   .el-upload-dragger {
-    width: 300px;
+    width: 310px;
     height: 150px;
     margin-bottom: 10px;
   }
@@ -376,5 +376,15 @@ $align-list: center, start, end, flex-start, flex-end, self-start, self-end, str
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif!important;
   .vxe-body--column {
     padding: 5px 0;
+  }
+}
+
+.dialog-border {
+  .el-dialog__body {
+    border-top: 1px solid #eee;
+  }
+
+  .el-dialog__footer {
+    border-top: 1px solid #eee;
   }
 }

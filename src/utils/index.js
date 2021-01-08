@@ -1,7 +1,7 @@
 /**
  * Created by PanJiaChen on 16/11/18.
  */
-
+import _ from 'lodash'
 /**
  * Parse the time to string
  * @param {(Object|string|number)} time
@@ -170,4 +170,56 @@ export function debounce2(fn, delay = 300) { // 默认300毫秒
       fn.apply(this, args) // this 指向vue
     }, delay)
   }
+}
+
+export function descartes_obj(_arrORobj) {
+  return new Promise(resolve => {
+    const obj = _arrORobj || {}
+    const keys = _.keys(obj)
+    const result = []
+    const arr = []
+    for (const i in obj) {
+      if (obj[i].length > 0) {
+        arr.push(obj[i])
+      } else {
+        delete obj[i]
+        _.pull(keys, i)
+      }
+    }
+    const descartes_arr = descartes_2(arr)
+    descartes_arr.forEach((item) => {
+      result.push(Object.assign({}, item))
+    })
+    result.forEach((item, index) => {
+      result[index] = _.mapKeys(item, (value, key) => {
+        const _key = Number(key)
+        return keys[_key]
+      })
+    })
+    resolve(result)
+  })
+
+  // return result
+}
+export function descartes_2(_arr) {
+  const arr = _arr || []
+  const end = arr.length - 1
+  const result = []
+
+  const recursive = (curr, start) => {
+    const first = arr[start]
+    const last = start === end
+    for (const i in first) {
+      var copy = curr.slice()
+      copy.push(first[i])
+      if (last) {
+        result.push(copy)
+      } else {
+        recursive(copy, start + 1)
+      }
+    }
+  }
+
+  if (arr.length) recursive([], 0)
+  return result
 }

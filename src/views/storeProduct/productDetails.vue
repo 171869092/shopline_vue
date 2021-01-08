@@ -9,7 +9,7 @@
               <label class="ml20">{{ $route.query.title }}</label>
             </div>
             <div>
-              <el-button size="small" type="primary" :loading="SubmitLoading" @click="Submit">Submit</el-button>
+              <el-button size="small" type="primary" :loading="SubmitLoading" @click="submit">Save</el-button>
               <el-button v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" size="small" class="button-border" @click="ProductDelete">Delete product</el-button>
             </div>
           </div>
@@ -31,9 +31,9 @@
           <el-card
             class="box-card"
           >
-            <div slot="header" class="clearfix hidden">
-              <label class="step-jump"><span style="color:red">*</span>Media:</label>
-              <div class="f-r">
+            <div slot="header" class="flexbox justify-space-between align-center">
+              <div><span style="color:red">*</span><span style="font-weight: 600;">Media:</span></div>
+              <div>
                 <el-button size="mini" type="primary" @click="openUploadPrint">Add image</el-button>
               </div>
             </div>
@@ -43,9 +43,13 @@
           </el-card>
           <!-- 商品 -->
           <el-card class="box-card mt10">
-            <div slot="header" class="clearfix">
-              <div class="f-l"><span style="color:red">*</span><label>Variants:</label></div>
+            <div slot="header" class="flexbox justify-space-between align-center">
+              <div><span style="color:red">*</span><span style="font-weight: 600;">Variants:</span></div>
               <!-- <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button> -->
+              <div v-if="$route.query.type === 'edit'">
+                <el-button size="mini" type="primary" icon="el-icon-plus">Add variant</el-button>
+                <el-button size="mini" @click="editOptions">Edit options</el-button>
+              </div>
             </div>
             <div v-if="$route.query.type === 'add'">
               <el-checkbox v-model="variantsEheck" @change="variantsChage">This product has multiple options, like different sizes or colors</el-checkbox>
@@ -184,7 +188,6 @@
                 </template>
               </vxe-table-column>
             </vxe-table>
-            <!-- <el-table -->
             <!-- <el-table
               v-if="variantsEheck || $route.query.type === 'edit'"
               ref="multipleTable"
@@ -256,11 +259,13 @@
       @select="selectedImg"
       @update="updateImgList"
     />
+    <edit-options :visible.sync="dialogVisible" :options="optionsList" />
   </div>
 </template>
 <script>
-import _ from 'lodash'
 import InputTag from 'vue-input-tag'
+import EditOptions from './component/edit-options'
+import { descartes_obj } from '@/utils'
 import { getAllProductEdit, getStoreProductEdit, getAllProductSave, getStoreProductSave, allProductDelete, getDeleteSku } from '@/api/product'
 export default {
   name: 'product-details',
@@ -272,14 +277,16 @@ export default {
     // UploadPrint: () => import('./component/uploadPrint'),
     ShopWindow: () => import('./component/shop-window'),
     SelectPictures: () => import('./component/select-pictures'),
-    InputTag
+    InputTag,
+    EditOptions
   },
   data() {
     return {
       formData: {
         status: '2',
         sku_list: [],
-        images: []
+        images: [],
+        options: []
       },
       formRule: {
         title: [
@@ -289,7 +296,7 @@ export default {
           { required: true, message: 'Please select Product status', trigger: 'change' }
         ]
       },
-      optionsList: [],
+      optionsList: [{ 'isShow': false, 'option': 'Size', 'tags': ['aaa', 'bbb', 'ccc', 'ddd', 'eee'] }, { 'isShow': false, 'option': 'Color', 'tags': ['hhh', 'iii', 'jjj', 'kkk', 'lll'] }],
       variantsTitle: [],
       variantsEheck: false,
       options: ['Size', 'Color', 'Material', 'Style', 'Title'],
@@ -313,13 +320,6 @@ export default {
     sourceArr() {
       return this.optionsList.map(item => item.tags).filter(String)
     }
-    // sourceObj() {
-    //   const sourceObj = {}
-    //   this.optionsList.forEach((item) => {
-    //     sourceObj[item.option] = item.tags
-    //   })
-    //   return sourceObj
-    // }
   },
   watch: {
     optionsList: {
@@ -343,17 +343,17 @@ export default {
         getAllProductEdit({ id: this.$route.query.id }).then(res => {
           if (res.code === 200) {
             if (res.data.sku_list.length > 0) {
-              const objHead = JSON.parse(res.data.sku_list[0].option)
-              this.variantsTitle = Object.keys(objHead)
-              res.data.sku_list.forEach(item => {
-                item.option = JSON.parse(item.option)
-              })
+              const option = res.data.sku_list[0].option
+              if (option) {
+                const objHead = JSON.parse(option)
+                this.variantsTitle = Object.keys(objHead)
+                res.data.sku_list.forEach(item => {
+                  item.option = JSON.parse(item.option)
+                })
+              }
             }
             this.formData = res.data
-            const xTable = this.$refs.xTable
-            if (xTable) {
-              this.$refs.xTable.loadData(res.data.sku_list)
-            }
+            this.tableData = res.data.sku_list
             this.formData.images = res.data.images.map(item => {
               return {
                 url: item.url,
@@ -371,18 +371,17 @@ export default {
         getStoreProductEdit({ id: this.$route.query.id }).then(res => {
           if (res.code === 200) {
             if (res.data.sku_list.length > 0) {
-              const objHead = JSON.parse(res.data.sku_list[0].option)
-              this.variantsTitle = Object.keys(objHead)
-              console.log(this.variantsTitle)
-              res.data.sku_list.forEach(item => {
-                item.option = JSON.parse(item.option)
-              })
+              const option = res.data.sku_list[0].option
+              if (option) {
+                const objHead = JSON.parse(option)
+                this.variantsTitle = Object.keys(objHead)
+                res.data.sku_list.forEach(item => {
+                  item.option = JSON.parse(item.option)
+                })
+              }
             }
             this.formData = res.data
-            const xTable = this.$refs.xTable
-            if (xTable) {
-              this.$refs.xTable.loadData(res.data.sku_list)
-            }
+            this.tableData = res.data.sku_list
             this.formData.images = res.data.images.map(item => {
               return {
                 url: item.url,
@@ -398,15 +397,15 @@ export default {
         })
       }
     },
-
     // 拖拽监听list
     updateimg(list) {
       this.formData.images = list
     },
     // 保存数据
-    Submit() {
+    submit() {
       this.formData.sku_list = this.tableData
-      if (this.formData.sku_list.length === 0) return this.$message({ message: 'Fill in at least one line of variation', type: 'warning' })
+      this.formData.options = this.optionsList
+      // if (this.formData.sku_list.length === 0) return this.$message({ message: 'Fill in at least one line of variation', type: 'warning' })
       console.log(this.formData)
       this.$refs.formData.validate((valid) => {
         if (valid) {
@@ -454,6 +453,9 @@ export default {
         this.optionsList = []
       }
     },
+    editOptions() {
+      this.dialogVisible = true
+    },
     // 删除属性
     RemoveOption(idx) {
       this.optionsList.splice(idx, 1)
@@ -461,25 +463,19 @@ export default {
     },
     // 属性变更
     tagsChange() {
-      // console.log(this.variantsTitle)
-      // console.log(this.sourceArr)
-      // console.log(this.sourceObj)
-      // const arr = this.formData.optionsList.map(item => item.tags.length > 0 ? item.tags : '').filter(e => e)
-      // console.log('arr', arr)
       console.time('whatever')
       const variants = this.whatever(this.sourceArr)
       console.timeEnd('whatever')
-      console.log(variants)
       variants.length > 100 ? this.showAlert = true : this.showAlert = false
       const sourceObj = {}
       this.optionsList.forEach((item) => {
         sourceObj[item.option] = item.tags
       })
-      // console.log(sourceObj)
-      // console.log(this.variantsTitle)
+      console.log(this.optionsList)
+      // console.log(this.sourceArr)
+      // console.log(this.sourceObj)
       this.preLoading = true
-      this.descartes_obj(sourceObj).then(result => {
-        console.log(result)
+      descartes_obj(sourceObj).then(result => {
         const newArr = result.map((item, index) => ({
           id: '',
           sku: '',
@@ -492,6 +488,7 @@ export default {
           sku_number: ''
         }))
         this.tableData = newArr
+        this.preLoading = false
         // const xTable = this.$refs.xTable
         // const startTime = Date.now()
         // if (xTable) {
@@ -507,82 +504,9 @@ export default {
         //     this.preLoading = false
         //   }
         // }
-        // this.$set(this.formData, 'sku_list', data)
-        this.preLoading = false
       }).catch(err => {
         console.log(err)
       })
-      // console.log('result', result.length)
-      // const newArr = result.map(item => ({
-      //   variants: item,
-      //   sku_image: '',
-      //   sku_color: '',
-      //   sku_size: '',
-      //   sku_price: '',
-      //   sku_number: '',
-      //   sku: '',
-      //   id: ''
-      // }))
-      // newArr.forEach((val, y) => {
-      //   val.option = {}
-      //   val.obj = val && val.obj.split('/')
-      //   this.Variantslist.forEach((item, i) => {
-      //     val.option[this.Variantslist[i]] = val.obj[i]
-      //   })
-      // })
-      // console.log(newArr)
-      // this.formData.sku_list = newArr
-    },
-    descartes_obj(_arrORobj) {
-      return new Promise((resolve, reject) => {
-        const obj = _arrORobj || this.sourceObj
-        const keys = _.keys(obj)
-        const result = []
-        const arr = []
-        for (const i in obj) {
-          if (obj[i].length > 0) {
-            arr.push(obj[i])
-          } else {
-            delete obj[i]
-            _.pull(keys, i)
-          }
-        }
-        const descartes_arr = this.descartes_2(arr)
-        descartes_arr.forEach((item) => {
-          result.push(Object.assign({}, item))
-        })
-        result.forEach((item, index) => {
-          result[index] = _.mapKeys(item, (value, key) => {
-            const _key = Number(key)
-            return keys[_key]
-          })
-        })
-        resolve(result)
-      })
-
-      // return result
-    },
-    descartes_2(_arr) {
-      const arr = _arr || this._arrORobj
-      const end = arr.length - 1
-      const result = []
-
-      const recursive = (curr, start) => {
-        const first = arr[start]
-        const last = start === end
-        for (const i in first) {
-          var copy = curr.slice()
-          copy.push(first[i])
-          if (last) {
-            result.push(copy)
-          } else {
-            recursive(copy, start + 1)
-          }
-        }
-      }
-
-      if (arr.length) recursive([], 0)
-      return result
     },
     // 属性交叉
     whatever(arrs) {
@@ -790,5 +714,20 @@ export default {
     }
   }
 }
-
+.grid-view {
+  .gridbox {
+    display: grid;
+    grid-template-columns: minmax(150px,3fr) 8fr;
+    grid-gap: 1.6rem;
+    margin-bottom: 1.6rem;
+    .option-tag .el-tag {
+      margin: 0 .4rem .4rem 0;
+      &.el-tag--info {
+        background-color:rgb(228, 229, 231);
+        border-color: #e9e9eb;
+        color: rgb(32, 34, 35);
+      }
+    }
+  }
+}
 </style>

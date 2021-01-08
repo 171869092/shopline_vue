@@ -82,7 +82,8 @@ export default {
         { label: 'Product', value: 'id', type: 'product', width: '500' },
         { label: 'Status', value: 'status' },
         { label: 'Inventory', value: 'stock' },
-        // { label: 'Type', value: 'type' },
+        { label: 'Price', value: 'price' },
+        { label: 'Cost', value: 'cost' },
         { label: 'Hosting', value: 'service_name' }
         // { label: 'Operating', type: 'Operating' }
       ],

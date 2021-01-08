@@ -52,6 +52,7 @@
     a {
       display: inline-block;
       width: 100%;
+      position: relative;
       // overflow: hidden;
     }
 
@@ -68,26 +69,43 @@
       border: none;
       height: 100%;
       width: 100% !important;
+      a {
+        &.router-link-active {
+          
+        }
+      }
       .el-menu-item {
+        position: relative;
         height: 45px;
         line-height: 45px;
         padding: 0;
-        font-weight: 500;
-        &:hover {
-          padding-left: 16px!important;
-          border-left: 4px solid $subMenuActiveText !important;
-          opacity: 1!important;
-          background-color: rgba(237, 238, 239, .5)!important;
-          color: $subMenuActiveText !important;
-          font-weight: 600!important; 
-        }
+        font-weight: 600;
+        // &:hover {
+        //   padding-left: 16px!important;
+        //   border-left: 4px solid $subMenuActiveText !important;
+        //   opacity: 1!important;
+        //   background-color: rgba(237, 238, 239, .5)!important;
+        //   color: $subMenuActiveText !important;
+        //   font-weight: 600!important; 
+        // }
         &.is-active {
-          padding-left: 16px!important;
-          border-left: 4px solid $subMenuActiveText !important;
+          // border-left: 4px solid $subMenuActiveText !important;
+          
           opacity: 1!important;
           background-color: rgba(237, 238, 239, .5)!important;
           // color: #8144e5!important;
-          font-weight: 600!important; 
+          &:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: -1px;
+            height: 100%;
+            width: .3rem;
+            background-color: $subMenuActiveText;
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+          }
         }
       }
     }

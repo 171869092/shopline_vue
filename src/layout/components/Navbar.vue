@@ -3,21 +3,28 @@
     <!-- <hamburger :is-active="sidebar.opened" class="hamburger-container" @toggleClick="toggleSideBar" /> -->
     <logo v-if="showLogo" :collapse="false" />
 
-    <breadcrumb class="breadcrumb-container" />
+    <div class="flexbox justify-space-between">
+      <breadcrumb class="breadcrumb-container" />
 
-    <div class="right-menu">
-      <el-dropdown class="avatar-container" trigger="click">
-        <div class="avatar-wrapper">
-          <el-avatar src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" size="small" />
-          <span class="user-name">{{ email }}</span>
-          <i class="el-icon-caret-bottom" />
+      <div class="flexbox">
+        <!-- <div class="download-ex">
+          <i class="el-icon-download" />
+        </div> -->
+        <div class="right-menu">
+          <el-dropdown class="avatar-container" trigger="click">
+            <div class="avatar-wrapper">
+              <el-avatar src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" size="small" />
+              <span class="user-name">{{ email }}</span>
+              <i class="el-icon-caret-bottom" />
+            </div>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item @click.native="logout">
+                <span style="display:block;">Log out</span>
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </div>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item @click.native="logout">
-            <span style="display:block;">Log out</span>
-          </el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+      </div>
     </div>
 
   </div>
@@ -141,5 +148,9 @@ export default {
       }
     }
   }
+}
+.download-ex {
+  line-height: 50px;
+  margin-right: 15px;
 }
 </style>
