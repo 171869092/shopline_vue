@@ -78,7 +78,7 @@
                   <div class="d-height f-l mb5 ml5">Option {{ scope.$index + 1 }}</div>
                   <el-form-item class="mb0" label-width="0">
                     <el-popover
-                      v-model="scope.row.isShow"
+                      v-model="scope.row.showList"
                       placement="bottom-end"
                       width="250"
                       trigger="click"
@@ -259,7 +259,7 @@
       @select="selectedImg"
       @update="updateImgList"
     />
-    <edit-options :visible.sync="dialogVisible" :options="optionsList" />
+    <edit-options :visible.sync="dialogVisible" :options="optionsLists" @update:sku="updateVariants" @delete:sku="deleteVariants" />
   </div>
 </template>
 <script>
@@ -296,7 +296,8 @@ export default {
           { required: true, message: 'Please select Product status', trigger: 'change' }
         ]
       },
-      optionsList: [{ 'isShow': false, 'option': 'Size', 'tags': ['aaa', 'bbb', 'ccc', 'ddd', 'eee'] }, { 'isShow': false, 'option': 'Color', 'tags': ['hhh', 'iii', 'jjj', 'kkk', 'lll'] }],
+      optionsList: [],
+      optionsLists: [{ 'showList': false, 'option': 'Size', 'tags': ['aaa', 'bbb', 'ccc'] }, { 'showList': false, 'option': 'Color', 'tags': ['eee', 'fff', 'ggg'] }],
       variantsTitle: [],
       variantsEheck: false,
       options: ['Size', 'Color', 'Material', 'Style', 'Title'],
@@ -345,11 +346,7 @@ export default {
             if (res.data.sku_list.length > 0) {
               const option = res.data.sku_list[0].option
               if (option) {
-                const objHead = JSON.parse(option)
-                this.variantsTitle = Object.keys(objHead)
-                res.data.sku_list.forEach(item => {
-                  item.option = JSON.parse(item.option)
-                })
+                this.variantsTitle = Object.keys(option)
               }
             }
             this.formData = res.data
@@ -373,11 +370,7 @@ export default {
             if (res.data.sku_list.length > 0) {
               const option = res.data.sku_list[0].option
               if (option) {
-                const objHead = JSON.parse(option)
-                this.variantsTitle = Object.keys(objHead)
-                res.data.sku_list.forEach(item => {
-                  item.option = JSON.parse(item.option)
-                })
+                this.variantsTitle = Object.keys(option)
               }
             }
             this.formData = res.data
@@ -436,18 +429,18 @@ export default {
     addOption() {
       const length = this.optionsList.length
       const name = this.options[length]
-      this.optionsList.push({ isShow: false, option: name, tags: [] })
+      this.optionsList.push({ showList: false, option: name, tags: [] })
     },
     selectOption(row, val) {
       row.option = val
-      row.isShow = false
+      row.showList = false
       this.tagsChange()
     },
     // 属性清空
     variantsChage(val) {
       if (val) {
         this.formData.sku_list = []
-        this.optionsList.push({ isShow: false, option: 'Size', tags: [] })
+        this.optionsList.push({ showList: false, option: 'Size', tags: [] })
       } else {
         this.formData.sku_list = []
         this.optionsList = []
@@ -514,6 +507,30 @@ export default {
         return arrs.reduce((arr1, arr2) => arr1.flatMap(e => arr2.map(e2 => `${e}/${e2}`)))
       }
       return []
+    },
+    updateVariants(list) {
+      console.log(list)
+      this.variantsTitle = list.map(i => i.option)
+      list.forEach(l => {
+        l.isShow = false
+        this.tableData.forEach((item, index) => {
+          item.option[l.option] = l.tags.toString()
+        })
+      })
+      this.optionsLists = list
+      console.log(this.tableData)
+    },
+    deleteVariants(list) {
+      console.log(list)
+      console.log(this.tableData)
+      list.delList.forEach(v => {
+        this.tableData.forEach((item, index) => {
+          if (item.option[v.title] === v.value) {
+            this.tableData.splice(index, 1)
+          }
+        })
+      })
+      this.optionsLists = list.orgList
     },
     // 删除sku
     delSkuData(row, index) {
@@ -711,22 +728,6 @@ export default {
     }
     .new-tag {
       line-height: 15px;
-    }
-  }
-}
-.grid-view {
-  .gridbox {
-    display: grid;
-    grid-template-columns: minmax(150px,3fr) 8fr;
-    grid-gap: 1.6rem;
-    margin-bottom: 1.6rem;
-    .option-tag .el-tag {
-      margin: 0 .4rem .4rem 0;
-      &.el-tag--info {
-        background-color:rgb(228, 229, 231);
-        border-color: #e9e9eb;
-        color: rgb(32, 34, 35);
-      }
     }
   }
 }
