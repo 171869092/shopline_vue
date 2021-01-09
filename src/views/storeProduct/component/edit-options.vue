@@ -9,7 +9,8 @@
       @open="openOptionDialog"
     >
       <el-alert
-        title="错误提示的文案"
+        v-show="showAlert"
+        title="Option names cannot be the same!"
         type="error"
         class="mb20"
       />
@@ -94,6 +95,7 @@ export default {
       addList: [],
       showTagList: [],
       isEdit: false,
+      showAlert: false,
       tipDialogVisible: false
     }
   },
@@ -165,32 +167,44 @@ export default {
       console.log(item)
       item.tags.push(item.newTag)
       this.addList.push(item)
+      console.log(this.addList)
     },
     changeOption(item, index) {
-      console.log('changeOption', item, index)
-      if (!item.isShow) {
-        const val = this.orgList[index]
-        console.log(val)
-        const found = this.changeList.findIndex(c => c.key === index)
-        if (found === -1) {
-          this.changeList.push({ key: index, original: val.option, change: item.option })
-        } else {
-          const original = this.changeList[found].original
-          if (item.option === original) {
-            this.changeList.splice(found, 1)
+      console.log(item)
+      console.log(this.orgList)
+      const even = this.copyList.map(i => i.option).filter(f => f === item.option)
+      console.log(even)
+      if (even.length > 1) {
+        this.showAlert = true
+      } else {
+        this.showAlert = false
+      }
+      if (!this.showAlert) {
+        if (!item.isShow) {
+          const val = this.orgList[index]
+          const found = this.changeList.findIndex(c => c.key === index)
+          if (found === -1) {
+            this.changeList.push({ key: index, original: val.option, change: item.option })
           } else {
-            this.changeList[found].change = item.option
-          }
-        }
-        this.changeList.forEach(c => {
-          this.removeTagList.forEach(t => {
-            if (c.original === t.title) {
-              console.log('trtue')
-              t.title = c.change
+            const original = this.changeList[found].original
+            if (item.option === original) {
+              this.changeList.splice(found, 1)
+            } else {
+              this.changeList[found].change = item.option
             }
-          // t.title = item.option
+          }
+          this.changeList.forEach(c => {
+            this.removeTagList.forEach(t => {
+              if (c.original === t.title) {
+                console.log('trtue')
+                t.title = c.change
+              }
+              // t.title = item.option
+            })
           })
-        })
+        } else {
+          this.addList
+        }
       }
       console.log(this.changeList)
     },
