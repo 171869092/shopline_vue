@@ -146,7 +146,7 @@
                 </template>
               </vxe-table-column>
               <template v-if="$route.query.type === 'edit'">
-                <vxe-table-column v-for="(variant, idx) in variantsTitle" :key="idx" :title="variant" :field="variant">
+                <vxe-table-column v-for="(variant, key) in variantsTitle" :key="key + Math.floor(Math.random()*100)" :title="variant">
                   <template v-slot="{ row }">
                     <el-form-item class="mb0" label-width="0">
                       <el-input v-model="row.option[variant]" size="mini" clearable :disabled="$route.query.type === 'add'" class="p5_input" />
@@ -162,9 +162,7 @@
               <vxe-table-column title="Price" field="sku_price">
                 <template v-slot="{ row, rowIndex }">
                   <el-form-item class="mb0" label-width="0">
-                    <el-input v-model="row.sku_price" clearable size="mini" class="p5_input" placeholder="Price">
-                      <!-- <i slot="prefix">€</i> -->
-                    </el-input>
+                    <el-input v-model="row.sku_price" clearable size="mini" class="p5_input" placeholder="Price" />
                   </el-form-item>
                 </template>
               </vxe-table-column>
@@ -209,7 +207,7 @@
                   </el-image>
                 </template>
               </el-table-column>
-              <el-table-column v-for="(variant, idx) in variantsTitle" :key="idx" :prop="variant" :label="variant">
+              <el-table-column v-for="variant in variantsTitle" :key="variant" :prop="variant" :label="variant">
                 <template slot-scope="scope">
                   <el-form-item class="mb0" label-width="0">
                     <el-input v-model="scope.row.option[variant]" size="mini" clearable :disabled="$route.query.type === 'add'" class="p5_input" />
@@ -259,10 +257,11 @@
       @select="selectedImg"
       @update="updateImgList"
     />
-    <edit-options :visible.sync="dialogVisible" :options="optionsLists" @update:sku="updateVariants" @delete:sku="deleteVariants" />
+    <edit-options :visible.sync="dialogVisible" :options="optionsList" :list-data="tableData" @update:sku="updateVariants" />
   </div>
 </template>
 <script>
+import _ from 'lodash'
 import InputTag from 'vue-input-tag'
 import EditOptions from './component/edit-options'
 import { descartes_obj } from '@/utils'
@@ -297,7 +296,6 @@ export default {
         ]
       },
       optionsList: [],
-      optionsLists: [{ 'showList': false, 'option': 'Size', 'tags': ['aaa', 'bbb', 'ccc'] }, { 'showList': false, 'option': 'Color', 'tags': ['eee', 'fff', 'ggg'] }],
       variantsTitle: [],
       variantsEheck: false,
       options: ['Size', 'Color', 'Material', 'Style', 'Title'],
@@ -314,12 +312,21 @@ export default {
       skuIndex: '',
       skuImage: '',
       imgList: [],
+      tableData: [],
       sourceObj: {}
     }
   },
   computed: {
     sourceArr() {
       return this.optionsList.map(item => item.tags).filter(String)
+    },
+    randomString(e) {
+      e = e || 32
+      var t = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'
+      var a = t.length
+      var n = ''
+      for (let i = 0; i < e; i++) n += t.charAt(Math.floor(Math.random() * a))
+      return n
     }
   },
   watch: {
@@ -334,7 +341,7 @@ export default {
     if (this.$route.query.type === 'edit') {
       this.getForm()
     }
-    this.tableData = []
+    // this.tableData = []
   },
   methods: {
     // 获取草稿数据
@@ -351,6 +358,7 @@ export default {
             }
             this.formData = res.data
             this.tableData = res.data.sku_list
+            this.optionsList = res.data.options
             this.formData.images = res.data.images.map(item => {
               return {
                 url: item.url,
@@ -375,6 +383,7 @@ export default {
             }
             this.formData = res.data
             this.tableData = res.data.sku_list
+            this.optionsList = res.data.options
             this.formData.images = res.data.images.map(item => {
               return {
                 url: item.url,
@@ -508,29 +517,81 @@ export default {
       }
       return []
     },
-    updateVariants(list) {
-      console.log(list)
-      this.variantsTitle = list.map(i => i.option)
-      list.forEach(l => {
-        l.isShow = false
-        this.tableData.forEach((item, index) => {
-          item.option[l.option] = l.tags.toString()
+    updateVariants(data) {
+      console.log(data)
+      this.variantsTitle = data.copyList.map(i => i.option)
+
+      this.changeTitle(data.changeList, this.tableData).then(res => {
+        console.log(res)
+        this.addTagData(data, res).then(res => {
+          // console.log(res)
+          this.$refs.xTable.loadData(res)
+        })
+        this.removeTagData(data, res).then(res => {
+          // console.log(res)
+          this.removelineData(data, res).then(res => {
+            // console.log(res)
+          })
+          this.$refs.xTable.loadData(res)
         })
       })
-      this.optionsLists = list
-      console.log(this.tableData)
+
+      this.optionsList = data.copyList
     },
-    deleteVariants(list) {
-      console.log(list)
-      console.log(this.tableData)
-      list.delList.forEach(v => {
-        this.tableData.forEach((item, index) => {
-          if (item.option[v.title] === v.value) {
-            this.tableData.splice(index, 1)
-          }
-        })
+    changeTitle(changeList, result) {
+      return new Promise(resolve => {
+        if (changeList.length > 0) {
+          console.log('1')
+          changeList.forEach(c => {
+            result.forEach(v => {
+              if (Object.keys(v.option).includes(c.original)) {
+                v.option[c.change] = v.option[c.original]
+                delete v.option[c.original]
+              }
+            })
+          })
+        }
+        resolve(result)
       })
-      this.optionsLists = list.orgList
+    },
+    addTagData(data, result) {
+      return new Promise(resolve => {
+        if (data.addList.length > 0) {
+          data.addList.forEach(a => {
+            result.forEach(v => {
+              v.option[a.option] = a.tags.toString()
+            })
+          })
+        }
+        resolve(result)
+      })
+    },
+    removeTagData(data, result) {
+      return new Promise(resolve => {
+        if (data.tagList.length > 0) {
+          data.tagList.forEach(t => {
+            result.forEach((v, i) => {
+              if (v.option[t.title] === t.value) {
+                delete result[i]
+                // delete v.option[t.title]
+              }
+            })
+          })
+        }
+        return resolve(result.filter(String))
+      })
+    },
+    removelineData(data, result) {
+      return new Promise(resolve => {
+        if (data.delList.length > 0) {
+          console.log(data.delList)
+          data.delList.forEach(d => {
+            result.forEach(v => {
+              delete v.option[d.option]
+            })
+          })
+        }
+      })
     },
     // 删除sku
     delSkuData(row, index) {
