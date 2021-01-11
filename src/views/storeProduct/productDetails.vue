@@ -115,8 +115,8 @@
                 <el-button size="mini" @click="editOptions">Edit options</el-button>
               </div>
             </div>
-            <div v-if="$route.query.type === 'add'">
-              <el-checkbox v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
+            <div>
+              <el-checkbox v-if="tableData.length == 0" v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
               <el-button v-if="variantsEheck && optionsList.length < 3 " class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
             </div>
             <!-- 新增属性 -->
@@ -185,9 +185,9 @@
               </el-table-column> -->
             </el-table>
             <!-- 生成属性 -->
-            <div v-if="variantsEheck && $route.query.type === 'add'" class="mt20"><label>Preview</label></div>
+            <div v-if="variantsEheck" class="mt20"><label>Preview</label></div>
             <vxe-table
-              v-if="variantsEheck || $route.query.type === 'edit'"
+              v-if="variantsEheck || tableData.length > 0"
               ref="xTable"
               border
               show-overflow
@@ -210,7 +210,7 @@
                 </template>
               </vxe-table-column>
               <template v-if="$route.query.type === 'edit'">
-                <vxe-table-column v-for="(variant, key) in variantsTitle" :key="key + Math.floor(Math.random()*100)" :title="variant">
+                <vxe-table-column v-for="(variant, key) in variantsTitle" :key="variant + key" :title="variant">
                   <template v-slot="{ row }">
                     <el-form-item class="mb0" label-width="0">
                       <el-input
@@ -219,7 +219,7 @@
                         clearable
                         :disabled="$route.query.type === 'add'"
                         class="p5_input"
-                        @change="changeVariants(row)"
+                        @change="changeVariants(variant)"
                       />
                     </el-form-item>
                   </template>
@@ -332,6 +332,7 @@
   </div>
 </template>
 <script>
+import _ from 'lodash'
 import InputTag from 'vue-input-tag'
 import EditOptions from './component/edit-options'
 import { descartes_obj } from '@/utils'
@@ -408,14 +409,6 @@ export default {
   computed: {
     sourceArr() {
       return this.optionsList.map(item => item.tags).filter(String)
-    },
-    randomString(e) {
-      e = e || 32
-      var t = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'
-      var a = t.length
-      var n = ''
-      for (let i = 0; i < e; i++) n += t.charAt(Math.floor(Math.random() * a))
-      return n
     }
   },
   watch: {
@@ -442,16 +435,16 @@ export default {
       if (this.$route.query.stroeType === 'all') {
         getAllProductEdit({ id: this.$route.query.id }).then(res => {
           if (res.code === 200) {
+            this.formData = res.data
+            this.tableData = res.data.sku_list
+            if (res.data.options) {
+              this.optionsList = res.data.options
+            }
             if (res.data.sku_list.length > 0) {
               const option = res.data.sku_list[0].option
               if (option) {
                 this.variantsTitle = Object.keys(option)
               }
-            }
-            this.formData = res.data
-            this.tableData = res.data.sku_list
-            if (res.data.options) {
-              this.optionsList = res.data.options
             }
             this.formData.images = res.data.images.map(item => {
               return {
@@ -469,16 +462,16 @@ export default {
       } else {
         getStoreProductEdit({ id: this.$route.query.id }).then(res => {
           if (res.code === 200) {
+            this.formData = res.data
+            this.tableData = res.data.sku_list
+            if (res.data.options) {
+              this.optionsList = res.data.options
+            }
             if (res.data.sku_list.length > 0) {
               const option = res.data.sku_list[0].option
               if (option) {
                 this.variantsTitle = Object.keys(option)
               }
-            }
-            this.formData = res.data
-            this.tableData = res.data.sku_list
-            if (res.data.options) {
-              this.optionsList = res.data.options
             }
             this.formData.images = res.data.images.map(item => {
               return {
@@ -613,8 +606,17 @@ export default {
       }
       return []
     },
-    changeVariants(row) {
-      console.log(row)
+    changeVariants(name) {
+      console.log(name)
+      console.log(this.tableData)
+      console.log(this.optionsList)
+      const arr = this.tableData.map(item => item.option[name])
+      console.log(_.uniq(arr))
+      this.optionsList.forEach(opt => {
+        if (opt.option === name) {
+          opt.tags = _.uniq(arr)
+        }
+      })
     },
     async updateVariants(data) {
       console.log(data)
@@ -712,13 +714,12 @@ export default {
             getDeleteSku({ id: row.id }).then(res => {
               if (res.code === 200) {
                 this.$message({ message: res.message, type: 'success' })
-                this.formData.sku_list.splice(index, 1)
+                this.tableData.splice(index, 1)
               }
             })
           } else {
-            this.formData.sku_list.splice(index, 1)
             this.tableData.splice(index, 1)
-            this.$refs.xTable.loadData(this.tableData)
+            // this.$refs.xTable.loadData(this.tableData)
           }
         })
         .catch(() => {})
