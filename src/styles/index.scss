@@ -388,3 +388,10 @@ $align-list: center, start, end, flex-start, flex-end, self-start, self-end, str
     border-top: 1px solid #eee;
   }
 }
+.icon-border {
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 1px 8px;
+  display: inline-block;
+  cursor: pointer;
+}

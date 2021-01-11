@@ -111,13 +111,13 @@
             <div slot="header" class="flexbox justify-space-between align-center">
               <div><span style="color:red">*</span><span style="font-weight: 600;">Variants:</span></div>
               <!-- <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button> -->
-              <div v-if="$route.query.type === 'edit'">
-                <el-button size="mini" type="primary" icon="el-icon-plus">Add variant</el-button>
+              <div v-if="$route.query.type == 'edit'">
+                <el-button size="mini" type="primary" icon="el-icon-plus" @click="addVariant">Add variant</el-button>
                 <el-button size="mini" @click="editOptions">Edit options</el-button>
               </div>
             </div>
-            <div>
-              <el-checkbox v-if="tableData.length == 0" v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
+            <div v-if="$route.query.type == 'add'">
+              <el-checkbox v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
               <el-button v-if="variantsEheck && optionsList.length < 3 " class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
             </div>
             <!-- 新增属性 -->
@@ -188,7 +188,6 @@
             <!-- 生成属性 -->
             <div v-if="variantsEheck" class="mt20"><label>Preview</label></div>
             <vxe-table
-              v-if="variantsEheck || tableData.length > 0"
               ref="xTable"
               border
               show-overflow
@@ -254,7 +253,10 @@
               </vxe-table-column>
               <vxe-table-column title="Operating" width="120px">
                 <template v-slot="{ row, rowIndex }">
-                  <el-button type="danger" size="mini" @click="delSkuData(row, rowIndex)">delete</el-button>
+                  <!-- <el-button type="danger" size="mini" @click="delSkuData(row, rowIndex)">delete</el-button> -->
+                  <div class="icon-border" @click="delSkuData(row, rowIndex)">
+                    <i class="el-icon-delete-solid cursor_p" />
+                  </div>
                 </template>
               </vxe-table-column>
             </vxe-table>
@@ -614,10 +616,21 @@ export default {
       }
       return []
     },
+    addVariant() {
+      const sku = {
+        id: '',
+        sku: '',
+        option: item,
+        variant: variants[index],
+        sku_image: '',
+        sku_color: '',
+        sku_size: '',
+        sku_price: '',
+        sku_number: ''
+      }
+      console.log(this.tableData[this.tableData.length - 1])
+    },
     changeVariants(name) {
-      console.log(name)
-      console.log(this.tableData)
-      console.log(this.optionsList)
       const arr = this.tableData.map(item => item.option[name])
       console.log(_.uniq(arr))
       this.optionsList.forEach(opt => {
@@ -712,22 +725,41 @@ export default {
     // 删除sku
     delSkuData(row, index) {
       console.log(row, index)
-      this.$confirm(`Are you sure you want to delete SKU-${index + 1}？`, 'Delete SKU', {
-        confirmButtonText: 'Submit',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      })
+      const skuName = []
+      for (var key of Object.keys(row.option)) {
+        skuName.push(row.option[key])
+      }
+      console.log(skuName)
+      this.$confirm(`Are you sure you want to delete the variant For <strong>${skuName.join(' / ')}</strong>?`,
+        `Delete For Variant`, {
+          // this.$confirm('<strong>这是 <i>HTML</i> 片段</strong>', 'Delete SKU', {
+          confirmButtonText: 'Delete',
+          cancelButtonText: 'Cancel',
+          type: 'warning',
+          dangerouslyUseHTMLString: true
+        })
         .then(() => {
-          if (row.id) {
-            getDeleteSku({ id: row.id }).then(res => {
-              if (res.code === 200) {
-                this.$message({ message: res.message, type: 'success' })
-                this.tableData.splice(index, 1)
-              }
-            })
+          // if (row.id) {
+          //   getDeleteSku({ id: row.id }).then(res => {
+          //     if (res.code === 200) {
+          //       this.$message({ message: res.message, type: 'success' })
+          //       this.tableData.splice(index, 1)
+          //     }
+          //   })
+          // } else {
+          //   this.tableData.splice(index, 1)
+          //   // this.$refs.xTable.loadData(this.tableData)
+          // }
+          this.tableData.splice(index, 1)
+          if (this.tableData.length > 0) {
+            const options = []
+            for (var key of Object.keys(row.option)) {
+              options.push({ option: key, tags: _.uniq(this.tableData.map(item => item.option[key])) })
+            }
+            console.log(options)
+            this.optionsList = options
           } else {
-            this.tableData.splice(index, 1)
-            // this.$refs.xTable.loadData(this.tableData)
+            this.optionsList = []
           }
         })
         .catch(() => {})
