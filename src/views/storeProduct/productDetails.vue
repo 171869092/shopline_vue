@@ -41,25 +41,25 @@
             <shop-window ref="shopWindow" :img-list="formData.images" @update="updateImgList" @delete="deleteImg" />
 
           </el-card>
-       <!-- Pricing -->
+          <!-- Pricing -->
           <el-card
-            class="box-card"
             v-if="tableData.length == 0"
+            class="box-card"
           >
             <div slot="header" class="flexbox justify-space-between align-center">
               <div><span style="color:red">*</span><span style="font-weight: 600;">Pricing:</span></div>
             </div>
             <div style="display: flex;" class="ml50">
-                <el-form-item label="Price:" prop="Price">
-                  <el-input v-model="formData.Price" placeholder="Price" class="w-230">
-                    <template slot="prepend">$</template>
-                  </el-input>
-                </el-form-item>
-                <el-form-item label="Compare at Price:" prop="Compare_price" class="w-230" style="margin-left: 150px;">
-                  <el-input v-model="formData.Compare_price" placeholder="Compare at Price">
-                    <template slot="prepend">$</template>
-                  </el-input>
-                </el-form-item>
+              <el-form-item label="Price:" prop="Price">
+                <el-input v-model="formData.Price" placeholder="Price" class="w-230">
+                  <template slot="prepend">$</template>
+                </el-input>
+              </el-form-item>
+              <el-form-item label="Compare at Price:" prop="Compare_price" class="w-230" style="margin-left: 150px;">
+                <el-input v-model="formData.Compare_price" placeholder="Compare at Price">
+                  <template slot="prepend">$</template>
+                </el-input>
+              </el-form-item>
             </div>
           </el-card>
 
@@ -70,7 +70,7 @@
             <div slot="header" class="flexbox justify-space-between align-center">
               <div><span style="color:red">*</span><span style="font-weight: 600;">Cost&Vendor:</span></div>
             </div>
-           <el-table
+            <el-table
               ref="vendorTable"
               v-loading="vendorLoading"
               :data="vendorData"
@@ -79,32 +79,31 @@
               fit
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
             >
-            <el-table-column v-for="(item,idx) in vendorList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
-              <template slot-scope="scope">
-                <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
-                <span v-if="item.type == 'pictures'">
-                  <img :src="scope.row.Pictures" width="50px" alt="">
-                </span>
-                <span v-if="item.type == 'tips'">
-                   <span v-if="scope.row.ShippingPrice">{{scope.row.ShippingPrice}}</span>
-                   <span v-else>Hosting Vendor firstly</span>
-                </span>
-                <span v-if="item.type == 'select' && scope.row.ProductPrice">
+              <el-table-column v-for="(item, idx) in vendorList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
+                <template slot-scope="scope">
+                  <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
+                  <span v-if="item.type == 'pictures'">
+                    <img :src="scope.row.Pictures" width="50px" alt="">
+                  </span>
+                  <span v-if="item.type == 'tips'">
+                    <span v-if="scope.row.ShippingPrice">{{ scope.row.ShippingPrice }}</span>
+                    <span v-else>Hosting Vendor firstly</span>
+                  </span>
+                  <span v-if="item.type == 'select' && scope.row.ProductPrice">
                     <el-select v-model="scope.row.ShippingPrice" @change="selectClick(scope.$index)">
                       <el-option
-                        v-for="(item,key) in scope.row.aa"
+                        v-for="(price, key) in scope.row.aa"
                         :key="key"
-                        :label="item.title"
-                        :value="String(item.value)">
-                      </el-option>
+                        :label="price.title"
+                        :value="String(price.value)"
+                      />
                     </el-select>
-                </span>
-              </template>
-            </el-table-column>
-          </el-table>
+                  </span>
+                </template>
+              </el-table-column>
+            </el-table>
 
           </el-card>
-
 
           <!-- 商品 -->
           <el-card class="box-card mt10">
@@ -117,7 +116,7 @@
               </div>
             </div>
             <div v-if="$route.query.type === 'add'">
-              <el-checkbox v-model="variantsEheck" @change="variantsChage">This product has multiple options, like different sizes or colors</el-checkbox>
+              <el-checkbox v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
               <el-button v-if="variantsEheck && optionsList.length < 3 " class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
             </div>
             <!-- 新增属性 -->
@@ -214,7 +213,14 @@
                 <vxe-table-column v-for="(variant, key) in variantsTitle" :key="key + Math.floor(Math.random()*100)" :title="variant">
                   <template v-slot="{ row }">
                     <el-form-item class="mb0" label-width="0">
-                      <el-input v-model="row.option[variant]" size="mini" clearable :disabled="$route.query.type === 'add'" class="p5_input" />
+                      <el-input
+                        v-model="row.option[variant]"
+                        size="mini"
+                        clearable
+                        :disabled="$route.query.type === 'add'"
+                        class="p5_input"
+                        @change="changeVariants(row)"
+                      />
                     </el-form-item>
                   </template>
                 </vxe-table-column>
@@ -326,7 +332,6 @@
   </div>
 </template>
 <script>
-import _ from 'lodash'
 import InputTag from 'vue-input-tag'
 import EditOptions from './component/edit-options'
 import { descartes_obj } from '@/utils'
@@ -360,30 +365,30 @@ export default {
           { required: true, message: 'Please select Product status', trigger: 'change' }
         ]
       },
-      vendorList:[
-        {label:'Pictures',value:'Pictures',type:'pictures'},
-        {label:'Variants',value:'Variants'},
-        {label:'SKU',value:'sku'},
-        {label:'Vendor',value:'Vendor'},
-        {label:'Total Cost',value:'total'},
-        {label:'Product Price',value:'ProductPrice'},
-        {label:'Service Price',value:'ServicePrice',type:'tips'},
-        {label:'Shipping Price',value:'ShippingPrice'},
-        {label:'',value:'',type:'select',width:'200'},
+      vendorList: [
+        { label: 'Pictures', value: 'Pictures', type: 'pictures' },
+        { label: 'Variants', value: 'Variants' },
+        { label: 'SKU', value: 'sku' },
+        { label: 'Vendor', value: 'Vendor' },
+        { label: 'Total Cost', value: 'total' },
+        { label: 'Product Price', value: 'ProductPrice' },
+        { label: 'Service Price', value: 'ServicePrice', type: 'tips' },
+        { label: 'Shipping Price', value: 'ShippingPrice' },
+        { label: '', value: '', type: 'select', width: '200' }
       ],
-      vendorData:[
-        {ProductPrice:'21',ServicePrice:'34',aa:[{title:'fr',value:"111"},{title:'de',value:'222'}],Pictures:'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg',sku:'122'},
-        {Pictures:'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg',sku:'122'},
-        {Pictures:'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg',sku:'122'},
-        {Pictures:'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg',sku:'122'},
+      vendorData: [
+        { ProductPrice: '21', ServicePrice: '34', aa: [{ title: 'fr', value: '111' }, { title: 'de', value: '222' }], Pictures: 'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg', sku: '122' },
+        { Pictures: 'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg', sku: '122' },
+        { Pictures: 'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg', sku: '122' },
+        { Pictures: 'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg', sku: '122' }
       ],
-      options1:['FR','DE','CN','CH'],
+      options1: ['FR', 'DE', 'CN', 'CH'],
       optionsList: [],
       variantsTitle: [],
       variantsEheck: false,
       options: ['Size', 'Color', 'Material', 'Style', 'Title'],
       statusOptions: ['Active', 'Draft'],
-      vendorLoading:false,
+      vendorLoading: false,
       dialogImageUrl: '',
       SubmitLoading: false,
       loading: false,
@@ -428,8 +433,8 @@ export default {
     // this.tableData = []
   },
   methods: {
-    selectClick(idx){
-      this.vendorData[idx].total =  +this.vendorData[idx].ProductPrice + +this.vendorData[idx].ServicePrice + +this.vendorData[idx].ShippingPrice
+    selectClick(idx) {
+      this.vendorData[idx].total = +this.vendorData[idx].ProductPrice + +this.vendorData[idx].ServicePrice + +this.vendorData[idx].ShippingPrice
     },
     // 获取草稿数据
     getForm() {
@@ -445,7 +450,9 @@ export default {
             }
             this.formData = res.data
             this.tableData = res.data.sku_list
-            this.optionsList = res.data.options
+            if (res.data.options) {
+              this.optionsList = res.data.options
+            }
             this.formData.images = res.data.images.map(item => {
               return {
                 url: item.url,
@@ -470,7 +477,9 @@ export default {
             }
             this.formData = res.data
             this.tableData = res.data.sku_list
-            this.optionsList = res.data.options
+            if (res.data.options) {
+              this.optionsList = res.data.options
+            }
             this.formData.images = res.data.images.map(item => {
               return {
                 url: item.url,
@@ -533,7 +542,7 @@ export default {
       this.tagsChange()
     },
     // 属性清空
-    variantsChage(val) {
+    checkVariants(val) {
       if (val) {
         this.formData.sku_list = []
         this.optionsList.push({ showList: false, option: 'Size', tags: [] })
@@ -603,6 +612,9 @@ export default {
         return arrs.reduce((arr1, arr2) => arr1.flatMap(e => arr2.map(e2 => `${e}/${e2}`)))
       }
       return []
+    },
+    changeVariants(row) {
+      console.log(row)
     },
     async updateVariants(data) {
       console.log(data)
