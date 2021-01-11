@@ -432,7 +432,7 @@ export default {
           }
         })
       })
-      this.formData.cost_vender_list[idx].total_cost = +this.formData.cost_vender_list[idx].price + +this.formData.cost_vender_list[idx].service_price + +this.formData.cost_vender_list[idx].shipping_price
+      this.formData.cost_vender_list[idx].total_cost = (+this.formData.cost_vender_list[idx].price + +this.formData.cost_vender_list[idx].service_price + +this.formData.cost_vender_list[idx].shipping_price).toFixed(2)
     },
     // 获取草稿数据
     getForm() {
