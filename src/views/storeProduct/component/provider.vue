@@ -7,8 +7,8 @@
             <el-option v-for="item in ServiceList" :key="item.id" :label="item.service_name" :value="item.id" />
           </el-select>
         </el-form-item>
-        <el-form-item label="Countries:" prop="Countries" :rules="[{required: true,validator: Countries,trigger: 'change'}]">
-          <el-select v-model="providerForm.Countries" multiple filterable class="w-350">
+        <el-form-item label="Countries:" prop="country" :rules="[{required: true,validator: country,trigger: 'change'}]">
+          <el-select v-model="providerForm.country" multiple filterable class="w-350">
             <el-option v-for="item in countriesList" :key="item.two_code" :label="item.name_en" :value="item.two_code" />
           </el-select>
         </el-form-item>
@@ -22,7 +22,7 @@
 </template>
 <script>
 import { getServiceList, getProductService,getCountryList } from '@/api/product'
-var Countries= (rule, value, callback) => {
+var country= (rule, value, callback) => {
   if(rule.required){
     if((value == null ) || (value.length == 0)){
       callback("please choose!")
@@ -43,10 +43,10 @@ export default {
   },
   data() {
     return {
-      Countries, 
+      country, 
       providerForm: {
         service_id: '',
-        Countries:[]
+        country:[]
       },
       ServiceList: [],
       countriesList:[],

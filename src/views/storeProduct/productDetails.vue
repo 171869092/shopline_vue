@@ -86,7 +86,7 @@
                   <img :src="scope.row.Pictures" width="50px" alt="">
                 </span>
                 <span v-if="item.type == 'tips'">
-                   <span v-if="scope.row.ShippingPrice">{{scope.row.ShippingPrice}}</span>
+                   <span v-if="scope.row.ServicePrice">{{scope.row.ServicePrice}}</span>
                    <span v-else>Hosting Vendor firstly</span>
                 </span>
                 <span v-if="item.type == 'select' && scope.row.ProductPrice">
