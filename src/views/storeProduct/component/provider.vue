@@ -7,6 +7,11 @@
             <el-option v-for="item in ServiceList" :key="item.id" :label="item.service_name" :value="item.id" />
           </el-select>
         </el-form-item>
+        <el-form-item label="Countries:" prop="Countries" :rules="[{required: true,validator: Countries,trigger: 'change'}]">
+          <el-select v-model="providerForm.Countries" multiple filterable class="w-350">
+            <el-option v-for="item in countriesList" :key="item.two_code" :label="item.name_en" :value="item.two_code" />
+          </el-select>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="providerAdd">Cancel</el-button>
@@ -16,7 +21,18 @@
   </div>
 </template>
 <script>
-import { getServiceList, getProductService } from '@/api/product'
+import { getServiceList, getProductService,getCountryList } from '@/api/product'
+var Countries= (rule, value, callback) => {
+  if(rule.required){
+    if((value == null ) || (value.length == 0)){
+      callback("please choose!")
+    }
+    if (value.length > 5) {
+      callback('Choose no more than 5 countries')
+    }
+  } 
+  callback()
+}
 export default {
   name: 'provider',
   props: {
@@ -27,10 +43,13 @@ export default {
   },
   data() {
     return {
+      Countries, 
       providerForm: {
-        service_id: ''
+        service_id: '',
+        Countries:[]
       },
       ServiceList: [],
+      countriesList:[],
       rules: {
         service_id: [
           { required: true, message: 'please choose', trigger: 'blur' }
@@ -45,6 +64,11 @@ export default {
         getServiceList().then(res => {
           if (res.code === 200) {
             this.ServiceList = res.data
+          }
+        })
+        getCountryList().then(res =>{
+          if (res.code === 200) {
+            this.countriesList = res.data
           }
         })
       } else {

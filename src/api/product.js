@@ -123,3 +123,11 @@ export function allGoodsSelectStore(data) {
     data
   })
 }
+//获取国家
+export function getCountryList(params) {
+  return request({
+    url: '/goods/goods/country-list',
+    method: 'get',
+    params
+  })
+}

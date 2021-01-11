@@ -41,6 +41,71 @@
             <shop-window ref="shopWindow" :img-list="formData.images" @update="updateImgList" @delete="deleteImg" />
 
           </el-card>
+       <!-- Pricing -->
+          <el-card
+            class="box-card"
+            v-if="tableData.length == 0"
+          >
+            <div slot="header" class="flexbox justify-space-between align-center">
+              <div><span style="color:red">*</span><span style="font-weight: 600;">Pricing:</span></div>
+            </div>
+            <div style="display: flex;" class="ml50">
+                <el-form-item label="Price:" prop="Price">
+                  <el-input v-model="formData.Price" placeholder="Price" class="w-230">
+                    <template slot="prepend">$</template>
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="Compare at Price:" prop="Compare_price" class="w-230" style="margin-left: 150px;">
+                  <el-input v-model="formData.Compare_price" placeholder="Compare at Price">
+                    <template slot="prepend">$</template>
+                  </el-input>
+                </el-form-item>
+            </div>
+          </el-card>
+
+          <!-- cost&vendor： -->
+          <el-card
+            class="box-card"
+          >
+            <div slot="header" class="flexbox justify-space-between align-center">
+              <div><span style="color:red">*</span><span style="font-weight: 600;">Cost&Vendor:</span></div>
+            </div>
+           <el-table
+              ref="vendorTable"
+              v-loading="vendorLoading"
+              :data="vendorData"
+              style="width: 100%"
+              highlight-current-row
+              fit
+              :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
+            >
+            <el-table-column v-for="(item,idx) in vendorList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
+              <template slot-scope="scope">
+                <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
+                <span v-if="item.type == 'pictures'">
+                  <img :src="scope.row.Pictures" width="50px" alt="">
+                </span>
+                <span v-if="item.type == 'tips'">
+                   <span v-if="scope.row.ShippingPrice">{{scope.row.ShippingPrice}}</span>
+                   <span v-else>Hosting Vendor firstly</span>
+                </span>
+                <span v-if="item.type == 'select' && scope.row.ProductPrice">
+                    <el-select v-model="scope.row.ShippingPrice" @change="selectClick(scope.$index)">
+                      <el-option
+                        v-for="(item,key) in scope.row.aa"
+                        :key="key"
+                        :label="item.title"
+                        :value="String(item.value)">
+                      </el-option>
+                    </el-select>
+                </span>
+              </template>
+            </el-table-column>
+          </el-table>
+
+          </el-card>
+
+
           <!-- 商品 -->
           <el-card class="box-card mt10">
             <div slot="header" class="flexbox justify-space-between align-center">
@@ -296,12 +361,31 @@ export default {
           { required: true, message: 'Please select Product status', trigger: 'change' }
         ]
       },
+      vendorList:[
+        {label:'Pictures',value:'Pictures',type:'pictures'},
+        {label:'Variants',value:'Variants'},
+        {label:'SKU',value:'sku'},
+        {label:'Vendor',value:'Vendor'},
+        {label:'Total Cost',value:'total'},
+        {label:'Product Price',value:'ProductPrice'},
+        {label:'Service Price',value:'ServicePrice',type:'tips'},
+        {label:'Shipping Price',value:'ShippingPrice'},
+        {label:'',value:'',type:'select',width:'200'},
+      ],
+      vendorData:[
+        {ProductPrice:'21',ServicePrice:'34',aa:[{title:'fr',value:"111"},{title:'de',value:'222'}],Pictures:'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg',sku:'122'},
+        {Pictures:'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg',sku:'122'},
+        {Pictures:'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg',sku:'122'},
+        {Pictures:'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg',sku:'122'},
+      ],
+      options1:['FR','DE','CN','CH'],
       optionsList: [],
       optionsLists: [{ 'showList': false, 'option': 'Size', 'tags': ['aaa', 'bbb', 'ccc'] }, { 'showList': false, 'option': 'Color', 'tags': ['eee', 'fff', 'ggg'] }],
       variantsTitle: [],
       variantsEheck: false,
       options: ['Size', 'Color', 'Material', 'Style', 'Title'],
       statusOptions: ['Active', 'Draft'],
+      vendorLoading:false,
       dialogImageUrl: '',
       SubmitLoading: false,
       loading: false,
@@ -337,6 +421,9 @@ export default {
     this.tableData = []
   },
   methods: {
+    selectClick(idx){
+      this.vendorData[idx].total =  +this.vendorData[idx].ProductPrice + +this.vendorData[idx].ServicePrice + +this.vendorData[idx].ShippingPrice
+    },
     // 获取草稿数据
     getForm() {
       this.loading = true
