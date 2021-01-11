@@ -253,7 +253,10 @@
               </vxe-table-column>
               <vxe-table-column title="Operating" width="120px">
                 <template v-slot="{ row, rowIndex }">
-                  <el-button type="danger" size="mini" @click="delSkuData(row, rowIndex)">delete</el-button>
+                  <!-- <el-button type="danger" size="mini" @click="delSkuData(row, rowIndex)">delete</el-button> -->
+                  <div class="icon-border" @click="delSkuData(row, rowIndex)">
+                    <i class="el-icon-delete-solid cursor_p" />
+                  </div>
                 </template>
               </vxe-table-column>
             </vxe-table>
@@ -704,11 +707,19 @@ export default {
     // 删除sku
     delSkuData(row, index) {
       console.log(row, index)
-      this.$confirm(`Are you sure you want to delete SKU-${index + 1}？`, 'Delete SKU', {
-        confirmButtonText: 'Submit',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      })
+      const skuName = []
+      for (var key of Object.keys(row.option)) {
+        skuName.push(row.option[key])
+      }
+
+      this.$confirm(`Are you sure you want to delete the variant For <strong>${skuName.join(' / ')}</strong>? This action cannot be reversed.`,
+        `Delete For Variant`, {
+          // this.$confirm('<strong>这是 <i>HTML</i> 片段</strong>', 'Delete SKU', {
+          confirmButtonText: 'Delete',
+          cancelButtonText: 'Cancel',
+          type: 'warning',
+          dangerouslyUseHTMLString: true
+        })
         .then(() => {
           if (row.id) {
             getDeleteSku({ id: row.id }).then(res => {
