@@ -66,6 +66,7 @@
           <!-- cost&vendor： -->
           <el-card
             class="box-card"
+            v-if="$route.query.stroeType == 'store'"
           >
             <div slot="header" class="flexbox justify-space-between align-center">
               <div><span style="color:red">*</span><span style="font-weight: 600;">Cost&Vendor:</span></div>
