@@ -65,8 +65,8 @@
 
           <!-- cost&vendor： -->
           <el-card
-            class="box-card"
             v-if="$route.query.stroeType == 'store'"
+            class="box-card"
           >
             <div slot="header" class="flexbox justify-space-between align-center">
               <div><span style="color:red">*</span><span style="font-weight: 600;">Cost&Vendor:</span></div>
@@ -84,7 +84,7 @@
                 <template slot-scope="scope">
                   <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
                   <span v-if="item.type == 'pictures'">
-                    <el-image :src="scope.row.img_url" class="sku_image"></el-image>
+                    <el-image :src="scope.row.img_url" class="sku_image" />
                   </span>
                   <span v-if="item.type == 'tips'">
                     <span v-if="scope.row.service_price">{{ scope.row.service_price }}</span>
@@ -360,7 +360,7 @@ export default {
         sku_list: [],
         images: [],
         options: [],
-        cost_vender_list: [],
+        cost_vender_list: []
       },
       formRule: {
         title: [
@@ -376,12 +376,12 @@ export default {
         { label: 'SKU', value: 'sku' },
         { label: 'Vendor', value: 'service_name' },
         { label: 'Total Cost', value: 'total_cost' },
-        { label: 'Product Price', value: 'price' , width: '120'},
-        { label: 'Service Price', value: 'service_price', type: 'tips' , width: '160'},
-        { label: 'Shipping Price', value: 'shipping_price' , width: '120'},
+        { label: 'Product Price', value: 'price', width: '120' },
+        { label: 'Service Price', value: 'service_price', type: 'tips', width: '160' },
+        { label: 'Shipping Price', value: 'shipping_price', width: '120' },
         { label: '', value: '', type: 'select', width: '150' }
       ],
-     
+
       optionsList: [],
       variantsTitle: [],
       variantsEheck: false,
@@ -424,10 +424,10 @@ export default {
     // this.tableData = []
   },
   methods: {
-    selectClick(val,idx) {
-      this.formData.cost_vender_list.map(item =>{
-        item.list.map(v =>{
-          if (val == v.title) {
+    selectClick(val, idx) {
+      this.formData.cost_vender_list.map(item => {
+        item.list.map(v => {
+          if (val === v.title) {
             this.formData.cost_vender_list[idx].shipping_price = v.value
           }
         })
@@ -468,9 +468,9 @@ export default {
         getStoreProductEdit({ id: this.$route.query.id }).then(res => {
           if (res.code === 200) {
             this.formData = res.data
-               this.formData.cost_vender_list.map((item,idx) =>{
-                this.formData.cost_vender_list[idx].country = item.list[0].title
-                this.selectClick(item.list[0].title,idx)
+            this.formData.cost_vender_list.map((item, idx) => {
+              this.formData.cost_vender_list[idx].country = item.list[0].title
+              this.selectClick(item.list[0].title, idx)
             })
             this.tableData = res.data.sku_list
             // this.vendorData = res.data.sku_list.cost_vender_list
@@ -590,21 +590,6 @@ export default {
         }))
         this.tableData = newArr
         this.preLoading = false
-        // const xTable = this.$refs.xTable
-        // const startTime = Date.now()
-        // if (xTable) {
-        //   if (data.length > 20 && data.length < 110) {
-        //     setTimeout(() => {
-        //       xTable.loadData(this.tableData).then(() => {
-        //         this.$message.info(`渲染用时 ${Date.now() - startTime}毫秒`)
-        //         this.preLoading = false
-        //       })
-        //     }, 500)
-        //   } else {
-        //     xTable.loadData(this.tableData)
-        //     this.preLoading = false
-        //   }
-        // }
       }).catch(err => {
         console.log(err)
       })
@@ -631,6 +616,7 @@ export default {
     },
     changeVariants(name) {
       const arr = this.tableData.map(item => item.option[name])
+      console.log(this.tableData)
       console.log(_.uniq(arr))
       this.optionsList.forEach(opt => {
         if (opt.option === name) {
@@ -652,17 +638,6 @@ export default {
       const result4 = await this.addTagData(data, result3)
       console.log(result4)
       this.$refs.xTable.loadData(result4)
-      // this.changeTitle(data.changeList, this.tableData).then(res => {
-      //   this.removeTagData(data, res).then(res => {
-      //     this.removelineData(data, res).then(res => {
-      //       console.log(res)
-      //       this.addTagData(data, res).then(res => {
-      //         this.$refs.xTable.loadData(res)
-      //       })
-      //     })
-      //     // this.$refs.xTable.loadData(res)
-      //   })
-      // })
     },
     changeTitle(data, result) {
       return new Promise(resolve => {
