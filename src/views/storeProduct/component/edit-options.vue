@@ -14,38 +14,53 @@
         type="error"
         class="mb20"
       />
-      <div class="flexbox">
-        <div class="grid-view">
-          <div v-for="(item, key) in copyList" :key="key" class="gridbox">
-            <div class="grid-1"><el-input v-model="item.option" autocomplete="off" placeholder="Option name" @change="changeOptionName(item, key)" /></div>
-            <div class="grid-2">
-              <div v-if="!item.isAdd" class="option-tag">
-                <el-tag
-                  v-for="(tag, index) in item.tags"
-                  :key="index"
-                  disable-transitions
-                  :closable="item.tags.length > 1"
-                  type="info"
-                  @close="removeTag(item, tag, index)"
-                >
-                  {{ tag }}
-                </el-tag>
+      <el-alert
+        v-show="isError"
+        title="Please ensure all fields have been filled."
+        type="error"
+        show-icon
+        class="mb20"
+      />
+      <el-form ref="ruleForm" :model="formData" :rules="rules" label-width="0" :show-message="false">
+        <div class="flexbox">
+          <div class="grid-view">
+            <div v-for="(item, key) in formData.copyList" :key="key" class="gridbox">
+              <div class="grid-1">
+                <el-form-item :prop="'copyList.' + key + '.option'" :rules="{required: true, message: '请输入姓名',trigger: 'blur'}">
+                  <el-input v-model="item.option" :validate-event="true" placeholder="Option name" @change="changeOptionName(item, key)" />
+                </el-form-item>
               </div>
-              <div v-else>
-                <el-input v-model="item.newTag" class="w-200" autocomplete="off" placeholder="Default Meterial" @change="updateNewTag(item, key)" />
+              <div class="grid-2">
+                <div v-if="!item.isAdd" class="option-tag">
+                  <el-tag
+                    v-for="(tag, index) in item.tags"
+                    :key="index"
+                    disable-transitions
+                    :closable="item.tags.length > 1"
+                    type="info"
+                    @close="removeTag(item, tag, index)"
+                  >
+                    {{ tag }}
+                  </el-tag>
+                </div>
+                <div v-else>
+                  <el-form-item :prop="'copyList.' + key + '.newTag'" :rules="{required: true, message: '请输入姓名',trigger: 'blur'}">
+                    <el-input v-model="item.newTag" class="w-200" autocomplete="off" :validate-event="true" placeholder="Default Meterial" @change="updateNewTag(item, key)" />
+                  </el-form-item>
+                </div>
               </div>
-            </div>
-            <div class="grid-3">
-              <div v-if="copyList.length != 1" class="flexbox justify-center align-center">
-                <div v-show="item.isAdd || item.tags.length == 1" class="del-icon" @click="deleteOption(key)">
-                  <i class="el-icon-delete" />
+              <div class="grid-3">
+                <div v-if="formData.copyList.length != 1" class="flexbox justify-center align-center">
+                  <div v-show="item.isAdd || item.tags.length == 1" class="del-icon" @click="deleteOption(key)">
+                    <i class="el-icon-delete" />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <el-button v-show="copyList.length < 3" size="small" plain @click="addOption()">Add another option</el-button>
+      </el-form>
+      <el-button v-show="formData.copyList.length < 3" size="small" plain @click="addOption()">Add another option</el-button>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
         <el-button type="primary" @click="confirmEditOption">Done</el-button>
@@ -87,14 +102,19 @@ export default {
   data() {
     return {
       tableData: [],
+      formData: {
+        copyList: []
+      },
+      rules: {},
       orgList: [],
-      copyList: [],
       removeTagList: [],
       delList: [],
       changeList: [],
       addList: [],
       showTagList: [],
+      optionsName: ['Size', 'Color', 'Material', 'Style', 'Title'],
       isEdit: false,
+      isError: false,
       showAlert: false,
       tipDialogVisible: false
     }
@@ -112,7 +132,7 @@ export default {
   created() {},
   methods: {
     openOptionDialog() {
-      this.copyList = JSON.parse(JSON.stringify(this.options))
+      this.formData.copyList = JSON.parse(JSON.stringify(this.options))
       this.orgList = JSON.parse(JSON.stringify(this.options))
       this.tableData = JSON.parse(JSON.stringify(this.listData))
       this.removeTagList = []
@@ -123,27 +143,34 @@ export default {
       this.isEdit = false
     },
     confirmEditOption() {
-      if (!this.showAlert) {
-        this.dialogVisible = false
-        if (this.isEdit) {
-          this.tipDialogVisible = true
+      this.$refs['ruleForm'].validate((valid) => {
+        if (valid) {
+          if (!this.showAlert) {
+            this.dialogVisible = false
+            if (this.isEdit) {
+              this.tipDialogVisible = true
+            } else {
+              this.$emit('update:sku', {
+                delList: this.delList,
+                tagList: this.removeTagList,
+                copyList: this.formData.copyList,
+                changeList: this.changeList,
+                addList: this.addList
+              })
+            }
+          }
         } else {
-          this.$emit('update:sku', {
-            delList: this.delList,
-            tagList: this.removeTagList,
-            copyList: this.copyList,
-            changeList: this.changeList,
-            addList: this.addList
-          })
+          this.isError = true
+          return false
         }
-      }
+      })
     },
     done() {
       this.tipDialogVisible = false
       this.$emit('update:sku', {
         delList: this.delList,
         tagList: this.removeTagList,
-        copyList: this.copyList,
+        copyList: this.formData.copyList,
         changeList: this.changeList,
         addList: this.addList
       })
@@ -155,52 +182,60 @@ export default {
       this.showTagList.push({ title: item.option, value: val })
     },
     addOption() {
-      this.copyList.push({ isAdd: true, option: 'Material', tags: [], newTag: '' })
-      const even = this.copyList.map(i => i.option).filter(f => f === 'Material')
-      even.length > 1 ? this.showAlert = true : this.showAlert = false
+      this.formData.copyList.push({ isAdd: true, option: 'Material', tags: [], newTag: '' })
+      const even = this.formData.copyList.map(i => i.option)
+      new Set(even).size !== even.length ? this.showAlert = true : this.showAlert = false
     },
     updateNewTag(item, index) {
       console.log(item)
-      item.tags.push(item.newTag)
-      this.addList.push(item)
-      console.log('addList', this.addList)
+      if (item.newTag !== '') {
+        this.isError = false
+        item.tags = [item.newTag]
+        this.addList.push(item)
+        console.log('addList', this.addList)
+      } else {
+        this.isError = true
+      }
     },
     changeOptionName(item, index) {
       console.log(item)
-      const even = this.copyList.map(i => i.option).filter(f => f === item.option)
-      even.length > 1 ? this.showAlert = true : this.showAlert = false
-      if (!this.showAlert) {
-        if (!item.isAdd) {
-          const val = this.orgList[index]
-          const found = this.changeList.findIndex(c => c.key === index)
-          if (found === -1) {
-            this.changeList.push({ key: index, original: val.option, change: item.option })
-          } else {
-            const original = this.changeList[found].original
-            if (item.option === original) {
-              this.changeList.splice(found, 1)
+      if (item.option !== '') {
+        this.isError = false
+        const even = this.formData.copyList.map(i => i.option).filter(f => f === item.option)
+        even.length > 1 ? this.showAlert = true : this.showAlert = false
+        if (!this.showAlert) {
+          if (!item.isAdd) {
+            const val = this.orgList[index]
+            const found = this.changeList.findIndex(c => c.key === index)
+            if (found === -1) {
+              this.changeList.push({ key: index, original: val.option, change: item.option })
             } else {
-              this.changeList[found].change = item.option
-            }
-          }
-          this.changeList.forEach(c => {
-            this.removeTagList.forEach(t => {
-              if (c.original === t.title) {
-                console.log('trtue')
-                t.title = c.change
+              const original = this.changeList[found].original
+              if (item.option === original) {
+                this.changeList.splice(found, 1)
+              } else {
+                this.changeList[found].change = item.option
               }
+            }
+            this.changeList.forEach(c => {
+              this.removeTagList.forEach(t => {
+                if (c.original === t.title) {
+                  console.log('trtue')
+                  t.title = c.change
+                }
               // t.title = item.option
+              })
             })
-          })
+          }
         }
       }
       console.log('changeList', this.changeList)
     },
     deleteOption(index) {
-      const item = this.copyList[index]
+      const item = this.formData.copyList[index]
       this.delList.push(item)
       this.showTagList.push({ title: item.option, value: item.tags[0] })
-      this.copyList.splice(index, 1)
+      this.formData.copyList.splice(index, 1)
     }
   }
 }
