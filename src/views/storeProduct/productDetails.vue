@@ -73,7 +73,7 @@
             <el-table
               ref="vendorTable"
               v-loading="vendorLoading"
-              :data="vendorData"
+              :data="formData.cost_vender_list"
               style="width: 100%"
               highlight-current-row
               fit
@@ -83,19 +83,19 @@
                 <template slot-scope="scope">
                   <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
                   <span v-if="item.type == 'pictures'">
-                    <img :src="scope.row.img_url" width="50px" alt="">
+                    <el-image :src="scope.row.img_url" class="sku_image"></el-image>
                   </span>
                   <span v-if="item.type == 'tips'">
                     <span v-if="scope.row.service_price">{{ scope.row.service_price }}</span>
                     <span v-else>Hosting Vendor firstly</span>
                   </span>
-                  <span v-if="item.type == 'select' && scope.row.product_price">
-                    <el-select v-model="scope.row.shipping_price" @change="selectClick(scope.$index)">
+                  <span v-if="item.type == 'select' && scope.row.price">
+                    <el-select v-model="scope.row.country" @change="selectClick(scope.row.country,scope.$index)">
                       <el-option
-                        v-for="(price, key) in scope.row.aa"
+                        v-for="(price, key) in scope.row.list"
                         :key="key"
                         :label="price.title"
-                        :value="String(price.value)"
+                        :value="String(price.title)"
                       />
                     </el-select>
                   </span>
@@ -356,7 +356,8 @@ export default {
         status: '2',
         sku_list: [],
         images: [],
-        options: []
+        options: [],
+        cost_vender_list: [],
       },
       formRule: {
         title: [
@@ -370,19 +371,14 @@ export default {
         { label: 'Pictures', value: 'img_url', type: 'pictures' },
         { label: 'Variants', value: 'variants' },
         { label: 'SKU', value: 'sku' },
-        { label: 'Vendor', value: 'Vendor' },
+        { label: 'Vendor', value: 'service_name' },
         { label: 'Total Cost', value: 'total_cost' },
-        { label: 'Product Price', value: 'product_price' , width: '120'},
+        { label: 'Product Price', value: 'price' , width: '120'},
         { label: 'Service Price', value: 'service_price', type: 'tips' , width: '160'},
         { label: 'Shipping Price', value: 'shipping_price' , width: '120'},
         { label: '', value: '', type: 'select', width: '150' }
       ],
-      vendorData: [
-        { product_price: '21', service_price: '34', aa: [{ title: 'fr', value: '111' }, { title: 'de', value: '222' }], img_url: 'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg', sku: '122' },
-        { img_url: 'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg', sku: '122' },
-        { img_url: 'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg', sku: '122' },
-        { img_url: 'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg', sku: '122' }
-      ],
+     
       optionsList: [],
       variantsTitle: [],
       variantsEheck: false,
@@ -425,8 +421,15 @@ export default {
     // this.tableData = []
   },
   methods: {
-    selectClick(idx) {
-      this.vendorData[idx].total_cost = +this.vendorData[idx].product_price + +this.vendorData[idx].service_price + +this.vendorData[idx].shipping_price
+    selectClick(val,idx) {
+      this.formData.cost_vender_list.map(item =>{
+        item.list.map(v =>{
+          if (val == v.title) {
+            this.formData.cost_vender_list[idx].shipping_price = v.value
+          }
+        })
+      })
+      this.formData.cost_vender_list[idx].total_cost = +this.formData.cost_vender_list[idx].price + +this.formData.cost_vender_list[idx].service_price + +this.formData.cost_vender_list[idx].shipping_price
     },
     // 获取草稿数据
     getForm() {
@@ -462,7 +465,12 @@ export default {
         getStoreProductEdit({ id: this.$route.query.id }).then(res => {
           if (res.code === 200) {
             this.formData = res.data
+               this.formData.cost_vender_list.map((item,idx) =>{
+                this.formData.cost_vender_list[idx].country = item.list[0].title
+                this.selectClick(item.list[0].title,idx)
+            })
             this.tableData = res.data.sku_list
+            // this.vendorData = res.data.sku_list.cost_vender_list
             if (res.data.options) {
               this.optionsList = res.data.options
             }
