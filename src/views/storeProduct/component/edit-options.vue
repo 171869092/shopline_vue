@@ -45,7 +45,7 @@
           </div>
         </div>
       </div>
-      <el-button v-show="copyList.length < 3" size="small" plain @click="addOption">Add another option</el-button>
+      <el-button v-show="copyList.length < 3" size="small" plain @click="addOption()">Add another option</el-button>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
         <el-button type="primary" @click="confirmEditOption">Done</el-button>
@@ -123,17 +123,19 @@ export default {
       this.isEdit = false
     },
     confirmEditOption() {
-      this.dialogVisible = false
-      if (this.isEdit) {
-        this.tipDialogVisible = true
-      } else {
-        this.$emit('update:sku', {
-          delList: this.delList,
-          tagList: this.removeTagList,
-          copyList: this.copyList,
-          changeList: this.changeList,
-          addList: this.addList
-        })
+      if (!this.showAlert) {
+        this.dialogVisible = false
+        if (this.isEdit) {
+          this.tipDialogVisible = true
+        } else {
+          this.$emit('update:sku', {
+            delList: this.delList,
+            tagList: this.removeTagList,
+            copyList: this.copyList,
+            changeList: this.changeList,
+            addList: this.addList
+          })
+        }
       }
     },
     done() {
@@ -154,6 +156,8 @@ export default {
     },
     addOption() {
       this.copyList.push({ isAdd: true, option: 'Material', tags: [], newTag: '' })
+      const even = this.copyList.map(i => i.option).filter(f => f === 'Material')
+      even.length > 1 ? this.showAlert = true : this.showAlert = false
     },
     updateNewTag(item, index) {
       console.log(item)

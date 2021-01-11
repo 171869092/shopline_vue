@@ -620,15 +620,14 @@ export default {
       const sku = {
         id: '',
         sku: '',
-        option: item,
-        variant: variants[index],
+        option: {},
         sku_image: '',
         sku_color: '',
         sku_size: '',
         sku_price: '',
         sku_number: ''
       }
-      console.log(this.tableData[this.tableData.length - 1])
+      this.tableData.push(sku)
     },
     changeVariants(name) {
       const arr = this.tableData.map(item => item.option[name])
@@ -647,7 +646,7 @@ export default {
         return item
       })
 
-      const result1 = await this.changeTitle(data.changeList, this.tableData)
+      const result1 = await this.changeTitle(data, this.tableData)
       const result2 = await this.removeTagData(data, result1)
       const result3 = await this.removelineData(data, result2)
       const result4 = await this.addTagData(data, result3)
@@ -665,10 +664,10 @@ export default {
       //   })
       // })
     },
-    changeTitle(changeList, result) {
+    changeTitle(data, result) {
       return new Promise(resolve => {
-        if (changeList.length > 0) {
-          changeList.forEach(c => {
+        if (data.changeList.length > 0) {
+          data.changeList.forEach(c => {
             result.forEach(v => {
               if (Object.keys(v.option).includes(c.original)) {
                 // 使用Vue.$set转成响应式
@@ -729,7 +728,6 @@ export default {
       for (var key of Object.keys(row.option)) {
         skuName.push(row.option[key])
       }
-      console.log(skuName)
       this.$confirm(`Are you sure you want to delete the variant For <strong>${skuName.join(' / ')}</strong>?`,
         `Delete For Variant`, {
           // this.$confirm('<strong>这是 <i>HTML</i> 片段</strong>', 'Delete SKU', {
@@ -761,13 +759,14 @@ export default {
           } else {
             this.optionsList = []
           }
+          this.$refs.xTable.loadData(this.tableData)
         })
         .catch(() => {})
     },
     // 删除商品
     ProductDelete() {
-      this.$confirm(`Are you sure you want to delete this product？`, 'Delete Product', {
-        confirmButtonText: 'Submit',
+      this.$confirm(`Are you sure you want to delete this product？This can’t be undone.`, 'Delete Product', {
+        confirmButtonText: 'Delete',
         cancelButtonText: 'Cancel',
         type: 'warning'
       })
