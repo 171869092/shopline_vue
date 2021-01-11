@@ -17,9 +17,9 @@
       <div class="flexbox">
         <div class="grid-view">
           <div v-for="(item, key) in copyList" :key="key" class="gridbox">
-            <div class="grid-1"><el-input v-model="item.option" autocomplete="off" placeholder="Option name" @change="changeOption(item, key)" /></div>
+            <div class="grid-1"><el-input v-model="item.option" autocomplete="off" placeholder="Option name" @change="changeOptionName(item, key)" /></div>
             <div class="grid-2">
-              <div v-if="!item.isShow" class="option-tag">
+              <div v-if="!item.isAdd" class="option-tag">
                 <el-tag
                   v-for="(tag, index) in item.tags"
                   :key="index"
@@ -37,7 +37,7 @@
             </div>
             <div class="grid-3">
               <div v-if="copyList.length != 1" class="flexbox justify-center align-center">
-                <div v-show="item.isShow || item.tags.length == 1" class="del-icon" @click="delOption(key)">
+                <div v-show="item.isAdd || item.tags.length == 1" class="del-icon" @click="deleteOption(key)">
                   <i class="el-icon-delete" />
                 </div>
               </div>
@@ -127,10 +127,6 @@ export default {
       if (this.isEdit) {
         this.tipDialogVisible = true
       } else {
-        this.copyList.forEach(i => {
-          i.isShow = false
-          i.newTag = ''
-        })
         this.$emit('update:sku', {
           delList: this.delList,
           tagList: this.removeTagList,
@@ -142,10 +138,6 @@ export default {
     },
     done() {
       this.tipDialogVisible = false
-      this.copyList.forEach(i => {
-        i.isShow = false
-        i.newTag = ''
-      })
       this.$emit('update:sku', {
         delList: this.delList,
         tagList: this.removeTagList,
@@ -161,26 +153,20 @@ export default {
       this.showTagList.push({ title: item.option, value: val })
     },
     addOption() {
-      this.copyList.push({ isShow: true, option: 'Material', tags: [], newTag: '' })
+      this.copyList.push({ isAdd: true, option: 'Material', tags: [], newTag: '' })
     },
     updateNewTag(item, index) {
       console.log(item)
       item.tags.push(item.newTag)
       this.addList.push(item)
-      console.log(this.addList)
+      console.log('addList', this.addList)
     },
-    changeOption(item, index) {
+    changeOptionName(item, index) {
       console.log(item)
-      console.log(this.orgList)
       const even = this.copyList.map(i => i.option).filter(f => f === item.option)
-      console.log(even)
-      if (even.length > 1) {
-        this.showAlert = true
-      } else {
-        this.showAlert = false
-      }
+      even.length > 1 ? this.showAlert = true : this.showAlert = false
       if (!this.showAlert) {
-        if (!item.isShow) {
+        if (!item.isAdd) {
           const val = this.orgList[index]
           const found = this.changeList.findIndex(c => c.key === index)
           if (found === -1) {
@@ -202,13 +188,11 @@ export default {
               // t.title = item.option
             })
           })
-        } else {
-          this.addList
         }
       }
-      console.log(this.changeList)
+      console.log('changeList', this.changeList)
     },
-    delOption(index) {
+    deleteOption(index) {
       const item = this.copyList[index]
       this.delList.push(item)
       this.showTagList.push({ title: item.option, value: item.tags[0] })

@@ -517,35 +517,40 @@ export default {
       }
       return []
     },
-    updateVariants(data) {
+    async updateVariants(data) {
       console.log(data)
       this.variantsTitle = data.copyList.map(i => i.option)
-
-      this.changeTitle(data.changeList, this.tableData).then(res => {
-        console.log(res)
-        this.addTagData(data, res).then(res => {
-          // console.log(res)
-          this.$refs.xTable.loadData(res)
-        })
-        this.removeTagData(data, res).then(res => {
-          // console.log(res)
-          this.removelineData(data, res).then(res => {
-            // console.log(res)
-          })
-          this.$refs.xTable.loadData(res)
-        })
+      this.optionsList = data.copyList.map(item => {
+        item.isAdd = false
+        return item
       })
 
-      this.optionsList = data.copyList
+      const result1 = await this.changeTitle(data.changeList, this.tableData)
+      const result2 = await this.removeTagData(data, result1)
+      const result3 = await this.removelineData(data, result2)
+      const result4 = await this.addTagData(data, result3)
+      console.log(result4)
+      this.$refs.xTable.loadData(result4)
+      // this.changeTitle(data.changeList, this.tableData).then(res => {
+      //   this.removeTagData(data, res).then(res => {
+      //     this.removelineData(data, res).then(res => {
+      //       console.log(res)
+      //       this.addTagData(data, res).then(res => {
+      //         this.$refs.xTable.loadData(res)
+      //       })
+      //     })
+      //     // this.$refs.xTable.loadData(res)
+      //   })
+      // })
     },
     changeTitle(changeList, result) {
       return new Promise(resolve => {
         if (changeList.length > 0) {
-          console.log('1')
           changeList.forEach(c => {
             result.forEach(v => {
               if (Object.keys(v.option).includes(c.original)) {
-                v.option[c.change] = v.option[c.original]
+                // 使用Vue.$set转成响应式
+                this.$set(v.option, c.change, v.option[c.original])
                 delete v.option[c.original]
               }
             })
@@ -557,9 +562,10 @@ export default {
     addTagData(data, result) {
       return new Promise(resolve => {
         if (data.addList.length > 0) {
-          data.addList.forEach(a => {
+          data.addList.forEach(t => {
             result.forEach(v => {
-              v.option[a.option] = a.tags.toString()
+              // 使用Vue.$set转成响应式
+              this.$set(v.option, t.option, t.tags.toString())
             })
           })
         }
@@ -591,6 +597,7 @@ export default {
             })
           })
         }
+        resolve(result)
       })
     },
     // 删除sku
