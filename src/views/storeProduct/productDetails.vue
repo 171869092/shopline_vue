@@ -361,6 +361,10 @@ export default {
         images: [],
         options: [],
         cost_vender_list: [],
+        compare_price:'',
+        price:'',
+        title:'',
+        describe:''
       },
       formRule: {
         title: [
