@@ -51,12 +51,12 @@
             </div>
             <div style="display: flex;" class="ml50">
               <el-form-item label="Price:" prop="Price">
-                <el-input v-model="formData.Price" placeholder="Price" class="w-230">
+                <el-input v-model="formData.price" placeholder="Price" class="w-230">
                   <template slot="prepend">$</template>
                 </el-input>
               </el-form-item>
-              <el-form-item label="Compare at Price:" prop="Compare_price" class="w-230" style="margin-left: 150px;">
-                <el-input v-model="formData.Compare_price" placeholder="Compare at Price">
+              <el-form-item label="Compare at Price:" prop="compare_price" class="w-230" style="margin-left: 150px;">
+                <el-input v-model="formData.compare_price" placeholder="Compare at Price">
                   <template slot="prepend">$</template>
                 </el-input>
               </el-form-item>
@@ -83,14 +83,14 @@
                 <template slot-scope="scope">
                   <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
                   <span v-if="item.type == 'pictures'">
-                    <img :src="scope.row.Pictures" width="50px" alt="">
+                    <img :src="scope.row.img_url" width="50px" alt="">
                   </span>
                   <span v-if="item.type == 'tips'">
-                    <span v-if="scope.row.ShippingPrice">{{ scope.row.ShippingPrice }}</span>
+                    <span v-if="scope.row.service_price">{{ scope.row.service_price }}</span>
                     <span v-else>Hosting Vendor firstly</span>
                   </span>
-                  <span v-if="item.type == 'select' && scope.row.ProductPrice">
-                    <el-select v-model="scope.row.ShippingPrice" @change="selectClick(scope.$index)">
+                  <span v-if="item.type == 'select' && scope.row.product_price">
+                    <el-select v-model="scope.row.shipping_price" @change="selectClick(scope.$index)">
                       <el-option
                         v-for="(price, key) in scope.row.aa"
                         :key="key"
@@ -366,23 +366,22 @@ export default {
         ]
       },
       vendorList: [
-        { label: 'Pictures', value: 'Pictures', type: 'pictures' },
-        { label: 'Variants', value: 'Variants' },
+        { label: 'Pictures', value: 'img_url', type: 'pictures' },
+        { label: 'Variants', value: 'variants' },
         { label: 'SKU', value: 'sku' },
         { label: 'Vendor', value: 'Vendor' },
-        { label: 'Total Cost', value: 'total' },
-        { label: 'Product Price', value: 'ProductPrice' },
-        { label: 'Service Price', value: 'ServicePrice', type: 'tips' },
-        { label: 'Shipping Price', value: 'ShippingPrice' },
-        { label: '', value: '', type: 'select', width: '200' }
+        { label: 'Total Cost', value: 'total_cost' },
+        { label: 'Product Price', value: 'product_price' , width: '120'},
+        { label: 'Service Price', value: 'service_price', type: 'tips' , width: '160'},
+        { label: 'Shipping Price', value: 'shipping_price' , width: '120'},
+        { label: '', value: '', type: 'select', width: '150' }
       ],
       vendorData: [
-        { ProductPrice: '21', ServicePrice: '34', aa: [{ title: 'fr', value: '111' }, { title: 'de', value: '222' }], Pictures: 'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg', sku: '122' },
-        { Pictures: 'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg', sku: '122' },
-        { Pictures: 'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg', sku: '122' },
-        { Pictures: 'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg', sku: '122' }
+        { product_price: '21', service_price: '34', aa: [{ title: 'fr', value: '111' }, { title: 'de', value: '222' }], img_url: 'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg', sku: '122' },
+        { img_url: 'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg', sku: '122' },
+        { img_url: 'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg', sku: '122' },
+        { img_url: 'http://dongke.oss-cn-shenzhen.aliyuncs.com/data/Company/20210107181131373-Eye-Mask-Cover-For-Oculus-Quest-2-VR-Glasses-Silicone-Anti-sweat-Anti-leakage-Light-Blocking.jpg', sku: '122' }
       ],
-      options1: ['FR', 'DE', 'CN', 'CH'],
       optionsList: [],
       variantsTitle: [],
       variantsEheck: false,
@@ -434,7 +433,7 @@ export default {
   },
   methods: {
     selectClick(idx) {
-      this.vendorData[idx].total = +this.vendorData[idx].ProductPrice + +this.vendorData[idx].ServicePrice + +this.vendorData[idx].ShippingPrice
+      this.vendorData[idx].total_cost = +this.vendorData[idx].product_price + +this.vendorData[idx].service_price + +this.vendorData[idx].shipping_price
     },
     // 获取草稿数据
     getForm() {
