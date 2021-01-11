@@ -1,12 +1,25 @@
 <template>
   <div>
-    <el-dialog title="Edit options" :visible.sync="dialogVisible" :close-on-click-modal="false" width="30%" class="dialog-border" @open="openOptionDialog">
+    <el-dialog
+      title="Edit options"
+      :visible.sync="dialogVisible"
+      :close-on-click-modal="false"
+      width="30%"
+      class="dialog-border"
+      @open="openOptionDialog"
+    >
+      <el-alert
+        v-show="showAlert"
+        title="Option names cannot be the same!"
+        type="error"
+        class="mb20"
+      />
       <div class="flexbox">
         <div class="grid-view">
           <div v-for="(item, key) in copyList" :key="key" class="gridbox">
-            <div class="grid-1"><el-input v-model="item.option" autocomplete="off" placeholder="Option name" /></div>
+            <div class="grid-1"><el-input v-model="item.option" autocomplete="off" placeholder="Option name" @change="changeOptionName(item, key)" /></div>
             <div class="grid-2">
-              <div v-if="!item.isShow" class="option-tag">
+              <div v-if="!item.isAdd" class="option-tag">
                 <el-tag
                   v-for="(tag, index) in item.tags"
                   :key="index"
@@ -19,12 +32,12 @@
                 </el-tag>
               </div>
               <div v-else>
-                <el-input v-model="newTag" class="w-200" autocomplete="off" placeholder="Default Meterial" @blur="updateOption(key)" />
+                <el-input v-model="item.newTag" class="w-200" autocomplete="off" placeholder="Default Meterial" @change="updateNewTag(item, key)" />
               </div>
             </div>
             <div class="grid-3">
-              <div v-show="item.isShow || item.tags.length == 1" class="flexbox justify-center align-center">
-                <div class="del-icon" @click="delOption(key)">
+              <div v-if="copyList.length != 1" class="flexbox justify-center align-center">
+                <div v-show="item.isAdd || item.tags.length == 1" class="del-icon" @click="deleteOption(key)">
                   <i class="el-icon-delete" />
                 </div>
               </div>
@@ -43,7 +56,7 @@
         Saving this product will delete 1 variant with the following options:
       </div>
       <ul class="confirm-del-list">
-        <li v-for="(l, k) in delList" :key="k">
+        <li v-for="(l, k) in showTagList" :key="k">
           <span>{{ l.title }}</span>: <span>{{ l.value }}</span>
         </li>
       </ul>
@@ -65,14 +78,24 @@ export default {
     options: {
       type: Array,
       default: () => []
+    },
+    listData: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
+      tableData: [],
+      orgList: [],
       copyList: [],
+      removeTagList: [],
       delList: [],
-      newTag: '',
+      changeList: [],
+      addList: [],
+      showTagList: [],
       isEdit: false,
+      showAlert: false,
       tipDialogVisible: false
     }
   },
@@ -90,38 +113,90 @@ export default {
   methods: {
     openOptionDialog() {
       this.copyList = JSON.parse(JSON.stringify(this.options))
+      this.orgList = JSON.parse(JSON.stringify(this.options))
+      this.tableData = JSON.parse(JSON.stringify(this.listData))
+      this.removeTagList = []
       this.delList = []
-      this.newTag = ''
+      this.changeList = []
+      this.addList = []
+      this.showTagList = []
+      this.isEdit = false
     },
     confirmEditOption() {
       this.dialogVisible = false
       if (this.isEdit) {
         this.tipDialogVisible = true
       } else {
-        this.$emit('update:sku', this.copyList)
+        this.$emit('update:sku', {
+          delList: this.delList,
+          tagList: this.removeTagList,
+          copyList: this.copyList,
+          changeList: this.changeList,
+          addList: this.addList
+        })
       }
     },
     done() {
       this.tipDialogVisible = false
-      this.$emit('delete:sku', {
+      this.$emit('update:sku', {
         delList: this.delList,
-        orgList: this.copyList
+        tagList: this.removeTagList,
+        copyList: this.copyList,
+        changeList: this.changeList,
+        addList: this.addList
       })
     },
     removeTag(item, val, index) {
-      console.log(item, val)
       this.isEdit = true
       item.tags.splice(index, 1)
-      this.delList.push({ title: item.option, value: val })
+      this.removeTagList.push({ title: item.option, value: val })
+      this.showTagList.push({ title: item.option, value: val })
     },
     addOption() {
-      this.copyList.push({ isShow: true, option: 'Material', tags: [] })
+      this.copyList.push({ isAdd: true, option: 'Material', tags: [], newTag: '' })
     },
-    delOption(index) {
+    updateNewTag(item, index) {
+      console.log(item)
+      item.tags.push(item.newTag)
+      this.addList.push(item)
+      console.log('addList', this.addList)
+    },
+    changeOptionName(item, index) {
+      console.log(item)
+      const even = this.copyList.map(i => i.option).filter(f => f === item.option)
+      even.length > 1 ? this.showAlert = true : this.showAlert = false
+      if (!this.showAlert) {
+        if (!item.isAdd) {
+          const val = this.orgList[index]
+          const found = this.changeList.findIndex(c => c.key === index)
+          if (found === -1) {
+            this.changeList.push({ key: index, original: val.option, change: item.option })
+          } else {
+            const original = this.changeList[found].original
+            if (item.option === original) {
+              this.changeList.splice(found, 1)
+            } else {
+              this.changeList[found].change = item.option
+            }
+          }
+          this.changeList.forEach(c => {
+            this.removeTagList.forEach(t => {
+              if (c.original === t.title) {
+                console.log('trtue')
+                t.title = c.change
+              }
+              // t.title = item.option
+            })
+          })
+        }
+      }
+      console.log('changeList', this.changeList)
+    },
+    deleteOption(index) {
+      const item = this.copyList[index]
+      this.delList.push(item)
+      this.showTagList.push({ title: item.option, value: item.tags[0] })
       this.copyList.splice(index, 1)
-    },
-    updateOption(index) {
-      this.copyList[index].tags = [this.newTag]
     }
   }
 }
