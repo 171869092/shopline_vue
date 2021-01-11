@@ -26,8 +26,8 @@
           <div class="grid-view">
             <div v-for="(item, key) in formData.copyList" :key="key" class="gridbox">
               <div class="grid-1">
-                <el-form-item :prop="'copyList.' + key + '.option'" :rules="{required: true, message: '请输入姓名',trigger: 'blur'}">
-                  <el-input v-model="item.option" :validate-event="true" placeholder="Option name" @change="changeOptionName(item, key)" />
+                <el-form-item :prop="'copyList.' + key + '.option'" :rules="{required: true, message: 'Can not be empty',trigger: 'input'}">
+                  <el-input v-model="item.option" autocomplete="off" placeholder="Option name" @change="changeOptionName(item, key)" />
                 </el-form-item>
               </div>
               <div class="grid-2">
@@ -44,8 +44,8 @@
                   </el-tag>
                 </div>
                 <div v-else>
-                  <el-form-item :prop="'copyList.' + key + '.newTag'" :rules="{required: true, message: '请输入姓名',trigger: 'blur'}">
-                    <el-input v-model="item.newTag" class="w-200" autocomplete="off" :validate-event="true" placeholder="Default Meterial" @change="updateNewTag(item, key)" />
+                  <el-form-item :prop="'copyList.' + key + '.newTag'" :rules="{required: true, message: 'Can not be empty',trigger: 'input'}">
+                    <el-input v-model="item.newTag" class="w-200" autocomplete="off" placeholder="Default Meterial" @change="updateNewTag(item, key)" />
                   </el-form-item>
                 </div>
               </div>
@@ -62,7 +62,7 @@
       </el-form>
       <el-button v-show="formData.copyList.length < 3" size="small" plain @click="addOption()">Add another option</el-button>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">Cancel</el-button>
+        <el-button @click="closeDialog">Cancel</el-button>
         <el-button type="primary" @click="confirmEditOption">Done</el-button>
       </span>
     </el-dialog>
@@ -140,7 +140,11 @@ export default {
       this.changeList = []
       this.addList = []
       this.showTagList = []
+    },
+    closeDialog() {
+      this.dialogVisible = false
       this.isEdit = false
+      this.isError = false
     },
     confirmEditOption() {
       this.$refs['ruleForm'].validate((valid) => {
