@@ -47,9 +47,11 @@
             <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
               <template slot-scope="scope">
                 <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
-                <div v-if="item.type == 'product'" style="color:#ef6f38;display: flex;" class="pointer f-l ml50" @click="productAdd('edit',scope.row.title,scope.row.id)">
+                <span v-if="item.type == 'image'">
                   <el-image :src="scope.row.img_url" style="width: 50px; height: 50px" fit="contain" />
-                  <div class="ml20">{{ scope.row.title }}</div>
+                </span>
+                <div v-if="item.type == 'product'" style="color:#ef6f38" class="pointer" @click="productAdd('edit',scope.row.title,scope.row.id)">
+                  <span>{{ scope.row.title }}</span>
                 </div>
               </template>
             </el-table-column>
@@ -79,6 +81,7 @@ export default {
     return {
       // 列表表头
       labelList: [
+        { label: '', value: '', type: 'image', width: '150' },
         { label: 'Product', value: 'id', type: 'product', width: '500' },
         { label: 'Status', value: 'status' },
         { label: 'Inventory', value: 'stock' },
