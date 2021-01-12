@@ -31,3 +31,11 @@ export function shopPush(params) {
     params
   })
 }
+
+export function c_name(params) {
+  return request({
+    url: '/c_name',
+    method: 'get',
+    params
+  })
+}
