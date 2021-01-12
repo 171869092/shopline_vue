@@ -234,6 +234,13 @@
                   </el-form-item>
                 </template>
               </vxe-table-column>
+               <vxe-table-column title="Compare at price" field="compare_price">
+                <template v-slot="{ row, rowIndex }">
+                  <el-form-item class="mb0" label-width="0">
+                    <el-input v-model="row.compare_price" clearable size="mini" class="p5_input" placeholder="Compare at price" />
+                  </el-form-item>
+                </template>
+              </vxe-table-column>
               <vxe-table-column title="Quantity" field="sku_number">
                 <template v-slot="{ row, rowIndex }">
                   <el-form-item class="mb0" label-width="0">
@@ -596,7 +603,8 @@ export default {
           sku_color: '',
           sku_size: '',
           sku_price: '',
-          sku_number: ''
+          sku_number: '999',
+          compare_price:''
         }))
         this.tableData = newArr
         this.preLoading = false
@@ -620,7 +628,8 @@ export default {
         sku_color: '',
         sku_size: '',
         sku_price: '',
-        sku_number: ''
+        sku_number: '999',
+        compare_price:''
       }
       this.tableData.push(sku)
     },
