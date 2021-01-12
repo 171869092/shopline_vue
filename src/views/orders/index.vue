@@ -1,147 +1,150 @@
 <template>
   <div class="my-orders">
     <el-card class="box-card">
-      <!-- <el-tabs v-model="formQuery.logistics_status" @tab-click="handleClick"> -->
-      <div class="filter-control flexbox mb20">
-        <div class="filter-item">
-          <el-input
-            v-model="queryForm.order_name"
-            clearable
-            class="w-500"
-            prefix-icon="el-icon-search"
-            placeholder="Filter orders"
-            @change="filterOrders"
-          />
-        </div>
-        <div class="filter-item w-250">
-          <el-select
-            v-model="queryForm.order_status"
-            multiple
-            clearable
-            collapse-tags
-            placeholder="Order status"
-            style="width:100%"
-            @change="filterOrderStatus"
-          >
-            <el-option
-              v-for="(item, key) in orderStatus"
-              :key="key"
-              :label="item"
-              :value="key"
+      <el-tabs v-model="formQuery.order_status_client" @tab-click="handleClick">
+        <div class="filter-control flexbox mb20">
+          <div class="filter-item">
+            <el-input
+              v-model="formQuery.order_name"
+              clearable
+              class="w-400"
+              prefix-icon="el-icon-search"
+              placeholder="Filter orders"
+              @change="filterOrders"
             />
-          </el-select>
+          </div>
+          <div class="filter-item w-250">
+            <el-select
+              v-model="formQuery.order_status_client"
+              clearable
+              collapse-tags
+              placeholder="Ship status"
+              style="width:100%"
+              @change="filterOrderStatus"
+            >
+              <el-option
+                v-for="(item, key) in orderStatus"
+                :key="key"
+                :label="item"
+                :value="key"
+              />
+            </el-select>
+          </div>
+          <!-- <div class="filter-item w-250">
+            <el-select
+              v-model="queryForm.logistics_status"
+              multiple
+              clearable
+              collapse-tags
+              placeholder="Logistics status"
+              style="width:100%"
+              @change="filterLogisticsStatus"
+            >
+              <el-option
+                v-for="(item, key) in logisticsStatus"
+                :key="key"
+                :label="item"
+                :value="key"
+              />
+            </el-select>
+          </div> -->
+          <div class="filter-item w-250">
+            <el-select
+              v-model="formQuery.store_url"
+              clearable
+              style="width:100%"
+              placeholder="Select Store"
+              @change="filterStoreUrl"
+            >
+              <el-option
+                v-for="(item, key) in storeList"
+                :key="key"
+                :label="item.store_url"
+                :value="item.store_url"
+              />
+            </el-select>
+          </div>
+          <div class="filter-item">
+            <el-select
+              v-model="formQuery.store_url"
+              clearable
+              style="width:100%"
+              placeholder="Select Store"
+              @change="filterStoreUrl"
+            >
+              <el-option
+                v-for="(item, key) in storeList"
+                :key="key"
+                :label="item.store_url"
+                :value="item.store_url"
+              />
+            </el-select>
+          </div>
         </div>
-        <div class="filter-item w-250">
-          <el-select
-            v-model="queryForm.logistics_status"
-            multiple
-            clearable
-            collapse-tags
-            placeholder="Logistics status"
-            style="width:100%"
-            @change="filterLogisticsStatus"
-          >
-            <el-option
-              v-for="(item, key) in logisticsStatus"
-              :key="key"
-              :label="item"
-              :value="key"
-            />
-          </el-select>
-        </div>
-        <div class="filter-item">
-          <el-select
-            v-model="queryForm.store_url"
-            clearable
-            placeholder="Select Store"
-            @change="filterStoreUrl"
-          >
-            <el-option
-              v-for="(item, key) in storeList"
-              :key="key"
-              :label="item.store_url"
-              :value="item.store_url"
-            />
-          </el-select>
-        </div>
-      </div>
 
-      <!-- <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.label" :name="tab.name"> -->
-      <el-table
-        ref="multipleTable"
-        v-loading="loading"
-        :data="tableData"
-        style="width: 100%"
-        highlight-current-row
-        fit
-        stripe
-        :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}"
-      >
-        <el-table-column label="Expand" type="expand" width="100">
-          <template slot-scope="scope">
-            <el-table border :data="scope.row.orders_sublist" style="width: 100%">
-              <el-table-column prop="service_name" label="Service Provider" width="200">
-                <template slot-scope="props">
-                  <div>{{ props.row.service_name || '--' }}</div>
-                </template>
-              </el-table-column>
-              <!-- <el-table-column prop="total_price" label="Order Amount" width="150" /> -->
-              <el-table-column prop="order_status" label="Order Status" width="200">
-                <template slot-scope="props">
-                  <div>{{ orderStatus[props.row.order_status] }}</div>
-                </template>
-              </el-table-column>
-              <el-table-column prop="abnormal_reason" label="Abnormal Reason">
-                <template slot-scope="props">
-                  <div v-html="props.row.abnormal_reason || '--'" />
-                </template>
-              </el-table-column>
-              <el-table-column label="Logistics Status" width="250">
-                <template slot-scope="props">
-                  <div>{{ logisticsStatus[props.row.logistics_status] }}</div>
-                  <div class="primary pointer" @click="logDetail(props.row)">Logistics Details</div>
-                </template>
-              </el-table-column>
-            </el-table>
-          </template>
-        </el-table-column>
-        <el-table-column label="Order">
-          <template slot-scope="scope">
-            <span class="primary pointer" @click="toLink(scope.row)">{{ scope.row.order_name }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="Order Amount">
-          <template slot-scope="scope">
-            <div>{{ scope.row.total_price }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="Store">
-          <template slot-scope="scope">
-            <div>{{ scope.row.store_url }}</div>
-          </template>
-        </el-table-column>
-        <el-table-column label="Order Status">
-          <template slot-scope="scope">
-            <div>
-              <span>{{ orderStatus[scope.row.order_status] }}</span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column label="Operations">
-          <template v-if="scope.row.order_status == 5" slot-scope="scope">
-            <i v-show="scopeIndex == scope.$index && refreshLoading" class="el-icon-loading" />
-            <el-button
-              type="text"
-              :disabled="scopeIndex == scope.$index && refreshLoading"
-              size="small"
-              @click="handleRefreshClick(scope.row, scope.$index)"
-            >Refresh</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
-      <!-- </el-tab-pane> -->
-      <!-- </el-tabs> -->
+        <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.label" :name="tab.name">
+          <el-table
+            ref="multipleTable"
+            v-loading="loading"
+            :data="tableData"
+            style="width: 100%"
+            highlight-current-row
+            fit
+            stripe
+            :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}"
+            @selection-change="handleSelectionChange"
+          >
+            <el-table-column type="selection" width="55" />
+            <el-table-column label="Order">
+              <template slot-scope="scope">
+                <span class="primary pointer" @click="toLink(scope.row)">{{ scope.row.order_name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="Store">
+              <template slot-scope="scope">
+                <div>{{ scope.row.store_url }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="Total">
+              <template slot-scope="scope">
+                <div>{{ scope.row.total_price }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="Cost">
+              <template slot-scope="scope">
+                <div>{{ scope.row.purchase_price }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="Ship Status">
+              <template slot-scope="scope">
+                <span>{{ orderStatus[scope.row.order_status_client] }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="Vendor">
+              <template slot-scope="scope">
+                <span>{{ scope.row.service_name }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="Created">
+              <template slot-scope="scope">
+                <span>{{ scope.row.order_update_time_format }}</span>
+              </template>
+            </el-table-column>
+            <!-- <el-table-column label="Operations">
+              <template v-if="scope.row.order_status == 5" slot-scope="scope">
+                <i v-show="scopeIndex == scope.$index && refreshLoading" class="el-icon-loading" />
+                <el-button
+                  type="text"
+                  :disabled="scopeIndex == scope.$index && refreshLoading"
+                  size="small"
+                  @click="handleRefreshClick(scope.row, scope.$index)"
+                >Refresh</el-button>
+              </template>
+            </el-table-column> -->
+          </el-table>
+          <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
+        </el-tab-pane>
+      </el-tabs>
     </el-card>
     <el-dialog class="custom-dialog" title="Logistics Details" :visible.sync="dialogVisible" width="700px" @open="handleOpen">
       <el-scrollbar ref="myScrollbar" v-loading="timelineLoading" wrap-class="dialog-scrollbar">
@@ -177,9 +180,8 @@ export default {
       },
       formQuery: {
         order_name: '',
-        order_status: '',
+        order_status_client: '',
         store_url: '',
-        logistics_status: '',
         iDisplayStart: 0,
         iDisplayLength: 2
       },
@@ -189,20 +191,17 @@ export default {
         limit: 10
       },
       // logisticsStatus: {1: "待发货", 2: "已揽件", 3: "运输中", 4: "已送达", 5: "已拒收", 6: "已取消", 7: "已退回", 8: "待转单", 9: "退货在仓"},
-      logisticsStatus: { 1: 'Waiting For Delivery', 2: 'Received', 3: 'In Transit', 4: 'Delivered', 5: 'Rejected', 6: 'Canceled', 7: 'Returned', 8: 'Pending Transfer', 9: 'Return Goods In Stock' },
+      // logisticsStatus: { 1: 'Waiting For Delivery', 2: 'Received', 3: 'In Transit', 4: 'Delivered', 5: 'Rejected', 6: 'Canceled', 7: 'Returned', 8: 'Pending Transfer', 9: 'Return Goods In Stock' },
       // orderStatus: {1: "待支付", 2: "金额处理", 3: "完成支付", 4: "退款", 5: "异常", 6: "部分支付", 7: "部分退款", 8: "订单取消"},
-      orderStatus: { 1: 'Pending payment', 2: 'Processing', 3: 'Complete payment', 4: 'Refunded', 5: 'Order exception', 6: 'Partially payment', 7: 'Partially refunded', 8: 'Order canceled' },
+      // orderStatus: { 1: 'Pending payment', 2: 'Processing', 3: 'Complete payment', 4: 'Refunded', 5: 'Order exception', 6: 'Partially payment', 7: 'Partially refunded', 8: 'Order canceled' },
+      orderStatus: { 0: 'ALL', 1: 'Pending', 2: 'Processing', 3: 'In transit', 4: 'Exception', 5: 'Delivered' },
       tabList: [
-        { label: 'All', name: '0' },
-        { label: 'Waiting For Delivery', name: '1' },
-        { label: 'Received', name: '2' },
+        { label: 'ALL', name: '0' },
+        { label: 'Pending', name: '1' },
+        { label: 'Processing', name: '2' },
         { label: 'In Transit', name: '3' },
-        { label: 'Delivered', name: '4' },
-        { label: 'Rejected', name: '5' },
-        { label: 'Canceled', name: '6' },
-        { label: 'Returned', name: '7' },
-        { label: 'Pending Transfer', name: '8' },
-        { label: 'Return Goods In Stock', name: '9' }
+        { label: 'Exception', name: '4' },
+        { label: 'Delivered', name: '5' }
       ],
       labelList: [
         // { label: 'Order Number', value: 'order_no', type: 'order_no' },
@@ -235,6 +234,9 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+    handleSelectionChange(val) {
+      console.log(val)
     },
     Inquire() {
       // const loading = this.$loading({
@@ -315,22 +317,22 @@ export default {
       })
     },
     filterOrders: debounce(function() {
-      this.formQuery.order_name = this.queryForm.order_name
+      // this.formQuery.order_name = this.queryForm.order_name
       this.resetPageLimit()
       this.Inquire()
     }, 500),
     filterOrderStatus: debounce(function() {
-      this.formQuery.order_status = this.queryForm.order_status.toString()
+      // this.formQuery.order_status = this.queryForm.order_status.toString()
       this.resetPageLimit()
       this.Inquire()
     }, 500),
     filterLogisticsStatus: debounce(function() {
-      this.formQuery.logistics_status = this.queryForm.logistics_status.toString()
+      // this.formQuery.logistics_status = this.queryForm.logistics_status.toString()
       this.resetPageLimit()
       this.Inquire()
     }, 500),
     filterStoreUrl: debounce(function() {
-      this.formQuery.store_url = this.queryForm.store_url
+      // this.formQuery.store_url = this.queryForm.store_url
       this.resetPageLimit()
       this.Inquire()
     }, 500)

@@ -107,13 +107,13 @@
             <div slot="header" class="flexbox justify-space-between align-center">
               <div><span style="color:red">*</span><span style="font-weight: 600;">Variants:</span></div>
               <!-- <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button> -->
-              <div v-if="$route.query.type == 'edit'">
+              <div v-if="$route.query.type == 'edit' && tableData.length > 0">
                 <el-button size="mini" type="primary" icon="el-icon-plus" @click="addVariant">Add variant</el-button>
                 <el-button size="mini" @click="editOptions">Edit options</el-button>
               </div>
             </div>
-            <div v-if="$route.query.type == 'add'">
-              <el-checkbox v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
+            <div>
+              <el-checkbox v-if="showVariants" v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
               <el-button v-if="variantsEheck && optionsList.length < 3 " class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
             </div>
             <!-- 新增属性 -->
@@ -353,15 +353,15 @@ export default {
   data() {
     return {
       formData: {
+        title: '',
+        describe: '',
         status: '2',
         sku_list: [],
         images: [],
         options: [],
         cost_vender_list: [],
         compare_price: '',
-        price: '',
-        title: '',
-        describe: ''
+        price: ''
       },
       formRule: {
         title: [
@@ -408,6 +408,12 @@ export default {
   computed: {
     sourceArr() {
       return this.optionsList.map(item => item.tags).filter(String)
+    },
+    showVariants() {
+      if ((this.formData.price && this.formData.price !== null) && this.tableData.length === 0) {
+        return false
+      }
+      return true
     }
   },
   watch: {
@@ -505,9 +511,12 @@ export default {
     },
     // 保存数据
     submit() {
-      this.formData.sku_list = this.tableData
+      if (this.tableData.length > 0) {
+        this.formData.price = ''
+        this.formData.compare_price = ''
+      }
+      this.formData.sku_list = this.tableData.filter(Boolean)
       this.formData.options = this.optionsList
-      // if (this.formData.sku_list.length === 0) return this.$message({ message: 'Fill in at least one line of variation', type: 'warning' })
       console.log(this.formData)
       this.$refs.formData.validate((valid) => {
         if (valid) {
@@ -551,8 +560,6 @@ export default {
         this.tableData = []
         this.optionsList.push({ showList: false, option: 'Size', tags: [] })
       } else {
-        this.formData.price = ''
-        this.formData.compare_price = ''
         this.tableData = []
         this.optionsList = []
       }
@@ -619,8 +626,6 @@ export default {
     },
     changeVariants(name) {
       const arr = this.tableData.map(item => item.option[name])
-      console.log(this.tableData)
-      console.log(_.uniq(arr))
       this.optionsList.forEach(opt => {
         if (opt.option === name) {
           opt.tags = _.uniq(arr)
@@ -640,7 +645,13 @@ export default {
       const result3 = await this.removelineData(data, result2)
       const result4 = await this.addTagData(data, result3)
       console.log(result4)
-      this.$refs.xTable.loadData(result4)
+      const xTable = this.$refs.xTable
+      if (xTable) {
+        this.$refs.xTable.loadData(result4)
+      } else {
+        // this.tableData = result4
+        this.$set(this, 'tableData', result4)
+      }
     },
     changeTitle(data, result) {
       return new Promise(resolve => {
@@ -678,12 +689,12 @@ export default {
             result.forEach((v, i) => {
               if (v.option[t.title] === t.value) {
                 delete result[i]
-                // delete v.option[t.title]
               }
             })
           })
+          return resolve(result.filter(Boolean))
         }
-        return resolve(result.filter(String))
+        return resolve(result)
       })
     },
     removelineData(data, result) {

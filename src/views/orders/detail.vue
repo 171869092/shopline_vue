@@ -85,7 +85,7 @@
         <el-card class="box-card mt20">
           <div slot="header">
             <div class="detail-block-title">
-              <h2>Timeline</h2>
+              <h2>Vendor</h2>
             </div>
           </div>
           <div v-if="track_info.length > 0">
