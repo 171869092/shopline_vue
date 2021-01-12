@@ -28,9 +28,7 @@
           </el-card>
 
           <!-- 橱窗图库： -->
-          <el-card
-            class="box-card"
-          >
+          <el-card class="box-card">
             <div slot="header" class="flexbox justify-space-between align-center">
               <div><span style="color:red">*</span><span style="font-weight: 600;">Media:</span></div>
               <div>
@@ -42,22 +40,20 @@
 
           </el-card>
           <!-- Pricing -->
-          <el-card
-            v-if="tableData.length == 0"
-            class="box-card"
-          >
+          <el-card v-if="!variantsEheck && tableData.length == 0" class="box-card">
             <div slot="header" class="flexbox justify-space-between align-center">
               <div><span style="color:red">*</span><span style="font-weight: 600;">Pricing:</span></div>
             </div>
-            <div style="display: flex;" class="ml50">
-              <el-form-item label="Price:" prop="Price">
-                <el-input v-model="formData.price" placeholder="Price" class="w-230">
-                  <template slot="prepend">$</template>
+            <div class="flexbox ml20">
+              <el-form-item label="Price" prop="Price">
+                <el-input v-model="formData.price" type="number" placeholder="Price" class="w-230">
+                  <div slot="prefix" style="padding:0 8px">$</div>
+                  <!-- <i slot="prefix">$</i> -->
                 </el-input>
               </el-form-item>
-              <el-form-item label="Compare at Price:" prop="compare_price" class="w-230" style="margin-left: 150px;">
-                <el-input v-model="formData.compare_price" placeholder="Compare at Price">
-                  <template slot="prepend">$</template>
+              <el-form-item label="Compare at Price" prop="compare_price" class="w-230" style="margin-left: 120px;">
+                <el-input v-model="formData.compare_price" type="number" placeholder="Compare at Price">
+                  <div slot="prefix" style="padding:0 8px">$</div>
                 </el-input>
               </el-form-item>
             </div>
@@ -188,6 +184,7 @@
             <!-- 生成属性 -->
             <div v-if="variantsEheck" class="mt20"><label>Preview</label></div>
             <vxe-table
+              v-if="variantsEheck || tableData.length > 0"
               ref="xTable"
               border
               show-overflow
@@ -339,7 +336,7 @@ import _ from 'lodash'
 import InputTag from 'vue-input-tag'
 import EditOptions from './component/edit-options'
 import { descartes_obj } from '@/utils'
-import { getAllProductEdit, getStoreProductEdit, getAllProductSave, getStoreProductSave, allProductDelete, getDeleteSku } from '@/api/product'
+import { getAllProductEdit, getStoreProductEdit, getAllProductSave, getStoreProductSave, allProductDelete } from '@/api/product'
 export default {
   name: 'product-details',
   components: {
@@ -551,10 +548,12 @@ export default {
     // 属性清空
     checkVariants(val) {
       if (val) {
-        this.formData.sku_list = []
+        this.tableData = []
         this.optionsList.push({ showList: false, option: 'Size', tags: [] })
       } else {
-        this.formData.sku_list = []
+        this.formData.price = ''
+        this.formData.compare_price = ''
+        this.tableData = []
         this.optionsList = []
       }
     },

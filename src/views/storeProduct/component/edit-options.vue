@@ -12,6 +12,7 @@
         v-show="showAlert"
         title="Option names cannot be the same!"
         type="error"
+        show-icon
         class="mb20"
       />
       <el-alert
@@ -204,10 +205,10 @@ export default {
     changeOptionName(item, index) {
       console.log(item)
       if (item.option !== '') {
-        this.isError = false
         const even = this.formData.copyList.map(i => i.option).filter(f => f === item.option)
         even.length > 1 ? this.showAlert = true : this.showAlert = false
         if (!this.showAlert) {
+          this.isError = false
           if (!item.isAdd) {
             const val = this.orgList[index]
             const found = this.changeList.findIndex(c => c.key === index)
@@ -232,6 +233,8 @@ export default {
             })
           }
         }
+      } else {
+        this.isError = true
       }
       console.log('changeList', this.changeList)
     },
