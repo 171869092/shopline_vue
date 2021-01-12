@@ -21,34 +21,36 @@
           </div>
           <el-table
             ref="productTable"
+            fit
             :data="detailInfo.goods_info"
             style="width: 100%"
             highlight-current-row
-            fit
             :header-cell-style="{ background: '#F3F5F9FF', color: '#262B3EFF' }"
           >
-            <!-- <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
-            <template slot-scope="scope">
-              <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
-            </template>
-          </el-table-column> -->
-            <el-table-column prop="third_goods_name" label="Products" width="300" />
-            <el-table-column prop="third_sku_name" label="SKU" width="300" />
-            <el-table-column prop="sku_num" label="SKU Num" />
-            <el-table-column prop="third_price" label="Price">
+            <el-table-column label="Picture" width="150">
               <template slot-scope="scope">
-                <span v-if="scope.row.third_price">{{
-                  scope.row.third_price
-                }}</span>
-                <span v-else>--</span>
+                <el-image class="sku_image" :src="scope.row.sku_image" fit="cover">
+                  <div slot="error" class="image-slot">
+                    <i class="error-icon el-icon-picture-outline" />
+                  </div>
+                </el-image>
               </template>
             </el-table-column>
-            <el-table-column prop="purchase_price" label="Cost">
+            <el-table-column prop="third_goods_name" label="Products" width="300" />
+            <el-table-column prop="third_sku_name" label="Price&Amount" width="300">
               <template slot-scope="scope">
-                <span v-if="scope.row.purchase_price">{{
-                  scope.row.purchase_price
-                }}</span>
-                <span v-else>--</span>
+                <span>{{ `${scope.row.third_price} x ${scope.row.sku_num}` }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="third_price" label="Total Price">
+              <template slot-scope="scope">
+                <span>{{ +scope.row.third_price * +scope.row.sku_num }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="service_name" label="Vendor" />
+            <el-table-column prop="purchase_price" label="Total Cost">
+              <template slot-scope="scope">
+                <span>{{ scope.row.purchase_price || '--' }}</span>
               </template>
             </el-table-column>
           </el-table>
@@ -61,23 +63,25 @@
             </div>
           </div>
           <el-row>
+            <el-col :offset="1" :span="8">
+              <div class="flexbox">
+                <div class="vendor-sub-title"><span>Shipping address</span></div>
+              </div>
+              <ul class="customer-info mt15">
+                <li><span>Name: </span><span>{{ detailInfo.consignee }}</span></li>
+                <li><span>Street: </span><span>{{ detailInfo.address1 }}</span></li>
+                <li><span>Zipcode: </span><span>{{ detailInfo.zip }}</span></li>
+                <li><span>Country: </span><span>{{ detailInfo.country }}</span></li>
+                <li><span>Phone: </span><span>{{ detailInfo.mobile }}</span></li>
+              </ul>
+            </el-col>
             <el-col :span="10">
-              <el-form ref="ruleForm" :model="detailInfo" label-width="140px">
-                <el-form-item label="Consignee :" prop="consignee">
-                  <div>{{ detailInfo.consignee || '--' }}</div>
-                </el-form-item>
-                <el-form-item label="Shipping Address :" prop="address1">
-                  <div>{{ detailInfo.address1 || '--' }}</div>
-                </el-form-item>
-                <el-form-item label="Email Address :" prop="email">
-                  <!-- <el-input v-model="detailInfo.email" readonly /> -->
-                  <div>{{ detailInfo.email || '--' }}</div>
-                </el-form-item>
-                <el-form-item label="Contact :" prop="mobile">
-                  <!-- <el-input v-model="detailInfo.mobile" readonly /> -->
-                  <div>{{ detailInfo.mobile || '--' }}</div>
-                </el-form-item>
-              </el-form>
+              <div class="flexbox">
+                <div class="vendor-sub-title"><span>Contact information</span></div>
+              </div>
+              <ul class="customer-info mt15">
+                <li><span>Email: </span><span>{{ detailInfo.email }}</span></li>
+              </ul>
             </el-col>
           </el-row>
         </el-card>
@@ -88,31 +92,41 @@
               <h2>Vendor</h2>
             </div>
           </div>
-          <!-- <div v-if="vendors.length > 0">
-            <div v-for="(vendor, key) in vendors" :key="key" class="block mb20">
-              <div class="flexbox p15 log-title cursor_p" @click="toggleTheTimeline(vendor)">
-                <div><span class="text-subdued">Service Provider:</span> {{ vendor.service_name || '--' }}</div>
-                <div><span class="text-subdued">Status:</span> {{ vendor.TrackingStatus || '--' }}</div>
-                <div><span class="text-subdued">Waybill Number：</span>{{ vendor.WaybillNumber || '--' }}</div>
-              </div>
-              <el-collapse-transition>
-                <div v-show="vendor.show">
-                  <el-timeline class="mt20 pl20" :reverse="false">
-                    <el-timeline-item v-for="(item, index) in vendor.OrderTrackingDetails" :key="index">
+          <div v-for="(vendor, key) in vendors" :key="key" class="border-top">
+            <el-row :gutter="20">
+              <el-col :offset="1" :span="8">
+                <div class="grid-content bg-purple">
+                  <div class="flexbox">
+                    <div class="vendor-sub-title">Name: <span>{{ vendor.service_name || '--' }}</span></div>
+                  </div>
+                  <ul class="vendor-info mt15">
+                    <li><span>Total Cost: </span><span>${{ vendor.total_cost }}</span></li>
+                    <li><span>Product Price: </span><span>${{ vendor.product_price }}</span></li>
+                    <li><span>Shipping Price: </span><span>${{ vendor.shipping_price }}</span></li>
+                    <li><span>Service Price: </span><span>${{ vendor.service_price }}</span></li>
+                  </ul>
+                </div>
+              </el-col>
+              <el-col :span="12">
+                <div class="grid-content bg-purple">
+                  <div class="flexbox">
+                    <div class="vendor-sub-title">Status: <span>{{ vendor.track_info.TrackingStatus || '--' }}</span></div>
+                    <div class="vendor-sub-title ml50">Tracking Numbers: <span>{{ vendor.track_info.TrackingNumber || '--' }}</span></div>
+                  </div>
+                  <el-timeline class="mt20 pl5" :reverse="false">
+                    <el-timeline-item v-for="(item, index) in vendor.track_info.OrderTrackingDetails" :key="index">
                       <span>{{ item.ProcessDate }}</span><span class="ml40">{{ item.ProcessContent }}</span>
                     </el-timeline-item>
                   </el-timeline>
+                <!-- <div v-if="vendor.track_info" class="empty-text ml40 mt40">
+                    <div class="empty-icon">
+                      <svg-icon icon-class="nodata" />
+                    </div>
+                    <div class="empty-normal">No Track Info</div>
+                  </div> -->
                 </div>
-              </el-collapse-transition>
-            </div>
-          </div> -->
-          <div>
-            <div class="empty-text">
-              <div class="empty-icon">
-                <svg-icon icon-class="nodata" />
-              </div>
-              <div class="empty-normal">No Data</div>
-            </div>
+              </el-col>
+            </el-row>
           </div>
         </el-card>
       </el-col>
@@ -165,10 +179,7 @@ export default {
           // console.log(res.data)
           if (res.code === 200) {
             this.detailInfo = res.data
-            this.vendors = res.data.vendor.map(item => {
-              this.$set(item, 'show', true)
-              return item
-            })
+            this.vendors = res.data.vendor
             console.log(this.vendors)
           }
         })
@@ -179,13 +190,6 @@ export default {
           // loading.close()
           this.loading = false
         })
-    },
-    toggleTheTimeline(track) {
-      if (track.show) {
-        this.$set(track, 'show', false)
-      } else {
-        this.$set(track, 'show', true)
-      }
     }
   }
 }
@@ -227,6 +231,7 @@ export default {
   }
 }
 .empty-text {
+  width: 150px;
   text-align: center;
   .empty-icon {
     svg {
@@ -237,5 +242,25 @@ export default {
     color: rgba(0,0,0,.25);
   }
 }
-
+.vendor-info {
+  padding-left: 25px;
+  line-height: 35px;
+}
+.customer-info {
+  @extend .vendor-info;
+  // padding-left: 22px;
+  // line-height: 30px;
+}
+.vendor-sub-title {
+  line-height: 25px;
+  font-weight: 700;
+}
+.border-top {
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+  &:first-child {
+    padding-top: 0 !important;
+    border-top: none !important;
+  }
+}
 </style>

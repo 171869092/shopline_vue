@@ -48,9 +48,9 @@
               <template slot-scope="scope">
                 <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
                 <span v-if="item.type == 'image'">
-                     <el-image :src="scope.row.img_url" style="width: 50px; height: 50px" fit="contain"></el-image>
+                  <el-image :src="scope.row.img_url" style="width: 50px; height: 50px" fit="contain" />
                 </span>
-                <div v-if="item.type == 'product'" style="color:#ef6f38" class="pointer" @click="productAdd('edit',scope.row.title,scope.row.id)">      
+                <div v-if="item.type == 'product'" style="color:#ef6f38" class="pointer" @click="productAdd('edit',scope.row.title,scope.row.id)">
                   <span>{{ scope.row.title }}</span>
                 </div>
               </template>
