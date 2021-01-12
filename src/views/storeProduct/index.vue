@@ -82,7 +82,7 @@ export default {
       // 列表表头
       labelList: [
         { label: '', value: '', type: 'image', width: '150' },
-        { label: 'Product', value: 'id', type: 'product', width: '350' },
+        { label: 'Product', value: 'id', type: 'product', width: '500' },
         { label: 'Status', value: 'status' },
         { label: 'Inventory', value: 'stock' },
         { label: 'Price', value: 'price' },
