@@ -270,7 +270,7 @@ export default {
       this.Inquire()
     },
     toLink(row) {
-      this.$router.push({ name: 'orders-detail', query: { order_no: row.order_no, order_name: row.order_name }})
+      this.$router.push({ name: 'orders-detail', query: { order_id: row.id, order_no: row.order_name }})
     },
     logDetail(row) {
       this.dialogVisible = true

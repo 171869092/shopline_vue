@@ -10,7 +10,7 @@
             @click="$router.back()"
           />
           <div class="order-id ml20">
-            Order No：<span class="primary">{{ order_name }}</span>
+            Order No：<span class="primary">{{ order_no }}</span>
           </div>
         </div>
         <el-card class="box-card mt20">
@@ -88,25 +88,25 @@
               <h2>Vendor</h2>
             </div>
           </div>
-          <div v-if="track_info.length > 0">
-            <div v-for="(track, key) in track_info" :key="key" class="block mb20">
-              <div class="flexbox p15 log-title cursor_p" @click="toggleTheTimeline(track)">
-                <div><span class="text-subdued">Service Provider:</span> {{ track.service_name || '--' }}</div>
-                <div><span class="text-subdued">Status:</span> {{ track.TrackingStatus || '--' }}</div>
-                <div><span class="text-subdued">Waybill Number：</span>{{ track.WaybillNumber || '--' }}</div>
+          <!-- <div v-if="vendors.length > 0">
+            <div v-for="(vendor, key) in vendors" :key="key" class="block mb20">
+              <div class="flexbox p15 log-title cursor_p" @click="toggleTheTimeline(vendor)">
+                <div><span class="text-subdued">Service Provider:</span> {{ vendor.service_name || '--' }}</div>
+                <div><span class="text-subdued">Status:</span> {{ vendor.TrackingStatus || '--' }}</div>
+                <div><span class="text-subdued">Waybill Number：</span>{{ vendor.WaybillNumber || '--' }}</div>
               </div>
               <el-collapse-transition>
-                <div v-show="track.show">
+                <div v-show="vendor.show">
                   <el-timeline class="mt20 pl20" :reverse="false">
-                    <el-timeline-item v-for="(item, index) in track.OrderTrackingDetails" :key="index">
+                    <el-timeline-item v-for="(item, index) in vendor.OrderTrackingDetails" :key="index">
                       <span>{{ item.ProcessDate }}</span><span class="ml40">{{ item.ProcessContent }}</span>
                     </el-timeline-item>
                   </el-timeline>
                 </div>
               </el-collapse-transition>
             </div>
-          </div>
-          <div v-else>
+          </div> -->
+          <div>
             <div class="empty-text">
               <div class="empty-icon">
                 <svg-icon icon-class="nodata" />
@@ -126,7 +126,6 @@ export default {
   props: {},
   data() {
     return {
-      tableData: [],
       labelList: [
         { label: 'Products', value: 'third_goods_name' },
         { label: 'SKU', value: 'third_sku_name' },
@@ -136,17 +135,17 @@ export default {
         { label: 'Service Fee', value: 'service_fee' }
       ],
       detailInfo: {},
-      track_info: [],
+      vendors: [],
       loading: false,
       trackList: []
     }
   },
   computed: {
+    order_id() {
+      return this.$route.query.order_id
+    },
     order_no() {
       return this.$route.query.order_no
-    },
-    order_name() {
-      return this.$route.query.order_name
     }
   },
   created() {
@@ -161,16 +160,16 @@ export default {
       //   background: 'rgba(0, 0, 0, 0.7)'
       // })
       this.loading = true
-      getOrderInfo({ order_no: this.order_no })
+      getOrderInfo({ orders_id: this.order_id })
         .then((res) => {
           // console.log(res.data)
           if (res.code === 200) {
             this.detailInfo = res.data
-            this.track_info = res.data.track_info.map(item => {
+            this.vendors = res.data.vendor.map(item => {
               this.$set(item, 'show', true)
               return item
             })
-            console.log(this.track_info)
+            console.log(this.vendors)
           }
         })
         .catch((err) => {
