@@ -10,18 +10,33 @@
         :data="tableData"
         style="width: 100%"
         highlight-current-row
+        :row-class-name="tableRowClassName"
+        @cell-click="tabClick"
         fit
         stripe
         :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}"
       >
-        <el-table-column label="Store ID">
+       <el-table-column label="Store name">
+          <template slot-scope="scope">
+            <span v-if="(scope.row.index === tabClickIndex && tabClickLabel === 'Store name') || !scope.row.store_name">
+                <el-input v-model="scope.row.store_name" class="w-230" @blur="inputBlur(scope.row)"></el-input>
+            </span>
+            <span v-else>{{scope.row.store_name}}</span>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column label="Store ID">
           <template slot-scope="scope">
             <span>{{ scope.row.id }}</span>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <el-table-column label="Store Url">
           <template slot-scope="scope">
             <div>{{ scope.row.store_url }}</div>
+          </template>
+        </el-table-column>
+        <el-table-column label="Platform">
+          <template slot-scope="scope">
+           <span>{{scope.row.platform}}</span>
           </template>
         </el-table-column>
         <el-table-column label="Create Time">
@@ -76,7 +91,7 @@
   </div>
 </template>
 <script>
-import { shopList, shopPush, testStoreConnect, connectStore } from '@/api/shop'
+import { shopList, shopPush, testStoreConnect, connectStore ,c_name} from '@/api/shop'
 import { } from '@/api/user'
 export default {
   name: 'shop',
@@ -96,6 +111,8 @@ export default {
         page: 1,
         limit: 10
       },
+      tabClickIndex:'',
+      tabClickLabel:'',
       loading: false,
       dialogvisible: false,
       submitLoading: false,
@@ -243,7 +260,33 @@ export default {
       //  this.storeForm = this.$options.data().storeForm[0]
       this.$refs.storeForm.resetFields()
       this.dialogvisible = false
+    },
+    tableRowClassName ({ row, rowIndex }) {
+      // 把每一行的索引放进row
+      row.index = rowIndex
+    },
+    inputBlur (row) {
+      // console.log('row', row)
+      this.tabClickIndex = null
+      this.tabClickLabel = ''   
+       c_name({id:row.id,store_name:row.store_name}).then(res =>{
+       if (res.code == 200) {
+         this.$message({ message: res.message, type: 'success' })
+       }
+    })  
+    },
+    // tabClick row 当前行 column 当前列
+    tabClick (row, column, cell, event) {
+      switch (column.label) {
+        case 'Store name':
+          this.tabClickIndex = row.index
+          this.tabClickLabel = column.label
+          break
+        default: return
     }
+   
+      console.log('tabClick', this.tabClickIndex, row)
+}
   }
 }
 </script>
