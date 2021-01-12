@@ -112,7 +112,7 @@
                 <el-button size="mini" @click="editOptions">Edit options</el-button>
               </div>
             </div>
-            <div>
+            <div v-if="$route.query.type == 'add'">
               <el-checkbox v-if="showVariants" v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
               <el-button v-if="variantsEheck && optionsList.length < 3 " class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
             </div>
