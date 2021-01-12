@@ -829,42 +829,7 @@ export default {
     color:  #ef6f38;
   }
 }
-.sku_image {
-  width: 40px;
-  height: 40px;
-  border-radius: 3px;
-  border: 1px solid rgba(201, 204, 207, 1);
-  background: #f9fafb;
-  margin: 4px;
-}
-.image-slot {
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
- .error-icon  {
-    font-size: 35px;
-  }
-  .my-autocomplete {
-    li {
-      line-height: normal;
-      padding: 7px;
 
-      .name {
-        text-overflow: ellipsis;
-        overflow: hidden;
-      }
-      .addr {
-        font-size: 12px;
-        color: #b4b4b4;
-      }
-
-      .highlighted .addr {
-        color: #ddd;
-      }
-    }
-  }
-}
 .option-list {
   list-style: none;
   padding-left: 0px;

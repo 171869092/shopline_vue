@@ -21,16 +21,16 @@
   </div>
 </template>
 <script>
-import { getServiceList, getProductService,getCountryList } from '@/api/product'
-var country= (rule, value, callback) => {
-  if(rule.required){
-    if((value == null ) || (value.length == 0)){
-      callback("please choose!")
+import { getServiceList, getProductService, getCountryList } from '@/api/product'
+var country = (rule, value, callback) => {
+  if (rule.required) {
+    if ((value == null) || (value.length === 0)) {
+      callback('please choose!')
     }
     if (value.length > 5) {
       callback('Choose no more than 5 countries')
     }
-  } 
+  }
   callback()
 }
 export default {
@@ -43,13 +43,13 @@ export default {
   },
   data() {
     return {
-      country, 
+      country,
       providerForm: {
         service_id: '',
-        country:[]
+        country: []
       },
       ServiceList: [],
-      countriesList:[],
+      countriesList: [],
       rules: {
         service_id: [
           { required: true, message: 'please choose', trigger: 'blur' }
@@ -66,7 +66,7 @@ export default {
             this.ServiceList = res.data
           }
         })
-        getCountryList().then(res =>{
+        getCountryList().then(res => {
           if (res.code === 200) {
             this.countriesList = res.data
           }

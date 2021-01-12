@@ -216,16 +216,26 @@ input[type="number"] {
     flex: #{$i} 1 auto;
   }
 }
-$mlist: 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 100;
-@each $item in $mlist {
+$marginlist: 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 100, 110, 120, 130, 140, 150;
+@each $item in $marginlist {
   .m#{$item} {
     margin: #{$item} !important;
   }
 }
-$mtlist: 0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 100;
-@each $item in $mtlist {
+@each $item in $marginlist {
   .mt#{$item} {
     margin-top: #{$item}px !important;
+  }
+}
+@each $item in $marginlist {
+  .ml#{$item} {
+    margin-left: #{$item}px !important;
+  }
+}
+
+@each $item in $marginlist {
+  .mr#{$item} {
+    margin-right: #{$item}px !important;
   }
 }
 
@@ -394,4 +404,23 @@ $align-list: center, start, end, flex-start, flex-end, self-start, self-end, str
   padding: 1px 8px;
   display: inline-block;
   cursor: pointer;
+}
+
+.sku_image {
+  width: 40px;
+  height: 40px;
+  border-radius: 3px;
+  border: 1px solid rgba(201, 204, 207, 1);
+  background: #f9fafb;
+  margin: 4px;
+  cursor: pointer;
+}
+.image-slot {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+ .error-icon  {
+    font-size: 35px;
+  }
 }
