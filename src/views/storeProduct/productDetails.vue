@@ -112,7 +112,7 @@
                 <el-button size="mini" @click="editOptions">Edit options</el-button>
               </div>
             </div>
-            <div v-if="$route.query.type == 'add'">
+            <div>
               <el-checkbox v-if="showVariants" v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
               <el-button v-if="variantsEheck && optionsList.length < 3 " class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
             </div>
@@ -421,6 +421,7 @@ export default {
       return this.optionsList.map(item => item.tags).filter(String)
     },
     showVariants() {
+      // v-if="$route.query.type == 'add'"
       if ((this.formData.price && this.formData.price !== null) && this.tableData.length === 0) {
         return false
       }
