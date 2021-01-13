@@ -143,7 +143,7 @@
         </el-tab-pane>
       </el-tabs>
     </el-card>
-    <unhosting-products :visible.sync="dialogVisible" />
+    <unhosting-products :visible.sync="dialogVisible" :orders-id="selOrderIds" />
   </div>
 </template>
 <script>
