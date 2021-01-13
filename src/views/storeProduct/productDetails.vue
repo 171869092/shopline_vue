@@ -113,7 +113,7 @@
               </div>
             </div>
             <div>
-              <el-checkbox v-if="showVariants" v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
+              <el-checkbox v-show="showVariants || isAddVariants" v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
               <el-button v-if="variantsEheck && optionsList.length < 3 " class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
             </div>
             <!-- 新增属性 -->
@@ -169,22 +169,15 @@
                     <div v-else />
                   </div>
                   <el-form-item class="mb0" label-width="0">
-                    <!-- <el-input-tag v-model="scope.row.tags" @input="tagsChange" /> -->
-                    <!-- <input-tag v-model="scope.row.tags" class="option-input-tag" :add-tag-on-blur="true" :limit="20" @update:tags="tagsChange" /> -->
                     <input-tag v-model="scope.row.tags" class="option-input-tag" :add-tag-on-blur="true" :limit="20" @input="tagsChange" />
                   </el-form-item>
                 </template>
               </el-table-column>
-              <!-- <el-table-column label="Operating" width="120px">
-                <template slot-scope="scope">
-
-                </template>
-              </el-table-column> -->
             </el-table>
             <!-- 生成属性 -->
-            <div v-if="variantsEheck" class="mb10">
-              <label>Preview</label>
-              <el-button v-if="showDelBtn" class="ml20" size="mini" type="text" plain @click="deleteVariants()">Delete variants</el-button>
+            <div class="mb10">
+              <label v-if="variantsEheck" class="ml20">Preview</label>
+              <el-button v-if="showDelBtn" size="mini" type="primary" plain @click="deleteVariants()">Delete variants</el-button>
             </div>
             <vxe-table
               v-if="variantsEheck || tableData.length > 0"
@@ -415,6 +408,7 @@ export default {
       showAlert: false,
       preLoading: false,
       showDelBtn: false,
+      isAddVariants: false,
       skuIndex: '',
       skuImage: '',
       imgList: [],
@@ -427,9 +421,8 @@ export default {
       return this.optionsList.map(item => item.tags).filter(String)
     },
     showVariants() {
-      return this.tableData.length < 0
+      return this.tableData.length === 0
     }
-
   },
   watch: {
     optionsList: {
@@ -589,6 +582,7 @@ export default {
     },
     // 属性变更
     tagsChange() {
+      this.isAddVariants = true
       console.time('whatever')
       const variants = this.whatever(this.sourceArr)
       console.timeEnd('whatever')
@@ -738,8 +732,9 @@ export default {
       this.selectedVariants = records
     },
     deleteVariants() {
-      _.pullAll(this.tableData, this.selectedVariants)
-      if (this.tableData.length > 0) {
+      const test = _.difference(this.tableData, this.selectedVariants)
+      console.log('test', test)
+      if (test.length > 0) {
         const option = this.tableData[0].option
         if (JSON.stringify(option) !== '{}') {
           const options = []
@@ -752,8 +747,9 @@ export default {
       } else {
         this.optionsList = []
       }
-      this.$set(this, 'tableData', this.tableData)
-      this.$refs.xTable.loadData(this.tableData)
+      this.showDelBtn = false
+      this.$set(this, 'tableData', test)
+      // this.$refs.xTable.loadData(this.tableData)
       console.log(this.tableData)
     },
     // 删除sku
