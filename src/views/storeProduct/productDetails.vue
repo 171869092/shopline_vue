@@ -176,7 +176,7 @@
             </el-table>
             <!-- 生成属性 -->
             <div class="mb10">
-              <label v-if="variantsEheck" class="ml20">Preview</label>
+              <label v-if="variantsEheck">Preview</label>
               <el-button v-if="showDelBtn" size="mini" type="primary" plain @click="deleteVariants()">Delete variants</el-button>
             </div>
             <vxe-table
@@ -194,7 +194,7 @@
               @checkbox-all="selectAllEvent"
               @checkbox-change="selectChangeEvent"
             >
-              <vxe-table-column v-if="$route.query.type == 'edit'" type="checkbox" width="100" />
+              <vxe-table-column v-if="$route.query.type == 'edit' && !variantsEheck" type="checkbox" width="100" />
               <vxe-table-column title="Picture" field="sku_image">
                 <template v-slot="{ row, rowIndex }">
                   <el-image class="sku_image" :src="row.sku_image" @click.native="openPrint(row, rowIndex)">
