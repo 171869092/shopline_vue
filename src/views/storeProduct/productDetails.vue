@@ -422,11 +422,13 @@ export default {
     },
     showVariants() {
       // v-if="$route.query.type == 'add'"
-      if ((this.formData.price && this.formData.price !== null) && this.tableData.length === 0) {
-        return false
-      }
-      return true
+    //   if ((this.formData.price && this.formData.price !== null) && this.tableData.length === 0) {
+    //     return false
+    //   }
+    //   return true
+        return this.tableData.length === 0
     }
+    
   },
   watch: {
     optionsList: {
@@ -751,6 +753,7 @@ export default {
               this.optionsList = options
             }
           } else {
+            this.variantsEheck = false
             this.optionsList = []
           }
           this.$refs.xTable.loadData(this.tableData)
