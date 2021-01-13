@@ -345,7 +345,7 @@ import _ from 'lodash'
 import InputTag from 'vue-input-tag'
 import EditOptions from './component/edit-options'
 import { descartes_obj } from '@/utils'
-import { getAllProductEdit, getStoreProductEdit, getAllProductSave, getStoreProductSave, allProductDelete } from '@/api/product'
+import { getAllProductEdit, getStoreProductEdit, getAllProductSave, getStoreProductSave, allProductDelete, getDeleteSku } from '@/api/product'
 export default {
   name: 'product-details',
   components: {
@@ -768,21 +768,28 @@ export default {
           dangerouslyUseHTMLString: true
         })
         .then(() => {
-          this.tableData.splice(index, 1)
-          if (this.tableData.length > 0) {
-            if (JSON.stringify(row.option) !== '{}') {
-              const options = []
-              for (var key of Object.keys(row.option)) {
-                options.push({ option: key, tags: _.uniq(this.tableData.map(item => item.option[key])) })
-              }
-              console.log(options)
-              this.optionsList = options
-            }
-          } else {
-            this.variantsEheck = false
-            this.optionsList = []
+          if (row.id) {
+            getDeleteSku({ sku: [row.id] }).then(res => {
+              console.log(res.data)
+            }).catch(err => {
+              console.log(err)
+            })
           }
-          this.$refs.xTable.loadData(this.tableData)
+          // this.tableData.splice(index, 1)
+          // if (this.tableData.length > 0) {
+          //   if (JSON.stringify(row.option) !== '{}') {
+          //     const options = []
+          //     for (var key of Object.keys(row.option)) {
+          //       options.push({ option: key, tags: _.uniq(this.tableData.map(item => item.option[key])) })
+          //     }
+          //     console.log(options)
+          //     this.optionsList = options
+          //   }
+          // } else {
+          //   this.variantsEheck = false
+          //   this.optionsList = []
+          // }
+          // this.$refs.xTable.loadData(this.tableData)
         })
         .catch(() => {})
     },
