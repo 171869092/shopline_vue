@@ -230,14 +230,18 @@
               <vxe-table-column title="Price" field="sku_price">
                 <template v-slot="{ row, rowIndex }">
                   <el-form-item class="mb0" label-width="0">
-                    <el-input v-model="row.sku_price" clearable size="mini" class="p5_input" placeholder="Price" />
+                    <el-input v-model="row.sku_price" clearable size="mini" class="p5_input" placeholder="Price">
+                      <div slot="prefix" style="padding:0 8px">$</div>
+                    </el-input>
                   </el-form-item>
                 </template>
               </vxe-table-column>
                <vxe-table-column title="Compare at price" field="compare_price">
                 <template v-slot="{ row, rowIndex }">
                   <el-form-item class="mb0" label-width="0">
-                    <el-input v-model="row.compare_price" clearable size="mini" class="p5_input" placeholder="Compare at price" />
+                    <el-input v-model="row.compare_price" clearable size="mini" class="p5_input" placeholder="Compare at price">
+                    <div slot="prefix" style="padding:0 8px">$</div>
+                    </el-input>
                   </el-form-item>
                 </template>
               </vxe-table-column>
