@@ -74,11 +74,11 @@ export function getAllProductSave(data) {
   })
 }
 // 删除产品sku
-export function getDeleteSku(params) {
+export function deleteSku(data) {
   return request({
-    url: '/goods/goods/delete-sku',
-    method: 'get',
-    params
+    url: '/de',
+    method: 'post',
+    data
   })
 }
 // 批量删除商品
@@ -123,7 +123,7 @@ export function allGoodsSelectStore(data) {
     data
   })
 }
-//获取国家
+// 获取国家
 export function getCountryList(params) {
   return request({
     url: '/goods/goods/country-list',

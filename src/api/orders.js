@@ -47,11 +47,19 @@ export function clearOrderException(params) {
     params
   })
 }
-// 清除订单异常
+// 获取委托管产品
 export function getOrderGoods(params) {
   return request({
     url: '/order_get_order_goods',
     method: 'get',
     params
+  })
+}
+// 托管产品
+export function orderJoinQueue(data) {
+  return request({
+    url: '/order/order/join-queue',
+    method: 'post',
+    data
   })
 }

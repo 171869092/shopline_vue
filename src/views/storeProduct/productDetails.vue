@@ -9,8 +9,8 @@
               <label class="ml20">{{ $route.query.title }}</label>
             </div>
             <div>
-              <el-button size="small" type="primary" :loading="SubmitLoading" @click="submit">Save</el-button>
               <el-button v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" size="small" class="button-border" @click="ProductDelete">Delete product</el-button>
+              <el-button size="small" type="primary" :loading="SubmitLoading" @click="submit">Save</el-button>
             </div>
           </div>
           <el-card class="box-card">
@@ -113,7 +113,7 @@
               </div>
             </div>
             <div>
-              <el-checkbox v-show="showVariants || isAddVariants" v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
+              <el-checkbox v-if="showVariants || isAddVariants" v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
               <el-button v-if="variantsEheck && optionsList.length < 3 " class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
             </div>
             <!-- 新增属性 -->
@@ -345,7 +345,7 @@ import _ from 'lodash'
 import InputTag from 'vue-input-tag'
 import EditOptions from './component/edit-options'
 import { descartes_obj } from '@/utils'
-import { getAllProductEdit, getStoreProductEdit, getAllProductSave, getStoreProductSave, allProductDelete, getDeleteSku } from '@/api/product'
+import { getAllProductEdit, getStoreProductEdit, getAllProductSave, getStoreProductSave, allProductDelete, deleteSku } from '@/api/product'
 export default {
   name: 'product-details',
   components: {
@@ -371,6 +371,7 @@ export default {
         cost_vender_list: [],
         compare_price: '',
         price: ''
+        // del_sku: []
       },
       formRule: {
         title: [
@@ -456,6 +457,7 @@ export default {
         getAllProductEdit({ id: this.$route.query.id }).then(res => {
           if (res.code === 200) {
             this.formData = res.data
+            // this.formData.del_sku = []
             this.tableData = res.data.sku_list
             if (res.data.options) {
               this.optionsList = res.data.options
@@ -483,6 +485,7 @@ export default {
         getStoreProductEdit({ id: this.$route.query.id }).then(res => {
           if (res.code === 200) {
             this.formData = res.data
+            // this.formData.del_sku = []
             this.formData.cost_vender_list.map((item, idx) => {
               this.formData.cost_vender_list[idx].country = item.list[0].title
               this.selectClick(item.list[0].title, idx)
@@ -723,17 +726,20 @@ export default {
     },
     selectAllEvent({ checked, records }) {
       records.length > 0 ? this.showDelBtn = true : this.showDelBtn = false
-      console.log(checked ? '所有勾选事件' : '所有取消事件', records)
       this.selectedVariants = records
     },
     selectChangeEvent({ checked, records }) {
       records.length > 0 ? this.showDelBtn = true : this.showDelBtn = false
-      console.log(checked ? '勾选事件' : '取消事件', records)
       this.selectedVariants = records
     },
     deleteVariants() {
+      // this.selectedVariants.forEach(sku => {
+      //   if (sku.id) {
+      //     this.formData.del_sku.push(sku.id)
+      //   }
+      // })
       const test = _.difference(this.tableData, this.selectedVariants)
-      console.log('test', test)
+      // console.log('test', test)
       if (test.length > 0) {
         const option = this.tableData[0].option
         if (JSON.stringify(option) !== '{}') {
@@ -741,7 +747,6 @@ export default {
           for (var key of Object.keys(option)) {
             options.push({ option: key, tags: _.uniq(this.tableData.map(item => item.option[key])) })
           }
-          console.log(options)
           this.optionsList = options
         }
       } else {
@@ -750,7 +755,6 @@ export default {
       this.showDelBtn = false
       this.$set(this, 'tableData', test)
       // this.$refs.xTable.loadData(this.tableData)
-      console.log(this.tableData)
     },
     // 删除sku
     delSkuData(row, index) {
@@ -768,28 +772,25 @@ export default {
           dangerouslyUseHTMLString: true
         })
         .then(() => {
-          if (row.id) {
-            getDeleteSku({ sku: [row.id] }).then(res => {
-              console.log(res.data)
-            }).catch(err => {
-              console.log(err)
-            })
-          }
-          // this.tableData.splice(index, 1)
-          // if (this.tableData.length > 0) {
-          //   if (JSON.stringify(row.option) !== '{}') {
-          //     const options = []
-          //     for (var key of Object.keys(row.option)) {
-          //       options.push({ option: key, tags: _.uniq(this.tableData.map(item => item.option[key])) })
-          //     }
-          //     console.log(options)
-          //     this.optionsList = options
-          //   }
-          // } else {
-          //   this.variantsEheck = false
-          //   this.optionsList = []
+          // if (row.id) {
+          //   this.formData.del_sku.push(row.id)
           // }
-          // this.$refs.xTable.loadData(this.tableData)
+          // console.log(this.formData)
+          this.tableData.splice(index, 1)
+          if (this.tableData.length > 0) {
+            if (JSON.stringify(row.option) !== '{}') {
+              const options = []
+              for (var key of Object.keys(row.option)) {
+                options.push({ option: key, tags: _.uniq(this.tableData.map(item => item.option[key])) })
+              }
+              console.log(options)
+              this.optionsList = options
+            }
+          } else {
+            this.variantsEheck = false
+            this.optionsList = []
+          }
+          this.$refs.xTable.loadData(this.tableData)
         })
         .catch(() => {})
     },

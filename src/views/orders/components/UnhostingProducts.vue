@@ -33,7 +33,7 @@
       <el-table-column prop="variants" label="Variants" align="center" width="90" />
       <el-table-column prop="store_name" label="Store" align="center" width="150" />
       <el-table-column prop="sku_price" label="Price" align="center" width="100" />
-      <el-table-column prop="store_name" label="Vendor" align="center" width="120" />
+      <el-table-column prop="service_name" label="Vendor" align="center" width="120" />
     </el-table>
     <!-- <pagination
         :total="listQuery.total"
@@ -50,7 +50,7 @@
   </el-dialog>
 </template>
 <script>
-import { getOrderGoods } from '@/api//orders'
+import { getOrderGoods, orderJoinQueue } from '@/api/orders'
 // import Pagination from '@/components/Pagination'
 import Hosting from './hosting'
 export default {
@@ -72,9 +72,9 @@ export default {
       type: String,
       default: 'view'
     },
-    formData: {
-      type: Object,
-      default: () => {}
+    ordersId: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
@@ -131,7 +131,9 @@ export default {
       const formData = {
         ...this.formInline
       }
-      formData.orders_id = '13669,13668,13666,13665,13664,13663'
+      // formData.orders_id = '13669,13668,13666,13665,13664,13663'
+      // console.log(this.ordersId)
+      formData.orders_id = this.ordersId.toString()
       formData.iDisplayLength = this.listQuery.limit
       formData.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
       getOrderGoods(formData)
@@ -154,24 +156,38 @@ export default {
       console.log(this.selectedProduct)
     },
     hosting() {
-      if (this.selectedProduct.lenght > 0) {
-        this.$message.warning('Please choose product first')
-      } else {
+      if (this.selectedProduct.length > 0) {
         this.hostingVisible = true
+      } else {
+        this.$message.warning('Please choose product first!')
       }
     },
     selectProducts(data) {
       console.log(data)
       this.selectedProduct.forEach(ele => {
-        ele.service_id = data.service_id
-        ele.country = data.country
+        this.$set(ele, 'service_id', data.service_id)
+        this.$set(ele, 'service_name', data.service_name)
+        this.$set(ele, 'country', data.country)
+        // ele.service_id = data.service_id
+        // ele.service_name = data.service_name
+        // ele.country = data.country
       })
-      console.log(this.selectedProduct)
+      console.log('tableData', this.tableData)
     },
     submit() {
-      const data = Object.assign({}, this.tableSelected)
-      this.$emit('close', data)
-      this.dialogVisible = false
+      // const data = Object.assign({}, this.tableSelected)
+      // this.$emit('close', data)
+      // this.dialogVisible = false
+      console.log('true')
+      if (this.selectedProduct.length > 0) {
+        orderJoinQueue({ goods: this.selectedProduct, orders_id: this.ordersId.toString() }).then(res => {
+          console.log(res.data)
+        }).catch(err => {
+          console.log(err)
+        })
+      } else {
+        this.$message.warning('Please select the product after hosting!')
+      }
     },
     handleClosed() {
       // this.$refs['formInline'].resetFields()
