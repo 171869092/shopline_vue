@@ -240,7 +240,7 @@
                 <template v-slot="{ row, rowIndex }">
                   <el-form-item class="mb0" label-width="0">
                     <el-input v-model="row.compare_price" clearable size="mini" class="p5_input" placeholder="Compare at price">
-                    <div slot="prefix" style="padding:0 8px">$</div>
+                      <div slot="prefix" style="padding:0 8px">$</div>
                     </el-input>
                   </el-form-item>
                 </template>
