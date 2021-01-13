@@ -234,7 +234,7 @@
                   </el-form-item>
                 </template>
               </vxe-table-column>
-               <vxe-table-column title="Compare at price" field="compare_price">
+              <vxe-table-column title="Compare at price" field="compare_price">
                 <template v-slot="{ row, rowIndex }">
                   <el-form-item class="mb0" label-width="0">
                     <el-input v-model="row.compare_price" clearable size="mini" class="p5_input" placeholder="Compare at price" />
@@ -604,7 +604,7 @@ export default {
           sku_size: '',
           sku_price: '',
           sku_number: '999',
-          compare_price:''
+          compare_price: ''
         }))
         this.tableData = newArr
         this.preLoading = false
@@ -629,7 +629,7 @@ export default {
         sku_size: '',
         sku_price: '',
         sku_number: '999',
-        compare_price:''
+        compare_price: ''
       }
       this.tableData.push(sku)
     },
@@ -735,25 +735,16 @@ export default {
           dangerouslyUseHTMLString: true
         })
         .then(() => {
-          // if (row.id) {
-          //   getDeleteSku({ id: row.id }).then(res => {
-          //     if (res.code === 200) {
-          //       this.$message({ message: res.message, type: 'success' })
-          //       this.tableData.splice(index, 1)
-          //     }
-          //   })
-          // } else {
-          //   this.tableData.splice(index, 1)
-          //   // this.$refs.xTable.loadData(this.tableData)
-          // }
           this.tableData.splice(index, 1)
           if (this.tableData.length > 0) {
-            const options = []
-            for (var key of Object.keys(row.option)) {
-              options.push({ option: key, tags: _.uniq(this.tableData.map(item => item.option[key])) })
+            if (JSON.stringify(row.option) !== '{}') {
+              const options = []
+              for (var key of Object.keys(row.option)) {
+                options.push({ option: key, tags: _.uniq(this.tableData.map(item => item.option[key])) })
+              }
+              console.log(options)
+              this.optionsList = options
             }
-            console.log(options)
-            this.optionsList = options
           } else {
             this.optionsList = []
           }

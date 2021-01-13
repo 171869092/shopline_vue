@@ -2,35 +2,36 @@
   <div class="my-orders">
     <el-card class="box-card">
       <el-tabs v-model="formQuery.order_status_client" @tab-click="handleClick">
-        <div class="filter-control flexbox mb20">
-          <div class="filter-item">
-            <el-input
-              v-model="formQuery.order_name"
-              clearable
-              class="w-400"
-              prefix-icon="el-icon-search"
-              placeholder="Filter orders"
-              @change="filterOrders"
-            />
-          </div>
-          <div class="filter-item w-250">
-            <el-select
-              v-model="formQuery.order_status_client"
-              clearable
-              collapse-tags
-              placeholder="Ship status"
-              style="width:100%"
-              @change="filterOrderStatus"
-            >
-              <el-option
-                v-for="(item, key) in orderStatus"
-                :key="key"
-                :label="item"
-                :value="key"
+        <div class="flexbox justify-space-between">
+          <div class="filter-control flexbox mb20">
+            <div class="filter-item">
+              <el-input
+                v-model="formQuery.order_name"
+                clearable
+                class="w-400"
+                prefix-icon="el-icon-search"
+                placeholder="Filter orders"
+                @change="filterOrders"
               />
-            </el-select>
-          </div>
-          <!-- <div class="filter-item w-250">
+            </div>
+            <div class="filter-item w-250">
+              <el-select
+                v-model="formQuery.order_status_client"
+                clearable
+                collapse-tags
+                placeholder="Ship status"
+                style="width:100%"
+                @change="filterOrderStatus"
+              >
+                <el-option
+                  v-for="(item, key) in orderStatus"
+                  :key="key"
+                  :label="item"
+                  :value="key"
+                />
+              </el-select>
+            </div>
+            <!-- <div class="filter-item w-250">
             <el-select
               v-model="queryForm.logistics_status"
               multiple
@@ -48,37 +49,33 @@
               />
             </el-select>
           </div> -->
-          <div class="filter-item w-250">
-            <el-select
-              v-model="formQuery.store_url"
-              clearable
-              style="width:100%"
-              placeholder="Select Store"
-              @change="filterStoreUrl"
-            >
-              <el-option
-                v-for="(item, key) in storeList"
-                :key="key"
-                :label="item.store_url"
-                :value="item.store_url"
-              />
-            </el-select>
+            <div class="filter-item w-250">
+              <el-select
+                v-model="formQuery.store_url"
+                clearable
+                style="width:100%"
+                placeholder="Select Store"
+                @change="filterStoreUrl"
+              >
+                <el-option
+                  v-for="(item, key) in storeList"
+                  :key="key"
+                  :label="item.store_url"
+                  :value="item.store_url"
+                />
+              </el-select>
+            </div>
+
           </div>
-          <div class="filter-item">
-            <el-select
-              v-model="formQuery.store_url"
-              clearable
-              style="width:100%"
-              placeholder="Select Store"
-              @change="filterStoreUrl"
-            >
-              <el-option
-                v-for="(item, key) in storeList"
-                :key="key"
-                :label="item.store_url"
-                :value="item.store_url"
-              />
-            </el-select>
+          <div class="filter-control">
+            <el-dropdown trigger="click" @command="handleCommand">
+              <el-button class="el-dropdown-link">
+                Action<i class="el-icon-arrow-down el-icon--right" />
+              </el-button>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="placing" icon="el-icon-plus">Placing</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
         </div>
 
@@ -146,28 +143,19 @@
         </el-tab-pane>
       </el-tabs>
     </el-card>
-    <el-dialog class="custom-dialog" title="Logistics Details" :visible.sync="dialogVisible" width="700px" @open="handleOpen">
-      <el-scrollbar ref="myScrollbar" v-loading="timelineLoading" wrap-class="dialog-scrollbar">
-        <el-timeline class="logistics-timeline">
-          <el-timeline-item v-for="(item,key) in logisticList" :key="key" color="#EF6F38FF">
-            <!-- <p>{{ item.ProcessContent }}</p>
-            <span style="color: #909399">{{ item.ProcessDate }}</span> -->
-            <p>{{ item.ProcessContent }}</p>
-            <span style="color: #909399">{{ item.ProcessDate }}</span>
-          </el-timeline-item>
-        </el-timeline>
-      </el-scrollbar>
-    </el-dialog>
+    <unhosting-products :visible.sync="dialogVisible" />
   </div>
 </template>
 <script>
 import { debounce } from '@/utils'
 import { getOrderList, getLogisticInfo, clearOrderException } from '@/api/orders'
 import { getStoreList } from '@/api/product'
+import UnhostingProducts from './components/UnhostingProducts'
 export default {
   name: 'orders',
   components: {
-    Pagination: () => import('@/components/Pagination')
+    Pagination: () => import('@/components/Pagination'),
+    UnhostingProducts
   },
   props: {},
   data() {
@@ -315,6 +303,15 @@ export default {
           message: 'Delete canceled'
         })
       })
+    },
+    handleCommand(command) {
+      console.log(command)
+      this.$confirm(`Chosen orders will be allocated to the vendors following your product's hosting setting.`, 'Manual Order placing', {
+        confirmButtonText: 'Next',
+        cancelButtonText: 'Cancel'
+      }).then(() => {
+        this.dialogVisible = true
+      }).catch(() => {})
     },
     filterOrders: debounce(function() {
       // this.formQuery.order_name = this.queryForm.order_name

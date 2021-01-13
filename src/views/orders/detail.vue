@@ -36,19 +36,19 @@
                 </el-image>
               </template>
             </el-table-column>
-            <el-table-column prop="third_goods_name" label="Products" width="300" />
-            <el-table-column prop="third_sku_name" label="Price&Amount" width="300">
+            <el-table-column prop="third_goods_name" label="Products" />
+            <el-table-column prop="third_sku_name" label="Price&Amount" width="200">
               <template slot-scope="scope">
                 <span>{{ `${scope.row.third_price} x ${scope.row.sku_num}` }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="third_price" label="Total Price">
+            <el-table-column prop="third_price" label="Total Price" width="200">
               <template slot-scope="scope">
                 <span>{{ +scope.row.third_price * +scope.row.sku_num }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="service_name" label="Vendor" />
-            <el-table-column prop="purchase_price" label="Total Cost">
+            <el-table-column prop="service_name" label="Vendor" width="200" />
+            <el-table-column prop="purchase_price" label="Total Cost" width="200">
               <template slot-scope="scope">
                 <span>{{ scope.row.purchase_price || '--' }}</span>
               </template>
