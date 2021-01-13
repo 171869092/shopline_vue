@@ -47,3 +47,11 @@ export function clearOrderException(params) {
     params
   })
 }
+// 清除订单异常
+export function getOrderGoods(params) {
+  return request({
+    url: '/order_get_order_goods',
+    method: 'get',
+    params
+  })
+}

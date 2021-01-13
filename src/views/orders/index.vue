@@ -198,14 +198,15 @@ export default {
         { label: 'Order Status', value: 'order_status_name', type: 'order_status' },
         { label: 'Logistics Status', value: 'logistics_status_name', type: 'logistics_status' }
       ],
+      loading: false,
+      dialogVisible: false,
+      timelineLoading: false,
+      refreshLoading: false,
       tableData: [],
       logisticList: [],
       storeList: [],
       scopeIndex: '',
-      loading: false,
-      dialogVisible: false,
-      timelineLoading: false,
-      refreshLoading: false
+      selOrderIds: []
     }
   },
   computed: {},
@@ -224,7 +225,8 @@ export default {
       })
     },
     handleSelectionChange(val) {
-      console.log(val)
+      this.selOrderIds = val.map(i => i.id)
+      console.log(this.selOrderIds)
     },
     Inquire() {
       // const loading = this.$loading({
@@ -306,12 +308,14 @@ export default {
     },
     handleCommand(command) {
       console.log(command)
-      this.$confirm(`Chosen orders will be allocated to the vendors following your product's hosting setting.`, 'Manual Order placing', {
-        confirmButtonText: 'Next',
-        cancelButtonText: 'Cancel'
-      }).then(() => {
+      if (this.selOrderIds.length === 0) {
+        this.$confirm(`Chosen orders will be allocated to the vendors following your product's hosting setting.`, 'Manual Order placing', {
+          confirmButtonText: 'Ok',
+          showCancelButton: false
+        })
+      } else {
         this.dialogVisible = true
-      }).catch(() => {})
+      }
     },
     filterOrders: debounce(function() {
       // this.formQuery.order_name = this.queryForm.order_name
