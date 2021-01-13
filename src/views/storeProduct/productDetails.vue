@@ -427,12 +427,7 @@ export default {
       return this.optionsList.map(item => item.tags).filter(String)
     },
     showVariants() {
-      // v-if="$route.query.type == 'add'"
-    //   if ((this.formData.price && this.formData.price !== null) && this.tableData.length === 0) {
-    //     return false
-    //   }
-    //   return true
-      return this.tableData.length === 0
+      return this.tableData.length < 0
     }
 
   },
@@ -452,8 +447,8 @@ export default {
   },
   methods: {
     selectClick(val, idx) {
-      this.formData.cost_vender_list.map(item => {
-        item.list.map(v => {
+      this.formData.cost_vender_list.forEach(item => {
+        item.list.forEach(v => {
           if (val === v.title) {
             this.formData.cost_vender_list[idx].shipping_price = v.value
           }

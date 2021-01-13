@@ -160,9 +160,6 @@ export default {
     },
     order_no() {
       return this.$route.query.order_no
-    },
-    isTrackEmpty() {
-
     }
   },
   created() {
