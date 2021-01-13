@@ -52,7 +52,7 @@ export default {
       countriesList: [],
       rules: {
         service_id: [
-          { required: true, message: 'please choose', trigger: 'blur' }
+          { required: true, message: 'please choose', trigger: 'change' }
         ]
       },
       loading: false

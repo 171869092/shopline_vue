@@ -49,6 +49,7 @@
       /> -->
     </div>
     <span slot="footer" class="dialog-footer">
+      <el-button size="small" type="primary" @click="handleClosed()">Hosting</el-button>
       <el-button size="small" @click="handleClosed()">Cancel</el-button>
       <el-button size="small" type="primary" @click="submit('goodsForm')">Done</el-button>
     </span>

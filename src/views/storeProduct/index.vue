@@ -4,7 +4,7 @@
       <div class="flexbox justify-flex-end">
         <!-- <el-button type="primary" icon="el-icon-plus" size="small" class="f-r mr50 mt20" @click="productAdd('add')">Add products</el-button> -->
         <el-button size="small" class="button-border" @click="providerClick">Hosting</el-button>
-        <el-button size="small" type="danger" @click="CancleHostClick">Cancle Hosting</el-button>
+        <el-button size="small" type="danger" @click="CancleHostClick">Unhosting</el-button>
         <el-button size="small" type="primary" icon="el-icon-top" :loading="shopifyLoading" @click="pushShopify">Push to shopify</el-button>
       </div>
     </div>
@@ -47,7 +47,7 @@
             <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
               <template slot-scope="scope">
                 <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
-                <span v-if="item.type == 'price'">$ {{scope.row.price}}</span>
+                <span v-if="item.type == 'price'">$ {{ scope.row.price }}</span>
                 <span v-if="item.type == 'image'">
                   <!-- <el-image :src="scope.row.img_url" style="width: 50px; height: 50px" fit="contain" /> -->
                   <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img_url" fit="cover" />
@@ -87,7 +87,7 @@ export default {
         { label: 'Product', value: 'id', type: 'product', width: '500' },
         { label: 'Status', value: 'status' },
         { label: 'Inventory', value: 'stock' },
-        { label: 'Price', value: 'price',type:'price'},
+        { label: 'Price', value: 'price', type: 'price' },
         { label: 'Cost', value: 'cost' },
         { label: 'Hosting', value: 'service_name' }
         // { label: 'Operating', type: 'Operating' }
