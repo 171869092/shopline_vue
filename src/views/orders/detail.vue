@@ -42,11 +42,7 @@
                 <span>{{ `${scope.row.third_price} x ${scope.row.sku_num}` }}</span>
               </template>
             </el-table-column>
-            <el-table-column prop="third_price" label="Total Price" width="200">
-              <template slot-scope="scope">
-                <span>{{ +scope.row.third_price * +scope.row.sku_num }}</span>
-              </template>
-            </el-table-column>
+            <el-table-column prop="total_price" label="Total Price" width="200" />
             <el-table-column prop="service_name" label="Vendor" width="200" />
             <el-table-column prop="purchase_price" label="Total Cost" width="200">
               <template slot-scope="scope">
@@ -111,19 +107,23 @@
                 <div class="grid-content bg-purple">
                   <div class="flexbox">
                     <div class="vendor-sub-title">Status: <span>{{ vendor.track_info.TrackingStatus || '--' }}</span></div>
-                    <div class="vendor-sub-title ml50">Tracking Numbers: <span>{{ vendor.track_info.TrackingNumber || '--' }}</span></div>
+                    <div class="vendor-sub-title ml40">Tracking Numbers: <span>{{ vendor.track_info.WaybillNumber || '--' }}</span></div>
                   </div>
-                  <el-timeline class="mt20 pl5" :reverse="false">
-                    <el-timeline-item v-for="(item, index) in vendor.track_info.OrderTrackingDetails" :key="index">
+                  <el-timeline v-if=" vendor.track_info.OrderTrackingDetails" class="mt20 pl5" :reverse="false">
+                    <el-timeline-item
+                      v-for="(item, index) in vendor.track_info.OrderTrackingDetails"
+                      :key="index"
+                      type="primary"
+                    >
                       <span>{{ item.ProcessDate }}</span><span class="ml40">{{ item.ProcessContent }}</span>
                     </el-timeline-item>
                   </el-timeline>
-                <!-- <div v-if="vendor.track_info" class="empty-text ml40 mt40">
+                  <div v-else class="empty-text ml40 mt40">
                     <div class="empty-icon">
                       <svg-icon icon-class="nodata" />
                     </div>
                     <div class="empty-normal">No Track Info</div>
-                  </div> -->
+                  </div>
                 </div>
               </el-col>
             </el-row>
@@ -160,6 +160,9 @@ export default {
     },
     order_no() {
       return this.$route.query.order_no
+    },
+    isTrackEmpty() {
+
     }
   },
   created() {

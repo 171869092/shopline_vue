@@ -182,7 +182,10 @@
               </el-table-column> -->
             </el-table>
             <!-- 生成属性 -->
-            <div v-if="variantsEheck" class="mt20"><label>Preview</label></div>
+            <div v-if="variantsEheck" class="mb10">
+              <label>Preview</label>
+              <el-button v-if="showDelBtn" class="ml20" size="mini" type="text" plain @click="deleteVariants()">Delete variants</el-button>
+            </div>
             <vxe-table
               v-if="variantsEheck || tableData.length > 0"
               ref="xTable"
@@ -195,8 +198,10 @@
               max-height="500"
               :scroll-y="{gt: 50}"
               :data="tableData"
+              @checkbox-all="selectAllEvent"
+              @checkbox-change="selectChangeEvent"
             >
-              <vxe-table-column type="seq" width="100" />
+              <vxe-table-column v-if="$route.query.type == 'edit'" type="checkbox" width="100" />
               <vxe-table-column title="Picture" field="sku_image">
                 <template v-slot="{ row, rowIndex }">
                   <el-image class="sku_image" :src="row.sku_image" @click.native="openPrint(row, rowIndex)">
@@ -409,11 +414,12 @@ export default {
       uploadPrintvisible: false,
       showAlert: false,
       preLoading: false,
+      showDelBtn: false,
       skuIndex: '',
       skuImage: '',
       imgList: [],
       tableData: [],
-      sourceObj: {}
+      selectedVariants: []
     }
   },
   computed: {
@@ -426,9 +432,9 @@ export default {
     //     return false
     //   }
     //   return true
-        return this.tableData.length === 0
+      return this.tableData.length === 0
     }
-    
+
   },
   watch: {
     optionsList: {
@@ -725,6 +731,35 @@ export default {
         }
         resolve(result)
       })
+    },
+    selectAllEvent({ checked, records }) {
+      records.length > 0 ? this.showDelBtn = true : this.showDelBtn = false
+      console.log(checked ? '所有勾选事件' : '所有取消事件', records)
+      this.selectedVariants = records
+    },
+    selectChangeEvent({ checked, records }) {
+      records.length > 0 ? this.showDelBtn = true : this.showDelBtn = false
+      console.log(checked ? '勾选事件' : '取消事件', records)
+      this.selectedVariants = records
+    },
+    deleteVariants() {
+      _.pullAll(this.tableData, this.selectedVariants)
+      if (this.tableData.length > 0) {
+        const option = this.tableData[0].option
+        if (JSON.stringify(option) !== '{}') {
+          const options = []
+          for (var key of Object.keys(option)) {
+            options.push({ option: key, tags: _.uniq(this.tableData.map(item => item.option[key])) })
+          }
+          console.log(options)
+          this.optionsList = options
+        }
+      } else {
+        this.optionsList = []
+      }
+      this.$set(this, 'tableData', this.tableData)
+      this.$refs.xTable.loadData(this.tableData)
+      console.log(this.tableData)
     },
     // 删除sku
     delSkuData(row, index) {
