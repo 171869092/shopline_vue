@@ -44,6 +44,11 @@
             <div>{{ scope.row.create_time }}</div>
           </template>
         </el-table-column>
+        <el-table-column label="">
+          <template slot-scope="scope">
+            <el-button type="primary" icon="el-icon-edit" @click="edit_shop(scope.row.id)" size="small">edit</el-button>
+          </template>
+        </el-table-column>
       </el-table>
       <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
     </el-card>
@@ -63,9 +68,9 @@
         <el-form-item prop="password">
           <el-input v-model="storeForm.password" autocomplete="off" placeholder="password" />
         </el-form-item>
-        <el-form-item prop="shared_secret">
+        <!-- <el-form-item prop="shared_secret">
           <el-input v-model="storeForm.shared_secret" autocomplete="off" placeholder="Shared Secret" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item prop="api_version">
           <el-input v-model="storeForm.api_version" autocomplete="off" placeholder="API Version" />
         </el-form-item>
@@ -91,7 +96,7 @@
   </div>
 </template>
 <script>
-import { shopList, shopPush, testStoreConnect, connectStore ,c_name} from '@/api/shop'
+import { shopList, shopPush, testStoreConnect, connectStore ,c_name,editStore} from '@/api/shop'
 import { } from '@/api/user'
 export default {
   name: 'shop',
@@ -122,11 +127,11 @@ export default {
         api_token: '',
         api_key: '',
         password: '',
-        shared_secret: '',
         api_version: '',
         location_id: '',
         pull_date:''
       },
+      stutas:'',
       importList:[
         {label:'7 days',value:'7'},
         {label:'1month',value:'30'},
@@ -135,9 +140,6 @@ export default {
       rules: {
         store_url: [
           { required: true, message: 'store_url', trigger: 'blur' }
-        ],
-        api_token: [
-          { required: true, message: 'api_token', trigger: 'blur' }
         ],
         api_key: [
           { required: true, message: 'api_key', trigger: 'blur' }
@@ -155,10 +157,10 @@ export default {
           { required: true, message: 'location_id', trigger: 'blur' }
         ],
         pull_date: [
-          { required: true, message: '请选择', trigger: 'change' }
+          { required: true, message: 'Please select', trigger: 'change' }
         ],
         Orders_by_date:[
-           { required: true, message: '11', trigger: 'blur' }
+           { required: true, message: 'Orders by date', trigger: 'blur' }
         ]
       }
     }
@@ -192,6 +194,7 @@ export default {
     ConnectShop() {
       // https://fdapi.dongketech.com/site/install?shop=live-by-test.myshopify.com
       this.dialogvisible = true
+      
       // this.$prompt('Shopify Store URL', 'Connect New Shop', {
       //   confirmButtonText: 'Confirm',
       //   cancelButtonText: 'Cancel',
@@ -201,6 +204,33 @@ export default {
       // }).then(({ value }) => {
       //   window.open(`https://fdapi.dongketech.com/l?shop=${value}&uid=${this.uid}`)
       // }).catch(() => {})
+    },
+    // 编辑
+    edit_shop(id){
+       this.dialogvisible = true
+       editStore({id:id}).then(res =>{
+          if (res.code == 200) {
+            this.storeForm = {
+              api_token : res.data.setting.token,
+              store_url : res.data.setting.store_url.split('.')[0],
+              api_key : res.data.setting.api_key,
+              password : res.data.setting.password,
+              api_version : res.data.setting.api_version,
+              pull_date : res.data.setting.pull_date,
+              location_id : res.data.setting.location_id,
+              id:res.data.id
+            }
+            
+           if (res.data.setting.pull_date =='7'||res.data.setting.pull_date == '30') {
+             this.storeForm.pull_date = res.data.setting.pull_date
+              
+            }else{
+              console.log('000')
+               this.storeForm.Orders_by_date = res.data.setting.pull_date
+               this.storeForm.pull_date = 'Orders'
+            }
+          }
+       })
     },
     testConnect() {
       this.$refs.storeForm.validate((valid) => {
@@ -259,6 +289,7 @@ export default {
     closeDialog() {
       //  this.storeForm = this.$options.data().storeForm[0]
       this.$refs.storeForm.resetFields()
+      delete this.storeForm.id
       this.dialogvisible = false
     },
     tableRowClassName ({ row, rowIndex }) {
