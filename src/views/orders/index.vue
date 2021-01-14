@@ -67,7 +67,7 @@
             </div>
 
           </div>
-          <div class="filter-control">
+          <div v-if="formQuery.order_status_client == 1" class="filter-control">
             <el-dropdown trigger="click" @command="handleCommand">
               <el-button class="el-dropdown-link">
                 Action<i class="el-icon-arrow-down el-icon--right" />
