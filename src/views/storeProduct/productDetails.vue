@@ -47,21 +47,13 @@
             <div class="flexbox ml20">
               <el-form-item label="Price" prop="Price">
                 <el-input v-model="formData.price" type="number" placeholder="Price" class="w-230">
-<<<<<<< HEAD
-                  <div v-if="$route.query.stroeType === 'all'" slot="prefix" style="padding:0 8px">$</div>
-=======
-                  <div slot="prefix" style="padding:0 8px">{{formData.signal || '$'}}</div>
->>>>>>> efd3c2f91df80f3354935914008a1122dc3398a2
+                  <div slot="prefix" style="padding:0 8px">{{ formData.signal || '$' }}</div>
                   <!-- <i slot="prefix">$</i> -->
                 </el-input>
               </el-form-item>
               <el-form-item label="Compare at Price" prop="compare_price" class="w-230" style="margin-left: 120px;">
                 <el-input v-model="formData.compare_price" type="number" placeholder="Compare at Price">
-<<<<<<< HEAD
-                  <div v-if="$route.query.stroeType === 'all'" slot="prefix" style="padding:0 8px">$</div>
-=======
-                  <div slot="prefix" style="padding:0 8px">{{formData.signal || '$'}}</div>
->>>>>>> efd3c2f91df80f3354935914008a1122dc3398a2
+                  <div slot="prefix" style="padding:0 8px">{{ formData.signal || '$' }}</div>
                 </el-input>
               </el-form-item>
             </div>
@@ -199,7 +191,7 @@
               max-height="500"
               :scroll-y="{gt: 50}"
               :data="tableData"
-              @checkbox-all="selectAllEvent"
+              @checkbox-all="selectChangeEvent"
               @checkbox-change="selectChangeEvent"
             >
               <vxe-table-column v-if="$route.query.type == 'edit' && !variantsEheck" type="checkbox" width="100" />
@@ -237,11 +229,11 @@
                 <template v-slot="{ row, rowIndex }">
                   <el-form-item class="mb0" label-width="0">
                     <el-input v-model="row.sku_price" clearable size="mini" class="p5_input" placeholder="Price">
-<<<<<<< HEAD
+                      <<<<<<< HEAD
                       <div v-if="$route.query.stroeType === 'all'" slot="prefix" style="padding:0 8px">$</div>
-=======
-                      <div slot="prefix" style="padding:0 8px">{{row.signal || '$'}}</div>
->>>>>>> efd3c2f91df80f3354935914008a1122dc3398a2
+                      =======
+                      <div slot="prefix" style="padding:0 8px">{{ row.signal || '$' }}</div>
+                      >>>>>>> efd3c2f91df80f3354935914008a1122dc3398a2
                     </el-input>
                   </el-form-item>
                 </template>
@@ -250,11 +242,11 @@
                 <template v-slot="{ row, rowIndex }">
                   <el-form-item class="mb0" label-width="0">
                     <el-input v-model="row.compare_price" clearable size="mini" class="p5_input" placeholder="Compare at price">
-<<<<<<< HEAD
+                      <<<<<<< HEAD
                       <div v-if="$route.query.stroeType === 'all'" slot="prefix" style="padding:0 8px">$</div>
-=======
-                      <div slot="prefix" style="padding:0 8px">{{row.signal || '$'}}</div>
->>>>>>> efd3c2f91df80f3354935914008a1122dc3398a2
+                      =======
+                      <div slot="prefix" style="padding:0 8px">{{ row.signal || '$' }}</div>
+                      >>>>>>> efd3c2f91df80f3354935914008a1122dc3398a2
                     </el-input>
                   </el-form-item>
                 </template>
@@ -739,10 +731,6 @@ export default {
         }
         resolve(result)
       })
-    },
-    selectAllEvent({ checked, records }) {
-      records.length > 0 ? this.showDelBtn = true : this.showDelBtn = false
-      this.selectedVariants = records
     },
     selectChangeEvent({ checked, records }) {
       records.length > 0 ? this.showDelBtn = true : this.showDelBtn = false
