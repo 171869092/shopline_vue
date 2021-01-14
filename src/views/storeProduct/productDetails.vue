@@ -47,13 +47,13 @@
             <div class="flexbox ml20">
               <el-form-item label="Price" prop="Price">
                 <el-input v-model="formData.price" type="number" placeholder="Price" class="w-230">
-                  <div slot="prefix" style="padding:0 8px" v-if="$route.query.stroeType === 'all'">$</div>
+                  <div slot="prefix" style="padding:0 8px">{{formData.signal || '$'}}</div>
                   <!-- <i slot="prefix">$</i> -->
                 </el-input>
               </el-form-item>
               <el-form-item label="Compare at Price" prop="compare_price" class="w-230" style="margin-left: 120px;">
                 <el-input v-model="formData.compare_price" type="number" placeholder="Compare at Price">
-                  <div slot="prefix" style="padding:0 8px" v-if="$route.query.stroeType === 'all'">$</div>
+                  <div slot="prefix" style="padding:0 8px">{{formData.signal || '$'}}</div>
                 </el-input>
               </el-form-item>
             </div>
@@ -229,7 +229,7 @@
                 <template v-slot="{ row, rowIndex }">
                   <el-form-item class="mb0" label-width="0">
                     <el-input v-model="row.sku_price" clearable size="mini" class="p5_input" placeholder="Price">
-                      <div slot="prefix" style="padding:0 8px" v-if="$route.query.stroeType === 'all'">$</div>
+                      <div slot="prefix" style="padding:0 8px">{{row.signal || '$'}}</div>
                     </el-input>
                   </el-form-item>
                 </template>
@@ -238,7 +238,7 @@
                 <template v-slot="{ row, rowIndex }">
                   <el-form-item class="mb0" label-width="0">
                     <el-input v-model="row.compare_price" clearable size="mini" class="p5_input" placeholder="Compare at price">
-                      <div slot="prefix" style="padding:0 8px" v-if="$route.query.stroeType === 'all'">$</div>
+                      <div slot="prefix" style="padding:0 8px">{{row.signal || '$'}}</div>
                     </el-input>
                   </el-form-item>
                 </template>

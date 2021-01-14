@@ -18,9 +18,17 @@ export function connectStore(data) {
 
 export function testStoreConnect(params) {
   return request({
-    url: '/testing',
+    url: '/ts',
     method: 'post',
     data: params
+  })
+}
+
+export function editStore(params) {
+  return request({
+    url: '/edit',
+    method: 'get',
+    params
   })
 }
 
