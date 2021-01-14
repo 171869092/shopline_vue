@@ -10,8 +10,8 @@
   >
     <el-form ref="providerForm" :model="providerForm" size="small" label-width="170px" :rules="rules">
       <el-form-item label="Vendor:" prop="service_id">
-        <el-select v-model="providerForm.service_id" filterable class="w-350">
-          <el-option v-for="item in ServiceList" :key="item.id" :label="item.service_name" :value="item.id" />
+        <el-select v-model="providerForm.service_id" filterable class="w-350" @change="changeProvider">
+          <el-option v-for="item in serviceList" :key="item.id" :label="item.service_name" :value="item.id" />
         </el-select>
       </el-form-item>
       <el-form-item label="Countries:" prop="country" :rules="[{required: true,validator: country,trigger: 'change'}]">
@@ -56,9 +56,10 @@ export default {
       country,
       providerForm: {
         service_id: '',
+        service_name: '',
         country: []
       },
-      ServiceList: [],
+      serviceList: [],
       countriesList: [],
       rules: {
         service_id: [{ required: true, message: 'please choose', trigger: 'change' }]
@@ -80,7 +81,7 @@ export default {
     handleOpen() {
       getServiceList().then(res => {
         if (res.code === 200) {
-          this.ServiceList = res.data
+          this.serviceList = res.data
         }
       })
       getCountryList().then(res => {
@@ -88,6 +89,11 @@ export default {
           this.countriesList = res.data
         }
       })
+    },
+    changeProvider(val) {
+      console.log(val)
+      const item = this.serviceList.find(s => s.id === val)
+      this.providerForm.service_name = item.service_name
     },
     submit(formName) {
       this.$refs[formName].validate((valid) => {

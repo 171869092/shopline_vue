@@ -73,7 +73,7 @@
                 Action<i class="el-icon-arrow-down el-icon--right" />
               </el-button>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="placing" icon="el-icon-plus">Placing</el-dropdown-item>
+                <el-dropdown-item command="placing" icon="el-icon-paperclip">Placing</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -143,7 +143,7 @@
         </el-tab-pane>
       </el-tabs>
     </el-card>
-    <unhosting-products :visible.sync="dialogVisible" />
+    <unhosting-products :visible.sync="dialogVisible" :orders-id="selOrderIds" />
   </div>
 </template>
 <script>
