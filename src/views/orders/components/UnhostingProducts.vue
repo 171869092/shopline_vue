@@ -139,18 +139,20 @@ export default {
     },
     handleSelectionChange(val) {
       // this.selectedProduct = val.map(i => i.id)
-      this.selectedProduct = val
+      if (val.length > 0) {
+        this.selectedProduct = val
+      } else {
+        this.isHosting = false
+      }
       console.log(this.selectedProduct)
     },
     hosting(data) {
-      console.log(data)
       this.selectedProduct.forEach(ele => {
         this.$set(ele, 'service_id', data.service_id)
         this.$set(ele, 'service_name', data.service_name)
         this.$set(ele, 'country', data.country)
       })
       this.isHosting = true
-      console.log('tableData', this.tableData)
     },
     selectProducts() {
       if (this.selectedProduct.length > 0) {
@@ -177,6 +179,7 @@ export default {
       }).catch(err => {
         console.log(err)
       }).finally(() => {
+        this.isHosting = false
         this.submitLoading = false
       })
     },
