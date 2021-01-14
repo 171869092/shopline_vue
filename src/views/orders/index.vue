@@ -127,28 +127,26 @@
                 <span>{{ scope.row.order_update_time_format }}</span>
               </template>
             </el-table-column>
-            <!-- <el-table-column label="Operations">
-              <template v-if="scope.row.order_status == 5" slot-scope="scope">
-                <i v-show="scopeIndex == scope.$index && refreshLoading" class="el-icon-loading" />
-                <el-button
-                  type="text"
-                  :disabled="scopeIndex == scope.$index && refreshLoading"
-                  size="small"
-                  @click="handleRefreshClick(scope.row, scope.$index)"
-                >Refresh</el-button>
-              </template>
-            </el-table-column> -->
           </el-table>
           <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
         </el-tab-pane>
       </el-tabs>
     </el-card>
-    <unhosting-products :visible.sync="dialogVisible" :orders-id="selOrderIds" />
+    <unhosting-products :visible.sync="dialogVisible" :list="unhostingData" :orders-id="selOrderIds" @close="Inquire" />
+    <el-dialog title="Manual Order placing" :visible.sync="tipDialogVisible" :append-to-body="true" width="30%" class="dialog-border">
+      <div>
+        Chosen orders will be allocated to the vendors following your product's hosting setting.
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button size="small" @click="tipDialogVisible = false">Cancel</el-button>
+        <el-button size="small" type="primary" :loading="submitLoading" @click="next">OK</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { debounce } from '@/utils'
-import { getOrderList, getLogisticInfo, clearOrderException } from '@/api/orders'
+import { getOrderList, getLogisticInfo, getOrderGoods, orderJoinQueue } from '@/api/orders'
 import { getStoreList } from '@/api/product'
 import UnhostingProducts from './components/UnhostingProducts'
 export default {
@@ -200,13 +198,14 @@ export default {
       ],
       loading: false,
       dialogVisible: false,
-      timelineLoading: false,
-      refreshLoading: false,
+      submitLoading: false,
+      tipDialogVisible: false,
       tableData: [],
       logisticList: [],
       storeList: [],
       scopeIndex: '',
-      selOrderIds: []
+      selOrderIds: [],
+      unhostingData: []
     }
   },
   computed: {},
@@ -280,42 +279,34 @@ export default {
         this.$refs.myScrollbar.wrap.scrollTop = 0 // 这句重置滚动条高度
       })
     },
-    handleRefreshClick(row, index) {
-      this.$confirm('Try to refresh the abnormal status of the order?', 'Warning', {
-        confirmButtonText: 'OK',
-        cancelButtonText: 'Cancel',
-        type: 'warning'
-      }).then(() => {
-        this.scopeIndex = index
-        this.refreshLoading = true
-        clearOrderException({ order_no: row.order_no }).then(res => {
-          console.log(res.data)
-          if (res.code === 200) {
-            this.$message.success(res.message)
-            this.Inquire()
-          }
-          this.refreshLoading = false
-        }).catch(err => {
-          console.log(err)
-          this.refreshLoading = false
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: 'Delete canceled'
-        })
-      })
-    },
     handleCommand(command) {
       console.log(command)
-      if (this.selOrderIds.length === 0) {
-        this.$confirm(`Chosen orders will be allocated to the vendors following your product's hosting setting.`, 'Manual Order placing', {
-          confirmButtonText: 'Ok',
-          showCancelButton: false
-        })
+      if (this.selOrderIds.length > 0) {
+        this.tipDialogVisible = true
       } else {
-        this.dialogVisible = true
+        this.$message.warning('Please choose product first!')
       }
+    },
+    next() {
+      this.submitLoading = true
+      getOrderGoods({ orders_id: this.selOrderIds.toString() })
+        .then((res) => {
+          if (res.code === 4998) {
+            orderJoinQueue({ orders_id: this.selOrderIds.toString(), type: '2' }).then(res => {
+              if (res.code === 200) {
+                this.$message.success(res.message)
+              }
+            }).catch(err => {
+              console.log(err)
+            })
+          } else {
+            this.unhostingData = res.data
+            this.dialogVisible = true
+          }
+        }).finally(() => {
+          this.submitLoading = false
+          this.tipDialogVisible = false
+        })
     },
     filterOrders: debounce(function() {
       // this.formQuery.order_name = this.queryForm.order_name

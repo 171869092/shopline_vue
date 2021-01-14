@@ -43,7 +43,11 @@
               </template>
             </el-table-column>
             <el-table-column prop="total_price" label="Total Price" width="200" />
-            <el-table-column prop="service_name" label="Vendor" width="200" />
+            <el-table-column prop="service_name" label="Vendor" width="200">
+              <template slot-scope="scope">
+                <span>{{ scope.row.service_name || '--' }}</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="purchase_price" label="Total Cost" width="200">
               <template slot-scope="scope">
                 <span>{{ scope.row.purchase_price || '--' }}</span>

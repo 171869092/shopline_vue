@@ -67,7 +67,7 @@ service.interceptors.response.use(
           location.reload()
         })
       })
-    } else if (res.code !== undefined && res.code !== 200 && res.code !== 4999) {
+    } else if (res.code !== undefined && res.code !== 200 && res.code !== 4998) {
       if (res.message || res.msg) {
         Message({
           message: res.message || res.msg || 'Error Request',

@@ -58,7 +58,7 @@ export function getOrderGoods(params) {
 // 托管产品
 export function orderJoinQueue(data) {
   return request({
-    url: '/order/order/join-queue',
+    url: '/order_join_queue',
     method: 'post',
     data
   })
