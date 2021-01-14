@@ -439,11 +439,12 @@ export default {
     // this.tableData = []
   },
   methods: {
-    selectClick(val, idx) {
+    selectClick(val, idx) { 
+      console.log(val,idx);
       this.formData.cost_vender_list.forEach(item => {
-        item.list.forEach(v => {
+        item.list.forEach(v => {  
           if (val === v.title) {
-            this.formData.cost_vender_list[idx].shipping_price = v.value
+            this.$set(item,'shipping_price',v.value)
           }
         })
       })
@@ -484,8 +485,13 @@ export default {
           if (res.code === 200) {
             this.formData = res.data
             this.formData.cost_vender_list.map((item, idx) => {
-              this.formData.cost_vender_list[idx].country = item.list[0].title
-              this.selectClick(item.list[0].title, idx)
+              item.list.map(v =>{
+                if (v.value) {
+                  this.$set(item,'country',item.list[0].title)
+                     this.selectClick(item.list[0].title, idx)        
+                }
+              })
+              
             })
             this.tableData = res.data.sku_list
             // this.vendorData = res.data.sku_list.cost_vender_list
