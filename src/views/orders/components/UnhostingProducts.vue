@@ -190,10 +190,6 @@ export default {
       console.log('tableData', this.tableData)
     },
     submit() {
-      // const data = Object.assign({}, this.tableSelected)
-      // this.$emit('close', data)
-      // this.dialogVisible = false
-      console.log('true')
       if (this.selectedProduct.length > 0) {
         this.submitLoading = true
         orderJoinQueue({ goods: this.selectedProduct, orders_id: this.ordersId.toString() }).then(res => {
@@ -205,6 +201,8 @@ export default {
           }
         }).catch(err => {
           console.log(err)
+        }).finally(() => {
+          this.submitLoading = false
         })
       } else {
         this.$message.warning('Please select the product after hosting!')
@@ -212,10 +210,6 @@ export default {
     },
     handleClosed() {
       // this.$refs['formInline'].resetFields()
-      this.formInline = {
-        sku: '',
-        sku_name: ''
-      }
       this.dialogVisible = false
     }
   }

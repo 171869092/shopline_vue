@@ -440,15 +440,9 @@ export default {
     // this.tableData = []
   },
   methods: {
-    selectClick(val, idx) { 
-      console.log(val,idx);
-      this.formData.cost_vender_list.forEach(item => {
-        item.list.forEach(v => {  
-          if (val === v.title) {
-            this.$set(item,'shipping_price',v.value)
-          }
-        })
-      })
+    selectClick(val, idx) {
+      const list = this.formData.cost_vender_list[idx].list.find(item => item.title === val)
+      this.formData.cost_vender_list[idx].shipping_price = list.value
       this.formData.cost_vender_list[idx].total_cost = (+this.formData.cost_vender_list[idx].price + +this.formData.cost_vender_list[idx].service_price + +this.formData.cost_vender_list[idx].shipping_price).toFixed(2)
     },
     // 获取草稿数据
@@ -488,13 +482,12 @@ export default {
             this.formData = res.data
             // this.formData.del_sku = []
             this.formData.cost_vender_list.map((item, idx) => {
-              item.list.map(v =>{
+              item.list.map(v => {
                 if (v.value) {
-                  this.$set(item,'country',item.list[0].title)
-                     this.selectClick(item.list[0].title, idx)        
+                  this.$set(item, 'country', item.list[0].title)
+                  this.selectClick(item.list[0].title, idx)
                 }
               })
-              
             })
             this.tableData = res.data.sku_list
             // this.vendorData = res.data.sku_list.cost_vender_list
