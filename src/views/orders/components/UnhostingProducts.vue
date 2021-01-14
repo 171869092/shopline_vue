@@ -1,8 +1,8 @@
 <template>
   <el-dialog
     class="dialog-border"
+    width="1200px"
     :visible.sync="dialogVisible"
-    width="1000px"
     :title="title"
     :append-to-body="true"
     :modal-append-to-body="true"
@@ -34,6 +34,11 @@
       <el-table-column prop="store_name" label="Store" align="center" width="150" />
       <el-table-column prop="sku_price" label="Price" align="center" width="100" />
       <el-table-column prop="service_name" label="Vendor" align="center" width="120" />
+      <el-table-column prop="country" label="Country" align="center" width="150">
+        <template slot-scope="scope">
+          <span>{{ scope.row.country | formatString }}</span>
+        </template>
+      </el-table-column>
     </el-table>
     <!-- <pagination
         :total="listQuery.total"
@@ -44,7 +49,7 @@
     <span slot="footer" class="dialog-footer">
       <el-button size="small" type="primary" @click="hosting()">Hosting</el-button>
       <el-button size="small" @click="handleClosed()">Cancel</el-button>
-      <el-button size="small" type="primary" @click="submit('goodsForm')">Done</el-button>
+      <el-button size="small" type="primary" :loading="submitLoading" @click="submit('goodsForm')">Done</el-button>
     </span>
     <hosting :visible.sync="hostingVisible" @select="selectProducts" />
   </el-dialog>
@@ -58,6 +63,13 @@ export default {
   components: {
     // Pagination,
     Hosting
+  },
+  filters: {
+    formatString(val) {
+      if (Array.isArray(val)) {
+        return val.toString()
+      }
+    }
   },
   props: {
     visible: {
@@ -89,7 +101,8 @@ export default {
       },
       loading: false,
       hostingVisible: false,
-      selectedProduct: []
+      selectedProduct: [],
+      submitLoading: false
     }
   },
   computed: {
@@ -182,8 +195,14 @@ export default {
       // this.dialogVisible = false
       console.log('true')
       if (this.selectedProduct.length > 0) {
+        this.submitLoading = true
         orderJoinQueue({ goods: this.selectedProduct, orders_id: this.ordersId.toString() }).then(res => {
           console.log(res.data)
+          if (res.code === 200) {
+            this.submitLoading = false
+          } else {
+            this.$message.error(res.message)
+          }
         }).catch(err => {
           console.log(err)
         })

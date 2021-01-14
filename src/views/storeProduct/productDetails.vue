@@ -345,7 +345,7 @@ import _ from 'lodash'
 import InputTag from 'vue-input-tag'
 import EditOptions from './component/edit-options'
 import { descartes_obj } from '@/utils'
-import { getAllProductEdit, getStoreProductEdit, getAllProductSave, getStoreProductSave, allProductDelete, deleteSku } from '@/api/product'
+import { getAllProductEdit, getStoreProductEdit, getAllProductSave, getStoreProductSave, allProductDelete } from '@/api/product'
 export default {
   name: 'product-details',
   components: {
