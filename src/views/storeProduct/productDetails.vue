@@ -47,13 +47,13 @@
             <div class="flexbox ml20">
               <el-form-item label="Price" prop="Price">
                 <el-input v-model="formData.price" type="number" placeholder="Price" class="w-230">
-                  <div slot="prefix" style="padding:0 8px" v-if="$route.query.stroeType === 'all'">$</div>
+                  <div v-if="$route.query.stroeType === 'all'" slot="prefix" style="padding:0 8px">$</div>
                   <!-- <i slot="prefix">$</i> -->
                 </el-input>
               </el-form-item>
               <el-form-item label="Compare at Price" prop="compare_price" class="w-230" style="margin-left: 120px;">
                 <el-input v-model="formData.compare_price" type="number" placeholder="Compare at Price">
-                  <div slot="prefix" style="padding:0 8px" v-if="$route.query.stroeType === 'all'">$</div>
+                  <div v-if="$route.query.stroeType === 'all'" slot="prefix" style="padding:0 8px">$</div>
                 </el-input>
               </el-form-item>
             </div>
@@ -229,7 +229,7 @@
                 <template v-slot="{ row, rowIndex }">
                   <el-form-item class="mb0" label-width="0">
                     <el-input v-model="row.sku_price" clearable size="mini" class="p5_input" placeholder="Price">
-                      <div slot="prefix" style="padding:0 8px" v-if="$route.query.stroeType === 'all'">$</div>
+                      <div v-if="$route.query.stroeType === 'all'" slot="prefix" style="padding:0 8px">$</div>
                     </el-input>
                   </el-form-item>
                 </template>
@@ -238,7 +238,7 @@
                 <template v-slot="{ row, rowIndex }">
                   <el-form-item class="mb0" label-width="0">
                     <el-input v-model="row.compare_price" clearable size="mini" class="p5_input" placeholder="Compare at price">
-                      <div slot="prefix" style="padding:0 8px" v-if="$route.query.stroeType === 'all'">$</div>
+                      <div v-if="$route.query.stroeType === 'all'" slot="prefix" style="padding:0 8px">$</div>
                     </el-input>
                   </el-form-item>
                 </template>
@@ -442,8 +442,8 @@ export default {
   methods: {
     selectClick(val, idx) {
       const list = this.formData.cost_vender_list[idx].list.find(item => item.title === val)
-      this.formData.cost_vender_list[idx].shipping_price =  list.value
-      this.formData.cost_vender_list[idx].total_cost =  list.total_cost
+      this.formData.cost_vender_list[idx].shipping_price = list.value
+      this.formData.cost_vender_list[idx].total_cost = list.total_cost
       // this.formData.cost_vender_list[idx].total_cost = (+this.formData.cost_vender_list[idx].price + +this.formData.cost_vender_list[idx].service_price + +this.formData.cost_vender_list[idx].shipping_price).toFixed(2)
     },
     // 获取草稿数据
@@ -733,27 +733,31 @@ export default {
       this.selectedVariants = records
     },
     deleteVariants() {
-      // this.selectedVariants.forEach(sku => {
-      //   if (sku.id) {
-      //     this.formData.del_sku.push(sku.id)
-      //   }
-      // })
-      const test = _.difference(this.tableData, this.selectedVariants)
-      // console.log('test', test)
-      if (test.length > 0) {
-        const option = this.tableData[0].option
-        if (JSON.stringify(option) !== '{}') {
-          const options = []
-          for (var key of Object.keys(option)) {
-            options.push({ option: key, tags: _.uniq(this.tableData.map(item => item.option[key])) })
+      this.$confirm(`Are you sure you want to delete the selected variants?`,
+        `Delete For Variant`, {
+          confirmButtonText: 'Delete',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        })
+        .then(() => {
+          const test = _.difference(this.tableData, this.selectedVariants)
+          // console.log('test', test)
+          if (test.length > 0) {
+            const option = this.tableData[0].option
+            if (JSON.stringify(option) !== '{}') {
+              const options = []
+              for (var key of Object.keys(option)) {
+                options.push({ option: key, tags: _.uniq(this.tableData.map(item => item.option[key])) })
+              }
+              this.optionsList = options
+            }
+          } else {
+            this.optionsList = []
           }
-          this.optionsList = options
-        }
-      } else {
-        this.optionsList = []
-      }
-      this.showDelBtn = false
-      this.$set(this, 'tableData', test)
+          this.showDelBtn = false
+          this.$set(this, 'tableData', test)
+        })
+        .catch(() => {})
       // this.$refs.xTable.loadData(this.tableData)
     },
     // 删除sku
