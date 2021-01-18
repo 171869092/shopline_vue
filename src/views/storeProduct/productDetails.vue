@@ -737,14 +737,15 @@ export default {
         })
         .then(() => {
           const test = _.difference(this.tableData, this.selectedVariants)
-          // console.log('test', test)
+          console.log('test', test)
           if (test.length > 0) {
             const option = this.tableData[0].option
             if (JSON.stringify(option) !== '{}') {
               const options = []
               for (var key of Object.keys(option)) {
-                options.push({ option: key, tags: _.uniq(this.tableData.map(item => item.option[key])) })
+                options.push({ option: key, tags: _.uniq(test.map(item => item.option[key])) })
               }
+              console.log(options)
               this.optionsList = options
             }
           } else {
