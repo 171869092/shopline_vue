@@ -87,7 +87,7 @@
           </div>
         </div>
       </section>
-      <section class="about">
+      <!-- <section class="about">
         <div class="container-fluid">
           <div class="row p10">
             <div class="col-md-6">
@@ -106,7 +106,7 @@
             </div>
           </div>
         </div>
-      </section>
+      </section> -->
     </main>
     <footer-home />
   </div>
