@@ -2,7 +2,7 @@
   <header>
     <nav class="navbar navbar-expand-md fixed-top s-navbar navbar-light white-bg shadow-sm">
         <div class="container">
-          <a class="navbar-brand mr50" href="#">
+          <a class="navbar-brand mr50" href="/">
             <img src="@/assets/home/logo@2x.png" alt="" class="home-logo">
           </a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -11,7 +11,7 @@
           <div id="navbarCollapse" class="collapse navbar-collapse">
             <ul class="navbar-nav mr-auto">
               <li v-for="(menu, key) in menuList" :key="key" class="nav-item" :class="{'active': activeIndex == key}" @click="goLink(key)">
-                <a class="nav-link" href="#">{{ menu }}</a>
+                <a class="nav-link" href="/">{{ menu }}</a>
               </li>
             </ul>
             <form class="form-inline mt-2 mt-md-0">
