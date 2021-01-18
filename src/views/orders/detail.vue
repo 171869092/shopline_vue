@@ -107,13 +107,13 @@
                   </ul>
                 </div>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="15">
                 <div class="grid-content bg-purple">
                   <div class="flexbox">
                     <div class="vendor-sub-title">Status: <span>{{ vendor.track_info.TrackingStatus || '--' }}</span></div>
                     <div class="vendor-sub-title ml40">Tracking Numbers: <span>{{ vendor.track_info.WaybillNumber || '--' }}</span></div>
                   </div>
-                  <el-timeline v-if=" vendor.track_info.OrderTrackingDetails" class="mt20 pl5" :reverse="false">
+                  <el-timeline v-if=" vendor.track_info.OrderTrackingDetails" class="mt20 pl5">
                     <el-timeline-item
                       v-for="(item, index) in vendor.track_info.OrderTrackingDetails"
                       :key="index"
@@ -243,7 +243,7 @@ export default {
     }
   }
   .empty-normal {
-    color: rgba(0,0,0,.25);
+    color: rgba(0, 0, 0, 0.25);
   }
 }
 .vendor-info {
