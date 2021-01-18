@@ -63,8 +63,8 @@
       </el-form>
       <el-button v-show="formData.copyList.length < 3" size="small" plain @click="addOption()">Add another option</el-button>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="closeDialog">Cancel</el-button>
-        <el-button type="primary" @click="confirmEditOption">Done</el-button>
+        <el-button size="small" @click="closeDialog">Cancel</el-button>
+        <el-button size="small" type="primary" @click="confirmEditOption">Done</el-button>
       </span>
     </el-dialog>
     <el-dialog title="Removing options will also delete variants" :visible.sync="tipDialogVisible" width="30%" class="dialog-border">
@@ -254,13 +254,13 @@ export default {
 .grid-view {
   .gridbox {
     display: grid;
-    grid-template-columns: minmax(150px,3fr) 6fr 1fr;
+    grid-template-columns: minmax(150px, 3fr) 6fr 1fr;
     grid-gap: 1.6rem;
     margin-bottom: 1.6rem;
     .option-tag .el-tag {
-      margin: 0 .4rem .4rem 0;
+      margin: 0 0.4rem 0.4rem 0;
       &.el-tag--info {
-        background-color:rgb(228, 229, 231);
+        background-color: rgb(228, 229, 231);
         border-color: #e9e9eb;
         color: rgb(32, 34, 35);
       }

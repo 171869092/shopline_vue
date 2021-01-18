@@ -138,9 +138,9 @@ export default {
       this.dialogVisible = true
     },
     deleteImg(index) {
-      this.$confirm('此操作将删除该文件, 是否继续?', '删除图片？', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$confirm('This will delete the file, do you want to continue?', 'Delete media?', {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
         type: 'warning'
       }).then(() => {
         this.$emit('delete', this.fileList[index].url)
