@@ -226,7 +226,7 @@
                 </template>
               </vxe-table-column>
               <vxe-table-column title="Price" field="sku_price">
-                <template v-slot="{ row, rowIndex }">
+                <template v-slot="{ row }">
                   <el-form-item class="mb0" label-width="0">
                     <el-input v-model="row.sku_price" clearable size="mini" class="p5_input" placeholder="Price">
                       <div slot="prefix" style="padding:0 8px">{{ row.signal || '$' }}</div>
@@ -235,7 +235,7 @@
                 </template>
               </vxe-table-column>
               <vxe-table-column title="Compare at price" field="compare_price">
-                <template v-slot="{ row, rowIndex }">
+                <template v-slot="{ row }">
                   <el-form-item class="mb0" label-width="0">
                     <el-input v-model="row.compare_price" clearable size="mini" class="p5_input" placeholder="Compare at price">
                       <div slot="prefix" style="padding:0 8px">{{ row.signal || '$' }}</div>
@@ -244,14 +244,14 @@
                 </template>
               </vxe-table-column>
               <vxe-table-column title="Quantity" field="sku_number">
-                <template v-slot="{ row, rowIndex }">
+                <template v-slot="{ row }">
                   <el-form-item class="mb0" label-width="0">
                     <el-input-number v-model="row.sku_number" class="p5_input" size="mini" :min="1" controls-position="right" />
                   </el-form-item>
                 </template>
               </vxe-table-column>
               <vxe-table-column title="SKU" field="sku">
-                <template v-slot="{ row, rowIndex }">
+                <template v-slot="{ row }">
                   <el-form-item class="mb0" label-width="0">
                     <el-input v-model="row.sku" size="mini" clearable class="p5_input" placeholder="SKU" />
                   </el-form-item>
@@ -850,8 +850,8 @@ export default {
 }
 </script>
 <style lang="scss">
-.productDetails{
-  .variantsTabel{
+.productDetails {
+  .variantsTabel {
     // border-bottom: 1px solid #EBEEF5;
     margin-bottom: 30px;
   }
@@ -859,16 +859,16 @@ export default {
     margin-top: 20px;
   }
   .el-form-item {
-    margin-bottom: 10px
+    margin-bottom: 10px;
   }
-  .el-form-item__label{
-    font-size: 16px!important;
-    color: #000!important;
+  .el-form-item__label {
+    font-size: 16px !important;
+    color: #000 !important;
     padding: 0;
   }
-  .button-border{
+  .button-border {
     border: 1px solid #ef6f38;
-    color:  #ef6f38;
+    color: #ef6f38;
   }
 }
 
