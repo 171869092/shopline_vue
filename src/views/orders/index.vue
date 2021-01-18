@@ -148,7 +148,7 @@
 import { debounce } from '@/utils'
 import { getOrderList, getLogisticInfo, getOrderGoods, orderJoinQueue } from '@/api/orders'
 import { getStoreList } from '@/api/product'
-import UnhostingProducts from './components/UnhostingProducts'
+import UnhostingProducts from './components/unhosting-products'
 export default {
   name: 'orders',
   components: {
@@ -343,7 +343,7 @@ export default {
     &:first-child {
       margin-left: 0;
     }
-     margin-left: 15px;
+    margin-left: 15px;
   }
 }
 </style>
