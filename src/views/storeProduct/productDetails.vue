@@ -84,7 +84,7 @@
                   </span>
                   <span v-if="item.type == 'tips'">
                     <span v-if="scope.row.service_price">{{ scope.row.service_price }}</span>
-                    <span v-else>Hosting Vendor firstly</span>
+                    <span v-else>Waiting for reply</span>
                   </span>
                   <span v-if="item.type == 'select' && scope.row.price">
                     <el-select v-model="scope.row.country" @change="selectClick(scope.row.country,scope.$index)">
