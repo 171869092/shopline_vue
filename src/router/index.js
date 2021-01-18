@@ -57,7 +57,12 @@ export const constantRoutes = [
     name: 'auth',
     hidden: true
   },
-
+  {
+    path: '/privacy-policy',
+    component: () => import('@/views/privacy-policy/index'),
+    name: 'privacy-policy',
+    hidden: true
+  },
   {
     path: '/404',
     component: () => import('@/views/404'),

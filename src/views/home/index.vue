@@ -1,33 +1,6 @@
 <template>
   <div>
-    <header>
-      <nav class="navbar navbar-expand-md fixed-top s-navbar navbar-light white-bg shadow-sm">
-        <div class="container">
-          <a class="navbar-brand mr50" href="#">
-            <img src="@/assets/home/logo@2x.png" alt="" class="home-logo">
-          </a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon" />
-          </button>
-          <div id="navbarCollapse" class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-              <li v-for="(menu, key) in menuList" :key="key" class="nav-item" :class="{'active': activeIndex == key}" @click="goLink(key)">
-                <a class="nav-link" href="#">{{ menu }}</a>
-              </li>
-            </ul>
-            <form class="form-inline mt-2 mt-md-0">
-              <div v-if="isLogin">
-                <router-link class="login-btn" :to="{name: 'dashboard'}">Dashboard</router-link>
-              </div>
-              <div v-else>
-                <router-link class="login-btn" :to="{name: 'login'}">Login</router-link>
-                <el-button type="primary" @click="registerClick">Get Started</el-button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </nav>
-    </header>
+    <navbar></navbar>
     <main>
       <section class="wap m-navbar-top">
         <!-- <div class="jumbotron"> -->
@@ -135,30 +108,24 @@
         </div>
       </section>
     </main>
-    <footer class="b-footer">
-      <div class="container">
-        <p class="float-right">
-          <a href="#">Back to top</a>
-        </p>
-        <p>Album example is © Bootstrap, but please download and customize it for yourself!</p>
-        <p>New to Bootstrap? <a href="https://v4.bootcss.com/">Visit the homepage</a> or read our <a href="/docs/getting-started/introduction/">getting started guide</a>.</p>
-      </div>
-    </footer>
+    <footer-home></footer-home>
   </div>
 </template>
 <script>
 import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
 import 'swiper/css/swiper.css'
 import { setCookies } from '@/utils/cookies'
+import Navbar from '@/views/home/components/navbar'
+import footerHome from '@/views/home/components/footer'
 export default {
   components: {
     Swiper,
-    SwiperSlide
+    SwiperSlide,
+    Navbar,
+    footerHome
   },
   data() {
     return {
-      activeIndex: 0,
-      menuList: ['Home', 'FAQ', 'Contact'],
       swiperOption: {
         slidesPerView: 6,
         spaceBetween: 30,
@@ -186,11 +153,6 @@ export default {
       ]
     }
   },
-  computed: {
-    isLogin() {
-      return !!this.$store.getters.token
-    }
-  },
   created() {
     // console.log({ ...this.$route.query })
     const query = this.$route.query
@@ -210,11 +172,8 @@ export default {
       }
       return str.join('&')
     },
-    goLink(index) {
-      this.activeIndex = index
-    },
-    registerClick() {
-      this.$router.push({ name: 'register' })
+    policyClick(){
+      this.$router.push({ name: 'privacy-policy' })
     }
   }
 }
