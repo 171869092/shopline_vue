@@ -110,7 +110,7 @@ export default {
           return file
         },
         () => {
-          this.$message.error('上传的图片大小超出2M！')
+          this.$message.error('The uploaded file size exceeds 2M!')
           return Promise.reject(new Error('Error'))
         }
       )
