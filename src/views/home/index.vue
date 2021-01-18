@@ -1,6 +1,6 @@
 <template>
   <div>
-    <navbar></navbar>
+    <navbar />
     <main>
       <section class="wap m-navbar-top">
         <!-- <div class="jumbotron"> -->
@@ -108,7 +108,7 @@
         </div>
       </section>
     </main>
-    <footer-home></footer-home>
+    <footer-home />
   </div>
 </template>
 <script>
@@ -172,7 +172,7 @@ export default {
       }
       return str.join('&')
     },
-    policyClick(){
+    policyClick() {
       this.$router.push({ name: 'privacy-policy' })
     }
   }
