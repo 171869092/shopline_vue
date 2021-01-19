@@ -1,28 +1,45 @@
 <template>
   <div>
     <navbar />
+
     <main>
-      <section class="wap m-navbar-top">
-        <!-- <div class="jumbotron"> -->
-        <img src="@/assets/home/banner@2x.png" alt="" srcset="" style="width:100%">
-        <!-- <div class="container">
-            <h1 class="display-4">Hello, world!</h1>
-            <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-            <hr class="my-4">
-            <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-            <p>{{ $route.query }}</p>
-            <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-          </div> -->
-        <!-- </div> -->
+      <div class="banner-2" />
+      <section class="wap m-navbar-top banner-box">
+        <div class="background-overlay" />
+        <div class="jumbotron">
+          <!-- <img src="@/assets/home/banner@2x.png" alt="" srcset="" style="width:100%"> -->
+          <div class="container banner-bg">
+            <div class="banner-left">
+              <h1>Support more controllable supply chain services</h1>
+              <div>
+                <span
+                  class="banner-title"
+                >FbAli allows you to control total supply chain service,
+                  including shipping, products, inventory, and vendors for your
+                  e-commerce business.</span>
+              </div>
+              <div class="banner-button">
+                <el-button type="primary">Try It Free</el-button>
+              </div>
+            </div>
+            <div class="banner-right">
+              <img src="@/assets/home/banner3.png" alt="" class="banner3">
+            </div>
+          </div>
+        </div>
       </section>
       <section>
         <div class="page-container">
           <h2 class="text-center p-5">
-            <img src="@/assets/home/section-1@2x.png" alt="" style="width:220px">
+            <img
+              src="@/assets/home/section-1@2x.png"
+              alt=""
+              style="width: 220px"
+            >
           </h2>
           <swiper class="swiper" :options="swiperOption">
             <swiper-slide v-for="(item, key) in swiperList" :key="key">
-              <img style="width:100%" :src="item.url" alt="">
+              <img style="width: 100%" :src="item.url" alt="">
             </swiper-slide>
             <div slot="pagination" class="swiper-pagination" />
           </swiper>
@@ -31,24 +48,52 @@
       <section class="marketing">
         <div class="container">
           <h2 class="text-center p-5">
-            <img src="@/assets/home/section-2@2x.png" alt="" style="width:220px">
+            <img
+              src="@/assets/home/section-2@2x.png"
+              alt=""
+              style="width: 220px"
+            >
           </h2>
           <div class="row mb-5">
             <div class="col-lg-3 text-center">
-              <img src="@/assets/home/section-block-1@2x.png" alt="" width="100%">
-              <p class="title mt-4">Customer purchases products from your online store</p>
+              <img
+                src="@/assets/home/section-block-1@2x.png"
+                alt=""
+                width="100%"
+              >
+              <p class="title mt-4">
+                Customer purchases products from your online store
+              </p>
             </div>
             <div class="col-lg-3 text-center">
-              <img src="@/assets/home/section-block-2@2x.png" alt="" width="100%">
-              <p class="title mt-4">Your suppliers ship the product to your customer</p>
+              <img
+                src="@/assets/home/section-block-2@2x.png"
+                alt=""
+                width="100%"
+              >
+              <p class="title mt-4">
+                Your suppliers ship the product to your customer
+              </p>
             </div>
             <div class="col-lg-3 text-center">
-              <img src="@/assets/home/section-block-3@2x.png" alt="" width="100%">
-              <p class="title mt-4">Their order goes directly to your suppliers</p>
+              <img
+                src="@/assets/home/section-block-3@2x.png"
+                alt=""
+                width="100%"
+              >
+              <p class="title mt-4">
+                Their order goes directly to your suppliers
+              </p>
             </div>
             <div class="col-lg-3 text-center">
-              <img src="@/assets/home/section-block-4@2x.png" alt="" width="100%">
-              <p class="title mt-4">You keep the profit from the retail price</p>
+              <img
+                src="@/assets/home/section-block-4@2x.png"
+                alt=""
+                width="100%"
+              >
+              <p class="title mt-4">
+                You keep the profit from the retail price
+              </p>
             </div>
           </div>
         </div>
@@ -57,10 +102,18 @@
       <section>
         <div class="container">
           <h2 class="text-center p-5">
-            <img src="@/assets/home/section-3@2x.png" alt="" style="width:240px">
+            <img
+              src="@/assets/home/section-3@2x.png"
+              alt=""
+              style="width: 240px"
+            >
           </h2>
           <div class="row pb-5">
-            <div v-for="(item,idx) in threeList" :key="idx" class="col-lg-3 text-center">
+            <div
+              v-for="(item, idx) in threeList"
+              :key="idx"
+              class="col-lg-3 text-center"
+            >
               <img :src="item.image" alt="" width="100%">
               <!-- <h5 class="title mt-4">{{ item.name }}</h5> -->
             </div>
@@ -70,11 +123,19 @@
 
       <section class="container">
         <h2 class="text-center p-5">
-          <img src="@/assets/home/section-4@2x.png" alt="" style="width:200px">
+          <img
+            src="@/assets/home/section-4@2x.png"
+            alt=""
+            style="width: 200px"
+          >
         </h2>
         <div class="row featurette">
           <div class="col-md-6">
-            <img src="@/assets/home/section-block-9@2x.png" alt="" width="100%">
+            <img
+              src="@/assets/home/section-block-9@2x.png"
+              alt=""
+              width="100%"
+            >
           </div>
           <div class="col-md-6">
             <div class="shopify-logo">
@@ -82,7 +143,8 @@
             </div>
             <h3 class="ml30">Shopify</h3>
             <p class="lead ml30 mt30">
-              DropShipping integrates with all your favorite eCommerce platforms. Get started dropshipping today!
+              DropShipping integrates with all your favorite eCommerce
+              platforms. Get started dropshipping today!
             </p>
           </div>
         </div>
@@ -178,3 +240,61 @@ export default {
   }
 }
 </script>
+<style scoped>
+.banner-box {
+  position: relative;
+}
+.banner-2 {
+  background: url("../../assets/home/banner2.png") no-repeat;
+  height: 100%;
+  width: 100%;
+  background-size: center center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+.banner-bg {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-items: center;
+  align-items: center;
+}
+.background-overlay {
+  background: url("../../assets/home/banner1.png") no-repeat;
+  background-position: 60%;
+  background-size: contain;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+}
+.banner-left .banner-title {
+  color: #5b5b5b;
+  font-size: 20px;
+  font-weight: 400;
+  /* line-height: 11px; */
+}
+.banner-right {
+  width: 76%;
+  z-index: 3;
+}
+.banner-left h1 {
+  color: #01004d;
+  font-size: 36px;
+  font-weight: 800;
+  font-style: normal;
+  line-height: 1.3em;
+}
+.banner-button {
+  margin-top: 50px;
+}
+/* .banner-right{
+  position: relative;
+}
+.banner3{
+  position: absolute;
+  right: 10px;
+} */
+</style>
