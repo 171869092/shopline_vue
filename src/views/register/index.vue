@@ -57,8 +57,7 @@
           </div>
           <hr>
           <div class="info text-center">
-            <p>8 The Green #4638 Dover,DE 19901 (123)456-7890</p>
-            <p>@2020 dropshipping</p>
+            <p>© 2020-2021 FbAil All rights reserved.</p>
           </div>
         </div>
       </div>
@@ -129,10 +128,10 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.container{
+.container {
   align-items: center;
   display: flex;
-  height: 100vh
+  height: 100vh;
 }
 // .form {
 //   padding: 60px 0;
@@ -146,10 +145,10 @@ export default {
 .register-form {
   padding-top: 40px;
 }
-.imageLeft{
+.imageLeft {
   background: url(~@/assets/home/register.png) no-repeat center;
   background-size: cover;
-  width:100%;
+  width: 100%;
   height: 100vh;
 }
 </style>
