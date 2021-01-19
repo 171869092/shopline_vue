@@ -47,7 +47,8 @@
         </div>
         <div>
           <p>
-            <a href="/privacy-policy">Privacy Policy</a>
+            <router-link class="login-btn" :to="{name: 'privacy-policy'}">Privacy Policy</router-link>
+            <!-- <a href="/privacy-policy">Privacy Policy</a> -->
           </p>
           <p>
             <a href="/">Online Support</a>
@@ -71,9 +72,9 @@ export default {
   computed: {},
   created() {},
   methods: {
-    // policyClick() {
-    //   this.$router.push({ name: 'privacy-policy' })
-    // },
+    policyClick() {
+      this.$router.push({ name: 'privacy-policy' })
+    },
     tryFree() {
       this.$router.push({ name: 'register' })
     }
