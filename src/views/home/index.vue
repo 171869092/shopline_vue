@@ -15,8 +15,8 @@
                   <span
                     class="banner-title"
                   >FbAli allows you to control total supply chain service,
-                    including shipping, products, inventory, and vendors for your
-                    e-commerce business.</span>
+                    including shipping, products, inventory, and vendors for
+                    your e-commerce business.</span>
                 </div>
                 <div class="banner-button">
                   <el-button type="primary">Try It Free</el-button>
@@ -29,7 +29,7 @@
           </div>
         </div>
       </section>
-      <section>
+      <!-- <section>
         <div class="page-container">
           <h2 class="text-center p-5">
             <img
@@ -45,8 +45,8 @@
             <div slot="pagination" class="swiper-pagination" />
           </swiper>
         </div>
-      </section>
-      <section class="marketing">
+      </section> -->
+      <!-- <section class="marketing">
         <div class="container">
           <h2 class="text-center p-5">
             <img
@@ -98,9 +98,9 @@
             </div>
           </div>
         </div>
-      </section>
+      </section> -->
 
-      <section>
+      <!-- <section>
         <div class="container">
           <h2 class="text-center p-5">
             <img
@@ -116,74 +116,93 @@
               class="col-lg-3 text-center"
             >
               <img :src="item.image" alt="" width="100%">
-              <!-- <h5 class="title mt-4">{{ item.name }}</h5> -->
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="container">
-        <h2 class="text-center p-5">
-          <img
-            src="@/assets/home/section-4@2x.png"
-            alt=""
-            style="width: 200px"
-          >
-        </h2>
-        <div class="row featurette">
-          <div class="col-md-6">
-            <img
-              src="@/assets/home/section-block-9@2x.png"
-              alt=""
-              width="100%"
-            >
-          </div>
-          <div class="col-md-6">
-            <div class="shopify-logo">
-              <img src="@/assets/home/shopify-logo.png" alt="" width="150px">
-            </div>
-            <h3 class="ml30">Shopify</h3>
-            <p class="lead ml30 mt30">
-              DropShipping integrates with all your favorite eCommerce
-              platforms. Get started dropshipping today!
-            </p>
-          </div>
-        </div>
-      </section>
-      <!-- <section class="about">
-        <div class="container-fluid">
-          <div class="row p10">
-            <div class="col-md-6">
-              <div class="text-center">
-                <img src="@/assets/home/section-block-10@2x.png" alt="" width="800px">
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="about-us">
-                <h2>
-                  <img src="@/assets/home/section-5@2x.png" alt="" style="width:220px">
-                </h2>
-                <p class="mt40" style="width:450px">Password specification: more than 8 digits, English letters + numbers The user clicks to obtain the verification code, and the verification code is sent to the user's email. The specific verification code is attached to the email. The user needs to fill in the correct and register successfully</p>
-                <el-button class="mt20" type="primary">Contact</el-button>
-              </div>
             </div>
           </div>
         </div>
       </section> -->
+
+      <section class="featurette-padding">
+        <div class="container">
+          <h2 class="text-center p-5">
+            <!-- <img
+            src="@/assets/home/section-4@2x.png"
+            alt=""
+            style="width: 200px"
+          > -->
+            <!-- Tracking easily and in-time -->
+          </h2>
+          <div class="row featurette">
+            <div class="col-md-6">
+              <h2 class="ml30 mt80">Tracking easily and in-time</h2>
+              <p class="lead ml30 mt30 featurette-title">
+                FbAli allows you to check the in-time tracking details for your
+                order from top Chinese logistics service providers, including
+                YunExpress, 4PX, ChinaPost, and so on.
+              </p>
+            </div>
+            <div class="col-md-6">
+              <img
+                src="@/assets/home/section-block-9@2x.png"
+                alt=""
+                width="100%"
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+      <section style="background: #fafbff" class="featurette-padding">
+        <div class="container">
+          <div class="row featurette">
+            <div class="col-md-6">
+              <img
+                src="@/assets/home/section-block-9@2x.png"
+                alt=""
+                width="100%"
+              >
+            </div>
+            <div class="col-md-6">
+              <h2 class="ml30 mt80">Filtered source agent</h2>
+              <p class="lead ml30 mt30 featurette-title">
+                FbAli had the most stringent credit screening for source agent.
+                Every agent joined in FbAli should be examined and verified.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="featurette-padding">
+        <div class="container">
+          <div class="row featurette">
+            <div class="col-md-6">
+              <h2 class="ml30 mt80">Auto processing orders</h2>
+              <p class="lead ml30 mt30 featurette-title">
+                FbAli allows you to host your products to the vendor directly,
+                which will make your orders to be processed by the vendor in
+                time and automatically.
+              </p>
+            </div>
+            <div class="col-md-6">
+              <img
+                src="@/assets/home/section-block-9@2x.png"
+                alt=""
+                width="100%"
+              >
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
     <footer-home />
   </div>
 </template>
 <script>
-import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
-import 'swiper/css/swiper.css'
+// import { Swiper, SwiperSlide } from 'vue-awesome-swiper'
+// import 'swiper/css/swiper.css'
 import { setCookies } from '@/utils/cookies'
 import Navbar from '@/views/home/components/navbar'
 import footerHome from '@/views/home/components/footer'
 export default {
   components: {
-    Swiper,
-    SwiperSlide,
     Navbar,
     footerHome
   },
@@ -299,4 +318,14 @@ export default {
   position: absolute;
   right: 10px;
 } */
+.featurette-title {
+  color: #5f5f64;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 30px;
+  margin: 0px 30px 0px 0px;
+}
+.featurette-padding {
+  padding: 5rem;
+}
 </style>
