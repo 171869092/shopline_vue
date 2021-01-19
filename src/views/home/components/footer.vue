@@ -22,6 +22,17 @@
           <a class="navbar-brand mr50" href="/">
             <img src="@/assets/home/logo@white.png" alt="" class="footer-logo">
           </a>
+          <div class="d-contact">
+            <a href="/" target="_blank" rel="noopener noreferrer">
+              <img src="@/assets/home/icon-4@2x.png" alt="" class="d-contact-img">
+            </a>
+            <a href="/" target="_blank" rel="noopener noreferrer">
+              <img src="@/assets/home/icon-1@2x.png" alt="" class="d-contact-img">
+            </a>
+            <a href="/" target="_blank" rel="noopener noreferrer">
+              <img src="@/assets/home/icon-2@2x.png" alt="" class="d-contact-img">
+            </a>
+          </div>
         </div>
         <div>
           <p>
@@ -104,5 +115,14 @@ export default {
   width: 150px;
   border-bottom: 2px solid #fff;
   padding-bottom: 12px;
+}
+.d-contact{
+  margin-top: 10px;
+  margin-right: 20px;
+}
+.d-contact-img{
+  width: 24px;
+  height: 24px;
+  margin-right: 2rem;
 }
 </style>
