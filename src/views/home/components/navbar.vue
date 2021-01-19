@@ -46,7 +46,6 @@ export default {
   mounted() {
     window.addEventListener('scroll', (e) => {
       const scroll = document.documentElement.scrollTop || document.body.scrollTop
-      console.log(scroll)
       if (scroll <= 5) {
         this.isShow = false
       } else {
