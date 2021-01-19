@@ -309,11 +309,11 @@ export default {
   position: absolute;
   // bottom: 377px;
   // right: -280px;
-  left: 30%;
+  left: 32%;
   z-index: 1;
   .elementor-image {
     img {
-      width: 110%;
+      width: 115%;
       // max-width: 76%;
       vertical-align: middle;
       display: inline-block;
