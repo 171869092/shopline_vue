@@ -2,9 +2,9 @@
   <header>
     <nav class="navbar navbar-expand-md fixed-top s-navbar navbar-light" :class="[isShow ? 'white-bg shadow-sm' : '']">
       <div class="container">
-        <a class="navbar-brand mr50" href="/">
+        <router-link class="login-btn" :to="{name: 'home'}">
           <img src="@/assets/home/logo@2x.png" alt="" class="home-logo">
-        </a>
+        </router-link>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon" />
         </button>

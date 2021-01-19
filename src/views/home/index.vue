@@ -19,6 +19,7 @@
         </div>
       </section>
       <section class="wap m-navbar-top banner-box">
+        <div class="banner-stars" />
         <div class="jumbotron">
           <!-- <img src="@/assets/home/banner@2x.png" alt="" srcset="" style="width:100%"> -->
           <div class="container banner-bg">
@@ -136,7 +137,7 @@
         </div>
       </section> -->
 
-      <section style="padding-bottom:5rem">
+      <section style="padding-bottom: 5rem">
         <div class="container">
           <h2 class="text-center p-5">
             <!-- <img
@@ -156,11 +157,7 @@
               </p>
             </div>
             <div class="col-md-6">
-              <img
-                src="@/assets/home/details.jpeg"
-                alt=""
-                width="90%"
-              >
+              <img src="@/assets/home/details.jpeg" alt="" width="90%">
             </div>
           </div>
         </div>
@@ -169,11 +166,7 @@
         <div class="container">
           <div class="row featurette">
             <div class="col-md-6">
-              <img
-                src="@/assets/home/details1.png"
-                alt=""
-                width="90%"
-              >
+              <img src="@/assets/home/details1.png" alt="" width="90%">
             </div>
             <div class="col-md-6">
               <h2 class="ml30 mt80">Filtered source agent</h2>
@@ -197,11 +190,7 @@
               </p>
             </div>
             <div class="col-md-6">
-              <img
-                src="@/assets/home/details2.jpeg"
-                alt=""
-                width="90%"
-              >
+              <img src="@/assets/home/details2.jpeg" alt="" width="90%">
             </div>
           </div>
         </div>
@@ -278,7 +267,7 @@ export default {
 <style lang="scss" scoped>
 .banner-box {
   position: relative;
-  padding: 0!important;
+  padding: 0 !important;
 }
 .elementor-widget-wrap {
   position: relative;
@@ -324,7 +313,7 @@ export default {
 .banner3 {
   width: 110%;
 }
-.banner-left{
+.banner-left {
   margin-top: 40px;
 }
 .banner-left .banner-title {
@@ -362,5 +351,15 @@ export default {
 }
 .featurette-padding {
   padding: 5rem;
+}
+.banner-stars {
+  background: url("../../assets/home/stars.png");
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  background-position: center center;
+  background-size: cover;
 }
 </style>
