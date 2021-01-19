@@ -9,7 +9,7 @@
       </p> -->
       <div class="footer-title">
         <h2 class="title is-2">
-          Start with FaAil, take your business to next level!
+          Start with FbAil, take your business to next level!
         </h2>
         <el-button
           type="primary"

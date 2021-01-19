@@ -2,6 +2,22 @@
   <div>
     <navbar />
     <main>
+      <section>
+        <div class="container">
+          <div class="flexbox elementor-widget-wrap">
+            <div class="element-cai">
+              <div class="elementor-image">
+                <img src="@/assets/home/banner1.png" title="" alt="">
+              </div>
+            </div>
+            <div class="element-cloud">
+              <div class="elementor-image">
+                <img src="@/assets/home/banner2.png" title="" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
       <section class="wap m-navbar-top banner-box">
         <div class="jumbotron">
           <!-- <img src="@/assets/home/banner@2x.png" alt="" srcset="" style="width:100%"> -->
@@ -27,22 +43,7 @@
           </div>
         </div>
       </section>
-      <section style="width:100%">
-        <div class="container">
-          <div class="flexbox elementor-widget-wrap">
-            <div class="element-cai">
-              <div class="elementor-image">
-                <img src="@/assets/home/banner1.png" title="" alt="">
-              </div>
-            </div>
-            <div class="element-cloud">
-              <div class="elementor-image">
-                <img src="@/assets/home/banner2.png" title="" alt="">
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+
       <!-- <section>
         <div class="page-container">
           <h2 class="text-center p-5">
@@ -135,7 +136,7 @@
         </div>
       </section> -->
 
-      <section class="featurette-padding">
+      <section>
         <div class="container">
           <h2 class="text-center p-5">
             <!-- <img
@@ -277,24 +278,28 @@ export default {
 <style lang="scss" scoped>
 .banner-box {
   position: relative;
+  padding: 0!important;
 }
 .elementor-widget-wrap {
   position: relative;
-  width: 100%;
+  // width: 100%;
   flex-wrap: wrap;
   align-content: flex-start;
 }
 .element-cai {
   position: absolute;
-  width: 100%;
-  bottom: 27px;
-  right: -75px;
+  // width: 100%;
+  // bottom: 27px;
+  // right: -75px;
   z-index: 0;
   text-align: center;
+  top: 40px;
+  left: 5%;
+  z-index: 1;
   .elementor-image {
     img {
-      width: 92%;
-      max-width: 100%;
+      width: 140%;
+      // max-width: 100%;
       vertical-align: middle;
       display: inline-block;
     }
@@ -302,12 +307,14 @@ export default {
 }
 .element-cloud {
   position: absolute;
-  bottom: 377px;
-  right: -280px;
+  // bottom: 377px;
+  // right: -280px;
+  left: 30%;
+  z-index: 1;
   .elementor-image {
     img {
-      width: 100%;
-      max-width: 76%;
+      width: 110%;
+      // max-width: 76%;
       vertical-align: middle;
       display: inline-block;
     }
@@ -315,7 +322,10 @@ export default {
 }
 
 .banner3 {
-  width: 100%;
+  width: 110%;
+}
+.banner-left{
+  margin-top: 40px;
 }
 .banner-left .banner-title {
   color: #5b5b5b;

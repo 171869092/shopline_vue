@@ -120,7 +120,7 @@ export default {
   text-align: center;
 }
 .wap-top{
-  margin-top: 42px;
+  margin-top: 80px;
 }
 .block{
   margin-bottom: 1.5rem;
