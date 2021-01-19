@@ -2,9 +2,7 @@
   <div>
     <navbar />
     <main>
-      <div class="banner-2" />
       <section class="wap m-navbar-top banner-box">
-        <div class="background-overlay" />
         <div class="jumbotron">
           <!-- <img src="@/assets/home/banner@2x.png" alt="" srcset="" style="width:100%"> -->
           <div class="container banner-bg">
@@ -23,7 +21,23 @@
                 </div>
               </div>
               <div class="banner-right col-lg-6">
-                <img src="@/assets/home/banner3.png" alt="" class="banner3">
+                <img class="banner3" src="@/assets/home/banner3.png" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section style="width:100%">
+        <div class="container">
+          <div class="flexbox elementor-widget-wrap">
+            <div class="element-cai">
+              <div class="elementor-image">
+                <img src="@/assets/home/banner1.png" title="" alt="">
+              </div>
+            </div>
+            <div class="element-cloud">
+              <div class="elementor-image">
+                <img src="@/assets/home/banner2.png" title="" alt="">
               </div>
             </div>
           </div>
@@ -241,36 +255,48 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .banner-box {
   position: relative;
 }
-.banner-2 {
-  background: url("../../assets/home/banner2.png") no-repeat;
-  height: 100%;
+.elementor-widget-wrap {
+  position: relative;
   width: 100%;
-  background-size: 33%;
+  flex-wrap: wrap;
+  align-content: flex-start;
+}
+.element-cai {
   position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
-  background-position-x: 65%;
-}
-.banner-bg {
-  /* display: grid;
-  grid-template-columns: repeat(2, 1fr); */
-  /* justify-items: center;
-  align-items: center; */
-}
-.background-overlay {
-  background: url("../../assets/home/banner1.png") no-repeat;
-  background-position: 60%;
-  background-size: contain;
-  height: 100%;
   width: 100%;
-  top: 0;
-  left: 0;
+  bottom: 27px;
+  right: -75px;
+  z-index: 0;
+  text-align: center;
+  .elementor-image {
+    img {
+      width: 92%;
+      max-width: 100%;
+      vertical-align: middle;
+      display: inline-block;
+    }
+  }
+}
+.element-cloud {
   position: absolute;
+  bottom: 377px;
+  right: -280px;
+  .elementor-image {
+    img {
+      width: 100%;
+      max-width: 76%;
+      vertical-align: middle;
+      display: inline-block;
+    }
+  }
+}
+
+.banner3 {
+  width: 100%;
 }
 .banner-left .banner-title {
   color: #5b5b5b;
@@ -279,8 +305,7 @@ export default {
   /* line-height: 11px; */
 }
 .banner-right {
-  width: 76%;
-  z-index: 3;
+  z-index: 10;
 }
 .banner-left h1 {
   color: #01004d;

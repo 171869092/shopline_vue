@@ -1,6 +1,6 @@
 <template>
   <header>
-    <nav class="navbar navbar-expand-md fixed-top s-navbar navbar-light white-bg shadow-sm">
+    <nav class="navbar navbar-expand-md fixed-top s-navbar navbar-light" :class="[isShow ? 'white-bg shadow-sm' : '']">
       <div class="container">
         <a class="navbar-brand mr50" href="/">
           <img src="@/assets/home/logo@2x.png" alt="" class="home-logo">
@@ -8,21 +8,20 @@
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon" />
         </button>
-        <div id="navbarCollapse" class="collapse navbar-collapse">
-          <ul class="navbar-nav mr-auto">
+        <div id="navbarCollapse" class="collapse navbar-collapse justify-flex-end">
+          <ul class="navbar-nav">
             <li v-for="(menu, key) in menuList" :key="key" class="nav-item" :class="{'active': activeIndex == key}" @click="goLink(key)">
               <a class="nav-link" href="/">{{ menu }}</a>
             </li>
+            <li class="nav-item flexbox justify-center align-center">
+              <router-link v-if="isLogin" class="login-btn nav-link" :to="{name: 'dashboard'}">Dashboard</router-link>
+              <span v-else class="">
+                <router-link class="login-btn" :to="{name: 'login'}">Login</router-link>
+                <!-- <el-button class="ml10" type="text">Register</el-button> -->
+                <a class="login-btn ml10" @click="registerClick">Register</a>
+              </span>
+            </li>
           </ul>
-          <form class="form-inline mt-2 mt-md-0">
-            <div v-if="isLogin">
-              <router-link class="login-btn" :to="{name: 'dashboard'}">Dashboard</router-link>
-            </div>
-            <div v-else>
-              <router-link class="login-btn" :to="{name: 'login'}">LOGIN</router-link>
-              <el-button type="primary" @click="registerClick">Get Started</el-button>
-            </div>
-          </form>
         </div>
       </div>
     </nav>
@@ -35,7 +34,8 @@ export default {
   data() {
     return {
       activeIndex: 0,
-      menuList: ['HOME', 'FAQ', 'CONTACT']
+      menuList: ['Home', 'FAQ', 'Contact'],
+      isShow: false
     }
   },
   computed: {
@@ -43,7 +43,17 @@ export default {
       return !!this.$store.getters.token
     }
   },
-  created() {},
+  mounted() {
+    window.addEventListener('scroll', (e) => {
+      const scroll = document.documentElement.scrollTop || document.body.scrollTop
+      console.log(scroll)
+      if (scroll <= 5) {
+        this.isShow = false
+      } else {
+        this.isShow = true
+      }
+    })
+  },
   methods: {
     goLink(index) {
       this.activeIndex = index
