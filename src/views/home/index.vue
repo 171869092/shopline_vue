@@ -1,7 +1,6 @@
 <template>
   <div>
     <navbar />
-
     <main>
       <div class="banner-2" />
       <section class="wap m-navbar-top banner-box">
@@ -9,21 +8,23 @@
         <div class="jumbotron">
           <!-- <img src="@/assets/home/banner@2x.png" alt="" srcset="" style="width:100%"> -->
           <div class="container banner-bg">
-            <div class="banner-left">
-              <h1>Support more controllable supply chain services</h1>
-              <div>
-                <span
-                  class="banner-title"
-                >FbAli allows you to control total supply chain service,
-                  including shipping, products, inventory, and vendors for your
-                  e-commerce business.</span>
+            <div class="row">
+              <div class="banner-left col-lg-6">
+                <h1>Support more controllable supply chain services</h1>
+                <div>
+                  <span
+                    class="banner-title"
+                  >FbAli allows you to control total supply chain service,
+                    including shipping, products, inventory, and vendors for your
+                    e-commerce business.</span>
+                </div>
+                <div class="banner-button">
+                  <el-button type="primary">Try It Free</el-button>
+                </div>
               </div>
-              <div class="banner-button">
-                <el-button type="primary">Try It Free</el-button>
+              <div class="banner-right col-lg-6">
+                <img src="@/assets/home/banner3.png" alt="" class="banner3">
               </div>
-            </div>
-            <div class="banner-right">
-              <img src="@/assets/home/banner3.png" alt="" class="banner3">
             </div>
           </div>
         </div>
@@ -248,17 +249,18 @@ export default {
   background: url("../../assets/home/banner2.png") no-repeat;
   height: 100%;
   width: 100%;
-  background-size: center center;
+  background-size: 33%;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 1;
+  background-position-x: 65%;
 }
 .banner-bg {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  justify-items: center;
-  align-items: center;
+  /* display: grid;
+  grid-template-columns: repeat(2, 1fr); */
+  /* justify-items: center;
+  align-items: center; */
 }
 .background-overlay {
   background: url("../../assets/home/banner1.png") no-repeat;

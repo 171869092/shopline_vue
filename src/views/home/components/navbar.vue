@@ -19,7 +19,7 @@
               <router-link class="login-btn" :to="{name: 'dashboard'}">Dashboard</router-link>
             </div>
             <div v-else>
-              <router-link class="login-btn" :to="{name: 'login'}">Login</router-link>
+              <router-link class="login-btn" :to="{name: 'login'}">LOGIN</router-link>
               <el-button type="primary" @click="registerClick">Get Started</el-button>
             </div>
           </form>
@@ -35,7 +35,7 @@ export default {
   data() {
     return {
       activeIndex: 0,
-      menuList: ['Home', 'FAQ', 'Contact']
+      menuList: ['HOME', 'FAQ', 'CONTACT']
     }
   },
   computed: {
