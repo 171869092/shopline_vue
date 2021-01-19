@@ -136,7 +136,7 @@
         </div>
       </section> -->
 
-      <section>
+      <section style="padding-bottom:5rem">
         <div class="container">
           <h2 class="text-center p-5">
             <!-- <img
@@ -157,9 +157,9 @@
             </div>
             <div class="col-md-6">
               <img
-                src="@/assets/home/section-block-9@2x.png"
+                src="@/assets/home/details.jpeg"
                 alt=""
-                width="100%"
+                width="90%"
               >
             </div>
           </div>
@@ -170,9 +170,9 @@
           <div class="row featurette">
             <div class="col-md-6">
               <img
-                src="@/assets/home/section-block-9@2x.png"
+                src="@/assets/home/details1.png"
                 alt=""
-                width="100%"
+                width="90%"
               >
             </div>
             <div class="col-md-6">
@@ -198,9 +198,9 @@
             </div>
             <div class="col-md-6">
               <img
-                src="@/assets/home/section-block-9@2x.png"
+                src="@/assets/home/details2.jpeg"
                 alt=""
-                width="100%"
+                width="90%"
               >
             </div>
           </div>
