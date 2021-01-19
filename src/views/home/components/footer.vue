@@ -19,39 +19,39 @@
       </div>
       <div class="site-link content">
         <div>
-          <a class="navbar-brand mr50" href="/">
+          <router-link class="navbar-brand mr50" :to="{name: 'home'}">
             <img src="@/assets/home/logo@white.png" alt="" class="footer-logo">
-          </a>
+          </router-link>
+
           <div class="d-contact">
-            <a href="/" target="_blank" rel="noopener noreferrer">
+            <router-link :to="{name: 'home'}">
               <img src="@/assets/home/icon-4@2x.png" alt="" class="d-contact-img">
-            </a>
-            <a href="/" target="_blank" rel="noopener noreferrer">
+            </router-link>
+            <router-link :to="{name: 'home'}">
               <img src="@/assets/home/icon-1@2x.png" alt="" class="d-contact-img">
-            </a>
-            <a href="/" target="_blank" rel="noopener noreferrer">
+            </router-link>
+            <router-link :to="{name: 'home'}">
               <img src="@/assets/home/icon-2@2x.png" alt="" class="d-contact-img">
-            </a>
+            </router-link>
           </div>
         </div>
         <div>
           <p>
-            <a href="/">About us</a>
+            <router-link class="login-btn" :to="{name: 'home'}">About us</router-link>
           </p>
           <p>
-            <a href="/">Supply Service</a>
+            <router-link class="login-btn" :to="{name: 'home'}">Supply Service</router-link>
           </p>
           <p>
-            <a href="/">Blog</a>
+            <router-link class="login-btn" :to="{name: 'home'}">Blog</router-link>
           </p>
         </div>
         <div>
           <p>
             <router-link class="login-btn" :to="{name: 'privacy-policy'}">Privacy Policy</router-link>
-            <!-- <a href="/privacy-policy">Privacy Policy</a> -->
           </p>
           <p>
-            <a href="/">Online Support</a>
+            <router-link class="login-btn" :to="{name: 'home'}">Online Support</router-link>
           </p>
         </div>
       </div>
