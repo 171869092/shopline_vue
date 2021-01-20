@@ -37,7 +37,7 @@
         </div>
         <div>
           <p>
-            <router-link class="login-btn" :to="{name: 'home'}">About us</router-link>
+            <router-link class="login-btn" :to="{name: 'about-us'}">About us</router-link>
           </p>
           <p>
             <router-link class="login-btn" :to="{name: 'home'}">Supply Service</router-link>

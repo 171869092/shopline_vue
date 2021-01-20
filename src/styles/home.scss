@@ -52,6 +52,7 @@
 
 .jumbotron {
   background: #fff !important;
+  padding: 8rem 2rem!important;
 }
 // }
 
@@ -69,7 +70,7 @@
   }
   .navbar-nav {
     .nav-link {
-      color: #fff;
+      color: #111;
     }
   }
   .login-btn {
@@ -78,7 +79,7 @@
   &.white-bg {
     .navbar-nav {
       .nav-link {
-        color: #3d4157ff;
+        color: #f28c60;
       }
     }
     .login-btn {

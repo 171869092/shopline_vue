@@ -107,7 +107,7 @@ export default {
 .privacy-banner{
   background: #f28c60;
   height: 490px;
-  margin-top: -80px;
+  /* margin-top: -80px; */
 }
 .title{
   font-weight: 600;
