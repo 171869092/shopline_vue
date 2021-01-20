@@ -18,7 +18,7 @@
               <span v-else class="">
                 <router-link class="login-btn" :to="{name: 'login'}">Login</router-link>
                 <!-- <el-button class="ml10" type="text">Register</el-button> -->
-                <a class="login-btn ml10" @click="registerClick">Register</a>
+                <a class="login-btn ml10" @click="registerClick">Sign up</a>
               </span>
             </li>
           </ul>
