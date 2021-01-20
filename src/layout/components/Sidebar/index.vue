@@ -14,6 +14,15 @@
       >
         <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
+      <div class="ex-menu">
+        <a href="https://dwn.fbali.co/download/dist.zip" download>
+          <i class="el-icon-download" style="margin-right:10px;" />
+          Extension
+          <el-tooltip class="item" effect="dark" content="Download The Fbali Chrome Extension" placement="top">
+            <i class="el-icon-question" />
+          </el-tooltip>
+        </a>
+      </div>
     </el-scrollbar>
   </div>
 </template>
@@ -49,6 +58,11 @@ export default {
     },
     isCollapse() {
       return !this.sidebar.opened
+    }
+  },
+  methods: {
+    downloadExtension() {
+
     }
   }
 }
