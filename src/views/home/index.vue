@@ -302,7 +302,7 @@ export default {
   z-index: 1;
   .elementor-image {
     img {
-      width: 115%;
+      width: 120%;
       // max-width: 76%;
       vertical-align: middle;
       display: inline-block;
@@ -311,10 +311,10 @@ export default {
 }
 
 .banner3 {
-  width: 110%;
+  width: 120%;
 }
 .banner-left {
-  margin-top: 40px;
+  margin-top: 10px;
 }
 .banner-left .banner-title {
   color: #5b5b5b;
@@ -324,6 +324,7 @@ export default {
 }
 .banner-right {
   z-index: 10;
+  margin-top: -50px;
 }
 .banner-left h1 {
   color: #01004d;
