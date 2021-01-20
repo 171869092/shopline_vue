@@ -136,10 +136,21 @@
           </div>
         </div>
       </section> -->
-
-      <section style="padding-bottom: 5rem">
+      <section style="background: #fafbff" class="featurette-padding">
         <div class="container">
-          <h2 class="text-center p-5">
+          <div class="page-1">
+            <h1>Filtered source agent</h1>
+            <p class="lead featurette-title">
+              FbAli had the most stringent credit screening for source agent.
+              Every agent joined in FbAli should be examined and verified.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="featurette-padding">
+        <div class="container">
+          <h2 class="text-center">
             <!-- <img
             src="@/assets/home/section-4@2x.png"
             alt=""
@@ -362,5 +373,8 @@ export default {
   position: absolute;
   background-position: center center;
   background-size: cover;
+}
+.page-1{
+  text-align: center;
 }
 </style>
