@@ -6,7 +6,7 @@
         <div class="privacy-banner">
           <div class="container">
             <div class="wap-input">
-              <el-input placeholder="Search for articles..." icon="el-icon-search" c>
+              <el-input placeholder="Search for articles..." icon="el-icon-search">
                 <template slot="prepend">
                   <i class="el-icon-search" />
                 </template>
@@ -60,7 +60,7 @@ export default {
   methods: {}
 }
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .privacy-banner {
   background: #f28c60;
   height: 210px;
@@ -100,7 +100,14 @@ export default {
 .wap-input{
 padding-top: 78px;
 }
->>>.wap-input .el-input__inner{
-  height: 50px!important;
+// >>>.wap-input .el-input__inner{
+//   height: 50px!important;
+// }
+</style>
+
+<style lang="scss">
+.wap-input .el-input__inner {
+  height: 50px;
+  line-height: 50px;
 }
 </style>

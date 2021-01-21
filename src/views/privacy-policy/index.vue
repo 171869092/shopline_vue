@@ -156,7 +156,7 @@ export default {
 <style scoped>
 .privacy-banner {
   background: #f28c60;
-  height: 490px;
+  /* height: 490px; */
   /* margin-top: -80px; */
 }
 .title {
