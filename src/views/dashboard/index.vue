@@ -87,38 +87,16 @@ export default {
       'name'
     ])
   },
-  async created() {
-    await this.storeInit()
-    await this.shopifyInit()
+  created() {
+    this.shopifyInit()
   },
   methods: {
-    storeInit() {
-      const query = this.$route.query
-      if (Object.hasOwnProperty.call(query, 'hmac')) {
-        setCookies('shopify', query)
-        setCookies('shop', query.shop)
-      }
-    },
     shopifyInit() {
-      const shopify = getCookies('shopify')
-      if (shopify) {
-        const query = JSON.parse(shopify)
-        if (query.code && query.hmac) {
-          shopifyApi({ ...query }).then(res => {
-            this.$store.commit('user/SET_TOKEN', res.data.token)
-            this.$store.commit('user/SET_EMAIL', res.data.email)
-            // getToken(res.data.token)
-            setCookies('uid', res.data.uid)
-            setCookies('token', res.data.token)
-            setCookies('email', res.data.email)
-            shopifyPush({ shop: query.shop }).then(res => {
-            }).catch(err => {
-              console.log(err)
-            })
-          }).catch(err => {
-            console.log(err)
-          })
-        }
+      const shop = getCookies('shop')
+      if (shop) {
+        shopifyPush({ shop: shop }).then(res => {
+          console.log(res)
+        })
       }
     },
     handleSetLineChartData(type) {
