@@ -91,8 +91,9 @@ export default {
   },
   methods: {
     shopifyInit() {
+      const shopify = getCookies('shopify')
       const shop = getCookies('shop')
-      if (shop) {
+      if (shopify && shop) {
         shopifyPush({ shop: shop }).then(res => {
           console.log(res)
         })
