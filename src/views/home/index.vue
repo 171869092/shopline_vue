@@ -136,10 +136,24 @@
           </div>
         </div>
       </section> -->
-
-      <section style="padding-bottom: 5rem">
+      <section style="background: #fafbff;padding:10rem">
         <div class="container">
-          <h2 class="text-center p-5">
+          <div class="page-1">
+            <h1>What is exactly FbAli?</h1>
+            <p class="lead featurette-title">
+              Dropshipping is always an amazing idea, but it still comes down to
+              be a supply chain model. FbAli helps e-commerce merchants
+              improving complete supply chain control to do better dropshipping
+              works, or FbAli helps to build your own supplies chain to make the
+              business to an extremely high level.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="featurette-padding">
+        <div class="container">
+          <h2 class="text-center">
             <!-- <img
             src="@/assets/home/section-4@2x.png"
             alt=""
@@ -362,5 +376,8 @@ export default {
   position: absolute;
   background-position: center center;
   background-size: cover;
+}
+.page-1 {
+  text-align: center;
 }
 </style>
