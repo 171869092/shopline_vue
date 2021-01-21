@@ -37,6 +37,7 @@ router.beforeEach(async (to, from, next) => {
           setCookies('shop', query.shop)
           await shopifyApi({ ...query }).then(res => {
             if (res.code === 200) {
+              console.log('res', res.data)
               this.$store.commit('user/SET_TOKEN', res.data.token)
               this.$store.commit('user/SET_EMAIL', res.data.email)
               // getToken(res.data.token)
