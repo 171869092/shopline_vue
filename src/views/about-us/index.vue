@@ -16,7 +16,7 @@
         <div class="row featurette">
           <div class="col-md-6">
             <h2 class="ml30 mt80">About us</h2>
-            <p class="lead ml30 mt30 featurette-title">
+            <p class="lead ml30 mt30">
               What we've been thinking about is “Dropshipping is a good
               starting, but what is the next?”. Faster shipping speed, better
               product quality, higher quality after-service …. We came from a
@@ -30,7 +30,7 @@
         </div>
         <!-- </div> -->
       </section>
-      <section style="padding:7rem">
+      <section style="padding:5rem 7rem 7rem 7rem;">
         <div class="container">
           <h2 class="text-center">
             About us
@@ -128,5 +128,12 @@ export default {
 .text-align{
   text-align: center;
   margin-top: -25px;
+}
+.featurette-title {
+  color: #5f5f64;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  /* margin: 0px 30px 0px 0px; */
 }
 </style>

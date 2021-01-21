@@ -11,7 +11,7 @@
         <div id="navbarCollapse" class="collapse navbar-collapse justify-flex-end">
           <ul class="navbar-nav">
             <li v-for="(menu, key) in menuList" :key="key" class="nav-item" :class="{'active': activeIndex == key}" @click="goLink(key)">
-              <a class="nav-link" href="/">{{ menu }}</a>
+              <router-link class="nav-link" :to="{name: menu.href}">{{ menu.name }}</router-link>
             </li>
             <li class="nav-item flexbox justify-center align-center">
               <router-link v-if="isLogin" class="login-btn nav-link" :to="{name: 'dashboard'}">Dashboard</router-link>
@@ -34,7 +34,11 @@ export default {
   data() {
     return {
       activeIndex: 0,
-      menuList: ['Home', 'FAQ', 'Contact'],
+      menuList: [
+        { name: 'Home', href: 'home' },
+        { name: 'FAQ', href: 'home' },
+        { name: 'Contact', href: 'home' }
+      ],
       isShow: false
     }
   },

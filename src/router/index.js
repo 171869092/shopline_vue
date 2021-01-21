@@ -70,6 +70,12 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/faq',
+    component: () => import('@/views/faq/index'),
+    name: 'faq',
+    hidden: true
+  },
+  {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
