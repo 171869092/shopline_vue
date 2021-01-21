@@ -6,7 +6,7 @@
         <div class="privacy-banner">
           <div class="container">
             <div class="wap-input">
-              <el-input placeholder="Search for articles..." icon="el-icon-search" c>
+              <el-input v-model="search" placeholder="Search for articles..." icon="el-icon-search" clearable>
                 <template slot="prepend">
                   <i class="el-icon-search" />
                 </template>
@@ -69,7 +69,8 @@ export default {
           test:
             ' FbAli provides lightweight ERP including product management, orders management and shipping management, and auto-processing for orders to merchants who use Shopify to power their stores. This Privacy Policy describes how personal information is collected, used, and shared when you install or use the App in connection with your Shopify-supported store.'
         }
-      ]
+      ],
+      search: ''
     }
   },
   computed: {},

@@ -6,7 +6,7 @@
         <div class="privacy-banner">
           <div class="container">
             <div class="wap-input">
-              <el-input placeholder="Search for articles..." icon="el-icon-search">
+              <el-input v-model="search" placeholder="Search for articles..." icon="el-icon-search" clearable>
                 <template slot="prepend">
                   <i class="el-icon-search" />
                 </template>
@@ -52,7 +52,7 @@ export default {
   props: {},
   data() {
     return {
-
+      search: ''
     }
   },
   computed: {},
