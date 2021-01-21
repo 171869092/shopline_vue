@@ -136,13 +136,16 @@
           </div>
         </div>
       </section> -->
-      <section style="background: #fafbff" class="featurette-padding">
+      <section style="background: #fafbff;padding:10rem">
         <div class="container">
           <div class="page-1">
-            <h1>Filtered source agent</h1>
+            <h1>What is exactly FbAli?</h1>
             <p class="lead featurette-title">
-              FbAli had the most stringent credit screening for source agent.
-              Every agent joined in FbAli should be examined and verified.
+              Dropshipping is always an amazing idea, but it still comes down to
+              be a supply chain model. FbAli helps e-commerce merchants
+              improving complete supply chain control to do better dropshipping
+              works, or FbAli helps to build your own supplies chain to make the
+              business to an extremely high level.
             </p>
           </div>
         </div>
@@ -374,7 +377,7 @@ export default {
   background-position: center center;
   background-size: cover;
 }
-.page-1{
+.page-1 {
   text-align: center;
 }
 </style>
