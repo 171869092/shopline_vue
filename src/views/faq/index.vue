@@ -9,24 +9,20 @@
           </div>
         </div>
       </section>
-      <section class="wap wap-top">
+      <section
+        v-for="(item, key) in containList"
+        :key="key"
+        class="wap contain"
+      >
         <div class="container">
-          <h3 class="title">FbAli Privacy Policy</h3>
-          <div class="block">
-            <p class="block-title">
-              FbAli provides lightweight ERP including product management, orders management and shipping management, and auto-processing for orders to merchants who use Shopify to power their stores. This Privacy Policy describes how personal information is collected, used, and shared when you install or use the App in connection with your Shopify-supported store.
-            </p>
-          </div>
-        </div>
-      </section>
-      <section class="wap wap-top">
-        <div class="container">
-          <h3 class="title">Contacting</h3>
-          <div class="block">
-            <p class="block-title">
-              Contact Us For more information about our privacy practices, if you have questions, or if you would like to make a complaint, please contact us by e-mail at fulfilbyali@gmail.com or by mail using the details provided below:
-            </p>
-          </div>
+          <el-card type="card">
+            <h5 class="title"> {{ item.title }}</h5>
+            <div class="block">
+              <p class="block-title">
+                {{ item.test }}
+              </p>
+            </div>
+          </el-card>
         </div>
       </section>
     </main>
@@ -45,41 +41,66 @@ export default {
   props: {},
   data() {
     return {
+      containList: [
+        {
+          title: 'FbAli Privacy Policy?',
+          test:
+            ' FbAli provides lightweight ERP including product management, orders management and shipping management, and auto-processing for orders to merchants who use Shopify to power their stores. This Privacy Policy describes how personal information is collected, used, and shared when you install or use the App in connection with your Shopify-supported store.'
+        },
+        {
+          title: 'FbAli Privacy Policy?',
+          test:
+            ' FbAli provides lightweight ERP including product management, orders management and shipping management, and auto-processing for orders to merchants who use Shopify to power their stores. This Privacy Policy describes how personal information is collected, used, and shared when you install or use the App in connection with your Shopify-supported store.'
+        },
+        {
+          title: 'FbAli Privacy Policy?',
+          test:
+            ' FbAli provides lightweight ERP including product management, orders management and shipping management, and auto-processing for orders to merchants who use Shopify to power their stores. This Privacy Policy describes how personal information is collected, used, and shared when you install or use the App in connection with your Shopify-supported store.'
+        },
+        {
+          title: 'FbAli Privacy Policy?',
+          test:
+            ' FbAli provides lightweight ERP including product management, orders management and shipping management, and auto-processing for orders to merchants who use Shopify to power their stores. This Privacy Policy describes how personal information is collected, used, and shared when you install or use the App in connection with your Shopify-supported store.'
+        }
+      ]
     }
   },
-  computed: {
-  },
+  computed: {},
   created() {},
-  methods: {
-  }
+  methods: {}
 }
 </script>
 <style scoped>
-.privacy-banner{
+.privacy-banner {
   background: #f28c60;
-  height: 490px;
+  height: 210px;
   /* margin-top: -80px; */
 }
-.title{
-  font-weight: 600;
-  margin-bottom: 1.5rem;
+.title {
+  font-weight: 400;
+  margin-bottom: 1rem;
+  color: #f28c60;
 }
-.is-1{
+.is-1 {
   font-size: 3rem;
   color: #fff;
-  line-height: 410px;
+  line-height: 210px;
   text-align: center;
 }
-.wap-top{
+.wap-top {
   margin-top: 80px;
 }
-.block{
+.contain{
+ margin-top: 50px;
+  margin-bottom: 50px;
+}
+.block {
   margin-bottom: 1.5rem;
 }
-.block-title{
+.block-title {
   color: #4a4a4a;
-    font-size: 1em;
-    font-weight: 400;
-    line-height: 1.5;
+  font-size: 1em;
+  font-weight: 400;
+  line-height: 1.5;
 }
 </style>
