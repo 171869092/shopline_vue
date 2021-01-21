@@ -45,7 +45,7 @@ router.beforeEach(async (to, from, next) => {
             setCookies('token', res.data.token)
             setCookies('email', res.data.email)
             console.log('initthis')
-            next()
+            next({ ...to, replace: true })
           } else {
             next('/login')
           }
