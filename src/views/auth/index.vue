@@ -12,7 +12,7 @@ export default {
     return {}
   },
   created() {
-    this.shopifyInit()
+    // this.shopifyInit()
   },
   methods: {
     shopifyInit() {
@@ -36,7 +36,7 @@ export default {
           console.log(err)
         })
       } else {
-        window.location = '/'
+        this.$router.push({ name: 'home' })
       }
     }
   }

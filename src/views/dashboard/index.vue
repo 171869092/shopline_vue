@@ -105,8 +105,12 @@ export default {
         const query = JSON.parse(shopify)
         if (query.code && query.hmac) {
           shopifyApi({ ...query }).then(res => {
-          // commit('SET_TOKEN', res.data.token)
-          // getToken(res.data.token)
+            this.$store.commit('user/SET_TOKEN', res.data.token)
+            this.$store.commit('user/SET_EMAIL', res.data.email)
+            // getToken(res.data.token)
+            setCookies('uid', res.data.uid)
+            setCookies('token', res.data.token)
+            setCookies('email', res.data.email)
             shopifyPush({ shop: query.shop }).then(res => {
             }).catch(err => {
               console.log(err)
@@ -142,11 +146,11 @@ export default {
   }
 }
 .dashboard__sub-title {
-    font-weight: 600;
-    font-size: 14px;
-    line-height: 20px;
-    color: #272742;
-    padding-top: 8px;
-    color: #6f6f85;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 20px;
+  color: #272742;
+  padding-top: 8px;
+  color: #6f6f85;
 }
 </style>
