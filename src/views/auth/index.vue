@@ -25,6 +25,7 @@ export default {
             this.$store.commit('user/SET_TOKEN', res.data.token)
             this.$store.commit('user/SET_EMAIL', res.data.email)
             // getToken(res.data.token)
+            setCookies('uid', res.data.uid)
             setCookies('token', res.data.token)
             setCookies('email', res.data.email)
             this.$router.replace({ name: 'dashboard' })
