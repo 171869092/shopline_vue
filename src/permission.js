@@ -45,14 +45,14 @@ router.beforeEach(async (to, from, next) => {
               setCookies('email', res.data.email)
               next()
             } else {
-              next('/login')
+              // next('/login')
             }
           }).catch(() => {
-            next('/login')
+            // next('/login')
           })
         }
       } else {
-        next('/login')
+        // next('/login')
       }
       NProgress.done()
     }
