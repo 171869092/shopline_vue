@@ -34,7 +34,9 @@
                     your e-commerce business.</span>
                 </div>
                 <div class="banner-button">
-                  <el-button type="primary">Try It Free</el-button>
+                  <router-link class="login-btn" :to="{ name: 'register' }">
+                    <el-button type="primary">Try It Free</el-button>
+                  </router-link>
                 </div>
               </div>
               <div class="banner-right col-lg-6">
@@ -136,7 +138,7 @@
           </div>
         </div>
       </section> -->
-      <section style="background: #fafbff;padding:10rem">
+      <section style="background: #fafbff; padding: 10rem">
         <div class="container">
           <div class="page-1">
             <h1>What is exactly FbAli?</h1>
@@ -329,6 +331,7 @@ export default {
 }
 .banner-left {
   margin-top: 10px;
+  z-index: 999;
 }
 .banner-left .banner-title {
   color: #5b5b5b;
