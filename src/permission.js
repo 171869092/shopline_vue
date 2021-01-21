@@ -10,7 +10,7 @@ import { shopifyApi } from '@/api/user'
 import { setCookies } from '@/utils/cookies'
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/', '/login', '/register', '/auth', '/privacy-policy', '/about-us', '/faq'] // no redirect whitelist
+const whiteList = ['/', '/login', '/register', '/auth', '/privacy-policy', '/about-us', '/faq', '/content'] // no redirect whitelist
 
 router.beforeEach(async (to, from, next) => {
   const hasToken = getToken()

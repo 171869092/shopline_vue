@@ -13,10 +13,11 @@
         v-for="(item, key) in containList"
         :key="key"
         class="wap contain"
+        @click="containClick"
       >
         <div class="container">
           <el-card type="card">
-            <h5 class="title"> {{ item.title }}</h5>
+            <h5 class="title">{{ item.title }}</h5>
             <div class="block">
               <p class="block-title">
                 {{ item.test }}
@@ -67,7 +68,11 @@ export default {
   },
   computed: {},
   created() {},
-  methods: {}
+  methods: {
+    containClick() {
+      this.$router.push({ name: 'content' })
+    }
+  }
 }
 </script>
 <style scoped>
@@ -90,9 +95,10 @@ export default {
 .wap-top {
   margin-top: 80px;
 }
-.contain{
- margin-top: 50px;
+.contain {
+  margin-top: 50px;
   margin-bottom: 50px;
+  cursor: pointer;
 }
 .block {
   margin-bottom: 1.5rem;
