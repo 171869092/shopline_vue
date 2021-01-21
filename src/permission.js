@@ -38,16 +38,14 @@ router.beforeEach(async (to, from, next) => {
           const res = await shopifyApi({ ...query })
           console.log(res.data)
           if (res.code === 200) {
-            if (res.data && res.data.length > 0) {
-              store.commit('user/SET_TOKEN', res.data.token)
-              store.commit('user/SET_EMAIL', res.data.email)
-              // getToken(res.data.token)
-              setCookies('uid', res.data.uid)
-              setCookies('token', res.data.token)
-              setCookies('email', res.data.email)
-              console.log('initthis')
-              next()
-            }
+            store.commit('user/SET_TOKEN', res.data.token)
+            store.commit('user/SET_EMAIL', res.data.email)
+            // getToken(res.data.token)
+            setCookies('uid', res.data.uid)
+            setCookies('token', res.data.token)
+            setCookies('email', res.data.email)
+            console.log('initthis')
+            next()
           } else {
             next('/login')
           }
