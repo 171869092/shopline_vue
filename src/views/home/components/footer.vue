@@ -11,11 +11,13 @@
         <h2 class="title is-2">
           Start with FbAil, take your business to next level!
         </h2>
-        <el-button
-          type="primary"
-          class="botton-color"
-          @click="tryFree"
-        >Try It Free</el-button>
+        <router-link class="login-btn" :to="{name: 'register'}">
+          <el-button
+            type="primary"
+            class="botton-color"
+          >Try It Free</el-button>
+        </router-link>
+
       </div>
       <div class="site-link content">
         <div>
