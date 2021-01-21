@@ -11,17 +11,17 @@
         style="width: 100%"
         highlight-current-row
         :row-class-name="tableRowClassName"
-        @cell-click="tabClick"
         fit
         stripe
         :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}"
+        @cell-click="tabClick"
       >
-       <el-table-column label="Store name">
+        <el-table-column label="Store name">
           <template slot-scope="scope">
             <span v-if="(scope.row.index === tabClickIndex && tabClickLabel === 'Store name') || !scope.row.store_name">
-                <el-input v-model="scope.row.store_name" class="w-230" @blur="inputBlur(scope.row)"></el-input>
+              <el-input v-model="scope.row.store_name" class="w-230" @blur="inputBlur(scope.row)" />
             </span>
-            <span v-else>{{scope.row.store_name}}</span>
+            <span v-else>{{ scope.row.store_name }}</span>
           </template>
         </el-table-column>
         <!-- <el-table-column label="Store ID">
@@ -36,7 +36,7 @@
         </el-table-column>
         <el-table-column label="Platform">
           <template slot-scope="scope">
-           <span>{{scope.row.platform}}</span>
+            <span>{{ scope.row.platform }}</span>
           </template>
         </el-table-column>
         <el-table-column label="Create Time">
@@ -46,7 +46,7 @@
         </el-table-column>
         <el-table-column label="">
           <template slot-scope="scope">
-            <el-button type="primary" icon="el-icon-edit" @click="edit_shop(scope.row.id)" size="small">edit</el-button>
+            <el-button type="primary" icon="el-icon-edit" size="small" @click="edit_shop(scope.row.id)">edit</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -59,9 +59,9 @@
             <template slot="append">.myshopify.com</template>
           </el-input>
         </el-form-item>
-        <el-form-item prop="api_token">
+        <!-- <el-form-item prop="api_token">
           <el-input v-model="storeForm.api_token" autocomplete="off" placeholder="API Token" />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item prop="api_key">
           <el-input v-model="storeForm.api_key" autocomplete="off" placeholder="API Key" />
         </el-form-item>
@@ -78,17 +78,17 @@
           <el-input v-model="storeForm.location_id" autocomplete="off" placeholder="Location Id" />
         </el-form-item>
         <el-form-item prop="pull_date" label="Import Orders:">
-           <el-radio-group v-model="storeForm.pull_date" class="mt10 ml20">
-              <el-radio v-for="(item,key) in importList" :key="key" :label="item.value">{{item.label}}</el-radio>
-            </el-radio-group>
+          <el-radio-group v-model="storeForm.pull_date" class="mt10 ml20">
+            <el-radio v-for="(item,key) in importList" :key="key" :label="item.value">{{ item.label }}</el-radio>
+          </el-radio-group>
         </el-form-item>
-         <el-form-item prop="Orders_by_date" v-if="storeForm.pull_date == 'Orders'">
+        <el-form-item v-if="storeForm.pull_date == 'Orders'" prop="Orders_by_date">
           <el-input v-model="storeForm.Orders_by_date" autocomplete="off" placeholder="Orders by date" />
         </el-form-item>
 
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="small" type="success" :loading="testLoading" @click="testConnect">Test Connect</el-button>
+        <!-- <el-button size="small" type="success" :loading="testLoading" @click="testConnect">Test Connect</el-button> -->
         <el-button size="small" @click="closeDialog">Cancel</el-button>
         <el-button size="small" type="primary" :loading="submitLoading" @click="submitConnect">Confirm</el-button>
       </div>
@@ -96,7 +96,7 @@
   </div>
 </template>
 <script>
-import { shopList, shopPush, testStoreConnect, connectStore ,c_name,editStore} from '@/api/shop'
+import { shopList, shopPush, testStoreConnect, connectStore, c_name, editStore } from '@/api/shop'
 import { } from '@/api/user'
 export default {
   name: 'shop',
@@ -116,8 +116,8 @@ export default {
         page: 1,
         limit: 10
       },
-      tabClickIndex:'',
-      tabClickLabel:'',
+      tabClickIndex: '',
+      tabClickLabel: '',
       loading: false,
       dialogvisible: false,
       submitLoading: false,
@@ -129,13 +129,13 @@ export default {
         password: '',
         api_version: '',
         location_id: '',
-        pull_date:''
+        pull_date: ''
       },
-      stutas:'',
-      importList:[
-        {label:'7 days',value:'7'},
-        {label:'1month',value:'30'},
-        {label:'Orders by date',value:'Orders'},
+      stutas: '',
+      importList: [
+        { label: '7 days', value: '7' },
+        { label: '1month', value: '30' },
+        { label: 'Orders by date', value: 'Orders' }
       ],
       rules: {
         store_url: [
@@ -159,8 +159,8 @@ export default {
         pull_date: [
           { required: true, message: 'Please select', trigger: 'change' }
         ],
-        Orders_by_date:[
-           { required: true, message: 'Orders by date', trigger: 'blur' }
+        Orders_by_date: [
+          { required: true, message: 'Orders by date', trigger: 'blur' }
         ]
       }
     }
@@ -194,7 +194,7 @@ export default {
     ConnectShop() {
       // https://fdapi.dongketech.com/site/install?shop=live-by-test.myshopify.com
       this.dialogvisible = true
-      
+
       // this.$prompt('Shopify Store URL', 'Connect New Shop', {
       //   confirmButtonText: 'Confirm',
       //   cancelButtonText: 'Cancel',
@@ -206,31 +206,30 @@ export default {
       // }).catch(() => {})
     },
     // 编辑
-    edit_shop(id){
-       this.dialogvisible = true
-       editStore({id:id}).then(res =>{
-          if (res.code == 200) {
-            this.storeForm = {
-              api_token : res.data.setting.token,
-              store_url : res.data.setting.store_url.split('.')[0],
-              api_key : res.data.setting.api_key,
-              password : res.data.setting.password,
-              api_version : res.data.setting.api_version,
-              pull_date : res.data.setting.pull_date,
-              location_id : res.data.setting.location_id,
-              id:res.data.id
-            }
-            
-           if (res.data.setting.pull_date =='7'||res.data.setting.pull_date == '30') {
-             this.storeForm.pull_date = res.data.setting.pull_date
-              
-            }else{
-              console.log('000')
-               this.storeForm.Orders_by_date = res.data.setting.pull_date
-               this.storeForm.pull_date = 'Orders'
-            }
+    edit_shop(id) {
+      this.dialogvisible = true
+      editStore({ id: id }).then(res => {
+        if (res.code === 200) {
+          this.storeForm = {
+            api_token: res.data.setting.token,
+            store_url: res.data.setting.store_url.split('.')[0],
+            api_key: res.data.setting.api_key,
+            password: res.data.setting.password,
+            api_version: res.data.setting.api_version,
+            pull_date: res.data.setting.pull_date,
+            location_id: res.data.setting.location_id,
+            id: res.data.id
           }
-       })
+
+          if (res.data.setting.pull_date === '7' || res.data.setting.pull_date === '30') {
+            this.storeForm.pull_date = res.data.setting.pull_date
+          } else {
+            console.log('000')
+            this.storeForm.Orders_by_date = res.data.setting.pull_date
+            this.storeForm.pull_date = 'Orders'
+          }
+        }
+      })
     },
     testConnect() {
       this.$refs.storeForm.validate((valid) => {
@@ -253,15 +252,15 @@ export default {
         }
       })
     },
-    submitConnect() { 
+    submitConnect() {
       this.$refs.storeForm.validate((valid) => {
         if (valid) {
           this.submitLoading = true
-          let params = JSON.parse(JSON.stringify(this.storeForm))
+          const params = JSON.parse(JSON.stringify(this.storeForm))
           const url = `${this.storeForm.store_url}.myshopify.com`
-          if (this.storeForm.pull_date == 'Orders') {
-           params.pull_date = this.storeForm.Orders_by_date
-          }  
+          if (this.storeForm.pull_date === 'Orders') {
+            params.pull_date = this.storeForm.Orders_by_date
+          }
           params.type = 1
           params.uid = this.uid
           params.shop = url
@@ -292,32 +291,32 @@ export default {
       delete this.storeForm.id
       this.dialogvisible = false
     },
-    tableRowClassName ({ row, rowIndex }) {
+    tableRowClassName({ row, rowIndex }) {
       // 把每一行的索引放进row
       row.index = rowIndex
     },
-    inputBlur (row) {
+    inputBlur(row) {
       // console.log('row', row)
       this.tabClickIndex = null
-      this.tabClickLabel = ''   
-       c_name({id:row.id,store_name:row.store_name}).then(res =>{
-       if (res.code == 200) {
-         this.$message({ message: res.message, type: 'success' })
-       }
-    })  
+      this.tabClickLabel = ''
+      c_name({ id: row.id, store_name: row.store_name }).then(res => {
+        if (res.code === 200) {
+          this.$message({ message: res.message, type: 'success' })
+        }
+      })
     },
     // tabClick row 当前行 column 当前列
-    tabClick (row, column, cell, event) {
+    tabClick(row, column, cell, event) {
       switch (column.label) {
         case 'Store name':
           this.tabClickIndex = row.index
           this.tabClickLabel = column.label
           break
         default: return
-    }
-   
+      }
+
       console.log('tabClick', this.tabClickIndex, row)
-}
+    }
   }
 }
 </script>
