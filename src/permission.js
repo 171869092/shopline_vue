@@ -30,13 +30,11 @@ router.beforeEach(async (to, from, next) => {
       // next(`/login?redirect=${to.path}`)
       if (to.path === '/dashboard') {
         console.log('init dashboard')
-        console.log(to.path === '/dashboard')
         const query = to.query
         if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
           setCookies('shopify', query)
           setCookies('shop', query.shop)
           const res = await shopifyApi({ ...query })
-          console.log(res.data)
           if (res.code === 200 && res.message !== '-1') {
             store.commit('user/SET_TOKEN', res.data.token)
             store.commit('user/SET_EMAIL', res.data.email)
@@ -44,7 +42,7 @@ router.beforeEach(async (to, from, next) => {
             setCookies('uid', res.data.uid)
             setCookies('token', res.data.token)
             setCookies('email', res.data.email)
-            console.log('initthis')
+            console.log('init this')
             next({ ...to, replace: true })
           } else {
             next('/login')
