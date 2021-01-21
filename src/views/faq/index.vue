@@ -5,7 +5,13 @@
       <section class="wap wap-top">
         <div class="privacy-banner">
           <div class="container">
-            <h1 class="title is-1">FAQ</h1>
+            <div class="wap-input">
+              <el-input placeholder="Search for articles..." icon="el-icon-search" c>
+                <template slot="prepend">
+                  <i class="el-icon-search" />
+                </template>
+              </el-input>
+            </div>
           </div>
         </div>
       </section>
@@ -108,5 +114,11 @@ export default {
   font-size: 1em;
   font-weight: 400;
   line-height: 1.5;
+}
+.wap-input{
+padding-top: 78px;
+}
+>>>.wap-input .el-input__inner{
+  height: 50px!important;
 }
 </style>
