@@ -1,5 +1,5 @@
 import router from './router'
-// import store from './store'
+import store from './store'
 // import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
@@ -30,30 +30,30 @@ router.beforeEach(async (to, from, next) => {
       // next(`/login?redirect=${to.path}`)
       if (to.path === '/dashboard') {
         console.log('init dashboard')
-        console.log(to)
+        console.log(to.path === '/dashboard')
         const query = to.query
         if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
           setCookies('shopify', query)
           setCookies('shop', query.shop)
-          await shopifyApi({ ...query }).then(res => {
-            if (res.code === 200) {
-              console.log('res', res.data)
-              this.$store.commit('user/SET_TOKEN', res.data.token)
-              this.$store.commit('user/SET_EMAIL', res.data.email)
+          const res = await shopifyApi({ ...query })
+          console.log(res.data)
+          if (res.code === 200) {
+            if (res.data && res.data.length > 0) {
+              store.commit('user/SET_TOKEN', res.data.token)
+              store.commit('user/SET_EMAIL', res.data.email)
               // getToken(res.data.token)
               setCookies('uid', res.data.uid)
               setCookies('token', res.data.token)
               setCookies('email', res.data.email)
+              console.log('initthis')
               next()
-            } else {
-              // next('/login')
             }
-          }).catch(() => {
-            // next('/login')
-          })
+          } else {
+            next('/login')
+          }
         }
       } else {
-        // next('/login')
+        next('/login')
       }
       NProgress.done()
     }
