@@ -72,12 +72,12 @@ export default {
   computed: {},
   created() {},
   methods: {
-    policyClick() {
-      this.$router.push({ name: 'privacy-policy' })
-    },
-    tryFree() {
-      this.$router.push({ name: 'register' })
-    }
+    // policyClick() {
+    //   this.$router.push({ name: 'privacy-policy' })
+    // },
+    // tryFree() {
+    //   this.$router.push({ name: 'register' })
+    // }
   }
 }
 </script>
