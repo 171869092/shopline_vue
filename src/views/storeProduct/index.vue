@@ -41,15 +41,35 @@
             highlight-current-row
             fit
             :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
+            :row-class-name="tableRowClassName"
             @selection-change="productChange"
+            @cell-click="tabClick"
           >
             <el-table-column type="selection" />
-            <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
+            <el-table-column v-for="(item,idx) in labelList" :key="idx" :index="idx" :label="item.label" :prop="item.value" :width="item.width">
               <template slot-scope="scope">
                 <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
                 <span v-if="item.type == 'price'">{{ scope.row.price }}</span>
+                <span v-if="item.type == 'cost'">
+                  <span>
+                    <span v-if="(scope.$index === tabClickIndex && tabClickLabel === 'Cost') || !scope.row.cost">
+                      <el-input
+                        v-model="scope.row.cost"
+                        type="number"
+                        min="0.00"
+                        clearable
+                        size="mini"
+                        placeholder="0.00"
+                        @change="(val) => (getTheCost(scope.row.id, val))"
+                        @keydown.enter="(val) => (getTheCost(scope.row.id, val))"
+                      >
+                        <div slot="prefix" style="padding:3px 8px">{{ scope.row.money_signl || '$' }}</div>
+                      </el-input>
+                    </span>
+                    <span v-else>{{ scope.row.money_signl }}{{ scope.row.cost }}</span>
+                  </span>
+                </span>
                 <span v-if="item.type == 'image'" @click="productAdd('edit',scope.row.title, scope.row.id)">
-                  <!-- <el-image :src="scope.row.img_url" style="width: 50px; height: 50px" fit="contain" /> -->
                   <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img_url | thumbnail" fit="cover" />
                 </span>
                 <div v-if="item.type == 'product'" style="color:#ef6f38" class="pointer" @click="productAdd('edit', scope.row.title, scope.row.id)">
@@ -72,7 +92,7 @@
 </template>
 <script>
 import { debounce } from '@/utils'
-import { getStoreProductList, getCancelHosting, getStoreList, getStorePushProduct } from '@/api/product'
+import { getStoreProductList, getCancelHosting, getStoreList, getStorePushProduct, productCost } from '@/api/product'
 export default {
   name: 'product',
   components: {
@@ -88,7 +108,7 @@ export default {
         { label: 'Status', value: 'status' },
         { label: 'Inventory', value: 'stock' },
         { label: 'Price', value: 'price', type: 'price' },
-        { label: 'Cost', value: 'cost' },
+        { label: 'Cost', value: 'cost', type: 'cost' },
         { label: 'Hosting', value: 'service_name' }
         // { label: 'Operating', type: 'Operating' }
       ],
@@ -110,7 +130,10 @@ export default {
         store_url: '',
         title: '',
         status: ''
-      }
+      },
+      costValue: '',
+      tabClickIndex: '',
+      tabClickLabel: ''
     }
   },
   created() {
@@ -227,21 +250,45 @@ export default {
             }
           })
         }).catch(() => {})
+    },
+    tableRowClassName({ row, rowIndex }) {
+      // 把每一行的索引放进row
+      row.index = rowIndex
+    },
+    // 点击某个单元格
+    tabClick(row, column, cell, event) {
+      console.log(row)
+      // console.log(column)
+      this.tabClickIndex = row.index
+      this.tabClickLabel = column.label
+    },
+    // 获取商品成本
+    getTheCost(id, cost) {
+      console.log(id, cost)
+      this.tabClickIndex = null
+      productCost({ id: id, cost: cost }).then(res => {
+        console.log(res.data)
+        if (res.code === 200) {
+          this.$message.success(res.message)
+        }
+      }).catch(err => {
+        console.log(err)
+      })
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-.product{
-   .box-card{
-      margin: 20px 30px!important;
-    }
-    .button-border{
-      border: 1px solid #ef6f38;
-      color:  #ef6f38;
-    }
-    .min_height{
-      min-height: 300px;
-    }
+.product {
+  .box-card {
+    margin: 20px 30px !important;
+  }
+  .button-border {
+    border: 1px solid #ef6f38;
+    color: #ef6f38;
+  }
+  .min_height {
+    min-height: 300px;
+  }
 }
 </style>

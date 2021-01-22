@@ -131,3 +131,22 @@ export function getCountryList(params) {
     params
   })
 }
+
+// 产品成本
+export function productCost(data) {
+  return request({
+    url: '/product_cost',
+    method: 'post',
+    data
+  })
+}
+
+// 产品SKU成本
+export function productSkuCost(data) {
+  return request({
+    url: '/sku_cost',
+    method: 'post',
+    data
+  })
+}
+

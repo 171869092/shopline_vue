@@ -195,7 +195,7 @@
               @checkbox-change="selectChangeEvent"
             >
               <vxe-table-column v-if="$route.query.type == 'edit' && !variantsEheck" type="checkbox" width="100" />
-              <vxe-table-column title="Picture" field="sku_image">
+              <vxe-table-column title="Picture" field="sku_image" width="100">
                 <template v-slot="{ row, rowIndex }">
                   <el-image class="sku_image" :src="row.sku_image" @click.native="openPrint(row, rowIndex)">
                     <div slot="error" class="image-slot">
@@ -229,7 +229,7 @@
                 <template v-slot="{ row }">
                   <el-form-item class="mb0" label-width="0">
                     <el-input v-model="row.sku_price" clearable size="mini" class="p5_input" placeholder="Price">
-                      <div slot="prefix" style="padding:0 8px">{{ row.signal || '$' }}</div>
+                      <span slot="prefix" style="padding:0 8px">{{ row.signal || '$' }}</span>
                     </el-input>
                   </el-form-item>
                 </template>
@@ -237,7 +237,16 @@
               <vxe-table-column title="Compare at price" field="compare_price">
                 <template v-slot="{ row }">
                   <el-form-item class="mb0" label-width="0">
-                    <el-input v-model="row.compare_price" clearable size="mini" class="p5_input" placeholder="Compare at price">
+                    <el-input v-model="row.compare_price" clearable size="mini" class="p5_input" placeholder="0.00">
+                      <span slot="prefix" style="padding:0 8px">{{ row.signal || '$' }}</span>
+                    </el-input>
+                  </el-form-item>
+                </template>
+              </vxe-table-column>
+              <vxe-table-column title="Cost" field="sku_cost">
+                <template v-slot="{ row }">
+                  <el-form-item class="mb0" label-width="0">
+                    <el-input v-model="row.sku_cost" type="number" min="0.00" clearable size="mini" class="p5_input" placeholder="0.00">
                       <div slot="prefix" style="padding:0 8px">{{ row.signal || '$' }}</div>
                     </el-input>
                   </el-form-item>
