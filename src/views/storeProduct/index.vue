@@ -51,23 +51,21 @@
                 <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
                 <span v-if="item.type == 'price'">{{ scope.row.price }}</span>
                 <span v-if="item.type == 'cost'">
-                  <span>
-                    <span v-if="(scope.$index === tabClickIndex && tabClickLabel === 'Cost') || !scope.row.cost">
-                      <el-input
-                        v-model="scope.row.cost"
-                        type="number"
-                        min="0.00"
-                        clearable
-                        size="mini"
-                        placeholder="0.00"
-                        @change="(val) => (getTheCost(scope.row.id, val))"
-                        @keydown.enter="(val) => (getTheCost(scope.row.id, val))"
-                      >
-                        <div slot="prefix" style="padding:3px 8px">{{ scope.row.money_signl || '$' }}</div>
-                      </el-input>
-                    </span>
-                    <span v-else>{{ scope.row.money_signl }}{{ scope.row.cost }}</span>
-                  </span>
+                  <!-- <span v-if="(scope.$index === tabClickIndex && tabClickLabel === 'Cost') || !scope.row.cost">
+                    <el-input
+                      v-model="scope.row.cost"
+                      type="number"
+                      min="0.00"
+                      clearable
+                      size="mini"
+                      placeholder="0.00"
+                      @change="(val) => (getTheCost(scope.row.id, val))"
+                      @keydown.enter="(val) => (getTheCost(scope.row.id, val))"
+                    >
+                      <div slot="prefix" style="padding:3px 8px">{{ scope.row.money_signl || '$' }}</div>
+                    </el-input>
+                  </span> -->
+                  <span>{{ scope.row.cost ? scope.row.money_signl : '' }}{{ scope.row.cost }}</span>
                 </span>
                 <span v-if="item.type == 'image'" @click="productAdd('edit',scope.row.title, scope.row.id)">
                   <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img_url | thumbnail" fit="cover" />
