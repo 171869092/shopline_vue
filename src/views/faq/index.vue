@@ -67,7 +67,7 @@ export default {
 </ul>`
         },
         {
-          title: 'FbAli Privacy Policy?',
+          title: 'FbAli Privacy Policy11?',
           test:
             ' FbAli provides lightweight ERP including product management, orders management and shipping management, and auto-processing for orders to merchants who use Shopify to power their stores. This Privacy Policy describes how personal information is collected, used, and shared when you install or use the App in connection with your Shopify-supported store.',
           contain: `<ul>

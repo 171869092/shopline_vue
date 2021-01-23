@@ -20,7 +20,7 @@
           <div>
             <el-breadcrumb separator-class="el-icon-arrow-right">
               <el-breadcrumb-item :to="{ name: 'faq' }">All Collections</el-breadcrumb-item>
-              <el-breadcrumb-item>FbAli Privacy Policy</el-breadcrumb-item>
+              <el-breadcrumb-item>{{ dataList.title }}</el-breadcrumb-item>
             </el-breadcrumb>
           </div>
           <el-card type="card" class="card-box">
@@ -29,7 +29,7 @@
               <div class="block">
                 <p class="block-title">{{ dataList.test }}</p>
               </div>
-              <p v-html="dataList.contain" />
+              <p style="color:#565867" v-html="dataList.contain" />
             </div>
 
           </el-card>
@@ -91,7 +91,7 @@ export default {
   margin-bottom: 1.5rem;
 }
 .block-title {
-  color: #909399;
+  color: #8F919D;
   font-size: 1em;
   font-weight: 400;
   line-height: 1.5;
