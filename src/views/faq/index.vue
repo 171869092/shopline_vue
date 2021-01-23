@@ -6,7 +6,12 @@
         <div class="privacy-banner">
           <div class="container">
             <div class="wap-input">
-              <el-input v-model="search" placeholder="Search for articles..." icon="el-icon-search" clearable>
+              <el-input
+                v-model="search"
+                placeholder="Search for articles..."
+                icon="el-icon-search"
+                clearable
+              >
                 <template slot="prepend">
                   <i class="el-icon-search" />
                 </template>
@@ -19,7 +24,7 @@
         v-for="(item, key) in containList"
         :key="key"
         class="wap contain"
-        @click="containClick"
+        @click="containClick(item)"
       >
         <div class="container">
           <el-card type="card">
@@ -39,6 +44,7 @@
 <script>
 import Navbar from '@/views/home/components/navbar'
 import footerHome from '@/views/home/components/footer'
+import { setStorage } from '@/utils/storage'
 export default {
   name: 'faq',
   components: {
@@ -52,12 +58,20 @@ export default {
         {
           title: 'FbAli Privacy Policy?',
           test:
-            ' FbAli provides lightweight ERP including product management, orders management and shipping management, and auto-processing for orders to merchants who use Shopify to power their stores. This Privacy Policy describes how personal information is collected, used, and shared when you install or use the App in connection with your Shopify-supported store.'
+            ' FbAli provides lightweight ERP including product management, orders management and shipping management, and auto-processing for orders to merchants who use Shopify to power their stores. This Privacy Policy describes how personal information is collected, used, and shared when you install or use the App in connection with your Shopify-supported store.',
+          contain: `<ul>
+<li>For <strong>product-related questions</strong>, we have articles in our Help Center to address frequently asked questions</li>
+<li>For<strong> order-related concerns</strong>, kindly fill out Spocket's Order Inquiry Form via our messenger.</li>
+<li>For any <strong>technical-related issues</strong>, please email our Customer Support team at <a href="mailto:support@spocket.co" target="_blank" rel="nofollow noopener noreferrer">support@spocket.co</a> or connect with us via live chat</li>
+<li>For <strong>strategic questions</strong> related to promoting your store, how to generate more sales, and other tips and tricks, please enroll in the <a href="https://academy.spocket.co/" target="_blank" rel="nofollow noopener noreferrer">Spocket Academy</a></li>
+</ul>`
         },
         {
           title: 'FbAli Privacy Policy?',
           test:
-            ' FbAli provides lightweight ERP including product management, orders management and shipping management, and auto-processing for orders to merchants who use Shopify to power their stores. This Privacy Policy describes how personal information is collected, used, and shared when you install or use the App in connection with your Shopify-supported store.'
+            ' FbAli provides lightweight ERP including product management, orders management and shipping management, and auto-processing for orders to merchants who use Shopify to power their stores. This Privacy Policy describes how personal information is collected, used, and shared when you install or use the App in connection with your Shopify-supported store.',
+          contain: `<ul>
+          <li>Fulfill your orders with one click. Spocket can easily sync with your online store and all orders automatically appear in your app. Spocket is integrated with Shopify,  BigCommerce, Wix, and WooCommerce.</li></ul>`
         },
         {
           title: 'FbAli Privacy Policy?',
@@ -76,8 +90,9 @@ export default {
   computed: {},
   created() {},
   methods: {
-    containClick() {
-      this.$router.push({ name: 'content' })
+    containClick(row) {
+      setStorage('faq', row)
+      this.$router.push({ path: '/content' })
     }
   }
 }
@@ -116,10 +131,10 @@ export default {
   font-weight: 400;
   line-height: 1.5;
 }
-.wap-input{
-padding-top: 78px;
+.wap-input {
+  padding-top: 78px;
 }
->>>.wap-input .el-input__inner{
-  height: 50px!important;
+>>> .wap-input .el-input__inner {
+  height: 50px !important;
 }
 </style>

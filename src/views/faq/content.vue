@@ -25,12 +25,11 @@
           </div>
           <el-card type="card" class="card-box">
             <div style="padding:3rem">
-              <h3 class="title">FbAli Privacy Policy</h3>
+              <h3 class="title">{{ dataList.title }}</h3>
               <div class="block">
-                <p class="block-title">
-                  FbAli provides lightweight ERP including product management, orders management and shipping management, and auto-processing for orders to merchants who use Shopify to power their stores. This Privacy Policy describes how personal information is collected, used, and shared when you install or use the App in connection with your Shopify-supported store.
-                </p>
+                <p class="block-title">{{ dataList.test }}</p>
               </div>
+              <p v-html="dataList.contain" />
             </div>
 
           </el-card>
@@ -41,6 +40,7 @@
   </div>
 </template>
 <script>
+import { getStorage } from '@/utils/storage'
 import Navbar from '@/views/home/components/navbar'
 import footerHome from '@/views/home/components/footer'
 export default {
@@ -52,11 +52,14 @@ export default {
   props: {},
   data() {
     return {
-      search: ''
+      search: '',
+      dataList: {}
     }
   },
   computed: {},
-  created() {},
+  created() {
+    this.dataList = getStorage('faq')
+  },
   methods: {}
 }
 </script>
@@ -88,7 +91,7 @@ export default {
   margin-bottom: 1.5rem;
 }
 .block-title {
-  color: #4a4a4a;
+  color: #909399;
   font-size: 1em;
   font-weight: 400;
   line-height: 1.5;
