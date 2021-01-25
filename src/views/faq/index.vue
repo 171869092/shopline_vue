@@ -56,32 +56,55 @@ export default {
     return {
       containList: [
         {
-          title: 'FbAli Privacy Policy?',
+          title: 'What is the source agent?',
           test:
-            ' FbAli provides lightweight ERP including product management, orders management and shipping management, and auto-processing for orders to merchants who use Shopify to power their stores. This Privacy Policy describes how personal information is collected, used, and shared when you install or use the App in connection with your Shopify-supported store.',
-          contain: `<ul>
-<li>For <strong>product-related questions</strong>, we have articles in our Help Center to address frequently asked questions</li>
-<li>For<strong> order-related concerns</strong>, kindly fill out Spocket's Order Inquiry Form via our messenger.</li>
-<li>For any <strong>technical-related issues</strong>, please email our Customer Support team at <a href="mailto:support@spocket.co" target="_blank" rel="nofollow noopener noreferrer">support@spocket.co</a> or connect with us via live chat</li>
-<li>For <strong>strategic questions</strong> related to promoting your store, how to generate more sales, and other tips and tricks, please enroll in the <a href="https://academy.spocket.co/" target="_blank" rel="nofollow noopener noreferrer">Spocket Academy</a></li>
-</ul>`
+            'Let’s see what the process of a package borned from factory then to be deliveried to its owner.',
+          contain: `<ol>
+                <li>The products were produced by a factory with many processing steps.</li>
+                <li>The products will be purchased by wholesalers or retailers then stored in warehouses.</li>
+                <li>The worker will carry the product and then pack it into a package and paste the shipping label on the packages.</li>
+                <li>The packages will be passed to shipping companies, with sorting and transportation over and over again</li>
+                <li>The packages will appear in its owner’s hand.</li>
+                </ol>
+                <p>Source agents help you doing all these things behind marketing and orders.</p>`
         },
         {
-          title: 'FbAli Privacy Policy11?',
+          title: 'How to work with a source agent?',
           test:
-            ' FbAli provides lightweight ERP including product management, orders management and shipping management, and auto-processing for orders to merchants who use Shopify to power their stores. This Privacy Policy describes how personal information is collected, used, and shared when you install or use the App in connection with your Shopify-supported store.',
-          contain: `<ul>
-          <li>Fulfill your orders with one click. Spocket can easily sync with your online store and all orders automatically appear in your app. Spocket is integrated with Shopify,  BigCommerce, Wix, and WooCommerce.</li></ul>`
+            'FbAli will filter a good source agent for you to choose from. And it’s easy to work with one that you had negotiated.',
+          contain: `<ol>
+                <li>Make sure you had contacted the source agent that you want to work with, because they will be a part of your supply chain, make sure you know about them and want to work with them on your supply chain, and you can use the social platform supported by that source agent, usually is WhatsApp or telegram.</li>
+                <li>Go to the store products page, and choose the product that you want to host to that good source agent.</li>
+                <li>And there are 2 models you can use, manually process and automatically process, which means the order contains the products which you want that source agent to process will be sent out to the source agent manually or automatically.</li>
+                </ol>
+                <p>P.S The minimum unit for hosting is on the product, and not on SKU(stock keeping unit).</p>`
         },
         {
-          title: 'FbAli Privacy Policy?',
+          title: 'How to track the orders?',
           test:
-            ' FbAli provides lightweight ERP including product management, orders management and shipping management, and auto-processing for orders to merchants who use Shopify to power their stores. This Privacy Policy describes how personal information is collected, used, and shared when you install or use the App in connection with your Shopify-supported store.'
+            'FbAli constructed 5 states to order, pending, processing, in transit, delivered, and exception. And you can check more details for timeline in order details.',
+          contain: `<ol>
+                    <li>Pending: It means there’s no source agent or any other vendor will process your orders, and the orders in pending will not be fulfilled.</li>
+                    <li>Processing: The order is being fulfilled, and the source agents or other vendors are working on this order, such as purchasing, sorting, or packing.</li>
+                    <li>In Transit: The package is on the deliveries ways to its owner, which will be transported over and over again, and you can check the details in the order details.</li>
+                    <li>Delivered: The package is delivered to its owner.</li>
+                    <li>Exception: Any unexpected situation caused the packages could not be delivered will in exception status.</li>
+                    </ol>`
         },
         {
-          title: 'FbAli Privacy Policy?',
+          title: 'What is the difference between work with source agents and with retail sellers such as Aliexpress?',
           test:
-            ' FbAli provides lightweight ERP including product management, orders management and shipping management, and auto-processing for orders to merchants who use Shopify to power their stores. This Privacy Policy describes how personal information is collected, used, and shared when you install or use the App in connection with your Shopify-supported store.'
+            'Working with Source agent, you: ',
+          contain: `<p>Don’t need to connect different factories one by one</p>
+                  <p>Better price produced directly by the factory, no service charge of the platform</p>
+                  <p>Have faster-shipping line, no longer tired for long time shipping</p>
+                  <p>Process orders and update tracking numbers automatically</p>
+                  <p>Create and grow your own long term brand</p>
+                  <p>Have more time to focus on advertising and selling</p>
+                  <p></p>
+                  <p>Working with Aliexpress, you:</p>
+                  <p>Have safety secure platform</p>
+                  <p>Cheaper shipping price for small items</p>`
         }
       ],
       search: ''

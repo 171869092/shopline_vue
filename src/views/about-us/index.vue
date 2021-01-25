@@ -20,49 +20,62 @@
               What we've been thinking about is “Dropshipping is a good
               starting, but what is the next?”. Faster shipping speed, better
               product quality, higher quality after-service …. We came from a
-              data company and we are aiming to revolute the dropshipping
-              market by focusing on all data in the whole dropshipping chain.
+              data company and we are aiming to revolute the dropshipping market
+              by focusing on all data in the whole dropshipping chain.
             </p>
           </div>
-          <div class="col-md-6" style="display: flex;justify-content: center;align-items: center;">
+          <div
+            class="col-md-6"
+            style="display: flex; justify-content: center; align-items: center"
+          >
             <img src="@/assets/home/about_us.jpg" alt="" width="100%">
           </div>
         </div>
         <!-- </div> -->
       </section>
-      <section style="padding:5rem 7rem 7rem 7rem;">
+      <section style="padding: 5rem 7rem 7rem 7rem">
         <div class="container">
-          <h2 class="text-center">
-            About us
-          </h2>
+          <h2 class="text-center">The values we live by</h2>
           <div class="row featurette">
             <div class="col-md-4">
-              <el-card type="card" class="mt50">
-                <img src="@/assets/home/about_ourStrengths_item_01.png" alt="" srcset="">
-                <h3 class="text-align">About us</h3>
+              <el-card type="card" class="mt50" style="min-height: 220px">
+                <img
+                  src="@/assets/home/about_ourStrengths_item_01.png"
+                  alt=""
+                  srcset=""
+                >
+                <h4 class="text-align">Humble</h4>
                 <p class="lead ml30 mt20 featurette-title">
-                  What we've been thinking about is “Dropshipping is a good
-                  starting, but what is the next?”. Faster shipping speed, better
+                  For the better product and the better service, we will listen
+                  to every customer's advice with an open mind.
                 </p>
               </el-card>
             </div>
             <div class="col-md-4">
-              <el-card type="card" class="mt50">
-                <img src="@/assets/home/about_ourStrengths_item_02.png" alt="" srcset="">
-                <h3 class="text-align">About us</h3>
+              <el-card type="card" class="mt50" style="min-height: 220px">
+                <img
+                  src="@/assets/home/about_ourStrengths_item_02.png"
+                  alt=""
+                  srcset=""
+                >
+                <h4 class="text-align">Mission</h4>
                 <p class="lead ml30 mt20 featurette-title">
-                  What we've been thinking about is “Dropshipping is a good
-                  starting, but what is the next?”. Faster shipping speed, better
+                  Let 300k Dropshipper not close its own shop because of product
+                  quality, logistics quality and after-sales problems.
                 </p>
               </el-card>
             </div>
             <div class="col-md-4">
-              <el-card type="card" class="mt50">
-                <img src="@/assets/home/about_ourStrengths_item_03.png" alt="" srcset="">
-                <h3 class="text-align">About us</h3>
+              <el-card type="card" class="mt50" style="min-height: 220px">
+                <img
+                  src="@/assets/home/about_ourStrengths_item_03.png"
+                  alt=""
+                  srcset=""
+                >
+                <h4 class="text-align">Vision</h4>
                 <p class="lead ml30 mt20 featurette-title">
-                  What we've been thinking about is “Dropshipping is a good
-                  starting, but what is the next?”. Faster shipping speed, better
+                  Let every retailer and buyer experience high quality
+                  e-commerce supply chain service.
                 </p>
               </el-card>
             </div>
@@ -125,7 +138,7 @@ export default {
 .featurette-padding {
   padding: 5rem;
 }
-.text-align{
+.text-align {
   text-align: center;
   margin-top: -25px;
 }
