@@ -162,6 +162,18 @@ export const constantRoutes = [
       }
     ]
   },
+  // {
+  //   path: '/edit_faq',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       name: 'edit_faq',
+  //       component: () => import('@/views/edit_faq/index'),
+  //       meta: { title: 'FAQ', icon: 'el-icon-edit' }
+  //     }
+  //   ]
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }
