@@ -19,12 +19,31 @@ router.beforeEach(async (to, from, next) => {
   // }
   // next()
   if (hasToken) { // 已经有token
-    const query = to.query
-    if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
-      setCookies('shopify', query)
-      setCookies('shop', query.shop)
+    if (to.path === '/dashboard') {
+      console.log('init dashboard')
+      const query = to.query
+      if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
+        setCookies('shopify', query)
+        setCookies('shop', query.shop)
+        const res = await shopifyApi({ ...query })
+        if (res.code === 200 && res.data.length === undefined) {
+          store.commit('user/SET_TOKEN', res.data.token)
+          store.commit('user/SET_EMAIL', res.data.email)
+          // getToken(res.data.token)
+          setCookies('uid', res.data.uid)
+          setCookies('token', res.data.token)
+          setCookies('email', res.data.email)
+          console.log('init this')
+          next({ ...to, replace: true })
+        } else {
+          next('/login')
+        }
+      } else {
+        next()
+      }
+    } else {
+      next()
     }
-    next()
   } else {
     /* has no token*/
     if (whiteList.indexOf(to.path) !== -1) {
