@@ -94,7 +94,8 @@ export default {
       const shopify = getCookies('shopify')
       const shop = getCookies('shop')
       if (shopify && shop) {
-        shopifyApi({ ...shopify }).then(res => {
+        const shopifyQuery = JSON.parse(shopify)
+        shopifyApi({ ...shopifyQuery }).then(res => {
           shopifyPush({ shop: shop }).then(res => {
             console.log(res)
           })
