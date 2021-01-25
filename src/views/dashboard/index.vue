@@ -45,7 +45,7 @@ import RaddarChart from './components/RaddarChart'
 import PieChart from './components/PieChart'
 import BarChart from './components/BarChart'
 import { mapGetters } from 'vuex'
-import { shopifyPush } from '@/api/user'
+import { shopifyApi, shopifyPush } from '@/api/user'
 import { getCookies } from '@/utils/cookies'
 const lineChartData = {
   newVisitis: {
@@ -86,7 +86,7 @@ export default {
       'name'
     ])
   },
-  created() {
+  mounted() {
     this.shopifyInit()
   },
   methods: {
@@ -94,8 +94,12 @@ export default {
       const shopify = getCookies('shopify')
       const shop = getCookies('shop')
       if (shopify && shop) {
-        shopifyPush({ shop: shop }).then(res => {
-          console.log(res)
+        shopifyApi({ ...shopify }).then(res => {
+          shopifyPush({ shop: shop }).then(res => {
+            console.log(res)
+          })
+        }).catch(err => {
+          console.log(err)
         })
       }
     },
