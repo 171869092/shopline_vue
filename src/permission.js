@@ -7,7 +7,7 @@ import { getToken } from '@/utils/auth' // get token from cookie
 // import { staticMap } from '@/router'
 // import { setToken } from '@/utils/auth'
 import { shopifyApi } from '@/api/user'
-import { setCookies } from '@/utils/cookies'
+import { setCookies, getCookies } from '@/utils/cookies'
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/', '/login', '/register', '/auth', '/privacy-policy', '/about-us', '/faq', '/content'] // no redirect whitelist
@@ -25,7 +25,8 @@ router.beforeEach(async (to, from, next) => {
       if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
         setCookies('shopify', query)
         setCookies('shop', query.shop)
-        const res = await shopifyApi({ ...query })
+        const uid = getCookies('uid') || ''
+        const res = await shopifyApi({ ...query, uid: uid })
         if (res.code === 200 && res.data.length === undefined) {
           store.commit('user/SET_TOKEN', res.data.token)
           store.commit('user/SET_EMAIL', res.data.email)
