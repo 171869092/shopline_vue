@@ -13,7 +13,7 @@ export function removeCookies(name) {
 }
 
 export function removeAllCookies() {
-  Object.keys(Cookies.get()).forEach(function(cookieName) {
+  Object.keys(Cookies.get()).forEach(function (cookieName) {
     var neededAttributes = {
       // Here you pass the same attributes that were used when the cookie was created
       // and are required when removing the cookie

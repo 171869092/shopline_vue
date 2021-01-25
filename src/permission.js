@@ -19,6 +19,11 @@ router.beforeEach(async (to, from, next) => {
   // }
   // next()
   if (hasToken) { // 已经有token
+    const query = to.query
+    if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
+      setCookies('shopify', query)
+      setCookies('shop', query.shop)
+    }
     next()
   } else {
     /* has no token*/

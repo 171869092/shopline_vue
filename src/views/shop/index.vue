@@ -1,7 +1,7 @@
 <template>
   <div class="my-shop">
     <div class="shop-btn-group">
-      <el-button type="primary" size="small" icon="el-icon-plus" @click="ConnectShop">Connect A Store</el-button>
+      <el-button type="primary" size="small" icon="el-icon-plus" @click="connectShop">Connect A Store</el-button>
     </div>
     <el-card class="box-card">
       <el-table
@@ -46,14 +46,15 @@
         </el-table-column>
         <el-table-column label="">
           <template slot-scope="scope">
-            <el-button type="primary" icon="el-icon-edit" size="small" @click="edit_shop(scope.row.id)">edit</el-button>
+            <!-- <el-button type="primary" icon="el-icon-edit" size="small" @click="edit_shop(scope.row.id)">edit</el-button> -->
+            <el-button type="primary" icon="el-icon-s-tools" size="mini" @click="config(scope.row)" />
           </template>
         </el-table-column>
       </el-table>
       <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
     </el-card>
     <el-dialog title="Connect to Shopify" width="650px" :visible.sync="dialogvisible" :close-on-click-modal="false" @close="closeDialog">
-      <el-form ref="storeForm" :model="storeForm" :rules="rules">
+      <el-form ref="storeForm" :model="storeForm" :rules="rules" @submit.native.prevent="submitConnect">
         <el-form-item prop="store_url" :show-message="false">
           <el-input v-model="storeForm.store_url" autocomplete="off" placeholder="Shopify store URL">
             <template slot="append">.myshopify.com</template>
@@ -81,10 +82,10 @@
           <el-radio-group v-model="storeForm.pull_date" class="mt10 ml20">
             <el-radio v-for="(item,key) in importList" :key="key" :label="item.value">{{ item.label }}</el-radio>
           </el-radio-group>
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item v-if="storeForm.pull_date == 'Orders'" prop="Orders_by_date">
           <el-input v-model="storeForm.Orders_by_date" autocomplete="off" placeholder="Orders by date" />
-        </el-form-item>
+        </el-form-item> -->
 
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -96,8 +97,8 @@
   </div>
 </template>
 <script>
-import { shopList, shopPush, testStoreConnect, connectStore, c_name, editStore, checkShop } from '@/api/shop'
-import { } from '@/api/user'
+// import { shopList, shopPush, testStoreConnect, connectStore, c_name, editStore, checkShop } from '@/api/shop'
+import { shopList, testStoreConnect, c_name, editStore, checkShop } from '@/api/shop'
 export default {
   name: 'shop',
   components: {
@@ -191,19 +192,9 @@ export default {
         this.loading = false
       })
     },
-    ConnectShop() {
+    connectShop() {
       // https://fdapi.dongketech.com/site/install?shop=live-by-test.myshopify.com
       this.dialogvisible = true
-
-      // this.$prompt('Shopify Store URL', 'Connect New Shop', {
-      //   confirmButtonText: 'Confirm',
-      //   cancelButtonText: 'Cancel',
-      //   inputPattern: /.myshopify.com/,
-      //   inputErrorMessage: 'The entered store url is incorrect',
-      //   inputPlaceholder: 'xxxx.myshopify.com'
-      // }).then(({ value }) => {
-      //   window.open(`https://fdapi.dongketech.com/l?shop=${value}&uid=${this.uid}`)
-      // }).catch(() => {})
     },
     // 编辑
     edit_shop(id) {
@@ -230,6 +221,9 @@ export default {
           }
         }
       })
+    },
+    config() {
+      console.log()
     },
     // 测试链接店铺
     testConnect() {
@@ -259,10 +253,10 @@ export default {
       checkShop({ shop: url }).then(res => {
         console.log(res.data)
         if (res.message === '-1') {
-          setTimeout(() => {
-            window.open(`${process.env.VUE_APP_BASE_API}/l?shop=${url}&uid=${this.uid}&type=2`)
-          }, 300)
           this.dialogvisible = false
+          window.location.href = `${process.env.VUE_APP_BASE_API}/l?shop=${url}&uid=${this.uid}&type=2`
+        } else {
+          this.$message.error(res.message)
         }
         this.submitLoading = false
       }).catch(err => {
