@@ -47,3 +47,11 @@ export function c_name(params) {
     params
   })
 }
+
+export function checkShop(params) {
+  return request({
+    url: '/check',
+    method: 'get',
+    params
+  })
+}

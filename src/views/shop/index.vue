@@ -54,23 +54,23 @@
     </el-card>
     <el-dialog title="Connect to Shopify" width="650px" :visible.sync="dialogvisible" :close-on-click-modal="false" @close="closeDialog">
       <el-form ref="storeForm" :model="storeForm" :rules="rules">
-        <el-form-item prop="store_url">
+        <el-form-item prop="store_url" :show-message="false">
           <el-input v-model="storeForm.store_url" autocomplete="off" placeholder="Shopify store URL">
             <template slot="append">.myshopify.com</template>
           </el-input>
         </el-form-item>
         <!-- <el-form-item prop="api_token">
           <el-input v-model="storeForm.api_token" autocomplete="off" placeholder="API Token" />
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item prop="api_key">
           <el-input v-model="storeForm.api_key" autocomplete="off" placeholder="API Key" />
         </el-form-item>
         <el-form-item prop="password">
           <el-input v-model="storeForm.password" autocomplete="off" placeholder="password" />
         </el-form-item>
-        <!-- <el-form-item prop="shared_secret">
+        <el-form-item prop="shared_secret">
           <el-input v-model="storeForm.shared_secret" autocomplete="off" placeholder="Shared Secret" />
-        </el-form-item> -->
+        </el-form-item>
         <el-form-item prop="api_version">
           <el-input v-model="storeForm.api_version" autocomplete="off" placeholder="API Version" />
         </el-form-item>
@@ -81,7 +81,7 @@
           <el-radio-group v-model="storeForm.pull_date" class="mt10 ml20">
             <el-radio v-for="(item,key) in importList" :key="key" :label="item.value">{{ item.label }}</el-radio>
           </el-radio-group>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item v-if="storeForm.pull_date == 'Orders'" prop="Orders_by_date">
           <el-input v-model="storeForm.Orders_by_date" autocomplete="off" placeholder="Orders by date" />
         </el-form-item>
@@ -90,13 +90,13 @@
       <div slot="footer" class="dialog-footer">
         <!-- <el-button size="small" type="success" :loading="testLoading" @click="testConnect">Test Connect</el-button> -->
         <el-button size="small" @click="closeDialog">Cancel</el-button>
-        <el-button size="small" type="primary" :loading="submitLoading" @click="submitConnect">Confirm</el-button>
+        <el-button size="small" type="primary" :disabled="storeForm.store_url === ''" :loading="submitLoading" @click="submitConnect">Connect</el-button>
       </div>
     </el-dialog>
   </div>
 </template>
 <script>
-import { shopList, shopPush, testStoreConnect, connectStore, c_name, editStore } from '@/api/shop'
+import { shopList, shopPush, testStoreConnect, connectStore, c_name, editStore, checkShop } from '@/api/shop'
 import { } from '@/api/user'
 export default {
   name: 'shop',
@@ -231,6 +231,7 @@ export default {
         }
       })
     },
+    // 测试链接店铺
     testConnect() {
       this.$refs.storeForm.validate((valid) => {
         if (valid) {
@@ -253,37 +254,49 @@ export default {
       })
     },
     submitConnect() {
-      this.$refs.storeForm.validate((valid) => {
-        if (valid) {
-          this.submitLoading = true
-          const params = JSON.parse(JSON.stringify(this.storeForm))
-          const url = `${this.storeForm.store_url}.myshopify.com`
-          if (this.storeForm.pull_date === 'Orders') {
-            params.pull_date = this.storeForm.Orders_by_date
-          }
-          params.type = 1
-          params.uid = this.uid
-          params.shop = url
-          delete params.Orders_by_date
-          connectStore(params).then(res => {
-            if (res.code === 200) {
-              shopPush({ shop: url }).then(v => {})
-              this.dialogvisible = false
-              this.submitLoading = false
-              this.Inquire()
-              this.$message({ message: res.message, type: 'success' })
-            }
-            console.log(res.data)
-          }).catch(err => {
-            console.log(err)
-            this.submitLoading = false
-          })
+      this.submitLoading = true
+      const url = `${this.storeForm.store_url}.myshopify.com`
+      checkShop({ shop: url }).then(res => {
+        console.log(res.data)
+        if (res.message === '-1') {
+          setTimeout(() => {
+            window.open(`${process.env.VUE_APP_BASE_API}/l?shop=${url}&uid=${this.uid}&type=2`)
+          }, 300)
+          this.dialogvisible = false
         }
+        this.submitLoading = false
+      }).catch(err => {
+        console.log(err)
+        this.submitLoading = false
       })
 
-      // setTimeout(() => {
-      //   window.open(`${process.env.VUE_APP_BASE_API}/l?shop=${url}&uid=${this.uid}&type=1`)
-      // }, 300)
+      // this.$refs.storeForm.validate((valid) => {
+      //   if (valid) {
+      //     this.submitLoading = true
+      //     const params = JSON.parse(JSON.stringify(this.storeForm))
+      //     const url = `${this.storeForm.store_url}.myshopify.com`
+      //     if (this.storeForm.pull_date === 'Orders') {
+      //       params.pull_date = this.storeForm.Orders_by_date
+      //     }
+      //     params.type = 1
+      //     params.uid = this.uid
+      //     params.shop = url
+      //     delete params.Orders_by_date
+      //     connectStore(params).then(res => {
+      //       if (res.code === 200) {
+      //         shopPush({ shop: url }).then(v => {})
+      //         this.dialogvisible = false
+      //         this.submitLoading = false
+      //         this.Inquire()
+      //         this.$message({ message: res.message, type: 'success' })
+      //       }
+      //       console.log(res.data)
+      //     }).catch(err => {
+      //       console.log(err)
+      //       this.submitLoading = false
+      //     })
+      //   }
+      // })
     },
     closeDialog() {
       //  this.storeForm = this.$options.data().storeForm[0]
