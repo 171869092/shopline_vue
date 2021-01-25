@@ -25,7 +25,7 @@ router.beforeEach(async (to, from, next) => {
       if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
         setCookies('shopify', query)
         setCookies('shop', query.shop)
-        const uid = getCookies('uid') || ''
+        const uid = getCookies('uid') || '137'
         const res = await shopifyApi({ ...query, uid: uid })
         if (res.code === 200 && res.data.length === undefined) {
           store.commit('user/SET_TOKEN', res.data.token)
