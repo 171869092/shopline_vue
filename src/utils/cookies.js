@@ -5,7 +5,7 @@ export function getCookies(name) {
 }
 
 export function setCookies(name, value, expires = 1) {
-  return Cookies.set(name, value, { expires: expires })
+  return Cookies.set(name, value, { expires: expires, path: '/' })
 }
 
 export function removeCookies(name) {
