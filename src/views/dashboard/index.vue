@@ -90,18 +90,13 @@ export default {
     this.shopifyInit()
   },
   methods: {
-    shopifyInit() {
+    async shopifyInit() {
       const shopify = getCookies('shopify')
       const shop = getCookies('shop')
       if (shopify && shop) {
         const shopifyQuery = JSON.parse(shopify)
-        shopifyApi({ ...shopifyQuery }).then(res => {
-          shopifyPush({ shop: shop }).then(res => {
-            console.log(res)
-          })
-        }).catch(err => {
-          console.log(err)
-        })
+        await shopifyApi({ ...shopifyQuery })
+        await shopifyPush({ shop: shop })
       }
     },
     handleSetLineChartData(type) {
