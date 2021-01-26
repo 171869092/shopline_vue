@@ -1,4 +1,4 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, register, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 import { getCookies, setCookies, removeAllCookies } from '@/utils/cookies'
@@ -52,6 +52,30 @@ const actions = {
         setCookies('email', data.email)
         setCookies('name', data.username)
         resolve()
+      }).catch(error => {
+        reject(error)
+      })
+    })
+  },
+  // user register
+  register({ commit }, userInfo) {
+    // const { username, password } = userInfo
+    return new Promise((resolve, reject) => {
+      register(userInfo).then(response => {
+        if (response.code === 200) {
+          const { data } = response
+          commit('SET_TOKEN', data.token)
+          commit('SET_NAME', data.username)
+          commit('SET_EMAIL', data.email)
+          commit('SET_UID', data.u)
+          setToken(data.token)
+          setCookies('uid', data.u)
+          setCookies('email', data.email)
+          setCookies('name', data.username)
+          resolve(data)
+        } else {
+          reject([])
+        }
       }).catch(error => {
         reject(error)
       })

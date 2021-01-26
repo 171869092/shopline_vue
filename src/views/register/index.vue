@@ -67,7 +67,7 @@
 <script>
 // import BNavbar from '@/views/home/components/navbar'
 // import { getSession } from '@/utils/session'
-import { register } from '@/api/user'
+import { getCookies } from '@/utils/cookies'
 export default {
   name: 'register',
   components: {
@@ -110,13 +110,11 @@ export default {
           this.loading = true
           // const shopify = getSession('shopify')
           // const shop = shopify && shopify.shop ? shopify.shop : ''
-          register(this.loginForm).then(res => {
-            console.log(res.data)
-            this.$refs.loginForm.resetFields()
-            this.$router.push({ name: 'login' })
-          }).catch(err => {
-            console.log(err)
-          }).finally(() => {
+          const shop = getCookies('shop') || ''
+          this.$store.dispatch('user/register', { ...this.loginForm, shop: shop }).then(() => {
+            this.$router.push({ name: 'dashboard' })
+            this.loading = false
+          }).catch(() => {
             this.loading = false
           })
         } else {
@@ -146,7 +144,7 @@ export default {
   padding-top: 40px;
 }
 .imageLeft {
-  background: url(~@/assets/home/register.png) no-repeat center;
+  background: url("~@/assets/home/register.png") no-repeat center;
   background-size: cover;
   width: 100%;
   height: 100vh;
