@@ -7,7 +7,7 @@ import { getToken } from '@/utils/auth' // get token from cookie
 // import { staticMap } from '@/router'
 // import { setToken } from '@/utils/auth'
 import { shopifyApi } from '@/api/user'
-import { setCookies } from '@/utils/cookies'
+import { setCookies, getCookies } from '@/utils/cookies'
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
 const whiteList = ['/', '/login', '/register', '/auth', '/privacy-policy', '/about-us', '/faq', '/content', '/contact'] // no redirect whitelist
@@ -19,7 +19,30 @@ router.beforeEach(async (to, from, next) => {
   // }
   // next()
   if (hasToken) { // 已经有token
-    next()
+    console.log('hastoken init dashboard')
+    const query = to.query
+    if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
+      console.log('init shoify query')
+      setCookies('shopify', query)
+      setCookies('shop', query.shop)
+      const uid = getCookies('uid') || ''
+      const res = await shopifyApi({ ...query, uid: uid })
+      if (res.code === 200 && res.data.length === undefined) {
+        console.log('set user token')
+        store.commit('user/SET_TOKEN', res.data.token)
+        store.commit('user/SET_EMAIL', res.data.email)
+        // getToken(res.data.token)
+        setCookies('uid', res.data.uid)
+        setCookies('token', res.data.token)
+        setCookies('email', res.data.email)
+        console.log('jump next')
+        next()
+      } else {
+        next('/login')
+      }
+    } else {
+      next()
+    }
   } else {
     /* has no token*/
     if (whiteList.indexOf(to.path) !== -1) {
@@ -27,26 +50,20 @@ router.beforeEach(async (to, from, next) => {
       next()
     } else {
       // other pages that do not have permission to access are redirected to the login page.
-      // next(`/login?redirect=${to.path}`)
-      if (to.path === '/dashboard') {
-        console.log('init dashboard')
-        const query = to.query
-        if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
-          setCookies('shopify', query)
-          setCookies('shop', query.shop)
-          const res = await shopifyApi({ ...query })
-          if (res.code === 200 && res.data.length === undefined) {
-            store.commit('user/SET_TOKEN', res.data.token)
-            store.commit('user/SET_EMAIL', res.data.email)
-            // getToken(res.data.token)
-            setCookies('uid', res.data.uid)
-            setCookies('token', res.data.token)
-            setCookies('email', res.data.email)
-            console.log('init this')
-            next({ ...to, replace: true })
-          } else {
-            next('/login')
-          }
+      console.log('no token init dashboard')
+      const query = to.query
+      if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
+        setCookies('shopify', query)
+        setCookies('shop', query.shop)
+        const res = await shopifyApi({ ...query })
+        if (res.code === 200 && res.data.length === undefined) {
+          store.commit('user/SET_TOKEN', res.data.token)
+          store.commit('user/SET_EMAIL', res.data.email)
+          // getToken(res.data.token)
+          setCookies('uid', res.data.uid)
+          setCookies('token', res.data.token)
+          setCookies('email', res.data.email)
+          next({ ...to, replace: true })
         } else {
           next('/login')
         }
