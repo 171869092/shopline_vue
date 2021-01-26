@@ -56,6 +56,11 @@
             <router-link class="login-btn" :to="{name: 'home'}">Online Support</router-link>
           </p>
         </div>
+        <div>
+          <p>e-mail: fulfilbyali@gmail.com</p>
+          <p>phone: (+86) 158 1749 9393</p>
+        </div>
+
       </div>
       <div class="content has-text-centered">
         © 2020-2021 FbAil All rights reserved.
@@ -108,7 +113,7 @@ export default {
 }
 .site-link {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   margin-bottom: 1.5rem;
 }
 .has-text-centered {

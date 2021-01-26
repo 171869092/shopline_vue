@@ -75,6 +75,12 @@ export const constantRoutes = [
     name: 'faq',
     hidden: true
   },
+  // {
+  //   path: '/contact',
+  //   component: () => import('@/views/contact/index'),
+  //   name: 'contact',
+  //   hidden: true
+  // },
   {
     path: '/content',
     component: () => import('@/views/faq/content'),

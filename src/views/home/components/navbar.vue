@@ -36,8 +36,8 @@ export default {
       activeIndex: 0,
       menuList: [
         { name: 'Home', href: 'home' },
-        { name: 'FAQ', href: 'faq' },
-        { name: 'Contact', href: 'home' }
+        { name: 'FAQ', href: 'faq' }
+        // { name: 'Contact', href: 'contact' }
       ],
       isShow: false
     }
