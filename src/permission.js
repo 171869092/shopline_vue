@@ -23,18 +23,20 @@ router.beforeEach(async (to, from, next) => {
       console.log('init dashboard')
       const query = to.query
       if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
+        console.log('init shoify query')
         setCookies('shopify', query)
         setCookies('shop', query.shop)
         const uid = getCookies('uid') || ''
         const res = await shopifyApi({ ...query, uid: uid })
         if (res.code === 200 && res.data.length === undefined) {
+          console.log('set user token')
           store.commit('user/SET_TOKEN', res.data.token)
           store.commit('user/SET_EMAIL', res.data.email)
           // getToken(res.data.token)
           setCookies('uid', res.data.uid)
           setCookies('token', res.data.token)
           setCookies('email', res.data.email)
-          console.log('init this')
+          console.log('jump next')
           next({ ...to, replace: true })
         } else {
           next('/login')
