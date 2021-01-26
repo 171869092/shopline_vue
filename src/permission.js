@@ -19,6 +19,7 @@ router.beforeEach(async (to, from, next) => {
   // }
   // next()
   if (hasToken) { // 已经有token
+    console.log('hastoken init dashboard')
     const query = to.query
     if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
       console.log('init shoify query')
@@ -49,25 +50,20 @@ router.beforeEach(async (to, from, next) => {
       next()
     } else {
       // other pages that do not have permission to access are redirected to the login page.
-      // next(`/login?redirect=${to.path}`)
-      if (to.path === '/dashboard') {
-        console.log('no token init dashboard')
-        const query = to.query
-        if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
-          setCookies('shopify', query)
-          setCookies('shop', query.shop)
-          const res = await shopifyApi({ ...query })
-          if (res.code === 200 && res.data.length === undefined) {
-            store.commit('user/SET_TOKEN', res.data.token)
-            store.commit('user/SET_EMAIL', res.data.email)
-            // getToken(res.data.token)
-            setCookies('uid', res.data.uid)
-            setCookies('token', res.data.token)
-            setCookies('email', res.data.email)
-            next({ ...to, replace: true })
-          } else {
-            next('/login')
-          }
+      console.log('no token init dashboard')
+      const query = to.query
+      if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
+        setCookies('shopify', query)
+        setCookies('shop', query.shop)
+        const res = await shopifyApi({ ...query })
+        if (res.code === 200 && res.data.length === undefined) {
+          store.commit('user/SET_TOKEN', res.data.token)
+          store.commit('user/SET_EMAIL', res.data.email)
+          // getToken(res.data.token)
+          setCookies('uid', res.data.uid)
+          setCookies('token', res.data.token)
+          setCookies('email', res.data.email)
+          next({ ...to, replace: true })
         } else {
           next('/login')
         }
