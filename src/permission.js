@@ -20,7 +20,7 @@ router.beforeEach(async (to, from, next) => {
   // next()
   if (hasToken) { // 已经有token
     if (to.path === '/dashboard') {
-      console.log('init dashboard')
+      console.log('has token init dashboard')
       const query = to.query
       if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
         console.log('init shoify query')
@@ -56,7 +56,7 @@ router.beforeEach(async (to, from, next) => {
       // other pages that do not have permission to access are redirected to the login page.
       // next(`/login?redirect=${to.path}`)
       if (to.path === '/dashboard') {
-        console.log('init dashboard')
+        console.log('no token init dashboard')
         const query = to.query
         if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
           setCookies('shopify', query)
@@ -69,7 +69,6 @@ router.beforeEach(async (to, from, next) => {
             setCookies('uid', res.data.uid)
             setCookies('token', res.data.token)
             setCookies('email', res.data.email)
-            console.log('init this')
             next({ ...to, replace: true })
           } else {
             next('/login')
