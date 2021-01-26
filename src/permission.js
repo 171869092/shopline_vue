@@ -25,7 +25,7 @@ router.beforeEach(async (to, from, next) => {
       if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
         setCookies('shopify', query)
         setCookies('shop', query.shop)
-        const uid = getCookies('uid') || '137'
+        const uid = getCookies('uid') || ''
         const res = await shopifyApi({ ...query, uid: uid })
         if (res.code === 200 && res.data.length === undefined) {
           store.commit('user/SET_TOKEN', res.data.token)
@@ -35,7 +35,7 @@ router.beforeEach(async (to, from, next) => {
           setCookies('token', res.data.token)
           setCookies('email', res.data.email)
           console.log('init this')
-          next()
+          next({ ...to, replace: true })
         } else {
           next('/login')
         }
