@@ -183,6 +183,7 @@ export default {
       this.Inquire()
     },
     filterOrders: debounce(function() {
+      this.listQuery.page = 1
       this.Inquire()
     }, 1000),
     // 托管

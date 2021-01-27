@@ -189,6 +189,7 @@ export default {
       })
     },
     filterOrders: debounce(function() {
+      this.listQuery.page = 1
       this.Inquire()
     }, 1000)
   }
