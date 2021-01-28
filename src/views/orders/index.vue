@@ -17,7 +17,6 @@
             <div class="filter-item w-250">
               <el-select
                 v-model="formQuery.order_status_client"
-                clearable
                 collapse-tags
                 placeholder="Ship status"
                 style="width:100%"

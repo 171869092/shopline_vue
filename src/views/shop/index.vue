@@ -9,9 +9,8 @@
         v-loading="loading"
         :data="tableData"
         style="width: 100%"
-        highlight-current-row
         :row-class-name="tableRowClassName"
-        fit
+        border
         stripe
         :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}"
         @cell-click="tabClick"
@@ -39,17 +38,25 @@
             <span>{{ scope.row.platform }}</span>
           </template>
         </el-table-column>
+        <el-table-column label="Status">
+          <template slot-scope="scope">
+            <el-tooltip v-if="scope.row.is_del === '3'" class="item" effect="dark" content="App uninstalled" placement="top">
+              <i class="el-icon-warning-outline" style="font-size:18px; color:red" />
+            </el-tooltip>
+            <span v-else><i class="el-icon-check" style="color: green" /></span>
+          </template>
+        </el-table-column>
         <el-table-column label="Create Time">
           <template slot-scope="scope">
             <div>{{ scope.row.create_time }}</div>
           </template>
         </el-table-column>
-        <el-table-column label="">
+        <!-- <el-table-column label="">
           <template slot-scope="scope">
-            <!-- <el-button type="primary" icon="el-icon-edit" size="small" @click="edit_shop(scope.row.id)">edit</el-button> -->
+            <el-button type="primary" icon="el-icon-edit" size="small" @click="edit_shop(scope.row.id)">edit</el-button>
             <el-button type="primary" icon="el-icon-s-tools" size="mini" @click="config(scope.row)" />
           </template>
-        </el-table-column>
+        </el-table-column> -->
       </el-table>
       <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
     </el-card>
@@ -94,6 +101,26 @@
         <el-button size="small" type="primary" :disabled="storeForm.store_url === ''" :loading="submitLoading" @click="submitConnect">Connect</el-button>
       </div>
     </el-dialog>
+    <el-dialog
+      title="Store Configuration"
+      :visible.sync="configDialog"
+      width="30%"
+    >
+      <el-form ref="storeForm" :model="storeForm">
+        <el-form-item prop="pull_date" label="Import Orders:">
+          <el-radio-group v-model="storeForm.pull_date" class="mt10 ml20">
+            <el-radio v-for="(item,key) in importList" :key="key" :label="item.value">{{ item.label }}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-if="storeForm.pull_date == 'Orders'" prop="Orders_by_date">
+          <el-input v-model="storeForm.Orders_by_date" autocomplete="off" placeholder="Orders by date" />
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="configDialog = false">Cancel</el-button>
+        <el-button type="primary" @click="configDialog = false">Done</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -123,6 +150,7 @@ export default {
       dialogvisible: false,
       submitLoading: false,
       testLoading: false,
+      configDialog: false,
       storeForm: {
         store_url: '',
         api_token: '',
@@ -223,7 +251,7 @@ export default {
       })
     },
     config() {
-      console.log()
+      this.configDialog = true
     },
     // 测试链接店铺
     testConnect() {
@@ -301,6 +329,12 @@ export default {
     tableRowClassName({ row, rowIndex }) {
       // 把每一行的索引放进row
       row.index = rowIndex
+      console.log(row)
+      if (row.is_del === '3') {
+        return 'warning-row'
+      } else {
+        return ''
+      }
     },
     inputBlur(row) {
       // console.log('row', row)
@@ -314,15 +348,10 @@ export default {
     },
     // tabClick row 当前行 column 当前列
     tabClick(row, column, cell, event) {
-      switch (column.label) {
-        case 'Store name':
-          this.tabClickIndex = row.index
-          this.tabClickLabel = column.label
-          break
-        default: return
+      if (row.is_del !== '3') {
+        this.tabClickIndex = row.index
+        this.tabClickLabel = column.label
       }
-
-      console.log('tabClick', this.tabClickIndex, row)
     }
   }
 }
@@ -333,5 +362,14 @@ export default {
 }
 .shop-btn-group {
   margin-bottom: 20px;
+}
+</style>
+<style>
+.el-table .warning-row {
+  background: #f5f7fa;
+  cursor: no-drop;
+}
+.el-table--enable-row-hover .el-table__body tr:hover > td {
+  background-color: #f5f7fa;
 }
 </style>
