@@ -138,7 +138,7 @@
           </div>
         </div>
       </section> -->
-      <section style="background: #fafbff; padding: 5rem">
+      <!-- <section style="background: #fafbff; padding: 5rem">
         <div class="container">
           <div class="page-1">
             <iframe
@@ -151,7 +151,7 @@
             />
           </div>
         </div>
-      </section>
+      </section> -->
       <section style="padding: 10rem">
         <div class="container">
           <div class="page-1">
