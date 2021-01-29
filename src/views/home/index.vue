@@ -138,7 +138,21 @@
           </div>
         </div>
       </section> -->
-      <section style="background: #fafbff; padding: 10rem">
+      <section style="background: #fafbff; padding: 5rem">
+        <div class="container">
+          <div class="page-1">
+            <iframe
+              width="100%"
+              height="500px"
+              src="https://www.youtube.com/embed/jxiSEcTE1dw"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            />
+          </div>
+        </div>
+      </section>
+      <section style="padding: 10rem">
         <div class="container">
           <div class="page-1">
             <h1>What is exactly FbAli?</h1>
@@ -153,7 +167,7 @@
         </div>
       </section>
 
-      <section class="featurette-padding">
+      <section class="featurette-padding" style="background: #fafbff">
         <div class="container">
           <h2 class="text-center">
             <!-- <img
@@ -178,7 +192,7 @@
           </div>
         </div>
       </section>
-      <section style="background: #fafbff" class="featurette-padding">
+      <section class="featurette-padding">
         <div class="container">
           <div class="row featurette">
             <div class="col-md-6">
@@ -194,7 +208,7 @@
           </div>
         </div>
       </section>
-      <section class="featurette-padding">
+      <section class="featurette-padding" style="background: #fafbff">
         <div class="container">
           <div class="row featurette">
             <div class="col-md-6">
