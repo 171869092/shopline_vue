@@ -46,11 +46,11 @@
             <span v-else><i class="el-icon-check" style="color: green" /></span>
           </template>
         </el-table-column>
-        <el-table-column label="Create Time">
+        <!-- <el-table-column label="Create Time">
           <template slot-scope="scope">
             <div>{{ scope.row.create_time }}</div>
           </template>
-        </el-table-column>
+        </el-table-column> -->
         <!-- <el-table-column label="">
           <template slot-scope="scope">
             <el-button type="primary" icon="el-icon-edit" size="small" @click="edit_shop(scope.row.id)">edit</el-button>
