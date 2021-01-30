@@ -132,7 +132,7 @@
               style="width:850px"
             />
             <el-table
-              v-if="variantsEheck"
+              v-if="variantsEheck && optionsList.length > 0"
               ref="optionsTable"
               :data="optionsList"
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
