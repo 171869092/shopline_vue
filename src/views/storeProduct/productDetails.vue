@@ -185,7 +185,7 @@
               <el-button v-if="showDelBtn" size="mini" type="primary" plain @click="deleteVariants()">Delete variants</el-button>
             </div>
             <vxe-table
-              v-if="variantsEheck"
+              v-if="variantsEheck || optionsList.length > 0"
               ref="xTable"
               border
               show-overflow
@@ -537,7 +537,7 @@ export default {
     },
     // 保存数据
     submit() {
-      if (this.tableData.length === 0 && this.optionsList.length === 0) {
+      if (this.tableData.length > 0 && this.optionsList.length > 0) {
         this.formData.price = ''
         this.formData.compare_price = ''
         this.formData.cost = ''
