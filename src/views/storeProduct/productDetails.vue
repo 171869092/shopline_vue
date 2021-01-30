@@ -112,13 +112,13 @@
             <div slot="header" class="flexbox justify-space-between align-center">
               <div><span style="color:red">*</span><span style="font-weight: 600;">Variants:</span></div>
               <!-- <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button> -->
-              <div v-if="$route.query.type == 'edit' && optionsList.length > 0">
+              <div v-if="$route.query.type == 'edit' && tableData.length > 0">
                 <el-button size="mini" type="primary" icon="el-icon-plus" @click="addVariant">Add variant</el-button>
                 <el-button size="mini" @click="editOptions">Edit options</el-button>
               </div>
             </div>
             <div>
-              <el-checkbox v-if="optionsList.length == 0 || isAddVariants" v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
+              <el-checkbox v-if="optionsList.length == 0 || showVariants || isAddVariants" v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
               <el-button v-if="variantsEheck && optionsList.length < 3 " class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
             </div>
             <!-- 新增属性 -->
@@ -435,6 +435,9 @@ export default {
   computed: {
     sourceArr() {
       return this.optionsList.map(item => item.tags).filter(String)
+    },
+    showVariants() {
+      return this.tableData.length === 0
     }
   },
   watch: {
