@@ -56,6 +56,11 @@
                   <div slot="prefix" style="padding:0 8px">{{ formData.signal || '$' }}</div>
                 </el-input>
               </el-form-item>
+              <el-form-item label="Cost per item" prop="cost" class="w-230" style="margin-left: 120px;">
+                <el-input v-model="formData.cost" type="number" placeholder="Cost per item">
+                  <div slot="prefix" style="padding:0 8px">{{ formData.signal || '$' }}</div>
+                </el-input>
+              </el-form-item>
             </div>
           </el-card>
 
@@ -379,7 +384,8 @@ export default {
         options: [],
         cost_vender_list: [],
         compare_price: '',
-        price: ''
+        price: '',
+        cost: ''
         // del_sku: []
       },
       formRule: {
@@ -534,6 +540,7 @@ export default {
       if (this.tableData.length > 0) {
         this.formData.price = ''
         this.formData.compare_price = ''
+        this.formData.cost = ''
       }
       this.formData.sku_list = this.tableData.filter(Boolean)
       this.formData.options = this.optionsList
