@@ -119,7 +119,7 @@
             </div>
             <div>
               <el-checkbox v-if="optionsList.length == 0 || showVariants || isAddVariants" v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
-              <el-button v-if="variantsEheck && optionsList.length < 3 " class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
+              <el-button v-if="variantsEheck && optionsList.length < 3" class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
             </div>
             <!-- 新增属性 -->
             <el-alert
@@ -185,7 +185,7 @@
               <el-button v-if="showDelBtn" size="mini" type="primary" plain @click="deleteVariants()">Delete variants</el-button>
             </div>
             <vxe-table
-              v-if="variantsEheck || optionsList.length > 0"
+              v-if="variantsEheck"
               ref="xTable"
               border
               show-overflow
