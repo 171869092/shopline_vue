@@ -537,7 +537,7 @@ export default {
     },
     // 保存数据
     submit() {
-      if (this.tableData.length > 0) {
+      if (this.tableData.length === 0 && this.optionsList.length === 0) {
         this.formData.price = ''
         this.formData.compare_price = ''
         this.formData.cost = ''
