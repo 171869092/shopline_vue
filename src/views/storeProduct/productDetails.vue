@@ -40,7 +40,7 @@
 
           </el-card>
           <!-- Pricing -->
-          <el-card v-if="!variantsEheck && tableData.length == 0" class="box-card">
+          <el-card v-if="!variantsEheck && optionsList.length == 0" class="box-card">
             <div slot="header" class="flexbox justify-space-between align-center">
               <div><span style="color:red">*</span><span style="font-weight: 600;">Pricing:</span></div>
             </div>
