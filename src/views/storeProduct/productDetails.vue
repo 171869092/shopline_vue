@@ -132,7 +132,7 @@
               style="width:850px"
             />
             <el-table
-              v-if="variantsEheck && optionsList.length > 0"
+              v-if="variantsEheck"
               ref="optionsTable"
               :data="optionsList"
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
@@ -185,7 +185,7 @@
               <el-button v-if="showDelBtn" size="mini" type="primary" plain @click="deleteVariants()">Delete variants</el-button>
             </div>
             <vxe-table
-              v-if="variantsEheck || tableData.length > 0"
+              v-if="variantsEheck || optionsList.length > 0"
               ref="xTable"
               border
               show-overflow
