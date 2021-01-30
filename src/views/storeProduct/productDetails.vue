@@ -496,7 +496,17 @@ export default {
         getStoreProductEdit({ id: this.$route.query.id }).then(res => {
           if (res.code === 200) {
             this.formData = res.data
-            // this.formData.del_sku = []
+            if (res.data.options) {
+              this.optionsList = res.data.options
+            }
+            this.tableData = res.data.sku_list
+            console.log(this.optionsList)
+            if (res.data.sku_list.length > 0) {
+              const option = res.data.sku_list[0].option
+              if (option) {
+                this.variantsTitle = Object.keys(option)
+              }
+            }
             this.formData.cost_vender_list.map((item, idx) => {
               item.list.map(v => {
                 if (v.value) {
@@ -505,17 +515,6 @@ export default {
                 }
               })
             })
-            this.tableData = res.data.sku_list
-            // this.vendorData = res.data.sku_list.cost_vender_list
-            if (res.data.options) {
-              this.optionsList = res.data.options
-            }
-            if (res.data.sku_list.length > 0) {
-              const option = res.data.sku_list[0].option
-              if (option) {
-                this.variantsTitle = Object.keys(option)
-              }
-            }
             this.formData.images = res.data.images.map(item => {
               return {
                 url: item.url,
