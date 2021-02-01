@@ -50,13 +50,6 @@ export const constantRoutes = [
     name: 'register',
     hidden: true
   },
-
-  {
-    path: '/auth',
-    component: () => import('@/views/auth/index'),
-    name: 'auth',
-    hidden: true
-  },
   {
     path: '/privacy-policy',
     component: () => import('@/views/privacy-policy/index'),

@@ -48,18 +48,22 @@ export default {
     }
   },
   mounted() {
-    window.addEventListener('scroll', (e) => {
+    window.addEventListener('scroll', this.handleScroll)
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
+  methods: {
+    goLink(index) {
+      this.activeIndex = index
+    },
+    handleScroll() {
       const scroll = document.documentElement.scrollTop || document.body.scrollTop
       if (scroll <= 5) {
         this.isShow = false
       } else {
         this.isShow = true
       }
-    })
-  },
-  methods: {
-    goLink(index) {
-      this.activeIndex = index
     },
     registerClick() {
       this.$router.push({ name: 'register' })
