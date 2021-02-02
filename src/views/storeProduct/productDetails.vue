@@ -88,7 +88,7 @@
                     <el-image :src="scope.row.img_url" class="sku_image" />
                   </span>
                   <span v-if="item.type == 'tips'">
-                    <span v-if="scope.row.service_price">{{ scope.row.service_price }}</span>
+                    <span v-if="scope.row.price">{{ scope.row.price }}</span>
                     <span v-else>Waiting for reply</span>
                   </span>
                   <span v-if="item.type == 'select' && scope.row.price">
@@ -343,8 +343,8 @@ export default {
         { label: 'Vendor', value: 'service_name' },
         { label: 'Total Cost', value: 'total_cost' },
         { label: 'Discount Rate', value: 'rate' },
-        { label: 'Product Price', value: 'price', width: '120' },
-        { label: 'Service Price', value: 'service_price', type: 'tips', width: '160' },
+        { label: 'Product Price', value: 'price', width: '160', type: 'tips' },
+        { label: 'Service Price', value: 'service_price', width: '120' },
         { label: 'Shipping Price', value: 'shipping_price', width: '120' },
         { label: '', value: '', type: 'select', width: '150' }
       ],

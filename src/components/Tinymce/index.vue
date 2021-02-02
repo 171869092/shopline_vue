@@ -20,7 +20,7 @@ import load from './dynamicLoadScript'
 const tinymceCDN = 'https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js'
 
 export default {
-  name: 'Tinymce',
+  name: 'tinymce',
   // components: { editorImage, editorImageStore },
   props: {
     id: {
@@ -66,22 +66,21 @@ export default {
       type: Boolean,
       default: true
     },
-    baseImg:{
-      type:Array,
+    baseImg: {
+      type: Array,
       default: () => []
     },
-     baseImgType:{
-      type:String,
+    baseImgType: {
+      type: String
     },
-    maxLength:{
+    maxLength: {
       type: Number,
       default: 0
     },
-    pageType:{
+    pageType: {
       type: String,
-      default: ""
+      default: ''
     }
-    
 
   },
   data() {
@@ -90,7 +89,7 @@ export default {
       hasInit: false,
       tinymceId: this.id,
       fullscreen: false,
-      valueLength:0,
+      valueLength: 0,
       languageTypeList: {
         'en': 'en',
         'zh': 'zh_CN',
@@ -110,18 +109,18 @@ export default {
   },
   watch: {
     value(val) {
-      if(val){
+      if (val) {
         this.valueLength = this.escape2Html(val).length
-        if(this.pageType == 'lazada'){
-          val = val.replace(/<p>/g,'<li>').replace(/<\/p>/g,'</li>')
+        if (this.pageType == 'lazada') {
+          val = val.replace(/<p>/g, '<li>').replace(/<\/p>/g, '</li>')
           this.$nextTick(() => window.tinymce.get(this.tinymceId).setContent(val || ''))
         }
         if (!this.hasChange && this.hasInit) {
           setTimeout(() => {
             this.$nextTick(() => window.tinymce.get(this.tinymceId).setContent(val || ''))
-          }, 100);
+          }, 100)
         }
-      }else{
+      } else {
         this.$nextTick(() => window.tinymce.get(this.tinymceId).setContent(''))
       }
     }
@@ -141,12 +140,12 @@ export default {
   destroyed() {
     this.destroyTinymce()
   },
-  methods:{
-    escape2Html(str) { 
-      var arrEntities={'lt':'<','gt':'>','nbsp':' ','amp':'&','quot':'"'}; 
-      if(str){
-        str = str.replace(/&(lt|gt|nbsp|amp|quot);/ig,function(all,t){return arrEntities[t];}); 
-        str = str.replace(/<\/?[^>]*>/g,''); //去除HTML tag
+  methods: {
+    escape2Html(str) {
+      var arrEntities = { 'lt': '<', 'gt': '>', 'nbsp': ' ', 'amp': '&', 'quot': '"' }
+      if (str) {
+        str = str.replace(/&(lt|gt|nbsp|amp|quot);/ig, function(all, t) { return arrEntities[t] })
+        str = str.replace(/<\/?[^>]*>/g, '') // 去除HTML tag
         // str = str.replace(/[ | ]*\n/g,'\n'); //去除行尾空白
       }
       return str
@@ -183,9 +182,9 @@ export default {
         link_title: false,
         nonbreaking_force_tab: true, // inserting nonbreaking space &nbsp; need Nonbreaking Space Plugin
         // branding: false,
-        elementpath: false,//左下角的当前标签路径
+        elementpath: false, // 左下角的当前标签路径
         statusbar: false,
-        entity_encoding: "raw",   //禁止转义
+        entity_encoding: 'raw', // 禁止转义
 
         // entity_encoding : "raw",
         // remove_linebreaks : false,
@@ -208,8 +207,8 @@ export default {
             _this.fullscreen = e.state
           })
         },
-        readonly:this.readonly,
-        
+        readonly: this.readonly
+
         // 整合七牛上传
         // images_dataimg_filter(img) {
         //   setTimeout(() => {
@@ -261,21 +260,21 @@ export default {
     getContent() {
       window.tinymce.get(this.tinymceId).getContent()
     },
-    //本地上唇图片  添加到文本域
+    // 本地上唇图片  添加到文本域
     imageSuccessCBK(arr) {
       const _this = this
-      this.$emit('addPic',arr)
+      this.$emit('addPic', arr)
       arr.forEach(v => {
         window.tinymce.get(_this.tinymceId).insertContent(`<img class="wscnph" src="${v}" >`)
       })
     },
-    //从图片库选择图片  添加到文本域
-    storeImg(arr){
+    // 从图片库选择图片  添加到文本域
+    storeImg(arr) {
       const _this = this
       arr.forEach(v => {
         window.tinymce.get(_this.tinymceId).insertContent(`<img class="wscnph" src="${v}" >`)
       })
-    },
+    }
   }
 }
 </script>
