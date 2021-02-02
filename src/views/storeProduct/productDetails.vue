@@ -40,7 +40,7 @@
 
           </el-card>
           <!-- Pricing -->
-          <el-card v-if="!variantsEheck && !formData.options_tag" class="box-card">
+          <el-card v-if="!variantsCheck && !formData.options_tag" class="box-card">
             <div slot="header" class="flexbox justify-space-between align-center">
               <div><span style="color:red">*</span><span style="font-weight: 600;">Pricing:</span></div>
             </div>
@@ -112,14 +112,14 @@
             <div slot="header" class="flexbox justify-space-between align-center">
               <div><span style="color:red">*</span><span style="font-weight: 600;">Variants:</span></div>
               <!-- <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button> -->
-              <div v-if="$route.query.type == 'edit' && tableData.length > 1">
+              <div v-if="$route.query.type == 'edit' && formData.options_tag">
                 <el-button size="mini" type="primary" icon="el-icon-plus" @click="addVariant">Add variant</el-button>
                 <el-button size="mini" @click="editOptions">Edit options</el-button>
               </div>
             </div>
             <div>
-              <el-checkbox v-if="!formData.options_tag || showVariants || isAddVariants" v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
-              <el-button v-if="variantsEheck && optionsList.length < 3" class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
+              <el-checkbox v-if="!formData.options_tag || showVariants || isAddVariants" v-model="variantsCheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
+              <el-button v-if="variantsCheck && optionsList.length < 3" class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
             </div>
             <!-- 新增属性 -->
             <el-alert
@@ -132,7 +132,7 @@
               style="width:850px"
             />
             <el-table
-              v-if="variantsEheck"
+              v-if="variantsCheck"
               ref="optionsTable"
               :data="optionsList"
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
@@ -180,11 +180,11 @@
             </el-table>
             <!-- 生成属性 -->
             <div class="mb10">
-              <label v-if="variantsEheck && isAddVariants">Preview</label>
-              <el-button v-if="showDelBtn" size="mini" type="primary" plain @click="deleteVariants()">Delete variants</el-button>
+              <label v-if="variantsCheck && isAddVariants">Preview</label>
+              <el-button v-if="$route.query.type == 'edit' && variantsCheck && showDelBtn" size="mini" type="primary" plain @click="deleteVariants()">Delete variants</el-button>
             </div>
             <vxe-table
-              v-if="variantsEheck && isAddVariants || formData.options_tag"
+              v-if="(variantsCheck && isAddVariants) || formData.options_tag"
               ref="xTable"
               border
               show-overflow
@@ -198,7 +198,7 @@
               @checkbox-all="selectChangeEvent"
               @checkbox-change="selectChangeEvent"
             >
-              <vxe-table-column v-if="$route.query.type == 'edit' && !variantsEheck" type="checkbox" width="100" />
+              <vxe-table-column type="checkbox" width="100" />
               <vxe-table-column title="Picture" field="sku_image" width="100">
                 <template v-slot="{ row, rowIndex }">
                   <el-image class="sku_image" :src="row.sku_image" @click.native="openPrint(row, rowIndex)">
@@ -272,71 +272,12 @@
               </vxe-table-column>
               <vxe-table-column title="Operating" width="120px">
                 <template v-slot="{ row, rowIndex }">
-                  <!-- <el-button type="danger" size="mini" @click="delSkuData(row, rowIndex)">delete</el-button> -->
                   <div class="icon-border" @click="delSkuData(row, rowIndex)">
                     <i class="el-icon-delete-solid cursor_p" />
                   </div>
                 </template>
               </vxe-table-column>
             </vxe-table>
-            <!-- <el-table
-              v-if="variantsEheck || $route.query.type === 'edit'"
-              ref="multipleTable"
-              :data="tableData"
-              border
-              class="mt20"
-              :loading="preLoading"
-              :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
-              style="width: 100%"
-              max-height="500"
-            >
-              <el-table-column type="index" width="120" label="#" />
-              <el-table-column label="Picture" prop="sku_image">
-                <template slot-scope="scope">
-                  <el-image class="sku_image" :src="scope.row.sku_image" @click.native="openPrint(scope.row, scope.$index)">
-                    <div slot="error" class="image-slot">
-                      <i class="error-icon el-icon-picture-outline" />
-                    </div>
-                  </el-image>
-                </template>
-              </el-table-column>
-              <el-table-column v-for="variant in variantsTitle" :key="variant" :prop="variant" :label="variant">
-                <template slot-scope="scope">
-                  <el-form-item class="mb0" label-width="0">
-                    <el-input v-model="scope.row.option[variant]" size="mini" clearable :disabled="$route.query.type === 'add'" class="p5_input" />
-                  </el-form-item>
-                </template>
-              </el-table-column>
-              <el-table-column label="Price" prop="sku_price">
-                <template slot-scope="scope">
-                  <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_price`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
-                    <el-input v-model="scope.row.sku_price" clearable size="mini" class="p5_input" placeholder="Price">
-                      <i slot="prefix">€</i>
-                    </el-input>
-                  </el-form-item>
-                </template>
-              </el-table-column>
-              <el-table-column label="Quantity" prop="sku_number">
-                <template slot-scope="scope">
-                  <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku_number`" :rules="[{ required: true, message: '不能为空', trigger: 'blur' }]">
-                    <el-input-number v-model="scope.row.sku_number" class="p5_input" size="mini" :min="1" controls-position="right" />
-                  </el-form-item>
-                </template>
-              </el-table-column>
-              <el-table-column label="SKU" prop="sku">
-                <template slot-scope="scope">
-                  <el-form-item class="mb0" label-width="0" :prop="`sku_list.${scope.$index}.sku`">
-                    <el-input v-model="scope.row.sku" size="mini" clearable class="p5_input" placeholder="SKU" />
-                  </el-form-item>
-                </template>
-              </el-table-column>
-
-              <el-table-column label="Operating" width="120px">
-                <template slot-scope="scope">
-                  <el-button type="danger" size="mini" @click="delSkuData(scope.$index, scope.row)">delete</el-button>
-                </template>
-              </el-table-column>
-            </el-table> -->
           </el-card>
         </el-form>
       </el-col>
@@ -409,7 +350,7 @@ export default {
 
       optionsList: [],
       variantsTitle: [],
-      variantsEheck: false,
+      variantsCheck: false,
       options: ['Size', 'Color', 'Material', 'Style', 'Title'],
       statusOptions: ['Active', 'Draft'],
       vendorLoading: false,
@@ -535,7 +476,7 @@ export default {
     },
     // 保存数据
     submit() {
-      if (this.tableData.length > 0 && this.optionsList.length > 0) {
+      if (this.formData.options_tag) {
         this.formData.price = ''
         this.formData.compare_price = ''
         this.formData.cost = ''
@@ -802,7 +743,8 @@ export default {
               this.optionsList = options
             }
           } else {
-            this.variantsEheck = false
+            this.isAddVariants = false
+            this.variantsCheck = false
             this.optionsList = []
           }
           this.$refs.xTable.loadData(this.tableData)
