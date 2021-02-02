@@ -40,7 +40,7 @@
 
           </el-card>
           <!-- Pricing -->
-          <el-card v-if="!variantsEheck && optionsList.length == 0" class="box-card">
+          <el-card v-if="!variantsEheck && !formData.options_tag" class="box-card">
             <div slot="header" class="flexbox justify-space-between align-center">
               <div><span style="color:red">*</span><span style="font-weight: 600;">Pricing:</span></div>
             </div>
@@ -112,13 +112,13 @@
             <div slot="header" class="flexbox justify-space-between align-center">
               <div><span style="color:red">*</span><span style="font-weight: 600;">Variants:</span></div>
               <!-- <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button> -->
-              <div v-if="$route.query.type == 'edit' && tableData.length > 0">
+              <div v-if="$route.query.type == 'edit' && tableData.length > 1">
                 <el-button size="mini" type="primary" icon="el-icon-plus" @click="addVariant">Add variant</el-button>
                 <el-button size="mini" @click="editOptions">Edit options</el-button>
               </div>
             </div>
             <div>
-              <el-checkbox v-if="optionsList.length == 0 || showVariants || isAddVariants" v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
+              <el-checkbox v-if="!formData.options_tag || showVariants || isAddVariants" v-model="variantsEheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
               <el-button v-if="variantsEheck && optionsList.length < 3" class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
             </div>
             <!-- 新增属性 -->
@@ -185,7 +185,7 @@
               <el-button v-if="showDelBtn" size="mini" type="primary" plain @click="deleteVariants()">Delete variants</el-button>
             </div>
             <vxe-table
-              v-if="variantsEheck || optionsList.length > 0"
+              v-if="variantsEheck"
               ref="xTable"
               border
               show-overflow
@@ -583,6 +583,7 @@ export default {
     // 属性清空
     checkVariants(val) {
       if (val) {
+        this.optionsList = []
         this.tableData = []
         this.optionsList.push({ showList: false, option: 'Size', tags: [] })
       } else {
