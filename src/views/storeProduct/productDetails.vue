@@ -170,8 +170,7 @@
               <el-table-column prop="optionVlue" align="left">
                 <template slot-scope="scope">
                   <div class="flexbox justify-flex-end d-height">
-                    <span v-if="optionsList.length > 1" class="primary cursor_p f-r" @click="RemoveOption(scope.$index, scope.row)">Remove</span>
-                    <div v-else />
+                    <span v-show="optionsList.length > 1" class="primary cursor_p f-r" @click="RemoveOption(scope.$index, scope.row)">Remove</span>
                   </div>
                   <el-form-item class="mb0" label-width="0">
                     <input-tag v-model="scope.row.tags" class="option-input-tag" :add-tag-on-blur="true" :limit="20" @input="tagsChange" />
@@ -181,11 +180,11 @@
             </el-table>
             <!-- 生成属性 -->
             <div class="mb10">
-              <label v-if="variantsEheck">Preview</label>
+              <label v-if="variantsEheck && isAddVariants">Preview</label>
               <el-button v-if="showDelBtn" size="mini" type="primary" plain @click="deleteVariants()">Delete variants</el-button>
             </div>
             <vxe-table
-              v-if="variantsEheck"
+              v-if="variantsEheck && isAddVariants || formData.options_tag"
               ref="xTable"
               border
               show-overflow
@@ -587,6 +586,7 @@ export default {
         this.tableData = []
         this.optionsList.push({ showList: false, option: 'Size', tags: [] })
       } else {
+        this.isAddVariants = false
         this.tableData = []
         this.optionsList = []
       }
