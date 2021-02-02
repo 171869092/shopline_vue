@@ -113,12 +113,12 @@
               <div><span style="color:red">*</span><span style="font-weight: 600;">Variants:</span></div>
               <!-- <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button> -->
               <div v-if="$route.query.type == 'edit' && formData.options_tag">
-                <el-button size="mini" type="primary" icon="el-icon-plus" @click="addVariant">Add variant</el-button>
-                <el-button size="mini" @click="editOptions">Edit options</el-button>
+                <el-button size="mini" type="primary" icon="el-icon-plus" @click="addVariant()">Add variant</el-button>
+                <el-button size="mini" @click="editOptions()">Edit options</el-button>
               </div>
             </div>
             <div>
-              <el-checkbox v-if="!formData.options_tag || showVariants || isAddVariants" v-model="variantsCheck" @change="checkVariants">This product has multiple options, like different sizes or colors</el-checkbox>
+              <el-checkbox v-if="!formData.options_tag || isAddVariants" v-model="variantsCheck">This product has multiple options, like different sizes or colors</el-checkbox>
               <el-button v-if="variantsCheck && optionsList.length < 3" class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
             </div>
             <!-- 新增属性 -->
@@ -181,10 +181,10 @@
             <!-- 生成属性 -->
             <div class="mb10">
               <label v-if="variantsCheck && isAddVariants">Preview</label>
-              <el-button v-if="$route.query.type == 'edit' && variantsCheck && showDelBtn" size="mini" type="primary" plain @click="deleteVariants()">Delete variants</el-button>
+              <el-button v-if="$route.query.type == 'edit' && showDelBtn" size="mini" type="primary" plain @click="deleteVariants()">Delete variants</el-button>
             </div>
             <vxe-table
-              v-if="(variantsCheck && isAddVariants) || formData.options_tag"
+              v-if="(variantsCheck && isAddVariants) || (formData.options_tag && tableData.length > 1)"
               ref="xTable"
               border
               show-overflow
@@ -342,6 +342,7 @@ export default {
         { label: 'SKU', value: 'sku' },
         { label: 'Vendor', value: 'service_name' },
         { label: 'Total Cost', value: 'total_cost' },
+        { label: 'Discount Rate', value: 'rate' },
         { label: 'Product Price', value: 'price', width: '120' },
         { label: 'Service Price', value: 'service_price', type: 'tips', width: '160' },
         { label: 'Shipping Price', value: 'shipping_price', width: '120' },
@@ -386,6 +387,17 @@ export default {
         this.variantsTitle = list.map(item => item.option)
       },
       deep: true
+    },
+    variantsCheck: {
+      handler(val) {
+        if (val) { // 如果为true
+          this.tableData = []
+          this.optionsList.push({ showList: false, option: 'Size', tags: [] })
+        } else {
+          this.tableData = []
+          this.optionsList = []
+        }
+      }
     }
   },
   created() {
@@ -519,18 +531,6 @@ export default {
       row.option = val
       row.showList = false
       this.tagsChange()
-    },
-    // 属性清空
-    checkVariants(val) {
-      if (val) {
-        this.optionsList = []
-        this.tableData = []
-        this.optionsList.push({ showList: false, option: 'Size', tags: [] })
-      } else {
-        this.isAddVariants = false
-        this.tableData = []
-        this.optionsList = []
-      }
     },
     editOptions() {
       this.dialogVisible = true
@@ -705,6 +705,8 @@ export default {
               this.optionsList = options
             }
           } else {
+            this.isAddVariants = true
+            this.variantsCheck = false
             this.optionsList = []
           }
           this.showDelBtn = false
