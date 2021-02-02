@@ -184,7 +184,7 @@
               <el-button v-if="$route.query.type == 'edit' && showDelBtn" size="mini" type="primary" plain @click="deleteVariants()">Delete variants</el-button>
             </div>
             <vxe-table
-              v-if="(variantsCheck && isAddVariants) || (formData.options_tag && tableData.length > 1)"
+              v-if="(variantsCheck && isAddVariants) || formData.options_tag"
               ref="xTable"
               border
               show-overflow
