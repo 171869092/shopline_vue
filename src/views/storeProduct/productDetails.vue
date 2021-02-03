@@ -85,7 +85,11 @@
                 <template slot-scope="scope">
                   <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
                   <span v-if="item.type == 'pictures'">
-                    <el-image :src="scope.row.img_url" class="sku_image" />
+                    <el-image :src="scope.row.img_url" class="sku_image">
+                      <div slot="error" class="image-slot">
+                        <i class="el-icon-picture-outline" />
+                      </div>
+                    </el-image>
                   </span>
                   <span v-if="item.type == 'tips'">
                     <span v-if="scope.row.price">{{ scope.row.price }}</span>
