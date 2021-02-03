@@ -18,7 +18,7 @@
 // import { scrollTo } from '@/utils/scroll-to'
 
 export default {
-  name: 'Pagination',
+  name: 'pagination',
   props: {
     total: {
       required: true,
@@ -77,16 +77,16 @@ export default {
     handleSizeChange(val) {
       setTimeout(() => {
         this.$emit('pagination', { page: this.currentPage, limit: val })
-      }, 10);
+      }, 10)
       // if (this.autoScroll) {
       //   scrollTo(0, 800)
       // }
     },
-    handleCurrentChange(val) {    
-          this.$emit('pagination', { page: val, limit: this.pageSize })
-        //   if (this.autoScroll) {
-        //     scrollTo(0, 800)
-        // }
+    handleCurrentChange(val) {
+      this.$emit('pagination', { page: val, limit: this.pageSize })
+      //   if (this.autoScroll) {
+      //     scrollTo(0, 800)
+      // }
     }
   }
 }
