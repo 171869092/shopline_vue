@@ -391,9 +391,13 @@ export default {
     variantsCheck: {
       handler(val) {
         if (val) { // 如果为true
+          if (!this.formData.options_tag) {
+            this.optionsList = []
+          }
           this.tableData = []
           this.optionsList.push({ showList: false, option: 'Size', tags: [] })
         } else {
+          this.isAddVariants = false
           this.tableData = []
           this.optionsList = []
         }
@@ -551,7 +555,7 @@ export default {
       this.optionsList.forEach((item) => {
         sourceObj[item.option] = item.tags
       })
-      console.log(this.optionsList)
+      // console.log(this.optionsList)
       // console.log(this.sourceArr)
       // console.log(this.sourceObj)
       this.preLoading = true
@@ -624,6 +628,37 @@ export default {
         this.$set(this, 'tableData', result4)
       }
     },
+    deleteVariants() {
+      this.$confirm(`Are you sure you want to delete the selected variants?`,
+        `Delete For Variant`, {
+          confirmButtonText: 'Delete',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
+        })
+        .then(() => {
+          const test = _.difference(this.tableData, this.selectedVariants)
+          // console.log('test', test)
+          if (test.length > 0) {
+            const option = this.tableData[0].option
+            if (JSON.stringify(option) !== '{}') {
+              const options = []
+              for (var key of Object.keys(option)) {
+                options.push({ option: key, tags: _.uniq(test.map(item => item.option[key])) })
+              }
+              this.optionsList = options
+            }
+          } else {
+            this.isAddVariants = true
+            this.variantsCheck = false
+            this.formData.options_tag = false
+            this.optionsList = []
+          }
+          this.showDelBtn = false
+          this.$set(this, 'tableData', test)
+        })
+        .catch(() => {})
+      // this.$refs.xTable.loadData(this.tableData)
+    },
     changeTitle(data, result) {
       return new Promise(resolve => {
         if (data.changeList.length > 0) {
@@ -684,36 +719,6 @@ export default {
     selectChangeEvent({ checked, records }) {
       records.length > 0 ? this.showDelBtn = true : this.showDelBtn = false
       this.selectedVariants = records
-    },
-    deleteVariants() {
-      this.$confirm(`Are you sure you want to delete the selected variants?`,
-        `Delete For Variant`, {
-          confirmButtonText: 'Delete',
-          cancelButtonText: 'Cancel',
-          type: 'warning'
-        })
-        .then(() => {
-          const test = _.difference(this.tableData, this.selectedVariants)
-          // console.log('test', test)
-          if (test.length > 0) {
-            const option = this.tableData[0].option
-            if (JSON.stringify(option) !== '{}') {
-              const options = []
-              for (var key of Object.keys(option)) {
-                options.push({ option: key, tags: _.uniq(test.map(item => item.option[key])) })
-              }
-              this.optionsList = options
-            }
-          } else {
-            this.isAddVariants = true
-            this.variantsCheck = false
-            this.optionsList = []
-          }
-          this.showDelBtn = false
-          this.$set(this, 'tableData', test)
-        })
-        .catch(() => {})
-      // this.$refs.xTable.loadData(this.tableData)
     },
     // 删除sku
     delSkuData(row, index) {
