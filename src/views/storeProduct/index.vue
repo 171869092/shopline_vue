@@ -68,7 +68,11 @@
                   <span>{{ scope.row.cost ? scope.row.money_signl : '' }}{{ scope.row.cost }}</span>
                 </span>
                 <span v-if="item.type == 'image'" @click="productAdd('edit',scope.row.title, scope.row.id)">
-                  <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img_url" fit="cover" />
+                  <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img_url" fit="cover">
+                    <div slot="error" class="image-slot">
+                      <i class="el-icon-picture-outline" />
+                    </div>
+                  </el-image>
                 </span>
                 <div v-if="item.type == 'product'" style="color:#ef6f38" class="pointer" @click="productAdd('edit', scope.row.title, scope.row.id)">
                   <span>{{ scope.row.title }}</span>
