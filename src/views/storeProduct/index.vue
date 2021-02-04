@@ -70,7 +70,10 @@
                 <span v-if="item.type == 'image'" @click="productAdd('edit',scope.row.title, scope.row.id)">
                   <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img_url" fit="cover">
                     <div slot="error" class="image-slot">
-                      <i class="el-icon-picture-outline" />
+                      <i
+                        class="el-icon-picture-outline"
+                        style="font-size: 30px;"
+                      />
                     </div>
                   </el-image>
                 </span>

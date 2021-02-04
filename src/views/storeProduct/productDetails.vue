@@ -87,7 +87,7 @@
                   <span v-if="item.type == 'pictures'">
                     <el-image :src="scope.row.img_url" class="sku_image">
                       <div slot="error" class="image-slot">
-                        <i class="el-icon-picture-outline" />
+                        <i class="el-icon-picture-outline" style="font-size: 30px;" />
                       </div>
                     </el-image>
                   </span>
