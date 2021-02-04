@@ -71,7 +71,8 @@ export default {
       default: () => []
     },
     baseImgType: {
-      type: String
+      type: String,
+      default: ''
     },
     maxLength: {
       type: Number,
