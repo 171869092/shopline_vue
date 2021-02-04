@@ -6,7 +6,7 @@
           <div class="product-header mb20 flexbox justify-space-between">
             <div>
               <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack" />
-              <label class="ml20">{{ $route.query.title }}</label>
+              <label class="ml20">{{ formData.title }}</label>
             </div>
             <div>
               <el-button v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" size="small" class="button-border" @click="ProductDelete">Delete product</el-button>

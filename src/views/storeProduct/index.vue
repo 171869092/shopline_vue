@@ -67,7 +67,7 @@
                   </span> -->
                   <span>{{ scope.row.cost ? scope.row.money_signl : '' }}{{ scope.row.cost }}</span>
                 </span>
-                <span v-if="item.type == 'image'" @click="productAdd('edit',scope.row.title, scope.row.id)">
+                <span v-if="item.type == 'image'" @click="productAdd('edit', scope.row.id)">
                   <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img_url" fit="cover">
                     <div slot="error" class="image-slot">
                       <i
@@ -77,7 +77,7 @@
                     </div>
                   </el-image>
                 </span>
-                <div v-if="item.type == 'product'" style="color:#ef6f38" class="pointer" @click="productAdd('edit', scope.row.title, scope.row.id)">
+                <div v-if="item.type == 'product'" style="color:#ef6f38" class="pointer" @click="productAdd('edit', scope.row.id)">
                   <span>{{ scope.row.title }}</span>
                 </div>
               </template>
@@ -179,8 +179,8 @@ export default {
     productChange(val) {
       this.productSelection = val
     },
-    productAdd(type, title, id) {
-      this.$router.push({ name: 'productDetails', query: { type: type, title: title, id: id, stroeType: 'store' }})
+    productAdd(type, id) {
+      this.$router.push({ name: 'productDetails', query: { type: type, id: id, stroeType: 'store' }})
     },
     handleClick() {
       this.listQuery.page = 1

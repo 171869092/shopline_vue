@@ -43,14 +43,14 @@
         <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
           <template slot-scope="scope">
             <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
-            <span v-if="item.type == 'image'" @click="productAdd('edit',scope.row.title,scope.row.id)">
+            <span v-if="item.type == 'image'" @click="productAdd('edit',scope.row.id)">
               <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img_url" fit="cover">
                 <div slot="error" class="image-slot">
                   <i class="el-icon-picture-outline" style="font-size: 30px;" />
                 </div>
               </el-image>
             </span>
-            <div v-if="item.type == 'product'" style="color:#ef6f38" class="pointer" @click="productAdd('edit',scope.row.title,scope.row.id)">
+            <div v-if="item.type == 'product'" style="color:#ef6f38" class="pointer" @click="productAdd('edit',scope.row.id)">
               <span>{{ scope.row.title }}</span>
             </div>
           </template>
@@ -158,8 +158,8 @@ export default {
     productChange(val) {
       this.productSelection = val
     },
-    productAdd(type, title, id) {
-      this.$router.push({ name: 'productDetails', query: { type: type, title: title, id: id, stroeType: 'all' }})
+    productAdd(type, id) {
+      this.$router.push({ name: 'productDetails', query: { type: type, id: id, stroeType: 'all' }})
     },
     assignStore() {
       if (this.productSelection.length === 0) {
