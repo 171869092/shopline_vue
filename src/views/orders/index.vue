@@ -121,7 +121,7 @@
                 <span>{{ scope.row.service_name }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="Created">
+            <el-table-column label="Payment Time">
               <template slot-scope="scope">
                 <span>{{ scope.row.order_update_time_format }}</span>
               </template>
