@@ -294,6 +294,7 @@ export default {
             orderJoinQueue({ orders_id: this.selOrderIds.toString(), type: '2' }).then(res => {
               if (res.code === 200) {
                 this.$message.success(res.message)
+                this.Inquire()
               }
             }).catch(err => {
               console.log(err)
