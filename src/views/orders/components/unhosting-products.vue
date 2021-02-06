@@ -49,7 +49,7 @@
     <span slot="footer" class="dialog-footer">
       <el-button size="small" type="primary" @click="selectProducts()">Hosting</el-button>
       <el-button size="small" @click="handleClosed()">Cancel</el-button>
-      <el-button size="small" type="primary" :loading="submitLoading" :disabled="!isHosting" @click="done()">Done</el-button>
+      <el-button size="small" type="primary" :loading="submitLoading" @click="done()">Done</el-button>
     </span>
     <hosting :visible.sync="hostingVisible" @select="hosting" />
     <el-dialog title="Hosting products" :visible.sync="tipDialogVisible" :append-to-body="true" width="30%" class="dialog-border">
@@ -138,13 +138,14 @@ export default {
       // this.Inquire()
     },
     handleSelectionChange(val) {
+      console.log(val)
       // this.selectedProduct = val.map(i => i.id)
       if (val.length > 0) {
         this.selectedProduct = val
       } else {
+        this.selectedProduct = []
         this.isHosting = false
       }
-      console.log(this.selectedProduct)
     },
     hosting(data) {
       this.selectedProduct.forEach(ele => {
@@ -162,7 +163,38 @@ export default {
       }
     },
     done() {
-      this.tipDialogVisible = true
+      if (this.selectedProduct.length > 0) {
+        let hasHosting = true
+        try {
+          this.selectedProduct.forEach(item => {
+            if (!item.service_name) {
+              hasHosting = false
+              throw new Error('There are unmanaged products in the selection.')
+            }
+          })
+        } catch (error) {
+          this.$message.warning(error.message)
+        }
+        if (hasHosting) {
+          this.tipDialogVisible = true
+        }
+      } else {
+        this.submitLoading = true
+        orderJoinQueue({ orders_id: this.ordersId.toString(), type: '2' }).then(res => {
+          console.log(res.data)
+          if (res.code === 200) {
+            this.$message.success(res.message)
+            this.dialogVisible = false
+            this.$emit('close', true)
+          } else {
+            this.$message.error(res.message)
+          }
+        }).catch(err => {
+          console.log(err)
+        }).finally(() => {
+          this.submitLoading = false
+        })
+      }
     },
     submit() {
       this.tipDialogVisible = false

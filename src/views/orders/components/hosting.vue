@@ -91,7 +91,6 @@ export default {
       })
     },
     changeProvider(val) {
-      console.log(val)
       const item = this.serviceList.find(s => s.id === val)
       this.providerForm.service_name = item.service_name
     },

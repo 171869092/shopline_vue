@@ -25,14 +25,14 @@
               <el-form ref="loginForm" :model="loginForm" :rules="rules" class="mt40" label-position="top">
                 <el-form-item label="Your Email" prop="email">
                   <el-input v-model="loginForm.email">
-                    <!-- <el-button slot="append" class="secondary">identifying code</el-button> -->
+                    <el-button slot="append" class="secondary">identifying code</el-button>
                   </el-input>
                 </el-form-item>
-                <!-- <el-form-item label="Identifying code" prop="code">
-                  <el-input v-model="loginForm.code" auto-complete="new-password" />
-                </el-form-item> -->
+                <el-form-item label="Identifying code" prop="code">
+                  <el-input v-model="loginForm.code" autocomplete="off" />
+                </el-form-item>
                 <el-form-item label="Your Password" prop="password">
-                  <el-input v-model="loginForm.password" auto-complete="new-password" type="password" />
+                  <el-input v-model="loginForm.password" autocomplete="new-password" type="password" />
                 </el-form-item>
                 <el-form-item label="Your Name" prop="name">
                   <el-input v-model="loginForm.name" />
