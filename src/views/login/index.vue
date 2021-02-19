@@ -2,9 +2,9 @@
   <div style="overflow: hidden;">
     <!-- <b-navbar /> -->
     <div class="login-container">
-      <div class="left-panel">
+      <!-- <div class="left-panel">
         <div class="imageLeft" />
-      </div>
+      </div> -->
       <div class="right-panel">
         <div class="login-box flexbox justify-center align-center">
           <div class="login">
