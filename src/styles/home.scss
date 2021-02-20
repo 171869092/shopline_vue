@@ -11,8 +11,11 @@
   }
 }
 .secondary {
-  background: #ffe0d3ff !important;
-  color: #ef6f38ff !important;
+  background: #ef6f38 !important;
+  color: #fff !important;
+  &.is-disabled {
+    background-color: #ddd;
+  }
 }
 
 .b-text {
@@ -52,7 +55,7 @@
 
 .jumbotron {
   background: #fff !important;
-  padding: 8rem 2rem!important;
+  padding: 8rem 2rem !important;
 }
 // }
 

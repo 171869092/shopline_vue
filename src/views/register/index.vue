@@ -25,12 +25,14 @@
               </div>
               <el-form ref="loginForm" :model="loginForm" :rules="rules" class="mt40" label-position="top">
                 <el-form-item label="Your Email" prop="email">
-                  <el-input v-model="loginForm.email">
-                    <el-button slot="append" class="secondary">identifying code</el-button>
-                  </el-input>
+                  <el-input v-model="loginForm.email" type="email" />
                 </el-form-item>
-                <el-form-item label="Identifying code" prop="code">
-                  <el-input v-model="loginForm.code" autocomplete="off" />
+                <el-form-item label="Email Verification Code" prop="code">
+                  <el-input v-model="loginForm.code" autocomplete="off">
+                    <el-button slot="append" class="secondary" :disabled="startCount" @click="sendCode">
+                      Send<span v-show="startCount">({{ timeCount }})</span>
+                    </el-button>
+                  </el-input>
                 </el-form-item>
                 <el-form-item label="Your Password" prop="password">
                   <el-input v-model="loginForm.password" autocomplete="new-password" type="password" />
@@ -86,22 +88,47 @@ export default {
       },
       rules: {
         email: [
-          { required: true, message: 'Can not be empty', trigger: 'blur' },
+          { required: true, message: 'Email can not be empty', trigger: 'blur' },
           { pattern: /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/, message: 'Please input the correct email address', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: 'Can not be empty', trigger: 'blur' }
+          { required: true, message: 'Password can not be empty', trigger: 'blur' }
         ],
         name: [
-          { required: true, message: 'Can not be empty', trigger: 'blur' }
+          { required: true, message: 'Name Can not be empty', trigger: 'blur' }
         ]
       },
-      loading: false
+      loading: false,
+      startCount: false,
+      timeCount: 60
     }
   },
   computed: {},
   created() {},
   methods: {
+    sendCode() {
+      if (this.loginForm.email) {
+        this.startCount = true
+        const count = setInterval(() => {
+          this.timeCount = --this.timeCount
+          if (this.timeCount === 0) {
+            clearInterval(count)
+            this.startCount = false
+            this.timeCount = 60
+          }
+        }, 1000)
+        sendEmail({ email: this.loginForm.email }).then(res => {
+          console.log(res.data)
+          if (res.code === 200) {
+            this.$message.success('success')
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      } else {
+        this.$refs.loginForm.validateField('email')
+      }
+    },
     // 返回登陆
     SignIn() {
       this.$router.push({ name: 'login' })
