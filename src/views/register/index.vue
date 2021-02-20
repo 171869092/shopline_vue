@@ -30,7 +30,7 @@
                 <el-form-item label="Email Verification Code" prop="code">
                   <el-input v-model="loginForm.code" autocomplete="off">
                     <el-button slot="append" class="secondary" :disabled="startCount" @click="sendCode">
-                      Send<span v-show="startCount">({{ timeCount }})</span>
+                      <i class="el-icon-s-promotion" /> Send<span v-show="startCount">({{ timeCount }})</span>
                     </el-button>
                   </el-input>
                 </el-form-item>
@@ -91,12 +91,9 @@ export default {
           { required: true, message: 'Email can not be empty', trigger: 'blur' },
           { pattern: /\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*/, message: 'Please input the correct email address', trigger: 'blur' }
         ],
-        password: [
-          { required: true, message: 'Password can not be empty', trigger: 'blur' }
-        ],
-        name: [
-          { required: true, message: 'Name Can not be empty', trigger: 'blur' }
-        ]
+        code: [{ required: true, message: 'Verification code can not be empty', trigger: 'blur' }],
+        password: [{ required: true, message: 'Password can not be empty', trigger: 'blur' }],
+        name: [{ required: true, message: 'Name Can not be empty', trigger: 'blur' }]
       },
       loading: false,
       startCount: false,
@@ -120,7 +117,9 @@ export default {
         sendEmail({ email: this.loginForm.email }).then(res => {
           console.log(res.data)
           if (res.code === 200) {
-            this.$message.success('success')
+            this.$message.success('Sent successfully')
+          } else {
+            this.$message.error(res.message)
           }
         }).catch(err => {
           console.log(err)
