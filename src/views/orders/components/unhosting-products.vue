@@ -183,9 +183,9 @@ export default {
         orderJoinQueue({ orders_id: this.ordersId.toString(), type: '2' }).then(res => {
           console.log(res.data)
           if (res.code === 200) {
-            this.$message.success(res.message)
             this.dialogVisible = false
-            this.$emit('close', true)
+            this.$message.success(res.message)
+            this.$emit('close', { status: res.code, delay: '3000' })
           } else {
             this.$message.error(res.message)
           }
@@ -202,9 +202,9 @@ export default {
       orderJoinQueue({ goods: this.selectedProduct, orders_id: this.ordersId.toString(), type: '1' }).then(res => {
         console.log(res.data)
         if (res.code === 200) {
-          this.$message.success(res.message)
           this.dialogVisible = false
-          this.$emit('close', true)
+          this.$message.success(res.message)
+          this.$emit('close', { status: res.code, delay: '3000' })
         } else {
           this.$message.error(res.message)
         }

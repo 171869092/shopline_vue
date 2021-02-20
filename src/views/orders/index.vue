@@ -131,7 +131,7 @@
         </el-tab-pane>
       </el-tabs>
     </el-card>
-    <unhosting-products :visible.sync="dialogVisible" :list="unhostingData" :orders-id="selOrderIds" @close="Inquire" />
+    <unhosting-products :visible.sync="dialogVisible" :list="unhostingData" :orders-id="selOrderIds" @close="closeDialog" />
     <el-dialog title="Manual Order placing" :visible.sync="tipDialogVisible" :append-to-body="true" width="30%" class="dialog-border">
       <div>
         Chosen orders will be allocated to the vendors following your product's hosting setting.
@@ -249,6 +249,15 @@ export default {
         this.loading = false
       })
     },
+    closeDialog(res) {
+      console.log(res)
+      if (res.status === 200) {
+        // this.loading = true
+        // setTimeout(() => {
+        this.Inquire()
+        // }, res.delay)
+      }
+    },
     resetPageLimit() {
       this.listQuery.page = 1
       this.listQuery.limit = 10
@@ -294,6 +303,8 @@ export default {
             orderJoinQueue({ orders_id: this.selOrderIds.toString(), type: '2' }).then(res => {
               if (res.code === 200) {
                 this.$message.success(res.message)
+                this.submitLoading = false
+                this.tipDialogVisible = false
                 this.Inquire()
               }
             }).catch(err => {
@@ -302,10 +313,9 @@ export default {
           } else {
             this.unhostingData = res.data
             this.dialogVisible = true
+            this.submitLoading = false
+            this.tipDialogVisible = false
           }
-        }).finally(() => {
-          this.submitLoading = false
-          this.tipDialogVisible = false
         })
     },
     filterOrders: debounce(function() {

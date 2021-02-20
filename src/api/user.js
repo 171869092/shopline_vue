@@ -54,3 +54,11 @@ export function gtoken(data) {
     params: data
   })
 }
+
+export function sendEmail(data) {
+  return request({
+    url: '/site/send-email',
+    method: 'post',
+    data: data
+  })
+}

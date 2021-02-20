@@ -67,6 +67,7 @@
 <script>
 // import BNavbar from '@/views/home/components/navbar'
 // import { getSession } from '@/utils/session'
+import { sendEmail } from '@/api/user'
 import { getCookies } from '@/utils/cookies'
 export default {
   name: 'register',
