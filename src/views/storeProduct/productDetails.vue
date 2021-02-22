@@ -3,16 +3,17 @@
     <el-row :gutter="20">
       <el-col :span="20" :offset="2">
         <el-form ref="formData" :model="formData" :rules="formRule" label-width="140px" label-position="top">
-          <div class="product-header mb20 flexbox justify-space-between">
-            <div>
-              <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack" />
-              <label class="ml20">{{ formData.title }}</label>
-            </div>
-            <div>
+          <!-- <div class="product-header mb20 flexbox justify-space-between"> -->
+          <el-row>
+            <el-col :span="1"> <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack" /></el-col>
+            <el-col :span="19"> <label class="ml20">{{ formData.title }}</label></el-col>
+            <el-col :span="4"><div>
               <el-button v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" size="small" class="button-border" @click="ProductDelete">Delete product</el-button>
               <el-button size="small" type="primary" :loading="SubmitLoading" @click="submit">Save</el-button>
-            </div>
-          </div>
+            </div></el-col>
+          </el-row>
+
+          <!-- </div> -->
           <el-card class="box-card">
             <el-form-item label="Title:" prop="title">
               <el-input v-model="formData.title" placeholder="Title" />
