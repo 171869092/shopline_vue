@@ -18,6 +18,9 @@
             <el-form-item label="Title:" prop="title">
               <el-input v-model="formData.title" placeholder="Title" />
             </el-form-item>
+            <el-form-item v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" label="Source URL:">
+              <el-link :href="`https://aliexpress.com/item/${platform_index_id}.html`" type="primary" target="_blank">{{ `https://aliexpress.com/item/${platform_index_id}.html` }}</el-link>
+            </el-form-item>
             <el-form-item label="Product status:" prop="status">
               <el-select v-model="formData.status" class="w-480">
                 <el-option v-for="(item,idx) in statusOptions" :key="idx" :label="item" :value="String(idx + 1)" />
@@ -375,7 +378,8 @@ export default {
       skuImage: '',
       imgList: [],
       tableData: [],
-      selectedVariants: []
+      selectedVariants: [],
+      platform_index_id: ''
     }
   },
   computed: {
@@ -429,6 +433,7 @@ export default {
         getAllProductEdit({ id: this.$route.query.id }).then(res => {
           if (res.code === 200) {
             this.formData = res.data
+            this.platform_index_id = res.data.platform_index_id
             // this.formData.del_sku = []
             this.tableData = res.data.sku_list
             if (res.data.options) {
