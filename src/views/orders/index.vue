@@ -88,7 +88,8 @@
             fit
             stripe
             :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}"
-            @selection-change="handleSelectionChange"
+            @select="shiftMultiple"
+            @select-all="selectAll"
           >
             <el-table-column type="selection" width="55" />
             <el-table-column label="Order">
@@ -204,13 +205,28 @@ export default {
       storeList: [],
       scopeIndex: '',
       selOrderIds: [],
-      unhostingData: []
+      unhostingData: [],
+      selectRows: [],
+      origin: -1, // 选择起始行索引
+      keepDown: false, // 是否按住shift键
+      pin: false // 这里给一个变量，默认为false，不按住
     }
   },
   computed: {},
   created() {
     this.init()
     this.Inquire()
+  },
+  mounted() {
+    window.addEventListener('keydown', code => { // 这个是获取键盘按住事件
+      // console.log(code) // 这个是你按住键盘打印出键盘信息，在浏览器中自行查看
+      if (code.key === 'Shift' && code.shiftKey) { // 判断是否按住shift键，是就把pin赋值为true
+        this.pin = true
+      }
+    })
+    window.addEventListener('keyup', code => { // 这个是获取键盘松开事件
+      this.pin = false
+    })
   },
   methods: {
     init() {
@@ -222,9 +238,56 @@ export default {
         console.log(err)
       })
     },
-    handleSelectionChange(val) {
-      this.selOrderIds = val.map(i => i.id)
-      console.log(this.selOrderIds)
+    // 这里是select事件开始
+    shiftMultiple(selection, row) {
+      const tableIndex = this.formQuery.order_status_client
+      const data = this.$refs.multipleTable[tableIndex].tableData // 获取所以数据
+      const origin = this.origin // 起点数 从-1开始
+      const endIdx = row.index // 终点数
+      if (this.pin && selection.includes(data[origin])) { // 判断按住
+        console.log('pinselect', selection)
+        const sum = Math.abs(origin - endIdx) + 1// 这里记录终点
+        const min = Math.min(origin, endIdx)// 这里记录起点
+        let i = 0
+        while (i < sum) {
+          const index = min + i
+          const item = data[index]
+          this.$refs.multipleTable[tableIndex].toggleRowSelection(data[index], true) // 通过ref打点调用toggleRowSelection方法，第二个必须为true
+          if (!this.selOrderIds.includes(item.id)) {
+            this.selOrderIds.push(data[index].id)
+          }
+          i++
+        }
+      } else {
+        console.log('unpinselect', selection)
+        if (selection.length > 0) {
+          selection.forEach(item => {
+            if (!this.selOrderIds.includes(item.id)) {
+              this.selOrderIds.push(item.id)
+            } else {
+              this.selOrderIds = this.selOrderIds.filter(id => id === item.id)
+            }
+          })
+        } else {
+          this.selOrderIds = []
+        }
+        this.origin = row.index // 没按住记录起点
+      }
+      console.log('this.selOrderIds:', this.selOrderIds)
+    },
+    selectAll(selection) {
+      if (selection.length > 0) {
+        selection.forEach(item => {
+          if (!this.selOrderIds.includes(item.id)) {
+            this.selOrderIds.push(item.id)
+          } else {
+            this.selOrderIds = this.selOrderIds.filter(id => id === item.id)
+          }
+        })
+      } else {
+        this.selOrderIds = []
+      }
+      console.log('this.selOrderIds:', this.selOrderIds)
     },
     Inquire() {
       // const loading = this.$loading({
@@ -234,12 +297,16 @@ export default {
       //   background: 'rgba(0, 0, 0, 0.7)'
       // })
       this.loading = true
+      this.selOrderIds = []
       this.formQuery.iDisplayLength = this.listQuery.limit
       this.formQuery.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
       getOrderList(this.formQuery).then(res => {
         // console.log(res.data)
         if (res.code === 200) {
-          this.tableData = res.data
+          this.tableData = res.data.map((item, index) => {
+            item.index = index
+            return item
+          })
           this.listQuery.total = +res.total
         }
       }).catch(err => {
