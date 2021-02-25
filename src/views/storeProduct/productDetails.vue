@@ -6,8 +6,8 @@
           <!-- <div class="product-header mb20 flexbox justify-space-between"> -->
           <el-row>
             <el-col :span="1"> <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack" /></el-col>
-            <el-col :span="19"> <label class="ml20">{{ formData.title }}</label></el-col>
-            <el-col :span="4">
+            <el-col :span="18"> <label class="ml20">{{ formData.title }}</label></el-col>
+            <el-col :span="5">
               <div style="float: right;">
                 <el-button v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" size="small" class="button-border" @click="ProductDelete">Delete product</el-button>
                 <el-button size="small" type="primary" :loading="SubmitLoading" @click="submit">Save</el-button>
