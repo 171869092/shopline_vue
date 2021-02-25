@@ -7,10 +7,12 @@
           <el-row>
             <el-col :span="1"> <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack" /></el-col>
             <el-col :span="19"> <label class="ml20">{{ formData.title }}</label></el-col>
-            <el-col :span="4"><div>
-              <el-button v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" size="small" class="button-border" @click="ProductDelete">Delete product</el-button>
-              <el-button size="small" type="primary" :loading="SubmitLoading" @click="submit">Save</el-button>
-            </div></el-col>
+            <el-col :span="4">
+              <div style="float: right;">
+                <el-button v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" size="small" class="button-border" @click="ProductDelete">Delete product</el-button>
+                <el-button size="small" type="primary" :loading="SubmitLoading" @click="submit">Save</el-button>
+              </div>
+            </el-col>
           </el-row>
 
           <!-- </div> -->
@@ -18,8 +20,8 @@
             <el-form-item label="Title:" prop="title">
               <el-input v-model="formData.title" placeholder="Title" />
             </el-form-item>
-            <el-form-item v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" label="Source URL:">
-              <el-link v-if="platform_index_id" :href="`https://aliexpress.com/item/${platform_index_id}.html`" type="primary" target="_blank">{{ `https://aliexpress.com/item/${platform_index_id}.html` }}</el-link>
+            <el-form-item v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" label="Source URL:" style="display: flex;">
+              <el-link v-if="platform_index_id" :href="`https://aliexpress.com/item/${platform_index_id}.html`" type="primary" target="_blank" style="margin-left:20px">{{ `https://aliexpress.com/item/${platform_index_id}.html` }}</el-link>
             </el-form-item>
             <el-form-item label="Product status:" prop="status">
               <el-select v-model="formData.status" class="w-480">
