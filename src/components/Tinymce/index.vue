@@ -17,7 +17,7 @@
 import plugins from './plugins'
 import toolbar from './toolbar'
 import load from './dynamicLoadScript'
-const tinymceCDN = 'https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymce.min.js'
+const tinymceCDN = 'https://cdn.jsdelivr.net/npm/tinymce-all-in-one-lin@4.9.5/tinymce.min.js'
 
 export default {
   name: 'tinymce',
@@ -112,7 +112,7 @@ export default {
     value(val) {
       if (val) {
         this.valueLength = this.escape2Html(val).length
-        if (this.pageType == 'lazada') {
+        if (this.pageType === 'lazada') {
           val = val.replace(/<p>/g, '<li>').replace(/<\/p>/g, '</li>')
           this.$nextTick(() => window.tinymce.get(this.tinymceId).setContent(val || ''))
         }
@@ -162,7 +162,6 @@ export default {
       })
     },
     initTinymce() {
-      const _this = this
       window.tinymce.init({
         selector: `#${this.tinymceId}`,
         // language: this.languageTypeList['zh'],
@@ -194,18 +193,18 @@ export default {
         // forced_root_block : '',
 
         init_instance_callback: editor => {
-          if (_this.value) {
-            editor.setContent(_this.value)
+          if (this.value) {
+            editor.setContent(this.value)
           }
-          _this.hasInit = true
+          this.hasInit = true
           editor.on('NodeChange Change KeyUp SetContent', () => {
             this.hasChange = true
             this.$emit('input', editor.getContent())
           })
         },
-        setup(editor) {
+        setup: editor => {
           editor.on('FullscreenStateChanged', (e) => {
-            _this.fullscreen = e.state
+            this.fullscreen = e.state
           })
         },
         readonly: this.readonly
@@ -261,6 +260,9 @@ export default {
     getContent() {
       window.tinymce.get(this.tinymceId).getContent()
     },
+    execCommand(content) {
+      window.tinymce.get(this.tinymceId).execCommand('mceInsertContent', false, content)
+    },
     // 本地上唇图片  添加到文本域
     imageSuccessCBK(arr) {
       const _this = this
@@ -285,7 +287,7 @@ export default {
   position: relative;
   line-height: normal;
 }
-.tinymce-container>>>.mce-fullscreen {
+.tinymce-container >>> .mce-fullscreen {
   z-index: 10000;
 }
 .tinymce-textarea {
@@ -305,8 +307,8 @@ export default {
 .editor-upload-btn {
   display: inline-block;
 }
-.bottomText{
-  color:#595959;
+.bottomText {
+  color: #595959;
   padding: 0 5px;
   padding-top: 6px;
   font-size: 0.8em;

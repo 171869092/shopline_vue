@@ -27,7 +27,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="Description:" prop="describe">
-              <tinymce ref="tinymces" v-model="formData.describe" :height="300" />
+              <tinymce ref="tinymces" v-model="formData.describe" :height="400" />
             </el-form-item>
           </el-card>
 
@@ -305,6 +305,7 @@
 <script>
 import _ from 'lodash'
 import InputTag from 'vue-input-tag'
+import Tinymce from '@/components/Tinymce'
 import EditOptions from './component/edit-options'
 import { descartes_obj } from '@/utils'
 import { getAllProductEdit, getStoreProductEdit, getAllProductSave, getStoreProductSave, allProductDelete } from '@/api/product'
@@ -312,12 +313,12 @@ export default {
   name: 'product-details',
   components: {
     // ElInputTag: () => import('@/components/ElInputTag'),
-    Tinymce: () => import('@/components/Tinymce'),
     // EditPrint: () => import('./component/editPrint'),
     // PrintPopover: () => import('./component/printPopover'),
     // UploadPrint: () => import('./component/uploadPrint'),
     ShopWindow: () => import('./component/shop-window'),
     SelectPictures: () => import('./component/select-pictures'),
+    Tinymce,
     InputTag,
     EditOptions
   },

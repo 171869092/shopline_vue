@@ -161,6 +161,18 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/settings',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'settings',
+        component: () => import('@/views/settings/index'),
+        meta: { title: 'Settings', icon: 'el-icon-s-tools' }
+      }
+    ]
+  },
   // {
   //   path: '/edit_faq',
   //   component: Layout,
