@@ -19,6 +19,14 @@
 td {
   text-align: center !important;
 }
+.el-table th {
+  &.is-center {
+    text-align: center !important;
+  }
+  &.is-left {
+    text-align: left !important;
+  }
+}
 
 .el-table td {
   &.is-center {

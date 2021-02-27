@@ -111,7 +111,7 @@ export default {
   watch: {
     value(val) {
       if (val) {
-        this.valueLength = this.escape2Html(val).length
+        // this.valueLength = this.escape2Html(val).length
         if (this.pageType === 'lazada') {
           val = val.replace(/<p>/g, '<li>').replace(/<\/p>/g, '</li>')
           this.$nextTick(() => window.tinymce.get(this.tinymceId).setContent(val || ''))
@@ -244,6 +244,12 @@ export default {
         // },
       })
     },
+    getContent() {
+      window.tinymce.get(this.tinymceId).getContent()
+    },
+    setContent(value) {
+      window.tinymce.get(this.tinymceId).setContent(value)
+    },
     destroyTinymce() {
       const tinymce = window.tinymce.get(this.tinymceId)
       if (this.fullscreen) {
@@ -253,12 +259,6 @@ export default {
       if (tinymce) {
         tinymce.destroy()
       }
-    },
-    setContent(value) {
-      window.tinymce.get(this.tinymceId).setContent(value)
-    },
-    getContent() {
-      window.tinymce.get(this.tinymceId).getContent()
     },
     execCommand(content) {
       window.tinymce.get(this.tinymceId).execCommand('mceInsertContent', false, content)
