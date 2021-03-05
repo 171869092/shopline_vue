@@ -169,7 +169,8 @@ export const constantRoutes = [
         path: 'index',
         name: 'settings',
         component: () => import('@/views/settings/index'),
-        meta: { title: 'Settings', icon: 'el-icon-s-tools' }
+        meta: { title: 'Settings', icon: 'el-icon-s-tools' },
+        hidden: true
       }
     ]
   },
