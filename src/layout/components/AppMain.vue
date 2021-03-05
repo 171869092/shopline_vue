@@ -1,5 +1,5 @@
 <template>
-  <section class="app-main">
+  <section id="app_main" class="app-main">
     <transition name="fade-transform" mode="out-in">
       <router-view :key="key" />
     </transition>
@@ -25,7 +25,7 @@ export default {
   width: 100%;
   position: relative;
   overflow: auto;
-  background: #F3F5F9;
+  background: #f3f5f9;
 }
 </style>
 

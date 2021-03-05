@@ -82,6 +82,7 @@
           <el-table
             ref="multipleTable"
             v-loading="loading"
+            v-sticky="{top: 0, parent: '#app_main' }"
             :data="tableData"
             style="width: 100%"
             highlight-current-row
@@ -148,9 +149,11 @@
 import { debounce } from '@/utils'
 import { getOrderList, getLogisticInfo, getOrderGoods, orderJoinQueue } from '@/api/orders'
 import { getStoreList } from '@/api/product'
+import Sticky from '@/directive/fix-table-header'
 import UnhostingProducts from './components/unhosting-products'
 export default {
   name: 'orders',
+  directives: { Sticky },
   components: {
     Pagination: () => import('@/components/Pagination'),
     UnhostingProducts
@@ -240,6 +243,7 @@ export default {
     },
     // 这里是select事件开始
     shiftMultiple(selection, row) {
+      console.log('single', selection)
       const tableIndex = this.formQuery.order_status_client
       const data = this.$refs.multipleTable[tableIndex].tableData // 获取所以数据
       const origin = this.origin // 起点数 从-1开始
@@ -261,33 +265,22 @@ export default {
       } else {
         console.log('unpinselect', selection)
         if (selection.length > 0) {
-          selection.forEach(item => {
-            if (!this.selOrderIds.includes(item.id)) {
-              this.selOrderIds.push(item.id)
-            } else {
-              this.selOrderIds = this.selOrderIds.filter(id => id === item.id)
-            }
-          })
+          this.selOrderIds = selection.map(item => item.id)
         } else {
           this.selOrderIds = []
         }
         this.origin = row.index // 没按住记录起点
       }
-      console.log('this.selOrderIds:', this.selOrderIds)
+      console.log('single selOrderIds:', this.selOrderIds)
     },
     selectAll(selection) {
+      console.log('all', selection)
       if (selection.length > 0) {
-        selection.forEach(item => {
-          if (!this.selOrderIds.includes(item.id)) {
-            this.selOrderIds.push(item.id)
-          } else {
-            this.selOrderIds = this.selOrderIds.filter(id => id === item.id)
-          }
-        })
+        this.selOrderIds = selection.map(item => item.id)
       } else {
         this.selOrderIds = []
       }
-      console.log('this.selOrderIds:', this.selOrderIds)
+      console.log('all selOrderIds:', this.selOrderIds)
     },
     Inquire() {
       // const loading = this.$loading({

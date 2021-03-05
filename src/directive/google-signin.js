@@ -3,7 +3,8 @@
 import Vue from 'vue'
 
 export default Vue.directive('google-signin-button', {
-  bind: function(el, binding, vnode) {
+  // eslint-disable-next-line space-before-function-paren
+  bind: function (el, binding, vnode) {
     CheckComponentMethods()
     const clientId = binding.value
     const googleSignInAPI = document.createElement('script')
@@ -16,7 +17,7 @@ export default Vue.directive('google-signin-button', {
       gapi.load('auth2', () => {
         const auth2 = gapi.auth2.init({
           client_id: clientId,
-          cookiepolicy: 'single_host_origin',
+          cookiepolicy: 'single_host_origin'
           // ux_mode: 'redirect'
         })
         auth2.attachClickHandler(el, {},
