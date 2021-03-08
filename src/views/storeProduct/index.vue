@@ -290,7 +290,7 @@ export default {
     },
     // 初始化weosocket
     initWebSocket() {
-      const wsuri = 'ws://54.146.200.9:9502'
+      const wsuri = 'wss://54.146.200.9:9502'
       this.websock = new WebSocket(wsuri)
       this.websock.onmessage = this.websocketonmessage
       this.websock.onopen = this.websocketonopen
