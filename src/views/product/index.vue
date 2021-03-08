@@ -200,11 +200,11 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.product{
-   margin: 20px 30px!important;
-    .button-border{
-      border: 1px solid #ef6f38;
-      color:  #ef6f38;
-    }
+.product {
+  margin: 20px 30px !important;
+  .button-border {
+    border: 1px solid #ef6f38;
+    color: #ef6f38;
+  }
 }
 </style>
