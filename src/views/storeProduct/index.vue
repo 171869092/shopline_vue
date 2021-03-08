@@ -313,7 +313,7 @@ export default {
     websocketonmessage(e) { // 数据接收
       console.log(e)
       const redata = JSON.parse(e.data)
-      this.percentage = +redata.expr || 0
+      this.percentage = parseInt(redata.expr) || 0
       redata.code === '-1' ? this.typeClose = false : this.typeClose = true
 
       // console.log('连接成功', redata)
