@@ -34,7 +34,7 @@
             </div>
 
           </div>
-          <el-progress :percentage="percentage" :color="customColor" class="mb10" />
+          <el-progress v-if="typeClose !== 'close'" :percentage="percentage" :color="customColor" class="mb10" />
           <el-table
             ref="multipleTable"
             v-loading="loading"
@@ -143,7 +143,8 @@ export default {
       costValue: '',
       tabClickIndex: '',
       tabClickLabel: '',
-      websock: null
+      websock: null,
+      typeClose: ''
     }
   },
   created() {
@@ -317,6 +318,7 @@ export default {
     },
     websocketclose(e) { // 关闭
       console.log('断开连接', e)
+      this.typeClose = e.type
     }
   }
 }
