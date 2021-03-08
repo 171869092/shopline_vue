@@ -34,7 +34,11 @@
             </div>
 
           </div>
-          <el-progress :percentage="percentage" :color="customColor" class="mb10" />
+          <el-row v-if="typeClose" class="row-bg mb10">
+            <el-col :span="2"><span>Data syncing:</span></el-col>
+            <el-col :span="22"><el-progress :percentage="percentage" :color="customColor" /></el-col>
+          </el-row>
+          <div />
           <el-table
             ref="multipleTable"
             v-loading="loading"
@@ -144,7 +148,7 @@ export default {
       tabClickIndex: '',
       tabClickLabel: '',
       websock: null,
-      typeClose: ''
+      typeClose: false
     }
   },
   created() {
@@ -310,6 +314,8 @@ export default {
       console.log(e)
       const redata = JSON.parse(e.data)
       this.percentage = +redata.expr || 0
+      redata.code === '-1' ? this.typeClose = false : this.typeClose = true
+
       // console.log('连接成功', redata)
     },
     websocketsend(Data) { // 数据发送
@@ -318,7 +324,6 @@ export default {
     },
     websocketclose(e) { // 关闭
       console.log('断开连接', e)
-      // this.typeClose = e.type
     }
   }
 }
