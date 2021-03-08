@@ -314,18 +314,13 @@ export default {
       console.log(e)
       const redata = JSON.parse(e.data)
       this.percentage = parseInt(redata.expr) || 0
-
-      if (redata.code === '-1') {
-        this.typeClose = false
-      } else {
-        if (redata.code === undefined) {
-          this.typeClose = false
-        } else {
-          this.typeClose = true
-        }
-      }
-      // if (redata.code) {
-      // redata.code === '-1' ? this.typeClose = false : this.typeClose = true
+      // if (this.percentage || redata.code) {
+      //   this.typeClose = true
+      // } else {
+      //   this.typeClose = false
+      // }
+      // if () {
+      redata.code === '-1' ? this.typeClose = false : this.typeClose = true
       // }
 
       // console.log('连接成功', redata)
