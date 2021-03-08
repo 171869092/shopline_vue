@@ -156,7 +156,7 @@ export const constantRoutes = [
       {
         path: 'index',
         name: 'store',
-        component: () => import('@/views/shop/index'),
+        component: () => import('@/views/store/index'),
         meta: { title: 'Store', icon: 'el-icon-s-shop' }
       }
     ]
@@ -171,6 +171,18 @@ export const constantRoutes = [
         component: () => import('@/views/settings/index'),
         meta: { title: 'Settings', icon: 'el-icon-s-tools' },
         hidden: true
+      }
+    ]
+  },
+  {
+    path: '/vendors',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'vendors',
+        component: () => import('@/views/vendors/index'),
+        meta: { title: 'Vendors', icon: 'el-icon-reading' }
       }
     ]
   },
