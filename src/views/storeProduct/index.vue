@@ -314,7 +314,9 @@ export default {
       console.log(e)
       const redata = JSON.parse(e.data)
       this.percentage = parseInt(redata.expr) || 0
-      redata.code === '-1' ? this.typeClose = false : this.typeClose = true
+      if (redata.code) {
+        redata.code === '-1' ? this.typeClose = false : this.typeClose = true
+      }
 
       // console.log('连接成功', redata)
     },
