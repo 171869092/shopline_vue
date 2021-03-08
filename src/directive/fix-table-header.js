@@ -45,7 +45,7 @@ function fixHead(parent, el, top) {
   if (parent.tagName) {
     // 如果是DOM内局部滚动
     // 当前元素距离滚动父容器的高度= 当前元素距离父元素的高度-父容器的滚动距离-表头的高度
-    myTop = el.offsetTop - parent.scrollTop - dom.offsetHeight + 205
+    myTop = el.offsetTop - parent.scrollTop - dom.offsetHeight + 160
     // 父元素高度
     const height = getComputedStyle(parent).height
     parentHeight = Number(height.slice(0, height.length - 2))
