@@ -32,7 +32,9 @@
                 />
               </el-select>
             </div>
+
           </div>
+          <el-progress v-if="typeClose !== 'close'" :percentage="percentage" :color="customColor" class="mb10" />
           <el-table
             ref="multipleTable"
             v-loading="loading"
@@ -107,6 +109,8 @@ export default {
   data() {
     return {
       // 列表表头
+      percentage: 0,
+      customColor: 'rgb(239, 111, 56)',
       labelList: [
         { label: '', value: '', type: 'image', width: '150' },
         { label: 'Product', value: 'id', type: 'product', width: '500' },
@@ -138,7 +142,9 @@ export default {
       },
       costValue: '',
       tabClickIndex: '',
-      tabClickLabel: ''
+      tabClickLabel: '',
+      websock: null,
+      typeClose: ''
     }
   },
   created() {
@@ -154,6 +160,7 @@ export default {
             this.tabList = res.data
             this.formInline.store_url = res.data[0].store_url
             this.Inquire()
+            this.initWebSocket()
           }
           this.tabloading = false
         }
@@ -188,6 +195,7 @@ export default {
       this.formInline.title = ''
       this.formInline.status = ''
       this.Inquire()
+      this.initWebSocket()
     },
     filterOrders: debounce(function() {
       this.listQuery.page = 1
@@ -280,6 +288,37 @@ export default {
       }).catch(err => {
         console.log(err)
       })
+    },
+    // 初始化weosocket
+    initWebSocket() {
+      const wsuri = 'wss://socket.fbali.co/wss/'
+      this.websock = new WebSocket(wsuri)
+      this.websock.onmessage = this.websocketonmessage
+      this.websock.onopen = this.websocketonopen
+      this.websock.onerror = this.websocketonerror
+      this.websock.onclose = this.websocketclose
+    },
+    websocketonopen() { // 连接建立之后执行send方法发送数据
+      const actions = { store_url: this.formInline.store_url }
+      this.websocketsend(JSON.stringify(actions))
+      console.log('连接建立之后执行')
+    },
+    websocketonerror() { // 连接建立失败重连
+      this.initWebSocket()
+    },
+    websocketonmessage(e) { // 数据接收
+      console.log(e)
+      const redata = JSON.parse(e.data)
+      this.percentage = +redata.expr || 0
+      // console.log('连接成功', redata)
+    },
+    websocketsend(Data) { // 数据发送
+      this.websock.send(Data)
+      console.log(Data)
+    },
+    websocketclose(e) { // 关闭
+      console.log('断开连接', e)
+      this.typeClose = e.type
     }
   }
 }
