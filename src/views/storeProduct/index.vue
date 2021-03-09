@@ -34,7 +34,7 @@
             </div>
 
           </div>
-          <el-row v-if="typeClose" class="row-bg mb10">
+          <el-row v-if="typeClose && formInline.store_url === store_url" class="row-bg mb10">
             <el-col :span="2"><span>Data syncing:</span></el-col>
             <el-col :span="22"><el-progress :percentage="percentage" :color="customColor" /></el-col>
           </el-row>
@@ -148,7 +148,8 @@ export default {
       tabClickIndex: '',
       tabClickLabel: '',
       websock: null,
-      typeClose: false
+      typeClose: false,
+      store_url: ''
     }
   },
   created() {
@@ -314,15 +315,8 @@ export default {
       console.log(e)
       const redata = JSON.parse(e.data)
       this.percentage = parseInt(redata.expr) || 0
-      if (this.percentage === 0) {
-        this.typeClose = false
-      }
-      // this.tabList.map((item, idx) => {
+      this.store_url = redata.store_url
       redata.code === '-1' ? this.typeClose = false : this.typeClose = true
-      // this.typeClose[idx] = redata.code
-      // })
-
-      // console.log('连接成功', redata)
     },
     websocketsend(Data) { // 数据发送
       this.websock.send(Data)
