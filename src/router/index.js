@@ -174,18 +174,19 @@ export const constantRoutes = [
       }
     ]
   },
-  // {
-  //   path: '/vendors',
-  //   component: Layout,
-  //   children: [
-  //     {
-  //       path: 'index',
-  //       name: 'vendors',
-  //       component: () => import('@/views/vendors/index'),
-  //       meta: { title: 'Vendors', icon: 'el-icon-reading' }
-  //     }
-  //   ]
-  // },
+  {
+    path: '/vendors',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'vendors',
+        component: () => import('@/views/vendors/index'),
+        meta: { title: 'Vendors', icon: 'el-icon-reading' },
+        hidden: true
+      }
+    ]
+  },
   // {
   //   path: '/edit_faq',
   //   component: Layout,
