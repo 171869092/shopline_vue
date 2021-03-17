@@ -32,3 +32,11 @@ export function templateEditUse(data) {
     params: data
   })
 }
+// 店铺通知开启
+export function notifationstore(data) {
+  return request({
+    url: '/base/index/notifation',
+    method: 'post',
+    data
+  })
+}
