@@ -40,3 +40,12 @@ export function notifationstore(data) {
     data
   })
 }
+// 类型
+export function template_uses_list(data) {
+  return request({
+    url: '/template_uses_list',
+    method: 'post',
+    data
+  })
+}
+

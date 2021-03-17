@@ -37,13 +37,13 @@
     </el-row>
     <el-dialog title="New Template" top="10vh" :visible.sync="dialogVisible" @open="handleDialogOpen">
       <el-form ref="templateForm" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="Name:" prop="template_name">
-          <el-input v-model="form.template_name" autocomplete="off" placeholder="Template Name" />
+        <el-form-item label="Title:" prop="template_name">
+          <el-input v-model="form.template_name" autocomplete="off" placeholder="Template Title" />
         </el-form-item>
         <el-form-item label="Description:" prop="description">
           <el-input v-model="form.description" autocomplete="off" placeholder="Template Description" />
         </el-form-item>
-        <el-form-item label="Bind Store:" prop="store_url">
+        <el-form-item label="Store:" prop="store_url">
           <el-select v-model="form.store_url" multiple placeholder="Select Store" style="width:100%">
             <el-option
               v-for="item in storeList"
@@ -53,6 +53,22 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item label="Type:" prop="type">
+          <el-select v-model="form.template_uses" style="width:100%">
+            <el-option
+              v-for="(item,key) in templateTypeList"
+              :key="key"
+              :label="item"
+              :value="key"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Name:" prop="sender_name">
+          <el-input v-model="form.sender_name" autocomplete="off" placeholder="Sender Name" />
+        </el-form-item>
+        <!-- <el-form-item label="Email:" prop="template_name">
+          <el-input v-model="form.template_name" autocomplete="off" placeholder="Sender Email" />
+        </el-form-item> -->
         <el-form-item label="Content:" prop="template_content">
           <tinymce ref="tinymces" v-model="form.template_content" menubar :height="300" />
         </el-form-item>
@@ -65,6 +81,8 @@
               <el-dropdown-item command="a">Order Number</el-dropdown-item>
               <el-dropdown-item command="b">Tracking Number</el-dropdown-item>
               <el-dropdown-item command="c">Order Info</el-dropdown-item>
+              <el-dropdown-item command="d">Consignee</el-dropdown-item>
+
             </el-dropdown-menu>
           </el-dropdown>
           <span class="link ml10" @click="dialogTableVisible = true">Variable specification</span>
@@ -86,7 +104,7 @@
   </div>
 </template>
 <script>
-import { templateList, templateAdd, templateEdit, templateEditUse } from '@/api/notifications'
+import { templateList, templateAdd, templateEdit, templateEditUse, template_uses_list } from '@/api/notifications'
 import { getStoreList } from '@/api/product'
 export default {
   name: 'templates',
@@ -124,7 +142,9 @@ export default {
       rules: {
         template_name: [{ required: true, message: 'Can not be empty!', trigger: 'blur' }],
         store_url: [{ required: true, message: 'Please choose the store!', trigger: 'blur' }],
-        template_content: [{ required: true, message: 'Can not be empty!', trigger: 'blur' }]
+        template_content: [{ required: true, message: 'Can not be empty!', trigger: 'blur' }],
+        type: [{ required: true, message: 'Please choose the type!', trigger: 'blur' }],
+        sender_name: [{ required: true, message: 'Can not be empty!', trigger: 'blur' }]
       },
       gridData: [
         { type: 'Variable format', description: '${name}, ${content}, etc. The middle letter should represent the variable attribute.' },
@@ -132,6 +152,7 @@ export default {
         { type: 'Other specifications', description: 'The notification template can add links, but it does not support setting variable links, such as www.${site}.cn, nor does it support the direct combination of short links and variables. For example: t.cn${code}, t.cn is a short link, and ${code} is a variable. For example, the format of www.****.com/${order_id} is allowed, but you are reminded that for the specific URL, the reviewer will review it, and it can be used only after the review is passed.' }
       ],
       storeList: [],
+      templateTypeList: {},
       editFlag: false
     }
   },
@@ -148,6 +169,11 @@ export default {
         }
       }).catch(err => {
         console.log(err)
+      })
+      template_uses_list().then(res => {
+        if (res.code === 200) {
+          this.templateTypeList = res.data
+        }
       })
     },
     initData() {
@@ -237,6 +263,9 @@ export default {
           break
         case 'c':
           this.$refs.tinymces.execCommand('${order_info}')
+          break
+        case 'd':
+          this.$refs.tinymces.execCommand('${consignee}')
           break
         default:
           break
