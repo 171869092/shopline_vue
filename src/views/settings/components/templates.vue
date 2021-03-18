@@ -81,8 +81,7 @@
               <el-dropdown-item command="a">Order Number</el-dropdown-item>
               <el-dropdown-item command="b">Tracking Number</el-dropdown-item>
               <el-dropdown-item command="c">Order Info</el-dropdown-item>
-              <el-dropdown-item command="d">Consignee</el-dropdown-item>
-
+              <el-dropdown-item command="d">Shipping Name</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
           <span class="link ml10" @click="dialogTableVisible = true">Variable specification</span>
@@ -265,7 +264,7 @@ export default {
           this.$refs.tinymces.execCommand('${order_info}')
           break
         case 'd':
-          this.$refs.tinymces.execCommand('${consignee}')
+          this.$refs.tinymces.execCommand('${shipping_name}')
           break
         default:
           break
