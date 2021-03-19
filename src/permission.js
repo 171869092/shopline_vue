@@ -3,9 +3,8 @@ import store from './store'
 // import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
-import { getToken } from '@/utils/auth' // get token from cookie
+import { getToken, setToken } from '@/utils/auth' // get token from cookie
 // import { staticMap } from '@/router'
-// import { setToken } from '@/utils/auth'
 import { shopifyApi } from '@/api/user'
 import { setSession, getSession } from '@/utils/session'
 NProgress.configure({ showSpinner: false }) // NProgress Configuration
@@ -33,7 +32,7 @@ router.beforeEach(async (to, from, next) => {
         store.commit('user/SET_EMAIL', res.data.email)
         // getToken(res.data.token)
         setSession('uid', res.data.uid)
-        setSession('token', res.data.token)
+        setToken(res.data.token)
         setSession('email', res.data.email)
         console.log('jump next')
         next()
@@ -61,7 +60,7 @@ router.beforeEach(async (to, from, next) => {
           store.commit('user/SET_EMAIL', res.data.email)
           // getToken(res.data.token)
           setSession('uid', res.data.uid)
-          setSession('token', res.data.token)
+          setToken(res.data.token)
           setSession('email', res.data.email)
           // next({ ...to, replace: true })
           next()
