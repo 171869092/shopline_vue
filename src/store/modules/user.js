@@ -1,15 +1,14 @@
 import { login, register, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
-import { setCookies, removeAllCookies } from '@/utils/cookies'
-// getCookies,
-import { getSession, setSession } from '@/utils/session'
+import { getCookies, setCookies, removeAllCookies } from '@/utils/cookies'
+
 const getDefaultState = () => {
   return {
     token: getToken(),
-    uid: getSession('uid'),
+    uid: getCookies('uid'),
     name: '',
-    email: getSession('email'),
+    email: getCookies('email'),
     avatar: ''
   }
 }
@@ -49,12 +48,9 @@ const actions = {
         commit('SET_EMAIL', data.email)
         commit('SET_UID', data.u)
         setToken(data.token)
-        setSession('uid', data.u)
-        setSession('email', data.email)
-        setSession('name', data.username)
-        setCookies('token', data.token)
         setCookies('uid', data.u)
         setCookies('email', data.email)
+        setCookies('name', data.username)
         resolve()
       }).catch(error => {
         reject(error)
@@ -140,4 +136,3 @@ export default {
   mutations,
   actions
 }
-
