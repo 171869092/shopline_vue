@@ -4,6 +4,7 @@ import store from './store'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import { getToken, setToken } from '@/utils/auth' // get token from cookie
+import { setCookies } from '@/utils/cookies'
 // import { staticMap } from '@/router'
 import { shopifyApi } from '@/api/user'
 import { setSession, getSession } from '@/utils/session'
@@ -34,6 +35,9 @@ router.beforeEach(async (to, from, next) => {
         setSession('uid', res.data.uid)
         setToken(res.data.token)
         setSession('email', res.data.email)
+        setCookies('token', res.data.token)
+        setCookies('uid', res.data.uid)
+        setCookies('email', res.data.email)
         console.log('jump next')
         next()
       } else {
@@ -62,6 +66,9 @@ router.beforeEach(async (to, from, next) => {
           setSession('uid', res.data.uid)
           setToken(res.data.token)
           setSession('email', res.data.email)
+          setCookies(res.data.token)
+          setCookies('uid', res.data.uid)
+          setCookies('email', res.data.email)
           // next({ ...to, replace: true })
           next()
         } else {

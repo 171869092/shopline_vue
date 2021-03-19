@@ -52,6 +52,9 @@ const actions = {
         setSession('uid', data.u)
         setSession('email', data.email)
         setSession('name', data.username)
+        setCookies('token', data.token)
+        setCookies('uid', data.u)
+        setCookies('email', data.email)
         resolve()
       }).catch(error => {
         reject(error)
