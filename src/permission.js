@@ -63,7 +63,8 @@ router.beforeEach(async (to, from, next) => {
           setSession('uid', res.data.uid)
           setSession('token', res.data.token)
           setSession('email', res.data.email)
-          next({ ...to, replace: true })
+          // next({ ...to, replace: true })
+          next()
         } else {
           next('/login')
         }
