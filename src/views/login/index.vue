@@ -56,7 +56,7 @@
   </div>
 </template>
 <script>
-import { getCookie } from '@/utils/cookie'
+import { getCookies } from '@/utils/cookies'
 export default {
   name: 'login',
   components: {
@@ -89,7 +89,7 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          const shop = getCookie('shop') || ''
+          const shop = getCookies('shop') || ''
           this.$store.dispatch('user/login', { LoginForm: this.loginForm, id: 1, shop: shop }).then(() => {
             this.$router.push({ name: 'dashboard' })
             this.loading = false
