@@ -21,7 +21,7 @@
             </el-option>
           </el-select>
         </div>
-        <div v-for="(info,key) in detailInfo" :key="key" class="order-cell" :id="gernerateId(key)">
+        <div v-for="(info,key) in detailInfo" :key="key" class="order-cell" :id="'product'+key">
           <el-card class="box-card mt20">
             <div slot="header">
               <div class="detail-block-title">
@@ -193,7 +193,6 @@ export default {
     }
   },
   created() {
-    document.getElementsByTagName("body")[0].className="bd";
     this.init()
   },
   methods: {
@@ -220,27 +219,17 @@ export default {
           this.loading = false
         })
     },
-    gernerateId(index) {
-      return 'product'+index
-    },
     handleChange(index) {
       let id = 'product'+index;
-      document.getElementById(id).scrollIntoView();
-      // this.$nextTick(() => {
-      //   setTimeout(() => {
-      //       let targetbox= document.getElementById(id);
-      //       this.target= targetbox.offsetTop;
-      //   })
-      // })
-      // document.body.scrollTop = this.target;
+      this.$nextTick(() => {
+        document.getElementById(id).scrollIntoView({behavior: "smooth"})
+      })
+
     },
   }
 }
 </script>
 <style lang="scss">
-.bd {
-  overflow: auto;
-}
 .order-id {
   line-height: 36px;
   margin-right: 20px;
