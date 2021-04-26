@@ -163,7 +163,7 @@ export const constantRoutes = [
         path: 'after-detail',
         name: 'after-detail',
         component: () => import('@/views/after-sale/components/after-detail'),
-        meta: {title: 'AfterSale Detail', icon: 'el-icon-tickets'},
+        meta: { title: 'AfterSale Detail', icon: 'el-icon-tickets'},
         hidden: true
       }
     ]
@@ -177,6 +177,32 @@ export const constantRoutes = [
         name: 'store',
         component: () => import('@/views/store/index'),
         meta: { title: 'Store', icon: 'el-icon-s-shop' }
+      }
+    ]
+  },
+  {
+    path: '/bill',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'bill',
+        component: () => import('@/views/bill/index'),
+        meta: { title: 'Bill', icon: 'el-icon-notebook-2' }
+      },
+      {
+        path: 'detail',
+        name: 'bill-detail',
+        component: () => import('@/views/bill/detail'),
+        meta: { title: 'Bill Detail', icon: 'el-icon-notebook-2' },
+        hidden: true
+      },
+      {
+        path: 'preview',
+        name: 'bill-preview',
+        component: () => import('@/views/bill/preview'),
+        meta: { title: 'Bill Preview', icon: 'el-icon-notebook-2' },
+        hidden: true
       }
     ]
   },
