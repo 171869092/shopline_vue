@@ -17,11 +17,11 @@ export function getOrderBillDetail(params) {
   })
 }
 // 完成账单订单列表
-export function getOrderBillFinish(params) {
+export function getOrderBillFinish(data) {
   return request({
     url: '/order/bill/finish',
-    method: 'get',
-    params
+    method: 'post',
+    data: data
   })
 }
 // 获取账单订单列表
