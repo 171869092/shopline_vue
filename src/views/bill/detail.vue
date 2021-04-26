@@ -7,7 +7,7 @@
           <span class="mr30">{{ '【'+ billDetailForm.bill_name + '】' }}</span>
           <span class="mr30">{{ billDetailForm.bill_no }}</span>
         </div>
-        <el-button type="primary" size="small" @click="Settlement">Settlement</el-button>
+        <el-button type="primary" size="small" @click="settlement">Settlement</el-button>
       </div>
     </div>
     <el-card class="m20 mt0">
@@ -71,7 +71,7 @@
             <el-table-column prop="ltem" label="ltem" min-width="320" />
             <el-table-column prop="price" label="Price" width="260" />
             <el-table-column prop="quantity" label="Quantity" width="260" />
-            <el-table-column prop="totalPrice" label="Total price" width="260" />
+            <el-table-column prop="total_price" label="Total price" width="260" />
           </el-table>
           <el-button type="primary" size="small" icon="el-icon-view" class="mt20" @click="iViews">Details</el-button>
         </div>
@@ -151,12 +151,17 @@ export default {
   },
   methods: {
     // 完成账单
-    Settlement() {
-      getOrderBillFinish(this.billDetailForm.bill_id).then(res => {
+    settlement() {
+      const ids = []
+      ids.push(this.bill_id)
+      getOrderBillFinish({ id: ids }).then(res => {
         if (res.code === 200) {
+          this.$message.success('The bill is settled successfully!')
           this.$router.push({
             name: 'bill'
           })
+        } else {
+          this.$message.error('Order settlement failed!')
         }
       })
     },

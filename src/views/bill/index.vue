@@ -32,7 +32,12 @@
             </div>
           </div>
         </div>
-
+        <el-button type="primary" size="small" @click="settlement" class="mr10">Settlement</el-button>
+        <export-import :set-export-data="setExportData">
+          <template slot="export">
+            <el-button type="primary" size="small">Export</el-button>
+          </template>
+        </export-import>
         <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.label" :name="tab.name">
           <el-table
             ref="multipleTable"
@@ -93,14 +98,16 @@
 
 <script>
 import { debounce } from '@/utils'
-import { getOrderBillList } from '@/api/bill'
+import { getOrderBillFinish, getOrderBillList } from '@/api/bill'
 import Sticky from '@/directive/fix-table-header'
+import exportImport from '@/components/exportImport/index'
 
 export default {
   name: 'index',
   directives: { Sticky },
   components: {
-    Pagination: () => import('@/components/Pagination')
+    Pagination: () => import('@/components/Pagination'),
+    exportImport
   },
   created() {
     this.Inquire()
@@ -204,6 +211,28 @@ export default {
     },
     handleView(row) {
       this.$router.push({ name: 'bill-detail', params: { bill_id: row.id }})
+    },
+    // 完成账单
+    settlement() {
+      if (this.selOrderIds.length > 0) {
+        getOrderBillFinish({ id: this.selOrderIds }).then(res => {
+          if (res.code === 200) {
+            this.$message.success('The bill is settled successfully!')
+            this.Inquire()
+          } else {
+            this.$message.error('Order settlement failed!')
+          }
+        })
+      } else {
+        this.$message.warning('Please check the order that will be settled first!')
+      }
+    },
+    // 导出
+    setExportData() {
+      return {
+        // excelTitle: {},
+        excelData: this.tableData
+      }
     }
   }
 }
