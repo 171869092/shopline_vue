@@ -14,9 +14,9 @@
         </export-import>
       </div>
     </div>
-    <el-card class="box-card">
+    <el-card class="box-card m20 mt0">
       <el-form :model="previewForm" label-width="120px" inline>
-        <el-input type="text" v-model="previewForm.search" placeholder="please enter" class="w-300 mb20" size="small" @change="filterBill"></el-input>
+        <el-input type="text" v-model="previewForm.search" placeholder="please enter" class="w-300 mb20" size="small" clearable @change="filterBill"></el-input>
       </el-form>
       <el-table
         ref="multipleTable"
