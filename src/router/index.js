@@ -150,6 +150,25 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/after',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'after',
+        component: () => import('@/views/after-sale/index'),
+        meta: { title: 'After Sale', icon: 'el-icon-tickets' }
+      },
+      {
+        path: 'after-detail',
+        name: 'after-detail',
+        component: () => import('@/views/after-sale/components/after-detail'),
+        meta: {title: 'AfterSale Detail', icon: 'el-icon-tickets'},
+        hidden: true
+      }
+    ]
+  },
+  {
     path: '/store',
     component: Layout,
     children: [

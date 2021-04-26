@@ -13,6 +13,10 @@
           <span slot="label"><i class="el-icon-message-solid" /> Notification</span>
           <notifications />
         </el-tab-pane>
+        <el-tab-pane name="Password">
+          <span slot="label"><i class="el-icon-message-solid" />Channge Password</span>
+          <password />
+        </el-tab-pane>
       </el-tabs>
     </el-card>
   </div>
@@ -20,11 +24,13 @@
 <script>
 import templates from './components/templates'
 import notifications from './components/notifications'
+import password from './components/password'
 export default {
   name: 'settings',
   components: {
     templates,
-    notifications
+    notifications,
+    password
   },
   props: {},
   data() {
