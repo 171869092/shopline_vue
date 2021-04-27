@@ -210,7 +210,7 @@ export default {
       }
     },
     handleView(row) {
-      this.$router.push({ name: 'bill-detail', params: { bill_id: row.id }})
+      this.$router.push({ name: 'bill-detail', query: { bill_id: row.id }})
     },
     // 完成账单
     settlement() {

@@ -56,12 +56,12 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="Bill To" prop="bill_to">
-                <el-input v-model="billDetailForm.bill_to" type="textarea" size="small" :rows="6" class="w-730" readonly resize="none" />
+                <el-input v-model="billDetailForm.bill_to" type="textarea" size="small" :rows="6" class="mv-calc" readonly resize="none" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="Ship To" prop="ship_to">
-                <el-input v-model="billDetailForm.ship_to" type="textarea" size="small" :rows="6" class="w-730" readonly resize="none" />
+                <el-input v-model="billDetailForm.ship_to" type="textarea" size="small" :rows="6" class="mv-calc" readonly resize="none" />
               </el-form-item>
             </el-col>
           </el-row>
@@ -145,8 +145,8 @@ export default {
     }
   },
   created() {
-    this.billDetailForm.bill_id = this.$route.params.bill_id
-    this.bill_id = this.$route.params.bill_id
+    this.billDetailForm.bill_id = this.$route.query.bill_id
+    this.bill_id = this.$route.query.bill_id
     this.handleInit()
   },
   methods: {
@@ -173,7 +173,7 @@ export default {
       }
       this.$router.push({
         name: 'bill-preview',
-        params: { bill_id: this.bill_id, billSomeThing: billDetail }
+        query: { bill_id: this.bill_id, billSomeThing: billDetail }
       })
     },
     // 初始化
@@ -208,6 +208,9 @@ export default {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 30px 30px 15px;
+    .mv-calc {
+      width: calc(100vw - 70vw)!important;
+    }
     .form-data-box {
       display: flex;
       .upload-logo {

@@ -32,6 +32,7 @@
         <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
           <template slot-scope="scope">
             <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
+            <span v-if="item.type =='goodsSku'" v-html="handleWarp(scope.row[item.value])"></span>
             <span v-if="item.type == 'status'">
               <span>{{ getValueOfLabel(scope.row.settlement_status,previewFormStatusList) }}</span>
             </span>
@@ -89,7 +90,7 @@ export default {
       labelList: [
         { label: 'Order', value: 'order_name', width: '260' },
         { label: 'Store', value: 'store_url' },
-        { label: 'Order goods and quantity', value: 'goods_sku', width: '220' },
+        { label: 'Order goods and quantity', type: 'goodsSku', value: 'goods_sku', width: '220' },
         { label: 'Product price', value: 'total_amount', width: '220' },
         { label: 'Logistics cost', value: 'logistics_cost', width: '220' },
         { label: 'Service fee', value: 'service_fee', width: '220' },
@@ -105,8 +106,8 @@ export default {
     }
   },
   created() {
-    this.previewForm.bill_id = this.$route.params.bill_id
-    this.billDetail = this.$route.params.billSomeThing
+    this.previewForm.bill_id = this.$route.query.bill_id
+    this.billDetail = this.$route.query.billSomeThing
     this.Inquire()
   },
   methods: {
@@ -157,7 +158,11 @@ export default {
     filterBill: debounce(function() {
 
       this.search()
-    }, 500)
+    }, 500),
+    handleWarp(content) {
+      content = content.replace(/,/g, '</br>')
+      return content
+    }
   }
 }
 </script>
