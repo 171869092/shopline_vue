@@ -1,31 +1,90 @@
 <template>
   <div class="dashboard-editor-container">
-    <div v-if="isdev">
-      <panel-group @handleSetLineChartData="handleSetLineChartData" />
-
-      <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-        <line-chart :chart-data="lineChartData" />
-      </el-row>
-
-      <el-row :gutter="32">
-        <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper">
-            <raddar-chart />
+    <div class="my-order-box">
+      <div class="order">
+        <el-card class="box-card">
+          <div class="top-box">
+            <h4><span class="radius"></span>Order</h4>
+            <div class="main">
+              <p class="text">16,6556,254</p>
+              <div class="image-box">
+                <img src="@/assets/home/order-circle.png" class="image">
+                <div class="img-text">
+                  <p>1000</p>
+                  <p>Newly Added</p>
+                </div>
+              </div>
+              <div class="main-footer">
+                <div class="left">
+                  <p>Complete</p>
+                  <p>2300</p>
+                </div>
+                <div class="line"></div>
+                <div class="right">
+                  <p>Unfinished</p>
+                  <p>2300</p>
+                </div>
+              </div>
+            </div>
           </div>
-        </el-col>
-        <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper">
-            <pie-chart />
-          </div>
-        </el-col>
-        <el-col :xs="24" :sm="24" :lg="8">
-          <div class="chart-wrapper">
-            <bar-chart />
-          </div>
-        </el-col>
-      </el-row>
+        </el-card>
+      </div>
+      <div class="product-list-histogram">
+        <div class="product-list">
+          <el-card class="box-card">
+            <div class="top-box">
+              <div slot="header" class="clearfix">
+                <span>卡片名称</span>
+              </div>
+              <p>16,6556,254</p>
+            </div>
+          </el-card>
+          <el-card class="box-card">
+            <div class="top-box">
+              <div slot="header" class="clearfix">
+                <span>卡片名称</span>
+              </div>
+              <p>16,6556,254</p>
+            </div>
+          </el-card>
+          <el-card class="box-card">
+            <div class="top-box">
+              <div slot="header" class="clearfix">
+                <span>卡片名称</span>
+              </div>
+              <p>16,6556,254</p>
+            </div>
+          </el-card>
+          <el-card class="box-card">
+            <div class="top-box">
+              <div slot="header" class="clearfix">
+                <span>卡片名称</span>
+              </div>
+              <p>16,6556,254</p>
+            </div>
+          </el-card>
+        </div>
+        <div class="line-chart">
+          <el-card class="box-card">
+            <div class="top-box">
+              <div slot="header" class="clearfix">
+                <span>卡片名称</span>
+              </div>
+              <p>16,6556,254</p>
+            </div>
+          </el-card>
+          <el-card class="box-card">
+            <div class="top-box">
+              <div slot="header" class="clearfix">
+                <span>卡片名称</span>
+              </div>
+              <p>16,6556,254</p>
+            </div>
+          </el-card>
+        </div>
+      </div>
     </div>
-    <div v-else class="flexbox justify-center align-center" style="height:80vh">
+    <div class="flexbox justify-center align-center" style="height:80vh">
       <div class="text-center" style="width:100%">
         <h2 class="_281hA">Welcome to FbAli</h2>
         <h4 class="dashboard__sub-title">Build Your Business With FbAli</h4>
@@ -47,72 +106,19 @@
 </template>
 
 <script>
-
-import PanelGroup from './components/PanelGroup'
-import LineChart from './components/LineChart'
-import RaddarChart from './components/RaddarChart'
-import PieChart from './components/PieChart'
-import BarChart from './components/BarChart'
-import { mapGetters } from 'vuex'
-import { shopifyApi, shopifyPush } from '@/api/user'
-import { setCookies, getCookies } from '@/utils/cookies'
-const lineChartData = {
-  newVisitis: {
-    expectedData: [100, 120, 161, 134, 105, 160, 165],
-    actualData: [120, 82, 91, 154, 162, 140, 145]
-  },
-  messages: {
-    expectedData: [200, 192, 120, 144, 160, 130, 140],
-    actualData: [180, 160, 151, 106, 145, 150, 130]
-  },
-  purchases: {
-    expectedData: [80, 100, 121, 104, 105, 90, 100],
-    actualData: [120, 90, 100, 138, 142, 130, 130]
-  },
-  shoppings: {
-    expectedData: [130, 140, 141, 142, 145, 150, 160],
-    actualData: [120, 82, 91, 154, 162, 140, 130]
-  }
-}
-
 export default {
   name: 'dashboard',
   components: {
-    PanelGroup,
-    LineChart,
-    RaddarChart,
-    PieChart,
-    BarChart
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis,
-      isdev: false
     }
   },
   computed: {
-    ...mapGetters([
-      'name'
-    ])
   },
   mounted() {
-    this.shopifyInit()
   },
   methods: {
-    async shopifyInit() {
-      const shopify = getCookies('shopify')
-      const shop = getCookies('shop')
-      if (shopify && shop) {
-        const shopifyQuery = JSON.parse(shopify)
-        setCookies('shopify', shopifyQuery)
-        setCookies('shop', shopifyQuery.shop)
-        await shopifyApi({ ...shopifyQuery })
-        await shopifyPush({ shop: shop })
-      }
-    },
-    handleSetLineChartData(type) {
-      this.lineChartData = lineChartData[type]
-    }
   }
 }
 </script>
@@ -129,6 +135,97 @@ export default {
 }
 .dashboard-editor-container {
   padding: 30px;
+  .my-order-box {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    .order {
+      margin-right: 20px;
+      .box-card {
+        border-radius: 10px;
+        .top-box {
+          h4 {
+            font-weight: 400;
+          }
+          .radius {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #ed7000;
+            margin-right: 10px;
+          }
+          .main {
+            text-align: center;
+            .text {
+              margin: 60px 0 40px;
+              font-size: 40px;
+              color: #ed7000;
+            }
+            .image-box {
+              position: relative;
+              .image {
+              }
+              .img-text {
+                color: #e83f3f;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%,-50%);
+                p:nth-of-type(1) {
+                  font-size: 26px;
+                  margin: 0;
+                }
+              }
+            }
+            .main-footer {
+              display: flex;
+              justify-content: space-between;
+              margin-top: 20px;
+              padding: 0 40px;
+              color: #8b8c8c;
+              .line {
+                height: 60px;
+                width: 2px;
+                background-color: #ddd;
+              }
+              .right {
+                p:nth-of-type(2) {
+                  color: #5fa39a;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    .product-list-histogram {
+      display: flex;
+      flex-direction: column;
+      .product-list {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        .box-card {
+          margin-left: 20px;
+          border-radius: 10px;
+          &:nth-of-type(1) {
+            margin-left: 0;
+          }
+        }
+      }
+      .line-chart {
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        .box-card {
+          margin-left: 20px;
+          border-radius: 10px;
+          &:nth-of-type(1) {
+            margin-left: 0;
+          }
+        }
+      }
+    }
+  }
   .chart-wrapper {
     background: #fff;
     padding: 20px 20px;
@@ -138,7 +235,6 @@ export default {
   font-weight: 600;
   font-size: 14px;
   line-height: 20px;
-  color: #272742;
   padding-top: 8px;
   color: #6f6f85;
 }
