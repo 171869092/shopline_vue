@@ -122,11 +122,11 @@ export default {
   name: 'bill-detail',
   data() {
     return {
-      bill_status: '',
       billDetailForm: {
         bill_id: '',
         bill_name: '',
         bill_no: '',
+        bill_status: '',
         enterprise_logo: '',
         date: '',
         due_date: '',
@@ -152,18 +152,22 @@ export default {
   methods: {
     // 完成账单
     settlement() {
-      const ids = []
-      ids.push(this.bill_id)
-      getOrderBillFinish({ id: ids }).then(res => {
-        if (res.code === 200) {
-          this.$message.success('The bill is settled successfully!')
-          this.$router.push({
-            name: 'bill'
-          })
-        } else {
-          this.$message.error('Order settlement failed!')
-        }
-      })
+      if (this.billDetailForm.bill_status === '2') {
+        this.$message.warning('The order has been settled, please do not submit it repeatedly!')
+      } else {
+        const ids = []
+        ids.push(this.bill_id)
+        getOrderBillFinish({ id: ids }).then(res => {
+          if (res.code === 200) {
+            this.$message.success('The bill is settled successfully!')
+            this.$router.push({
+              name: 'bill'
+            })
+          } else {
+            this.$message.error('Order settlement failed!')
+          }
+        })
+      }
     },
     // 查看
     iViews() {
