@@ -20,13 +20,17 @@
               :value="item.value">
             </el-option>
           </el-select>
+          
+          <!-- <div style="float:right;" class="order-id ml20">
+           <el-button type="primary" size="small" @click="afterSales">Confirm After Sales</el-button>
+          </div> -->
         </div>
         <div v-for="(info,key) in detailInfo" :key="key" class="order-cell" :id="'product'+key">
           <el-card class="box-card mt20">
             <div slot="header">
               <div class="detail-block-title">
                 <div >
-                  <h2>Product <span v-if="isShowProductIndex">{{ key+1 }}</span></h2>
+                  <h2>Product <span v-if="isShowProductIndex">{{ key+1 }} </span><span style="float:right;"><el-button type="primary" size="small" @click="afterSales(info)">Confirm After Sales</el-button></span></h2>
                 </div>
               </div>
             </div>
@@ -226,6 +230,10 @@ export default {
       })
 
     },
+    afterSales(info) {
+      // console.log(info)
+      this.$router.push({ name: 'after-create', query: { type: 'create', id: this.order_id, order_no: this.$route.query.order_no, detailInfo: info }})
+    }
   }
 }
 </script>

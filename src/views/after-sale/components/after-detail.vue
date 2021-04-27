@@ -2,25 +2,22 @@
     <div v-loading="loading" class="order-detail p30">
         <el-row :gutter="20">
             <el-col :span="20" :offset="2">
-                <div class="order-header flexbox">
-                    <el-button
-                        size="small"
-                        class="button-border"
-                        icon="el-icon-back"
-                        @click="$router.back()"
-                    />
-                    <div class="order-id ml20">
-                        Order No：<span class="primary">{{ order_no }}</span>
-                    </div>
-                    <el-select v-model="selectedProduct" v-if="isShowProductIndex" @change="handleChange(selectedProduct)" placeholder="Select Product">
-                        <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
-                        </el-option>
-                    </el-select>
-                </div>
+              <!-- <el-row> -->
+                <!-- <div class="flexbox"> -->
+                  <div class="order-header flexbox">
+                      <el-button
+                          size="small"
+                          class="button-border"
+                          icon="el-icon-back"
+                          @click="$router.back()"
+                      />
+                      <div class="order-id ml20">
+                          Order No：<span class="primary">{{ order_no }}</span>
+                      </div>
+                
+                      <!-- <span style="float: right;"><el-button size="small" type="primary" >Submit</el-button></span> -->
+                  </div>
+ 
 
                 <div class="order-cell">
                     <!-- After Sales Information -->
@@ -33,61 +30,149 @@
                         <div class="detail-block-title custul">
                             <el-col :offset="1" :span="50">
                                 <ul class="customer-info mt10">
-                                    <li><span>After Sales Type: </span><span>55555555</span></li>
-                                    <li><span>After Sales Mode: </span><span>66666666</span></li>
-                                    <li><span>After Sales Products: </span><span>77777777</span></li>
+                                    <li><span>After Sales Type: </span><span>{{tableData.after_type}}</span></li>
+                                    <li><span>After Sales Mode: </span><span>{{tableData.after_model}}</span></li>
+                                    <li><span>After Sales Products: </span><span v-for="(item,ids) in tableData.product_json" :key="ids">{{item.sku_name}}</span></li>
                                 </ul>
                             </el-col>
                         </div>
                     </el-card>
 
-                    <!-- Text Content -->
                     <el-card class="box-card mt20">
+                      <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+                        <el-tab-pane label="Text Content" name="first">
+                          <!-- Text Content -->
+                          <div slot="header">
+                              <div class="detail-block-title">
+                                  <div><h2>Text Content</h2></div>
+                              </div>
+                          </div>
+                          <textarea class="el-textarea__inner" :disabled="true" v-model="tableData.content" autosize placeholder="请输入内容" />
+                        </el-tab-pane>
+
+
+                        <el-tab-pane label="Picture Content" name="second">
+                          <!-- Picture Content -->
+                          <div slot="header">
+                              <div class="detail-block-title">
+                                  <div><h2>Picture Content</h2></div>
+                              </div>
+                          </div>
+                         
+                          <div class="block" v-for="fit in fits" :key="fit">
+                            <!-- <span class="demonstration">{{ fit }}</span> -->
+                            <el-image
+                              class="sku_image"
+                              style="width: 100px; height: 100px; float:left;"
+                              :src="url"
+                              :fit="fit">
+                                <div slot="error" class="image-slot">
+                                  <i class="el-icon-picture-outline" style="font-size: 30px;" />
+                                </div>
+                              </el-image>
+                          </div>
+                          
+                        </el-tab-pane>
+                      </el-tabs>
+                    </el-card>
+                    
+                    <!-- Text Content -->
+                    <!-- <el-card class="box-card mt20">
                         <div slot="header">
                             <div class="detail-block-title">
                                 <div><h2>Text Content</h2></div>
                             </div>
                         </div>
-                    </el-card>
+                        <textarea class="el-textarea__inner" :disabled="true" v-model="tableData.content" autosize placeholder="请输入内容" />
+                    </el-card> -->
 
                     <!-- Picture Content -->
-                    <el-card class="box-card mt20">
+                    <!-- <el-card class="box-card mt20">
                         <div slot="header">
                             <div class="detail-block-title">
                                 <div><h2>Picture Content</h2></div>
                             </div>
                         </div>
-                    </el-card>
-
-                    <!-- Reply Message -->
-                    <el-card class="box-card mt20">
-                        <div slot="header">
-                            <div class="detail-block-title">
-                                <div><h2>Reply Message</h2></div>
+                            <div slot="header" class="flexbox justidfy-space-between align-center">
                             </div>
-                        </div>
-                    </el-card>
+                    </el-card> -->
 
-                    <!-- Reply to Picture -->
-                    <el-card class="box-card mt20">
-                        <div slot="header">
-                            <div class="detail-block-title">
-                                <div><h2>Reply to Picture</h2></div>
+                    <div v-for="(item,k) in tableData.reply" :key="k">
+                        <!-- Reply Message -->
+                      <el-card class="box-card mt20">
+                          <div slot="header">
+                              <div class="detail-block-title">
+                                  <div><h2>Reply Message</h2></div>
+                              </div>
+                          </div>
+                          <textarea class="el-textarea__inner" v-model="item.reply_info" :disabled="true" autosize placeholder="请输入内容" />
+                      </el-card>
+
+                      <!-- Reply to Picture -->
+                      <el-card class="box-card mt20">
+                          <div slot="header">
+                              <div class="detail-block-title">
+                                  <div><h2>Reply to Picture</h2></div>
+                              </div>
+                          </div>
+                          <div class="block" v-for="fit in fits" :key="fit">
+                              <!-- <span class="demonstration">{{ fit }}</span> -->
+                              <el-image
+                                class="sku_image"
+                                style="width: 100px; height: 100px; float:left;"
+                                :src="url"
+                                :fit="fit">
+                                  <div slot="error" class="image-slot">
+                                    <i class="el-icon-picture-outline" style="font-size: 30px;" />
+                                  </div>
+                                </el-image>
                             </div>
-                        </div>
-                    </el-card>
+                      </el-card>
+                    </div>
+
+
                 </div>
             </el-col>
         </el-row>
     </div>
 </template>
 <script>
+import { afterSalesDetail } from '@/api/after'
 export default {
     name: 'after-detail',
+    components: {
+      ShopWindow: () => import('./shop-window'),
+    },
     data() {
         return {
+            activeName: 'first',
             detailInfo: {},
             loading: false,
+            formData: {
+                images: []
+            },
+            imgList: [],
+            tableData: {
+              after_model: '',
+              after_type: '',
+              content: '',
+              cost: '',
+              image: [],
+              order_name: '',
+              product_json: [],
+              shipping_json: [],
+              status: '',
+              store_url: '',
+              third_order_no: '',
+              total: '',
+              vendor: '',
+              reply: {
+                reply_info: '',
+                reply_img: []
+              }
+            },
+            fits: ['fill', 'contain', 'cover', 'none', 'scale-down'],
+            url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
         }
     },
     computed: {
@@ -101,7 +186,45 @@ export default {
             return this.detailInfo.length > 1
         },
     },
+    created() {
+      if (this.$route.query.type == 'edit') {
+        this.getAfterSalesDetail()
+      }
+    },
     methods: {
+        updateImgList(list) {
+          this.imgList = list
+          this.formData.images = this.imgList
+        },
+        deleteImg() {
+
+        },
+        openUploadPrint() {
+
+        },
+        delImg() {
+
+        },
+        updateimg() {
+
+        },
+        getAfterSalesDetail() {
+          this.loading = true
+          afterSalesDetail({id: this.$route.query.id}).then(res => {
+            if (res.code == 200){
+              this.tableData = res.data
+            }
+            console.log(this.tableData)
+          }).catch (err => {
+            console.log(err)
+          }).finally(() => {
+            this.loading =false
+          })
+        },
+
+        handleClick(tab, event) {
+          console.log(tab, event);
+        }
     }
 }
 </script>
@@ -185,7 +308,7 @@ export default {
 .custul li{
   float: left;
 //   display:block;
-  padding-right: 150px;
+  padding-right: 340px;
   list-style:none;
 }
 // .inputDeep>>>.el-input__inner {

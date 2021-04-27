@@ -241,7 +241,7 @@ export default {
 
         //. 跳转售后详情
         toLink(row) {
-            this.$router.push({ name: 'after-detail', query: { id: row.id, order_no: row.order_name }})
+            this.$router.push({ name: 'after-detail', query: { type: 'edit', id: row.id, order_no: row.order_name }})
         },
     }
 }

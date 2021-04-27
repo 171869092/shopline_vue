@@ -165,6 +165,13 @@ export const constantRoutes = [
         component: () => import('@/views/after-sale/components/after-detail'),
         meta: {title: 'AfterSale Detail', icon: 'el-icon-tickets'},
         hidden: true
+      },
+      {
+        path: 'after-create',
+        name: 'after-create',
+        component: () => import('@/views/after-sale/components/after-create'),
+        meta: {title: 'Create AfterSale', icon: 'el-icon-tickets'},
+        hidden: true
       }
     ]
   },
