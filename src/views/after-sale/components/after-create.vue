@@ -154,7 +154,7 @@ export default {
             this.productArr.push(item)
         });
         this.orderInfo = this.detailInfo
-        // console.log('orderInfo: ',this.orderInfo)
+        console.log('orderInfo: ',this.orderInfo)
         // console.log('detailInfo: ',this.detailInfo)
         // console.log('productArr:', this.productArr)
         this.getAfterSalesType()
@@ -215,8 +215,21 @@ export default {
             this.formData.third_order_no = this.orderInfo.thirdParty_order_on
             this.formData.order_name = this.orderInfo.order_name
             this.formData.import_people = this.orderInfo.import_people
-            this.formData.receive_json = {address:this.orderInfo.address1, city:this.orderInfo.city, country:this.orderInfo.country, consignee: this.orderInfo.consignee}
-            this.formData.shipping_json = {address:this.orderInfo.address1, city:this.orderInfo.city, country:this.orderInfo.country, consignee: this.orderInfo.consignee}
+            this.formData.receive_json = {
+                        address:this.orderInfo.address1,
+                        city:this.orderInfo.city,
+                        country:this.orderInfo.country,
+                        consignee: this.orderInfo.consignee,
+                        first_name: this.orderInfo.first_name,
+                        last_name: this.orderInfo.last_name,
+                        mobile: this.orderInfo.mobile,
+                        email: this.orderInfo.email
+                    }
+            this.formData.shipping_json = {
+                        logistics_company: this.orderInfo.logistics_company,
+                        logistics_no: this.orderInfo.logistics_no,
+                        logistics_status: this.orderInfo.logistics_status
+                    }
 
             this.formData.server_id = this.orderInfo.service_id
             console.log('formData',this.formData)
