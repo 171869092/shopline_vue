@@ -205,6 +205,22 @@ export default {
           this.formData.images = this.imgList
         },
 
+         //获取cookie
+        getCookie: function (cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            // console.log("获取cookie,现在循环")
+            for (var i = 0; i < ca.length; i++) {
+            var c = ca[i];
+            // console.log(c)
+            while (c.charAt(0) == ' ') c = c.substring(1);
+            if (c.indexOf(name) != -1){
+                return c.substring(name.length, c.length);
+            }
+            }
+            return "";
+        },
+
         //.save
         submit() {
             this.formData.vendor = this.orderInfo.vendor.service_name
@@ -231,7 +247,10 @@ export default {
                         logistics_status: this.orderInfo.logistics_status
                     }
 
+            // let getName = this.getCookie('name')
+            
             this.formData.server_id = this.orderInfo.service_id
+            this.formData.customer_name = this.getCookie('name')
             console.log('formData',this.formData)
             let products = []
             this.formData.product_json.map(item => {
