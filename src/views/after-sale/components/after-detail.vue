@@ -59,12 +59,12 @@
                               </div>
                           </div>
                          
-                          <div class="block" v-for="fit in fits" :key="fit">
+                          <div class="block" v-for="fit in showImg" :key="fit">
                             <!-- <span class="demonstration">{{ fit }}</span> -->
                             <el-image
                               class="sku_image"
                               style="width: 100px; height: 100px; float:left;"
-                              :src="url"
+                              :src="fit"
                               :fit="fit">
                                 <div slot="error" class="image-slot">
                                   <i class="el-icon-picture-outline" style="font-size: 30px;" />
@@ -115,12 +115,12 @@
                                   <div><h2>Reply to Picture</h2></div>
                               </div>
                           </div>
-                          <div class="block" v-for="fit in fits" :key="fit">
+                          <div class="block" v-for="fit in item.reply_img" :key="fit">
                               <!-- <span class="demonstration">{{ fit }}</span> -->
                               <el-image
                                 class="sku_image"
                                 style="width: 100px; height: 100px; float:left;"
-                                :src="url"
+                                :src="fit"
                                 :fit="fit">
                                   <div slot="error" class="image-slot">
                                     <i class="el-icon-picture-outline" style="font-size: 30px;" />
@@ -171,8 +171,10 @@ export default {
                 reply_img: []
               }
             },
-            fits: ['fill', 'contain', 'cover', 'none', 'scale-down'],
-            url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+            showImg: [],
+            replyImg: []
+            // fits: ['fill', 'contain', 'cover', 'none', 'scale-down'],
+            // url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
         }
     },
     computed: {
@@ -213,6 +215,10 @@ export default {
           afterSalesDetail({id: this.$route.query.id}).then(res => {
             if (res.code == 200){
               this.tableData = res.data
+              this.showImg = res.data.image
+              // if (res.data.reply){
+              //   this.replyImg = res.data.reply
+              // }
             }
             console.log(this.tableData)
           }).catch (err => {
@@ -223,7 +229,7 @@ export default {
         },
 
         handleClick(tab, event) {
-          console.log(tab, event);
+          // console.log(tab, event);
         }
     }
 }

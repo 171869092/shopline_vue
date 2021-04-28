@@ -31,7 +31,7 @@
                                     <li>
                                         <el-form-item label="After Sales Type:" prop="after_type" class="custItem">
                                             <el-select v-model="formData.after_type" class="w-180 custSel"  prop="after_type">
-                                                <el-option v-for="(item,idx) in dataType" :key="idx" :label="item" :value="String(idx + 1)" />
+                                                <el-option v-for="(item,idx) in dataType" :key="idx" :label="item" :value="idx" />
                                             </el-select>
                                         </el-form-item>
                                     </li>
@@ -108,9 +108,9 @@ export default {
                 store_url: '',
                 total: '',
                 cost: '',
-                product_json: [],
-                shipping_json: [],
-                receive_json: [],
+                product_json: '',
+                shipping_json: '',
+                receive_json: '',
                 state: '',
                 vendor: '',
                 payment: '',
@@ -156,7 +156,7 @@ export default {
         this.orderInfo = this.detailInfo
         // console.log('orderInfo: ',this.orderInfo)
         // console.log('detailInfo: ',this.detailInfo)
-        console.log('productArr:', this.productArr)
+        // console.log('productArr:', this.productArr)
         this.getAfterSalesType()
     },
 
@@ -177,6 +177,7 @@ export default {
             afterSalesType().then( res => {
                 if (res.code == 200){
                     this.dataType = res.data
+                    // console.log('dataType:' , res.data)
                 }
             }).catch(error => {
                 console.log(error)
@@ -214,10 +215,10 @@ export default {
             this.formData.third_order_no = this.orderInfo.thirdParty_order_on
             this.formData.order_name = this.orderInfo.order_name
             this.formData.import_people = this.orderInfo.import_people
-            this.formData.receive_json.push({address:this.orderInfo.address1, city:this.orderInfo.city, country:this.orderInfo.country, consignee: this.orderInfo.consignee})
-            this.formData.shipping_json.push({address:this.orderInfo.address1, city:this.orderInfo.city, country:this.orderInfo.country, consignee: this.orderInfo.consignee})
+            this.formData.receive_json = {address:this.orderInfo.address1, city:this.orderInfo.city, country:this.orderInfo.country, consignee: this.orderInfo.consignee}
+            this.formData.shipping_json = {address:this.orderInfo.address1, city:this.orderInfo.city, country:this.orderInfo.country, consignee: this.orderInfo.consignee}
 
-            this.formData.server_id = 1
+            this.formData.server_id = this.orderInfo.service_id
             console.log('formData',this.formData)
             let products = []
             this.formData.product_json.map(item => {
@@ -236,6 +237,14 @@ export default {
                 })
             })
             this.formData.product_json = products
+            let imgs = []
+            this.formData.image = this.formData.images.map(item => {
+                imgs.push(item.url)
+                // return {url: item.url}
+            })
+            this.formData.image = imgs
+            // console.log(this.formData)
+            // return false
             this.$refs.formData.validate((validate) => {
                 if (validate){
                     this.SubmitLoading = true
