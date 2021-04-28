@@ -6,23 +6,23 @@
           <div class="top-box">
             <h4><span class="radius"></span>Order</h4>
             <div class="main">
-              <p class="text">16,6556,254</p>
+              <p class="text">{{dashboardForm.order}}</p>
               <div class="image-box">
                 <img src="@/assets/home/order-circle.png" class="image">
                 <div class="img-text">
-                  <p>1000</p>
+                  <p>{{dashboardForm.new_order}}</p>
                   <p>Newly Added</p>
                 </div>
               </div>
               <div class="main-footer">
                 <div class="left">
                   <p>Complete</p>
-                  <p>2300</p>
+                  <p>{{dashboardForm.complete}}</p>
                 </div>
                 <div class="line"></div>
                 <div class="right">
                   <p>Unfinished</p>
-                  <p>2300</p>
+                  <p>{{dashboardForm.unfinished}}</p>
                 </div>
               </div>
             </div>
@@ -36,28 +36,28 @@
               <i class="el-icon-user-solid first"></i>
               <span>My product</span>
             </div>
-            <p>50</p>
+            <p>{{dashboardForm.product}}</p>
           </el-card>
           <el-card class="box-card">
             <div>
               <i class="el-icon-message-solid second"></i>
               <span>Managed products</span>
             </div>
-            <p>50</p>
+            <p>{{dashboardForm.managed_product}}</p>
           </el-card>
           <el-card class="box-card">
             <div>
               <i class="el-icon-location third"></i>
               <span>Number of stores</span>
             </div>
-            <p>50</p>
+            <p>{{dashboardForm.stores_number}}</p>
           </el-card>
           <el-card class="box-card">
             <div>
               <i class="el-icon-coin fourth"></i>
               <span>Sales amount</span>
             </div>
-            <p>50</p>
+            <p>{{dashboardForm.sales_amount}}</p>
           </el-card>
         </div>
         <div class="line-chart">
@@ -74,13 +74,13 @@
                 <span class="radius"></span>
                 <span>After sales information</span>
               </div>
-              <el-button type="text" class="btn">ALL<i class="el-icon-arrow-right"></i></el-button>
+              <el-button type="text" class="btn" @click="$router.push({name: 'after'})">ALL<i class="el-icon-arrow-right"></i></el-button>
             </div>
             <el-table
-              :data="tableData"
+              :data="dashboardForm.after_sales"
               :header-cell-style="{background: '#f6f5fb'}">
               <el-table-column
-                prop="name"
+                prop="order_name"
                 label="Name">
               </el-table-column>
               <el-table-column
@@ -88,8 +88,13 @@
                 label="State">
               </el-table-column>
               <el-table-column
-                prop="type"
+                prop="after_type"
                 label="Type">
+                <template slot-scope="scope">
+                  <el-tooltip class="item" effect="dark" :content="afterTypes[scope.row.after_type]" placement="top">
+                    <span>{{ afterTypes[scope.row.after_type] | ellipsis}}</span>
+                  </el-tooltip>
+                </template>
               </el-table-column>
             </el-table>
           </el-card>
@@ -122,34 +127,47 @@
 </template>
 
 <script>
+import { baseChartIndex } from '@/api/user'
 export default {
   name: 'dashboard',
-  components: {
+  filters: {
+    ellipsis(value) {
+      if (!value) {
+        return ''
+      } else if (value.length > 20) {
+        return value.slice(0, 20) + '...'
+      } else {
+        return value
+      }
+    }
   },
   data() {
     return {
-      tableData: [
-        {
-          name: '#1133',
-          state: 'In process',
-          type: 'Product damage'
-        },
-        {
-          name: '#1133',
-          state: 'Processed',
-          type: 'Logistics information'
-        },
-        {
-          name: '#1133',
-          state: 'In process',
-          type: 'Product damage'
-        },
-        {
-          name: '#1133',
-          state: 'Processed',
-          type: 'Logistics information'
-        }
-      ]
+      dashboardForm: {
+        id: '',
+        user_id: '',
+        order: '',
+        new_order: '',
+        managed_product: '',
+        product: '',
+        sales_amount: '',
+        stores_number: '',
+        unfinished: '',
+        complete: '',
+        after_sales: [],
+        line: [],
+        logistics_information: []
+      },
+      afterTypes: {
+        1: 'Damaged product',
+        2: 'Product not received',
+        3: 'Unable to query the logistics number',
+        4: 'Did not receive the logistics order number',
+        5: 'Incorrect recipient information',
+        6: 'Wrong product',
+        7: 'Logistics information is not updated in time',
+        8: 'Other'
+      }
     }
   },
   computed: {
@@ -157,6 +175,7 @@ export default {
   mounted() {
     this.drawChart()
     this.drawTwoChart()
+    this.init()
   },
   methods: {
     drawChart() {
@@ -296,6 +315,14 @@ export default {
       }
       // 使用刚指定的配置项和数据显示图表。
       myChart.setOption(option)
+    },
+    init() {
+      baseChartIndex().then(res => {
+        if (res.code === 200) {
+          this.dashboardForm = res.data
+        }
+        console.log('res===', res)
+      })
     }
   }
 }
@@ -485,6 +512,7 @@ export default {
     }
   }
   .video-box {
+    margin-left: 5px;
     .video {
       border-radius: 10px;
     }

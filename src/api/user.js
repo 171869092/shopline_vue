@@ -62,3 +62,11 @@ export function sendEmail(data) {
     data: data
   })
 }
+
+export function baseChartIndex(data) {
+  return request({
+    url: '/base/chart/index',
+    method: 'get',
+    params: data
+  })
+}
