@@ -32,54 +32,66 @@
       <div class="product-list-histogram">
         <div class="product-list">
           <el-card class="box-card">
-            <div class="top-box">
-              <div slot="header" class="clearfix">
-                <span>卡片名称</span>
-              </div>
-              <p>16,6556,254</p>
+            <div>
+              <i class="el-icon-user-solid first"></i>
+              <span>My product</span>
             </div>
+            <p>50</p>
           </el-card>
           <el-card class="box-card">
-            <div class="top-box">
-              <div slot="header" class="clearfix">
-                <span>卡片名称</span>
-              </div>
-              <p>16,6556,254</p>
+            <div>
+              <i class="el-icon-message-solid second"></i>
+              <span>Managed products</span>
             </div>
+            <p>50</p>
           </el-card>
           <el-card class="box-card">
-            <div class="top-box">
-              <div slot="header" class="clearfix">
-                <span>卡片名称</span>
-              </div>
-              <p>16,6556,254</p>
+            <div>
+              <i class="el-icon-location third"></i>
+              <span>Number of stores</span>
             </div>
+            <p>50</p>
           </el-card>
           <el-card class="box-card">
-            <div class="top-box">
-              <div slot="header" class="clearfix">
-                <span>卡片名称</span>
-              </div>
-              <p>16,6556,254</p>
+            <div>
+              <i class="el-icon-coin fourth"></i>
+              <span>Sales amount</span>
             </div>
+            <p>50</p>
           </el-card>
         </div>
         <div class="line-chart">
           <el-card class="box-card">
             <div class="top-box">
-              <div slot="header" class="clearfix">
-                <span>卡片名称</span>
-              </div>
-              <p>16,6556,254</p>
+              <span class="radius"></span>
+              <span>Logistics information</span>
             </div>
+            <div id="myChart" style="width: 100%;height:320px;"></div>
           </el-card>
           <el-card class="box-card">
-            <div class="top-box">
-              <div slot="header" class="clearfix">
-                <span>卡片名称</span>
+            <div class="top-box space">
+              <div>
+                <span class="radius"></span>
+                <span>After sales information</span>
               </div>
-              <p>16,6556,254</p>
+              <el-button type="text" class="btn">ALL<i class="el-icon-arrow-right"></i></el-button>
             </div>
+            <el-table
+              :data="tableData"
+              :header-cell-style="{background: '#f6f5fb'}">
+              <el-table-column
+                prop="name"
+                label="Name">
+              </el-table-column>
+              <el-table-column
+                prop="state"
+                label="State">
+              </el-table-column>
+              <el-table-column
+                prop="type"
+                label="Type">
+              </el-table-column>
+            </el-table>
           </el-card>
         </div>
       </div>
@@ -112,13 +124,128 @@ export default {
   },
   data() {
     return {
+      tableData: [
+        {
+          name: '#1133',
+          state: 'In process',
+          type: 'Product damage'
+        },
+        {
+          name: '#1133',
+          state: 'Processed',
+          type: 'Logistics information'
+        },
+        {
+          name: '#1133',
+          state: 'In process',
+          type: 'Product damage'
+        },
+        {
+          name: '#1133',
+          state: 'Processed',
+          type: 'Logistics information'
+        }
+      ]
     }
   },
   computed: {
   },
   mounted() {
+    this.drawChart()
   },
   methods: {
+    drawChart() {
+      const echarts = require('echarts')
+      const myChart = echarts.init(document.getElementById('myChart'))
+      // 指定图表的配置项和数据
+      const option = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          }
+        },
+        legend: {
+          data: ['To be delivered', 'To be received', 'Received goods']
+        },
+        toolbox: {
+          show: true,
+          orient: 'vertical',
+          left: 'right',
+          top: 'center'
+        },
+        xAxis: [
+          {
+            type: 'category',
+            axisTick: { show: false },
+            data: ['1', '5', '10', '15', '20', '25', '30']
+          }
+        ],
+        yAxis: [
+          {
+            type: 'value'
+          }
+        ],
+        series: [
+          {
+            name: 'To be delivered',
+            type: 'bar',
+            emphasis: {
+              focus: 'series'
+            },
+            data: [320, 332, 301, 334, 390, 200, 230],
+            itemStyle: {
+              color: new echarts.graphic.LinearGradient(
+                0, 0.4, 0.8, 1,
+                [
+                  { offset: 0, color: '#6898ed' },
+                  { offset: 0.5, color: '#69bddf' },
+                  { offset: 1, color: '#68dccf' }
+                ]
+              )
+            }
+          },
+          {
+            name: 'To be received',
+            type: 'bar',
+            emphasis: {
+              focus: 'series'
+            },
+            data: [220, 182, 191, 234, 290, 250, 270],
+            itemStyle: {
+              color: new echarts.graphic.LinearGradient(
+                0, 0.4, 0.8, 1,
+                [
+                  { offset: 0, color: '#febb61' },
+                  { offset: 0.5, color: '#f1c077' },
+                  { offset: 1, color: '#f9c489' }
+                ]
+              )
+            }
+          },
+          {
+            name: 'Received goods',
+            type: 'bar',
+            emphasis: {
+              focus: 'series'
+            },
+            data: [150, 232, 201, 154, 190, 320, 370],
+            itemStyle: {
+              color: new echarts.graphic.LinearGradient(
+                0, 0.4, 0.8, 1,
+                [
+                  { offset: 0, color: '#4fe2c2' },
+                  { offset: 0.5, color: '#4fd8d2' },
+                  { offset: 1, color: '#4ecde1' }
+                ]
+              )
+            }
+          }
+        ]
+      }
+      // 使用刚指定的配置项和数据显示图表。
+      myChart.setOption(option)
+    }
   }
 }
 </script>
@@ -137,19 +264,20 @@ export default {
   padding: 30px;
   .my-order-box {
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 1fr 3.5fr;
     .order {
       margin-right: 20px;
       .box-card {
         border-radius: 10px;
+        height: 600px;
         .top-box {
           h4 {
             font-weight: 400;
           }
           .radius {
             display: inline-block;
-            width: 15px;
-            height: 15px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             background-color: #ed7000;
             margin-right: 10px;
@@ -160,6 +288,7 @@ export default {
               margin: 60px 0 40px;
               font-size: 40px;
               color: #ed7000;
+              text-shadow: -4px 4px 3px rgba(0,0,0,.2);
             }
             .image-box {
               position: relative;
@@ -180,7 +309,7 @@ export default {
             .main-footer {
               display: flex;
               justify-content: space-between;
-              margin-top: 20px;
+              margin-top: 40px;
               padding: 0 40px;
               color: #8b8c8c;
               .line {
@@ -205,10 +334,48 @@ export default {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         .box-card {
+          position: relative;
           margin-left: 20px;
           border-radius: 10px;
           &:nth-of-type(1) {
             margin-left: 0;
+          }
+          &::after {
+            content: '';
+            display: block;
+            width: 96%;
+            height: 1px;
+            background-color: #eee;
+            position: absolute;
+            top: 55px;
+            left: 2%;
+          }
+          p {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 36px;
+            font-weight: 500;
+            color: #333;
+          }
+          span {
+            font-weight: 500;
+            color: #737373;
+          }
+          i {
+            margin-right: 10px;
+            font-size: 18px;
+          }
+          .first {
+            color: #22d2c1;
+          }
+          .second {
+            color: #f2ad50;
+          }
+          .third {
+            color: #3ba9e2;
+          }
+          .fourth {
+            color: #fdd375;
           }
         }
       }
@@ -219,8 +386,27 @@ export default {
         .box-card {
           margin-left: 20px;
           border-radius: 10px;
+          height: 413px;
           &:nth-of-type(1) {
             margin-left: 0;
+          }
+          .top-box {
+            margin-bottom: 20px;
+            .radius {
+              display: inline-block;
+              width: 13px;
+              height: 13px;
+              border-radius: 50%;
+              background-color: #7182eb;
+              margin-right: 10px;
+            }
+          }
+          .space {
+            display: flex;
+            justify-content: space-between;
+            .btn {
+              padding: 0;
+            }
           }
         }
       }
