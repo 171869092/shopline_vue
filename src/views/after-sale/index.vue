@@ -48,7 +48,7 @@
             </div>
           </div>
         </div>
-        <el-button type="primary" size="small" class="mb10">After sales</el-button>
+        <el-button type="primary" size="small" class="mb10" @click="complete">After sales</el-button>
         <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.label" :name="tab.name">
           <el-table
             ref="multipleTable"
@@ -79,11 +79,11 @@
                 <div>{{ scope.row.total }}</div>
               </template>
             </el-table-column>
-            <el-table-column label="Cost">
+            <!-- <el-table-column label="Cost">
               <template slot-scope="scope">
                 <div>{{ scope.row.cost }}</div>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             <el-table-column label="State">
               <template slot-scope="scope">
                 <span>{{ scope.row.status }}</span>
@@ -110,7 +110,7 @@
 import { debounce } from '@/utils'
 import Sticky from '@/directive/fix-table-header'
 import { getStoreList } from '@/api/product'
-import { afterSalesList } from '@/api/after'
+import { afterSalesList, afterSalesChanngedStatus } from '@/api/after'
 export default {
   name: 'after-sale',
   components: {
@@ -219,7 +219,7 @@ export default {
     }, 500),
 
     shiftMultiple(selections, row) {
-      console.log(852963)
+      this.selectAfter = selections.map(item => (item.id))
     },
 
     // . 选择框数据
@@ -232,9 +232,35 @@ export default {
       console.log('all selectAfter:', this.selectAfter)
     },
 
+    // selectOne(selecttion) {
+    //     this.selectAfter = selecttion.map(item => (item.id))
+    // },
+
     // . 跳转售后详情
     toLink(row) {
       this.$router.push({ name: 'after-detail', query: { type: 'edit', id: row.id, order_no: row.order_name }})
+    },
+
+    //. complete
+    complete() {
+        if (this.selectAfter.length < 1){
+            this.$message.error('Please select a piece of data')
+            return false
+        }
+        afterSalesChanngedStatus({id: this.selectAfter}).then ( res => {
+            let type = ''
+            if (res.code == 200){
+                type = 'success'
+            }else{
+                type = 'error'
+            }
+            this.$message({ message: res.message, type: type })
+            // this.$router.go(0)
+        }).catch( err => {
+            console.log(err)
+        }).finally(() => {
+            
+        })
     }
   }
 }

@@ -34,3 +34,12 @@ export function afterSalesCreate(data) {
     data: data
   })
 }
+
+//. after sale channged status
+export function afterSalesChanngedStatus(data) {
+  return request({
+    url: '/after/after-sales/finish',
+    method: 'post',
+    data: data
+  })
+}
