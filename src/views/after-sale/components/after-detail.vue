@@ -1,83 +1,83 @@
 <template>
-    <div v-loading="loading" class="order-detail p30">
-        <el-row :gutter="20">
-            <el-col :span="20" :offset="2">
-              <!-- <el-row> -->
-                <!-- <div class="flexbox"> -->
-                  <div class="order-header flexbox">
-                      <el-button
-                          size="small"
-                          class="button-border"
-                          icon="el-icon-back"
-                          @click="$router.back()"
-                      />
-                      <div class="order-id ml20">
-                          Order No：<span class="primary">{{ order_no }}</span>
-                      </div>
-                
-                      <!-- <span style="float: right;"><el-button size="small" type="primary" >Submit</el-button></span> -->
+  <div v-loading="loading" class="order-detail p30">
+    <el-row :gutter="20">
+      <el-col :span="20" :offset="2">
+        <!-- <el-row> -->
+        <!-- <div class="flexbox"> -->
+        <div class="top-box">
+          <div class="order-header flexbox">
+            <el-button
+              size="small"
+              class="button-border"
+              icon="el-icon-back"
+              @click="$router.back()"
+            />
+            <div class="order-id ml20">
+              Order No：<span class="primary">{{ order_no }}</span>
+            </div>
+          </div>
+          <el-button size="small" type="primary" class="">After sales</el-button>
+        </div>
+
+        <div class="order-cell">
+          <!-- After Sales Information -->
+          <el-card class="box-card mt20">
+            <div slot="header">
+              <div class="detail-block-title">
+                <div><h2>After Sales Information</h2></div>
+              </div>
+            </div>
+            <div class="detail-block-title custul">
+              <el-col :offset="1" :span="50">
+                <ul class="customer-info mt10">
+                  <li><span>After Sales Type: </span><span>{{ tableData.after_type }}</span></li>
+                  <li><span>After Sales Mode: </span><span>{{ tableData.after_model }}</span></li>
+                  <li><span>After Sales Products: </span><span v-for="(item,ids) in tableData.product_json" :key="ids">{{ item.sku_name }}</span></li>
+                </ul>
+              </el-col>
+            </div>
+          </el-card>
+
+          <el-card class="box-card mt20">
+            <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+              <el-tab-pane label="Text Content" name="first">
+                <!-- Text Content -->
+                <div slot="header">
+                  <div class="detail-block-title">
+                    <div><h2>Text Content</h2></div>
                   </div>
- 
+                </div>
+                <textarea v-model="tableData.content" class="el-textarea__inner" :disabled="true" autosize placeholder="请输入内容" />
+              </el-tab-pane>
 
-                <div class="order-cell">
-                    <!-- After Sales Information -->
-                    <el-card class="box-card mt20">
-                        <div slot="header">
-                            <div class="detail-block-title">
-                                <div><h2>After Sales Information</h2></div>
-                            </div>
-                        </div>
-                        <div class="detail-block-title custul">
-                            <el-col :offset="1" :span="50">
-                                <ul class="customer-info mt10">
-                                    <li><span>After Sales Type: </span><span>{{tableData.after_type}}</span></li>
-                                    <li><span>After Sales Mode: </span><span>{{tableData.after_model}}</span></li>
-                                    <li><span>After Sales Products: </span><span v-for="(item,ids) in tableData.product_json" :key="ids">{{item.sku_name}}</span></li>
-                                </ul>
-                            </el-col>
-                        </div>
-                    </el-card>
+              <el-tab-pane label="Picture Content" name="second">
+                <!-- Picture Content -->
+                <div slot="header">
+                  <div class="detail-block-title">
+                    <div><h2>Picture Content</h2></div>
+                  </div>
+                </div>
 
-                    <el-card class="box-card mt20">
-                      <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-                        <el-tab-pane label="Text Content" name="first">
-                          <!-- Text Content -->
-                          <div slot="header">
-                              <div class="detail-block-title">
-                                  <div><h2>Text Content</h2></div>
-                              </div>
-                          </div>
-                          <textarea class="el-textarea__inner" :disabled="true" v-model="tableData.content" autosize placeholder="请输入内容" />
-                        </el-tab-pane>
+                <div v-for="fit in showImg" :key="fit" class="block">
+                  <!-- <span class="demonstration">{{ fit }}</span> -->
+                  <el-image
+                    class="sku_image"
+                    style="width: 100px; height: 100px; float:left;"
+                    :src="fit"
+                    :fit="fit"
+                  >
+                    <div slot="error" class="image-slot">
+                      <i class="el-icon-picture-outline" style="font-size: 30px;" />
+                    </div>
+                  </el-image>
+                </div>
 
+              </el-tab-pane>
+            </el-tabs>
+          </el-card>
 
-                        <el-tab-pane label="Picture Content" name="second">
-                          <!-- Picture Content -->
-                          <div slot="header">
-                              <div class="detail-block-title">
-                                  <div><h2>Picture Content</h2></div>
-                              </div>
-                          </div>
-                         
-                          <div class="block" v-for="fit in showImg" :key="fit">
-                            <!-- <span class="demonstration">{{ fit }}</span> -->
-                            <el-image
-                              class="sku_image"
-                              style="width: 100px; height: 100px; float:left;"
-                              :src="fit"
-                              :fit="fit">
-                                <div slot="error" class="image-slot">
-                                  <i class="el-icon-picture-outline" style="font-size: 30px;" />
-                                </div>
-                              </el-image>
-                          </div>
-                          
-                        </el-tab-pane>
-                      </el-tabs>
-                    </el-card>
-                    
-                    <!-- Text Content -->
-                    <!-- <el-card class="box-card mt20">
+          <!-- Text Content -->
+          <!-- <el-card class="box-card mt20">
                         <div slot="header">
                             <div class="detail-block-title">
                                 <div><h2>Text Content</h2></div>
@@ -86,8 +86,8 @@
                         <textarea class="el-textarea__inner" :disabled="true" v-model="tableData.content" autosize placeholder="请输入内容" />
                     </el-card> -->
 
-                    <!-- Picture Content -->
-                    <!-- <el-card class="box-card mt20">
+          <!-- Picture Content -->
+          <!-- <el-card class="box-card mt20">
                         <div slot="header">
                             <div class="detail-block-title">
                                 <div><h2>Picture Content</h2></div>
@@ -97,144 +97,148 @@
                             </div>
                     </el-card> -->
 
-                    <div v-for="(item,k) in tableData.reply" :key="k">
-                        <!-- Reply Message -->
-                      <el-card class="box-card mt20">
-                          <div slot="header">
-                              <div class="detail-block-title">
-                                  <div><h2>Reply Message</h2></div>
-                              </div>
-                          </div>
-                          <textarea class="el-textarea__inner" v-model="item.reply_info" :disabled="true" autosize placeholder="请输入内容" />
-                      </el-card>
-
-                      <!-- Reply to Picture -->
-                      <el-card class="box-card mt20">
-                          <div slot="header">
-                              <div class="detail-block-title">
-                                  <div><h2>Reply to Picture</h2></div>
-                              </div>
-                          </div>
-                          <div class="block" v-for="fit in item.reply_img" :key="fit">
-                              <!-- <span class="demonstration">{{ fit }}</span> -->
-                              <el-image
-                                class="sku_image"
-                                style="width: 100px; height: 100px; float:left;"
-                                :src="fit"
-                                :fit="fit">
-                                  <div slot="error" class="image-slot">
-                                    <i class="el-icon-picture-outline" style="font-size: 30px;" />
-                                  </div>
-                                </el-image>
-                            </div>
-                      </el-card>
-                    </div>
-
-
+          <div v-for="(item,k) in tableData.reply" :key="k">
+            <!-- Reply Message -->
+            <el-card class="box-card mt20">
+              <div slot="header">
+                <div class="detail-block-title">
+                  <div><h2>Reply Message</h2></div>
                 </div>
-            </el-col>
-        </el-row>
-    </div>
+              </div>
+              <textarea v-model="item.reply_info" class="el-textarea__inner" :disabled="true" autosize placeholder="请输入内容" />
+            </el-card>
+
+            <!-- Reply to Picture -->
+            <el-card class="box-card mt20">
+              <div slot="header">
+                <div class="detail-block-title">
+                  <div><h2>Reply to Picture</h2></div>
+                </div>
+              </div>
+              <div v-for="fit in item.reply_img" :key="fit" class="block">
+                <!-- <span class="demonstration">{{ fit }}</span> -->
+                <el-image
+                  class="sku_image"
+                  style="width: 100px; height: 100px; float:left;"
+                  :src="fit"
+                  :fit="fit"
+                >
+                  <div slot="error" class="image-slot">
+                    <i class="el-icon-picture-outline" style="font-size: 30px;" />
+                  </div>
+                </el-image>
+              </div>
+            </el-card>
+          </div>
+
+        </div>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 <script>
 import { afterSalesDetail } from '@/api/after'
 export default {
-    name: 'after-detail',
-    components: {
-      ShopWindow: () => import('./shop-window'),
-    },
-    data() {
-        return {
-            activeName: 'first',
-            detailInfo: {},
-            loading: false,
-            formData: {
-                images: []
-            },
-            imgList: [],
-            tableData: {
-              after_model: '',
-              after_type: '',
-              content: '',
-              cost: '',
-              image: [],
-              order_name: '',
-              product_json: [],
-              shipping_json: [],
-              status: '',
-              store_url: '',
-              third_order_no: '',
-              total: '',
-              vendor: '',
-              reply: {
-                reply_info: '',
-                reply_img: []
-              }
-            },
-            showImg: [],
-            replyImg: []
-            // fits: ['fill', 'contain', 'cover', 'none', 'scale-down'],
-            // url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+  name: 'after-detail',
+  components: {
+    ShopWindow: () => import('./shop-window')
+  },
+  data() {
+    return {
+      activeName: 'first',
+      detailInfo: {},
+      loading: false,
+      formData: {
+        images: []
+      },
+      imgList: [],
+      tableData: {
+        after_model: '',
+        after_type: '',
+        content: '',
+        cost: '',
+        image: [],
+        order_name: '',
+        product_json: [],
+        shipping_json: [],
+        status: '',
+        store_url: '',
+        third_order_no: '',
+        total: '',
+        vendor: '',
+        reply: {
+          reply_info: '',
+          reply_img: []
         }
-    },
-    computed: {
-        order_no() {
-            return this.$route.query.order_no
-        },
-        order_id() {
-            return this.$route.query.order_id
-        },
-        isShowProductIndex() {
-            return this.detailInfo.length > 1
-        },
-    },
-    created() {
-      if (this.$route.query.type == 'edit') {
-        this.getAfterSalesDetail()
-      }
-    },
-    methods: {
-        updateImgList(list) {
-          this.imgList = list
-          this.formData.images = this.imgList
-        },
-        deleteImg() {
-
-        },
-        openUploadPrint() {
-
-        },
-        delImg() {
-
-        },
-        updateimg() {
-
-        },
-        getAfterSalesDetail() {
-          this.loading = true
-          afterSalesDetail({id: this.$route.query.id}).then(res => {
-            if (res.code == 200){
-              this.tableData = res.data
-              this.showImg = res.data.image
-              // if (res.data.reply){
-              //   this.replyImg = res.data.reply
-              // }
-            }
-            console.log(this.tableData)
-          }).catch (err => {
-            console.log(err)
-          }).finally(() => {
-            this.loading =false
-          })
-        },
-
-        handleClick(tab, event) {
-          // console.log(tab, event);
-        }
+      },
+      showImg: [],
+      replyImg: []
+      // fits: ['fill', 'contain', 'cover', 'none', 'scale-down'],
+      // url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
     }
+  },
+  computed: {
+    order_no() {
+      return this.$route.query.order_no
+    },
+    order_id() {
+      return this.$route.query.order_id
+    },
+    isShowProductIndex() {
+      return this.detailInfo.length > 1
+    }
+  },
+  created() {
+    if (this.$route.query.type == 'edit') {
+      this.getAfterSalesDetail()
+    }
+  },
+  methods: {
+    updateImgList(list) {
+      this.imgList = list
+      this.formData.images = this.imgList
+    },
+    deleteImg() {
+
+    },
+    openUploadPrint() {
+
+    },
+    delImg() {
+
+    },
+    updateimg() {
+
+    },
+    getAfterSalesDetail() {
+      this.loading = true
+      afterSalesDetail({ id: this.$route.query.id }).then(res => {
+        if (res.code == 200) {
+          this.tableData = res.data
+          this.showImg = res.data.image
+          // if (res.data.reply){
+          //   this.replyImg = res.data.reply
+          // }
+        }
+        console.log(this.tableData)
+      }).catch(err => {
+        console.log(err)
+      }).finally(() => {
+        this.loading = false
+      })
+    },
+
+    handleClick(tab, event) {
+      // console.log(tab, event);
+    }
+  }
 }
 </script>
 <style lang="scss">
+.top-box {
+  display: flex;
+  justify-content: space-between;
+}
 .order-id {
   line-height: 36px;
   margin-right: 20px;
