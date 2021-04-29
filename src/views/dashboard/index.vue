@@ -266,39 +266,13 @@ export default {
         yAxis: {
           name: 'Number',
           type: 'value',
-          data: [10, 20, 30, 40]
+          data: []
         },
-        series: [
-          {
-            name: 'live-by-test',
-            type: 'line',
-            smooth: true,
-            emphasis: {
-              focus: 'series'
-            },
-            data: [1, 5, 33, 22, 8, 25, 36, 5, 34, 14, 8, 25, 5, 5, 33, 35, 8, 25, 12, 5, 22, 11, 8, 25, 37, 5, 24, 25, 8, 25],
-            itemStyle: {
-              color: '#6898ed'
-            }
-          },
-          {
-            name: 'live-by-testing',
-            type: 'line',
-            smooth: true,
-            emphasis: {
-              focus: 'series'
-            },
-            data: [7, 5, 27, 22, 8, 33, 36, 5, 5, 14, 8, 25, 5, 5, 33, 35, 8, 7, 36, 5, 22, 12, 8, 25, 37, 5, 12, 25, 8, 25],
-            itemStyle: {
-              color: '#68dccf'
-            }
-          }
-        ]
+        series: []
       }
     }
   },
   mounted() {
-    const arr = [320, 332, 301, 334, 390, 200, 230]
     const myChart = echarts.init(document.getElementById('myChart'))
     const twoChart = echarts.init(document.getElementById('twoChart'))
     baseChartIndex().then(res => {
@@ -307,8 +281,9 @@ export default {
       const received_goods = []
       const store_name = []
       const lineStores = []
-      const lineAxis = []
-      let firstDay = 1
+      const datas = []
+      const lineData = []
+      const series = []
       if (res.code === 200) {
         res.data.logistics_information.map(it => {
           delivered.push(it.delivered)
@@ -316,27 +291,35 @@ export default {
           received_goods.push(it.received_goods)
           store_name.push(it.store_name)
         })
-        console.log('res.data.line===', res.data.line)
-        firstDay = res.data.line[0].date.slice(8)
-        console.log('123123', firstDay)
-        res.data.line.map(it => {
-          it.stores.map(i => {
-            lineStores.push(i.store_name)
-            lineAxis.push(i.sale_amount)
+        for (const key in res.data.line) {
+          lineStores.push(res.data.line[key].store_name)
+          datas.push(res.data.line[key])
+        }
+        const lineStore = [...new Set(lineStores)]
+        datas.map(it => {
+          delete it.store_name
+          delete it.store_url
+          lineData.push(Object.values(it))
+        })
+        lineStore.map((item, index) => {
+          series.push({
+            name: item,
+            data: lineData[index],
+            itemStyle: {},
+            type: 'line',
+            smooth: true
           })
         })
-        const lineStore = [...new Set(lineStores)]
-        const lineAxisD = [...new Set(lineAxis)]
-        console.log('lineAxisD===', lineAxisD)
+        this.lineOption.series = series
+        lineData.map((it, inx) => {
+          this.$set(this.lineOption.series[inx].itemStyle, 'color', this.getColorRender())
+        })
         this.dashboardForm = res.data
         this.$set(this.axisOption.series[0], 'data', delivered)
         this.$set(this.axisOption.series[1], 'data', received)
         this.$set(this.axisOption.series[2], 'data', received_goods)
         this.$set(this.axisOption.xAxis[0], 'data', store_name)
         this.$set(this.lineOption.legend, 'data', lineStore)
-        // 当销售额不为0时放开该段代码
-        // this.$set(this.lineOption.yAxis, 'data', lineAxisD)
-        this.$set(this.lineOption.series, 'data', arr)
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(this.axisOption)
         twoChart.setOption(this.lineOption)
@@ -344,6 +327,16 @@ export default {
     })
   },
   methods: {
+    // 动态生成随机颜色
+    getColorRender() {
+      let c = '#'
+      const cArray = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F']
+      for (let i = 0; i < 6; i++) {
+        const cIndex = Math.round(Math.random() * 15)
+        c += cArray[cIndex]
+      }
+      return c
+    }
   }
 }
 </script>
@@ -431,6 +424,7 @@ export default {
       .product-list {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
+        height: 166px;
         .box-card {
           position: relative;
           margin-left: 20px;
