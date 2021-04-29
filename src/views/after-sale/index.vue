@@ -1,7 +1,7 @@
 <template>
   <div class="after-sale">
     <el-card class="box-card">
-      <el-tabs v-model="formQuery.order_status_client" @tab-click="handleClick">
+      <el-tabs v-model="formQuery.status" @tab-click="handleClick">
         <div class="flexbox justify-space-between">
           <div class="filter-control flexbox mb20">
             <div class="filter-item">
@@ -16,7 +16,7 @@
             </div>
             <div class="filter-item w-250">
               <el-select
-                v-model="formQuery.order_status_client"
+                v-model="formQuery.status"
                 collapse-tags
                 placeholder="Ship status"
                 style="width:100%"
@@ -86,6 +86,11 @@
             </el-table-column> -->
             <el-table-column label="State">
               <template slot-scope="scope">
+                <span>{{ scope.row.state }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="Status">
+              <template slot-scope="scope">
                 <span>{{ scope.row.status }}</span>
               </template>
             </el-table-column>
@@ -129,6 +134,7 @@ export default {
       formQuery: {
         // order_name: '',
         // order_status_client: '',
+        status: '',
         store_url: '',
         iDisplayStart: 0,
         iDisplayLength: 10
@@ -138,11 +144,12 @@ export default {
         page: 0,
         limit: 10
       },
-      afterStatus: { 0: 'ALL', 1: 'Processing', 2: 'In Processing' },
+      afterStatus: { 0: 'ALL',1: 'Pending', 2: 'In Processing', 3: 'Completed' },
       tabList: [
         { label: 'ALL', name: '0' },
-        { label: 'Processing', name: '1' },
-        { label: 'In Processing', name: '2' }
+        { label: 'Pending', name: '1' },
+        { label: 'In Processing', name: '2' },
+        { label: 'Completed', name: '3' }
       ],
       labelList: [
         { label: 'Third Party Order Number', value: 'thirdParty_order_on', type: 'order_no' }
