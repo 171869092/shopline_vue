@@ -86,7 +86,7 @@
             </el-table-column>
             <el-table-column label="State">
               <template slot-scope="scope">
-                <span>{{ scope.row.state }}</span>
+                <span>{{ scope.row.status }}</span>
               </template>
             </el-table-column>
             <el-table-column label="Vendor">
