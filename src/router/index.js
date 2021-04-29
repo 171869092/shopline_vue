@@ -214,6 +214,19 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/service',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'service-provider',
+        component: () => import('@/views/service-provider/index'),
+        meta: { title: 'Service provider', icon: 'el-icon-s-tools' }
+        // hidden: true
+      }
+    ]
+  },
+  {
     path: '/settings',
     component: Layout,
     children: [

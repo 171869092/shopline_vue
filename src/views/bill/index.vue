@@ -238,6 +238,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+.bill-box {
+  margin: 30px;
+}
 </style>
