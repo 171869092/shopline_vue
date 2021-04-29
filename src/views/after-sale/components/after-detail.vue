@@ -16,7 +16,7 @@
               Order No：<span class="primary">{{ order_no }}</span>
             </div>
           </div>
-          <el-button size="small" type="primary" class="">After sales</el-button>
+          <el-button size="small" type="primary" @click="complete">After sales</el-button>
         </div>
 
         <div class="order-cell">
@@ -28,13 +28,19 @@
               </div>
             </div>
             <div class="detail-block-title custul">
-              <el-col :offset="1" :span="50">
-                <ul class="customer-info mt10">
-                  <li><span>After Sales Type: </span><span>{{ tableData.after_type }}</span></li>
-                  <li><span>After Sales Mode: </span><span>{{ tableData.after_model }}</span></li>
-                  <li><span>After Sales Products: </span><span v-for="(item,ids) in tableData.product_json" :key="ids">{{ item.sku_name }}</span></li>
-                </ul>
-              </el-col>
+              <el-form>
+                <el-col :span="8">
+                  <el-form-item label="After Sales Type:">{{ tableData.after_type }}</el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="After Sales Mode:">{{ tableData.after_model }}</el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="After Sales Products:">
+                    <span v-for="(item,ids) in tableData.product_json" :key="ids">{{ item.sku_name }}</span>
+                  </el-form-item>
+                </el-col>
+              </el-form>
             </div>
           </el-card>
 
@@ -137,10 +143,11 @@
   </div>
 </template>
 <script>
-import { afterSalesDetail } from '@/api/after'
+import { afterSalesChanngedStatus, afterSalesDetail } from '@/api/after'
 export default {
   name: 'after-detail',
   components: {
+    // eslint-disable-next-line vue/no-unused-components
     ShopWindow: () => import('./shop-window')
   },
   data() {
@@ -230,6 +237,24 @@ export default {
 
     handleClick(tab, event) {
       // console.log(tab, event);
+    },
+    // complete
+    complete() {
+      const ids = []
+      ids.push(this.tableData.id)
+      afterSalesChanngedStatus({ id: ids }).then(res => {
+        let type = ''
+        if (res.code === 200) {
+          type = 'success'
+        } else {
+          type = 'error'
+        }
+        this.$message({ message: res.message, type: type })
+      }).catch(err => {
+        console.log(err)
+      }).finally(() => {
+
+      })
     }
   }
 }

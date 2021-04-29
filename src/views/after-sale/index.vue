@@ -248,26 +248,26 @@ export default {
       this.$router.push({ name: 'after-detail', query: { type: 'edit', id: row.id, order_no: row.order_name }})
     },
 
-    //. complete
+    // complete
     complete() {
-        if (this.selectAfter.length < 1){
-            this.$message.error('Please select a piece of data')
-            return false
+      if (this.selectAfter.length < 1) {
+        this.$message.error('Please select a piece of data')
+        return false
+      }
+      afterSalesChanngedStatus({ id: this.selectAfter }).then(res => {
+        let type = ''
+        if (res.code === 200) {
+          type = 'success'
+        } else {
+          type = 'error'
         }
-        afterSalesChanngedStatus({id: this.selectAfter}).then ( res => {
-            let type = ''
-            if (res.code == 200){
-                type = 'success'
-            }else{
-                type = 'error'
-            }
-            this.$message({ message: res.message, type: type })
-            // this.$router.go(0)
-        }).catch( err => {
-            console.log(err)
-        }).finally(() => {
-            
-        })
+        this.$message({ message: res.message, type: type })
+        // this.$router.go(0)
+      }).catch(err => {
+        console.log(err)
+      }).finally(() => {
+
+      })
     }
   }
 }
