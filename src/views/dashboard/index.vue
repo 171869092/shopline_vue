@@ -128,6 +128,7 @@
 
 <script>
 import { baseChartIndex } from '@/api/user'
+import * as echarts from 'echarts'
 export default {
   name: 'dashboard',
   filters: {
@@ -167,22 +168,8 @@ export default {
         6: 'Wrong product',
         7: 'Logistics information is not updated in time',
         8: 'Other'
-      }
-    }
-  },
-  computed: {
-  },
-  mounted() {
-    this.drawChart()
-    this.drawTwoChart()
-    this.init()
-  },
-  methods: {
-    drawChart() {
-      const echarts = require('echarts')
-      const myChart = echarts.init(document.getElementById('myChart'))
-      // 指定图表的配置项和数据
-      const option = {
+      },
+      axisOption: {
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -202,7 +189,7 @@ export default {
           {
             type: 'category',
             axisTick: { show: false },
-            data: ['店铺1', '店铺2', '店铺3', '店铺4', '店铺5', '店铺6', '店铺7']
+            data: []
           }
         ],
         yAxis: [
@@ -217,7 +204,7 @@ export default {
             emphasis: {
               focus: 'series'
             },
-            data: [320, 332, 301, 334, 390, 200, 230],
+            data: [],
             itemStyle: {
               color: new echarts.graphic.LinearGradient(
                 0, 0.4, 0.8, 1,
@@ -235,7 +222,7 @@ export default {
             emphasis: {
               focus: 'series'
             },
-            data: [220, 182, 191, 234, 290, 250, 270],
+            data: [],
             itemStyle: {
               color: new echarts.graphic.LinearGradient(
                 0, 0.4, 0.8, 1,
@@ -253,7 +240,7 @@ export default {
             emphasis: {
               focus: 'series'
             },
-            data: [150, 232, 201, 154, 190, 320, 370],
+            data: [],
             itemStyle: {
               color: new echarts.graphic.LinearGradient(
                 0, 0.4, 0.8, 1,
@@ -266,17 +253,10 @@ export default {
             }
           }
         ]
-      }
-      // 使用刚指定的配置项和数据显示图表。
-      myChart.setOption(option)
-    },
-    drawTwoChart() {
-      const echarts = require('echarts')
-      const myChart = echarts.init(document.getElementById('twoChart'))
-      // 指定图表的配置项和数据
-      const option = {
+      },
+      lineOption: {
         legend: {
-          data: ['店铺一', '店铺二']
+          data: []
         },
         xAxis: {
           name: 'Date',
@@ -290,8 +270,9 @@ export default {
         },
         series: [
           {
-            name: '店铺一',
+            name: 'live-by-test',
             type: 'line',
+            smooth: true,
             emphasis: {
               focus: 'series'
             },
@@ -301,8 +282,9 @@ export default {
             }
           },
           {
-            name: '店铺二',
+            name: 'live-by-testing',
             type: 'line',
+            smooth: true,
             emphasis: {
               focus: 'series'
             },
@@ -313,17 +295,55 @@ export default {
           }
         ]
       }
-      // 使用刚指定的配置项和数据显示图表。
-      myChart.setOption(option)
-    },
-    init() {
-      baseChartIndex().then(res => {
-        if (res.code === 200) {
-          this.dashboardForm = res.data
-        }
-        console.log('res===', res)
-      })
     }
+  },
+  mounted() {
+    const arr = [320, 332, 301, 334, 390, 200, 230]
+    const myChart = echarts.init(document.getElementById('myChart'))
+    const twoChart = echarts.init(document.getElementById('twoChart'))
+    baseChartIndex().then(res => {
+      const delivered = []
+      const received = []
+      const received_goods = []
+      const store_name = []
+      const lineStores = []
+      const lineAxis = []
+      let firstDay = 1
+      if (res.code === 200) {
+        res.data.logistics_information.map(it => {
+          delivered.push(it.delivered)
+          received.push(it.received)
+          received_goods.push(it.received_goods)
+          store_name.push(it.store_name)
+        })
+        console.log('res.data.line===', res.data.line)
+        firstDay = res.data.line[0].date.slice(8)
+        console.log('123123', firstDay)
+        res.data.line.map(it => {
+          it.stores.map(i => {
+            lineStores.push(i.store_name)
+            lineAxis.push(i.sale_amount)
+          })
+        })
+        const lineStore = [...new Set(lineStores)]
+        const lineAxisD = [...new Set(lineAxis)]
+        console.log('lineAxisD===', lineAxisD)
+        this.dashboardForm = res.data
+        this.$set(this.axisOption.series[0], 'data', delivered)
+        this.$set(this.axisOption.series[1], 'data', received)
+        this.$set(this.axisOption.series[2], 'data', received_goods)
+        this.$set(this.axisOption.xAxis[0], 'data', store_name)
+        this.$set(this.lineOption.legend, 'data', lineStore)
+        // 当销售额不为0时放开该段代码
+        // this.$set(this.lineOption.yAxis, 'data', lineAxisD)
+        this.$set(this.lineOption.series, 'data', arr)
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(this.axisOption)
+        twoChart.setOption(this.lineOption)
+      }
+    })
+  },
+  methods: {
   }
 }
 </script>
