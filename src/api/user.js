@@ -70,3 +70,12 @@ export function baseChartIndex(data) {
     params: data
   })
 }
+
+// 修改密码
+export function changePassword(data) {
+  return request({
+    url: '/site/change-password',
+    method: 'post',
+    data: data
+  })
+}

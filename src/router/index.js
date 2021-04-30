@@ -221,7 +221,7 @@ export const constantRoutes = [
         path: 'index',
         name: 'service-provider',
         component: () => import('@/views/service-provider/index'),
-        meta: { title: 'Service provider', icon: 'el-icon-s-tools' }
+        meta: { title: 'Service provider', icon: 'el-icon-user-solid' }
         // hidden: true
       }
     ]

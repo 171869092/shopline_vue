@@ -17,6 +17,10 @@
           <span slot="label"><i class="el-icon-message-solid" />Channge Password</span>
           <password />
         </el-tab-pane>
+        <el-tab-pane name="personal">
+          <span slot="label"><i class="el-icon-message-solid" />personal Center</span>
+          <personal />
+        </el-tab-pane>
       </el-tabs>
     </el-card>
   </div>
@@ -25,12 +29,14 @@
 import templates from './components/templates'
 import notifications from './components/notifications'
 import password from './components/password'
+import personal from './components/personal-center'
 export default {
   name: 'settings',
   components: {
     templates,
     notifications,
-    password
+    password,
+    personal
   },
   props: {},
   data() {

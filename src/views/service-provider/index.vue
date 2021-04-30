@@ -42,7 +42,7 @@
         </el-table-column>
         <el-table-column label="Time">
           <template slot-scope="scope">
-            <span>{{ scope.row.update_time }}</span>
+            <span>{{ scope.row.time }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -56,7 +56,7 @@
       <div class="dialog-box">
         <div class="mr20">
           <div v-for="(item,index) in codeList" :key="index">
-            <el-input type="text" v-model="input" placeholder="Please input activation code" clearable class="mb20" @blur="handleEnter(input)"></el-input>
+            <el-input type="text" v-model="item.code" placeholder="Please input activation code" clearable class="mb20"></el-input>
           </div>
         </div>
         <div>
@@ -65,7 +65,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="dialogVisible = false">Determine</el-button>
+        <el-button type="primary" @click="handleDetermine">Determine</el-button>
       </span>
     </el-dialog>
   </div>
@@ -73,7 +73,7 @@
 
 <script>
 import { debounce } from '@/utils'
-import { getGoodsServiceList } from '@/api/service'
+import { getGoodsServiceList, getGoodsActivationByCode } from '@/api/service'
 
 export default {
   name: 'service-provider',
@@ -97,8 +97,9 @@ export default {
       tableData: [],
       loading: false,
       dialogVisible: false,
-      codeList: [''],
-      input: ''
+      codeList: [{
+        code: ''
+      }]
     }
   },
   methods: {
@@ -124,7 +125,6 @@ export default {
       this.formQuery.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
       getGoodsServiceList(this.formQuery).then(res => {
         if (res.code === 200) {
-          console.log('item---', res)
           this.tableData = res.data.map((item, index) => {
             item.index = index
             return item
@@ -147,10 +147,20 @@ export default {
     },
     // 增加激活码
     handleAdd() {
-      this.codeList.push('')
+      this.codeList.push({ code: '' })
     },
-    handleEnter(val) {
-      console.log(val)
+    // 确认激活码
+    handleDetermine() {
+      const list = []
+      this.codeList.map(it => {
+        list.push(Object.values(it).toString())
+      })
+      getGoodsActivationByCode({ code: list }).then(res => {
+        if (res.code === 200) {
+          this.dialogVisible = false
+          this.Inquire()
+        }
+      })
     }
   }
 }
