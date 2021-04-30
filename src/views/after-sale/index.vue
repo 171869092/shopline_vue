@@ -48,7 +48,7 @@
             </div>
           </div>
         </div>
-        <el-button type="primary" size="small" class="mb10" @click="complete">After sales</el-button>
+        <el-button type="primary" size="small" class="mb10" @click="complete">Completed</el-button>
         <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.label" :name="tab.name">
           <el-table
             ref="multipleTable"
@@ -69,14 +69,14 @@
                 <span class="primary pointer" @click="toLink(scope.row)">{{ scope.row.order_name }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="Store">
+            <el-table-column label="Products">
               <template slot-scope="scope">
-                <div>{{ scope.row.store_url }}</div>
+                <div>{{ scope.row.product_json }}</div>
               </template>
             </el-table-column>
-            <el-table-column label="Total">
+            <el-table-column label="Application Time">
               <template slot-scope="scope">
-                <div>{{ scope.row.total }}</div>
+                <div>{{ scope.row.after_create_time }}</div>
               </template>
             </el-table-column>
             <!-- <el-table-column label="Cost">
@@ -84,9 +84,9 @@
                 <div>{{ scope.row.cost }}</div>
               </template>
             </el-table-column> -->
-            <el-table-column label="State">
+            <el-table-column label="After Sales Type">
               <template slot-scope="scope">
-                <span>{{ scope.row.state }}</span>
+                <span>{{ salesType[scope.row.after_type] }}</span>
               </template>
             </el-table-column>
             <el-table-column label="Status">
@@ -94,16 +94,14 @@
                 <span>{{ scope.row.status }}</span>
               </template>
             </el-table-column>
+
+
             <el-table-column label="Vendor">
               <template slot-scope="scope">
                 <span>{{ scope.row.vendor }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="Payment Time">
-              <template slot-scope="scope">
-                <span>{{ scope.row.payment_time }}</span>
-              </template>
-            </el-table-column>
+            
           </el-table>
           <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
         </el-tab-pane>
@@ -115,7 +113,7 @@
 import { debounce } from '@/utils'
 import Sticky from '@/directive/fix-table-header'
 import { getStoreList } from '@/api/product'
-import { afterSalesList, afterSalesChanngedStatus } from '@/api/after'
+import { afterSalesList, afterSalesChanngedStatus, afterSalesType } from '@/api/after'
 export default {
   name: 'after-sale',
   components: {
@@ -144,10 +142,10 @@ export default {
         page: 0,
         limit: 10
       },
-      afterStatus: { 0: 'ALL',1: 'Pending', 2: 'In Processing', 3: 'Completed' },
+      afterStatus: { 0: 'ALL', 2: 'In Processing', 3: 'Completed' },
       tabList: [
         { label: 'ALL', name: '0' },
-        { label: 'Pending', name: '1' },
+        
         { label: 'In Processing', name: '2' },
         { label: 'Completed', name: '3' }
       ],
@@ -158,13 +156,16 @@ export default {
       selectRows: [],
       selectAfter: [],
       loading: false,
-      storeList: []
+      storeList: [],
+      salesType: [],
+      product: []
     }
   },
   computed: {},
   created() {
     this.init()
     this.Inquire()
+    this.getAfterSalesType()
   },
   mounted() {},
   methods: {
@@ -184,16 +185,41 @@ export default {
       afterSalesList(this.formQuery).then(res => {
         if (res.code === 200) {
           this.tableData = res.data.map((item, index) => {
+            item.product_json = item.product_json.map((da,ik) => {
+              return da.sku_name
+            }).join(',')
             item.index = index
             return item
           })
           this.listQuery.total = +res.total
+
+          // if (res.data.product_json && res.data.product_json.length > 0) {
+          //   console.log(1111)
+          //   this.product = res.data.product_json.map((item,idx) => {
+          //     console.log('item: ',item)
+          //     return item.sku_name
+          //   })
+          // }else{
+          //   this.product = []
+          // }
+        
+          console.log('product: ',this.tableData)
         }
-        // console.log(this.tableData)
+        
       }).catch(err => {
-        console.log(err)
+        console.log('err',err)
       }).finally(() => {
         this.loading = false
+      })
+    },
+
+    getAfterSalesType() {
+      afterSalesType().then( res => {
+        if (res.code == 200){
+          this.salesType = res.data
+        }
+      }).catch(err => {
+        console.log(err)
       })
     },
 
@@ -263,6 +289,7 @@ export default {
         }
         this.$message({ message: res.message, type: type })
         // this.$router.go(0)
+        this.Inquire()
       }).catch(err => {
         console.log(err)
       }).finally(() => {

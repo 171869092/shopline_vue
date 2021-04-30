@@ -16,7 +16,7 @@
               Order No：<span class="primary">{{ order_no }}</span>
             </div>
           </div>
-          <el-button size="small" type="primary" @click="complete">After sales</el-button>
+          <el-button size="small" type="primary" @click="complete">Completed</el-button>
         </div>
 
         <div class="order-cell">
