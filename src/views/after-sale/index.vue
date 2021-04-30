@@ -191,7 +191,7 @@ export default {
             item.index = index
             return item
           })
-          this.listQuery.total = +res.total
+          this.listQuery.total = +res.total.totalCount
 
           // if (res.data.product_json && res.data.product_json.length > 0) {
           //   console.log(1111)
