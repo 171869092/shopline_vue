@@ -32,7 +32,7 @@
         :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}">
         <el-table-column label="Name">
           <template slot-scope="scope">
-            <div>{{ scope.row.id }}</div>
+            <div>{{ scope.row.service_name }}</div>
           </template>
         </el-table-column>
         <el-table-column label="Activation code">
