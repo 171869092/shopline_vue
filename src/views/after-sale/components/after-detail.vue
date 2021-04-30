@@ -58,15 +58,38 @@
 
               <el-tab-pane label="Picture Content" name="second">
                 <!-- Picture Content -->
-                <div slot="header">
-                  <div class="detail-block-title">
-                    <div><h2>Picture Content</h2></div>
-                  </div>
-                </div>
+            
+                <el-dialog :visible.sync="dialogVisible" width="550px" >
+                    <div class="block" style="height: 500px;">
+                      <el-image accept="image/png, image/jpeg" style="width: 500px; height: 500px; float:left;" :src="thisImgs">
+                        <!-- <div slot="error" class="image-slot">
+                          <i class="el-icon-picture-outline" style="font-size: 30px;" />
+                        </div> -->
+                      </el-image>
+                    </div>
+                </el-dialog>
 
                 <div v-for="fit in showImg" :key="fit" class="block">
                   <!-- <span class="demonstration">{{ fit }}</span> -->
+
                   <el-image
+                    ref="thisImg"
+                    accept="image/png, image/jpeg"
+                    class="sku_image"
+                    style="width: 100px; height: 100px; float:left;"
+                    :src="fit"
+                    :fit="fit"
+                    @click="preview(fit)"
+                  >
+
+                      <div slot="error" class="image-slot">
+                        <i class="el-icon-picture-outline" style="font-size: 30px;" />
+                      </div>
+                    </el-image>
+                  <!-- </el-dialog> -->
+
+                  <!-- <el-image
+                    accept="image/png, image/jpeg"
                     class="sku_image"
                     style="width: 100px; height: 100px; float:left;"
                     :src="fit"
@@ -75,7 +98,7 @@
                     <div slot="error" class="image-slot">
                       <i class="el-icon-picture-outline" style="font-size: 30px;" />
                     </div>
-                  </el-image>
+                  </el-image> -->
                 </div>
 
               </el-tab-pane>
@@ -129,6 +152,7 @@
                   :src="fit"
                   :fit="fit"
                 >
+                
                   <div slot="error" class="image-slot">
                     <i class="el-icon-picture-outline" style="font-size: 30px;" />
                   </div>
@@ -179,9 +203,9 @@ export default {
         }
       },
       showImg: [],
-      replyImg: []
-      // fits: ['fill', 'contain', 'cover', 'none', 'scale-down'],
-      // url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg'
+      replyImg: [],
+      dialogVisible: false,
+      thisImgs: ''
     }
   },
   computed: {
@@ -255,6 +279,13 @@ export default {
       }).finally(() => {
 
       })
+    },
+
+    //.preview 
+    preview(src) {
+      this.dialogVisible = true
+      console.log('this.$refs', src )
+      this.thisImgs = src
     }
   }
 }
