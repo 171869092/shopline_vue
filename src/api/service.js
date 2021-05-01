@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 激活服务商列表
 export function getGoodsServiceList(params) {
   return request({
-    url: '/goods/goods/service-list',
+    url: '/goods/goods/service-list-page',
     method: 'get',
     params
   })

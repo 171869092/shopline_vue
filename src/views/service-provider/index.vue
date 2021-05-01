@@ -37,12 +37,12 @@
         </el-table-column>
         <el-table-column label="Activation code">
           <template slot-scope="scope">
-            <span>{{ scope.row.service_name }}</span>
+            <span>{{ scope.row.code }}</span>
           </template>
         </el-table-column>
         <el-table-column label="Time">
           <template slot-scope="scope">
-            <span>{{ scope.row.time }}</span>
+            <span>{{ scope.row.create_time }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -125,11 +125,11 @@ export default {
       this.formQuery.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
       getGoodsServiceList(this.formQuery).then(res => {
         if (res.code === 200) {
-          this.tableData = res.data.map((item, index) => {
+          this.tableData = res.data.data.map((item, index) => {
             item.index = index
             return item
           })
-          this.listQuery.total = +res.total
+          this.listQuery.total = res.data.pagination.totalCount
         }
       }).catch(err => {
         console.log(err)
