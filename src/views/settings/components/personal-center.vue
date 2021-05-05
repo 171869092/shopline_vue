@@ -25,8 +25,11 @@
           </el-form-item>
         </div>
         <div class="image-box">
-          <div class="upload-box">
-            <img v-if="!showImg" :src="basicsForm.enterprise_logo" style="height: 100px;width: 100px"/>
+          <div class="contain-box">
+<!--            <img v-if="!showImg" :src="basicsForm.icon" style="height: 100px;width: 100px"/>-->
+            <el-avatar style="height: 100px;width: 100px" :src="basicsForm.icon" @error="errorHandler">
+              <img src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"/>
+            </el-avatar>
           </div>
           <el-upload
             ref="upload"
@@ -106,7 +109,9 @@ export default {
           const data = JSON.parse(JSON.stringify(res.data))
           file.url = data['data-service-file']
           file.showProgress = false
-          this.basicsForm.enterprise_logo = data['data-service-file']
+          // this.$set(this.basicsForm, 'enterprise_logo',data['data-service-file'])
+          this.$set(this.basicsForm, 'icon',data['data-service-file'])
+          // this.$store.commit("user/SET_AVATAR",data['data-service-file'])
           this.showImg = false
         }
       }).catch(err => {
@@ -160,11 +165,16 @@ export default {
       updateUserInfo(formData).then(res => {
         if (res.code === 200) {
           this.$message.success('Data modified successfully!')
+          // this.$store.commit("user/SET_AVATAR",this.basicsForm.enterprise_logo)
+          this.$store.commit("user/SET_AVATAR",this.basicsForm.icon)
           this.init()
         } else {
           this.$message.warning('Data modification failed!')
         }
       })
+    },
+    errorHandler() {
+      return true
     }
   }
 }
@@ -187,12 +197,13 @@ export default {
     }
     .image-box {
       display: flex;
-      .upload-box {
+      .contain-box {
         margin-left: 50px;
         width: 100px;
         height: 100px;
-        background-color: #f00;
+        //background-color: #f00;
         border-radius: 50%;
+        overflow: hidden;
       }
       .el-upload__text {
         margin: 40px 0 0 20px;

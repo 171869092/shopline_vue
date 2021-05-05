@@ -46,6 +46,7 @@ const actions = {
         commit('SET_TOKEN', data.token)
         commit('SET_NAME', data.username)
         commit('SET_EMAIL', data.email)
+        commit('SET_AVATAR', data.icon)
         commit('SET_UID', data.u)
         setToken(data.token)
         setCookies('uid', data.u)
@@ -92,7 +93,8 @@ const actions = {
           reject('Verification failed, please Login again.')
         }
 
-        const { name, avatar } = data
+        const { name } = data
+        let avatar = data.icon
 
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)

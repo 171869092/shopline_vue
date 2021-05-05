@@ -13,7 +13,9 @@
         <div class="right-menu">
           <el-dropdown class="avatar-container" trigger="click">
             <div class="avatar-wrapper">
-              <el-avatar src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" size="small" />
+              <el-avatar :src="avatar" size="small" @error="errorHandler">
+                <img src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"/>
+              </el-avatar>
               <span class="user-name">{{ email }}</span>
               <i class="el-icon-caret-bottom" />
             </div>
@@ -60,6 +62,9 @@ export default {
       await this.$store.dispatch('user/logout')
       window.clearInterval(window.timer)
       this.$router.push({ name: 'home' })
+    },
+    errorHandler() {
+      return true
     }
   }
 }
