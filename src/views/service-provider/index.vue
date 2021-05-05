@@ -125,11 +125,11 @@ export default {
       this.formQuery.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
       getGoodsServiceList(this.formQuery).then(res => {
         if (res.code === 200) {
-          this.tableData = res.data.data.map((item, index) => {
+          this.tableData = res.data.map((item, index) => {
             item.index = index
             return item
           })
-          this.listQuery.total = res.data.pagination.totalCount
+          this.listQuery.total = +res.total
         }
       }).catch(err => {
         console.log(err)

@@ -79,3 +79,27 @@ export function changePassword(data) {
     data: data
   })
 }
+// 个人中心获取用户基本信息
+export function findUserInfo(data) {
+  return request({
+    url: '/site/find-user-info',
+    method: 'get',
+    params: data
+  })
+}
+// 个人中心获取店铺
+export function getGoodsStoreList(data) {
+  return request({
+    url: '/goods/goods/store-list',
+    method: 'get',
+    params: data
+  })
+}
+// 个人中心修改用户信息
+export function updateUserInfo(data) {
+  return request({
+    url: '/site/update-user-info',
+    method: 'post',
+    data: data
+  })
+}
