@@ -129,6 +129,9 @@
 <script>
 import { baseChartIndex } from '@/api/user'
 import * as echarts from 'echarts'
+import { mapGetters } from 'vuex'
+import { shopifyApi, shopifyPush } from '@/api/user'
+import { setCookies, getCookies } from '@/utils/cookies'
 export default {
   name: 'dashboard',
   filters: {
@@ -141,6 +144,11 @@ export default {
         return value
       }
     }
+  },
+  computed: {
+    ...mapGetters([
+      'name'
+    ])
   },
   data() {
     return {
@@ -273,6 +281,7 @@ export default {
     }
   },
   mounted() {
+    this.shopifyInit()
     const myChart = echarts.init(document.getElementById('myChart'))
     const twoChart = echarts.init(document.getElementById('twoChart'))
     baseChartIndex().then(res => {
@@ -336,6 +345,17 @@ export default {
         c += cArray[cIndex]
       }
       return c
+    },
+    async shopifyInit() {
+      const shopify = getCookies('shopify')
+      const shop = getCookies('shop')
+      if (shopify && shop) {
+        const shopifyQuery = JSON.parse(shopify)
+        setCookies('shopify', shopifyQuery)
+        setCookies('shop', shopifyQuery.shop)
+        await shopifyApi({ ...shopifyQuery })
+        await shopifyPush({ shop: shop })
+      }
     }
   }
 }
