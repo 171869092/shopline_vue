@@ -125,8 +125,8 @@
                 <el-col :span="15">
                   <div class="grid-content bg-purple">
                     <div class="flexbox">
-                      <div class="vendor-sub-title">Status: <span>{{ info.vendor.track_info.TrackingStatus || '--' }}</span></div>
-                      <div class="vendor-sub-title ml40">Tracking Numbers: <span>{{ info.vendor.track_info.WaybillNumber || '--' }}</span></div>
+                      <div class="vendor-sub-title">Status: <span>{{ info.vendor.track_info.TrackingStatus ? info.vendor.track_info.TrackingStatus : '' || '--' }}</span></div>
+                      <div class="vendor-sub-title ml40">Tracking Numbers: <span>{{ info.vendor.track_info.WaybillNumber ? info.vendor.track_info.WaybillNumber : '' || '--' }}</span></div>
                     </div>
                     <el-timeline v-if=" info.vendor.track_info.OrderTrackingDetails" class="mt20 pl20" :reverse="false">
                       <el-timeline-item
