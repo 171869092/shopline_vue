@@ -280,8 +280,10 @@ export default {
       }
     }
   },
-  mounted() {
+  created() {
     this.shopifyInit()
+  },
+  mounted() {
     const myChart = echarts.init(document.getElementById('myChart'))
     const twoChart = echarts.init(document.getElementById('twoChart'))
     baseChartIndex().then(res => {
@@ -346,15 +348,17 @@ export default {
       }
       return c
     },
-    async shopifyInit() {
+    shopifyInit() {
       const shopify = getCookies('shopify')
       const shop = getCookies('shop')
+      console.log('shopify---', shopify)
+      console.log('shop---', shop)
       if (shopify && shop) {
         const shopifyQuery = JSON.parse(shopify)
         setCookies('shopify', shopifyQuery)
         setCookies('shop', shopifyQuery.shop)
-        await shopifyApi({ ...shopifyQuery })
-        await shopifyPush({ shop: shop })
+        shopifyApi({ ...shopifyQuery })
+        shopifyPush({ shop: shop })
       }
     }
   }
