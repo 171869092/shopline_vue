@@ -74,7 +74,7 @@ export function baseChartIndex(data) {
 // 修改密码
 export function changePassword(data) {
   return request({
-    url: '/site/change-password',
+    url: '/base/index/change-password',
     method: 'post',
     data: data
   })
@@ -82,7 +82,7 @@ export function changePassword(data) {
 // 个人中心获取用户基本信息
 export function findUserInfo(data) {
   return request({
-    url: '/site/find-user-info',
+    url: '/base/index/find-user-info',
     method: 'get',
     params: data
   })
@@ -98,7 +98,7 @@ export function getGoodsStoreList(data) {
 // 个人中心修改用户信息
 export function updateUserInfo(data) {
   return request({
-    url: '/site/update-user-info',
+    url: '/base/index/update-user-info',
     method: 'post',
     data: data
   })
