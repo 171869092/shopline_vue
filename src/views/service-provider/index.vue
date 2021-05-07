@@ -5,7 +5,7 @@
         <div class="filter-control flexbox mb20 mr20">
           <div class="filter-item">
             <el-input
-              v-model="formQuery.search"
+              v-model="formQuery.name"
               clearable
               class="w-300"
               prefix-icon="el-icon-search"
@@ -86,7 +86,7 @@ export default {
   data() {
     return {
       formQuery: {
-        search: '',
+        name: '',
         data: ''
       },
       listQuery: {
@@ -129,7 +129,7 @@ export default {
             item.index = index
             return item
           })
-          this.listQuery.total = +res.total
+          this.listQuery.total = +res.total.totalCount
         }
       }).catch(err => {
         console.log(err)
