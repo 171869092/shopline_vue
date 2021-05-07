@@ -58,15 +58,14 @@
 
               <el-tab-pane label="Picture Content" name="second">
                 <!-- Picture Content -->
-            
                 <el-dialog :visible.sync="dialogVisible" width="550px" >
-                    <div class="block" style="height: 500px;">
-                      <el-image accept="image/png, image/jpeg" style="width: 500px; height: 500px; float:left;" :src="thisImgs">
-                        <!-- <div slot="error" class="image-slot">
+                  <div class="block" style="height: 500px;">
+                    <el-image accept="image/png, image/jpeg" style="width: 500px; height: 500px; float:left;" :src="thisImgs">
+                      <!-- <div slot="error" class="image-slot">
                           <i class="el-icon-picture-outline" style="font-size: 30px;" />
                         </div> -->
-                      </el-image>
-                    </div>
+                    </el-image>
+                  </div>
                 </el-dialog>
 
                 <div v-for="fit in showImg" :key="fit" class="block">
@@ -152,7 +151,6 @@
                   :src="fit"
                   :fit="fit"
                 >
-                
                   <div slot="error" class="image-slot">
                     <i class="el-icon-picture-outline" style="font-size: 30px;" />
                   </div>
@@ -220,7 +218,7 @@ export default {
     }
   },
   created() {
-    if (this.$route.query.type == 'edit') {
+    if (this.$route.query.type === 'edit') {
       this.getAfterSalesDetail()
     }
   },
@@ -244,7 +242,7 @@ export default {
     getAfterSalesDetail() {
       this.loading = true
       afterSalesDetail({ id: this.$route.query.id }).then(res => {
-        if (res.code == 200) {
+        if (res.code === 200) {
           this.tableData = res.data
           this.showImg = res.data.image
           // if (res.data.reply){
@@ -281,10 +279,10 @@ export default {
       })
     },
 
-    //.preview 
+    // .preview
     preview(src) {
       this.dialogVisible = true
-      console.log('this.$refs', src )
+      console.log('this.$refs', src)
       this.thisImgs = src
     }
   }

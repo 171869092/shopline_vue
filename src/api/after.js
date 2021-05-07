@@ -1,15 +1,15 @@
 import request from '@/utils/request'
 
-//. after sale list
+// . after sale list
 export function afterSalesList(params) {
-    return request({
-      url: '/after/after-sales/index',
-      method: 'get',
-      params
-    })
+  return request({
+    url: '/after/after-sales/index',
+    method: 'get',
+    params
+  })
 }
 
-//. after sale detail
+// . after sale detail
 export function afterSalesDetail(params) {
   return request({
     url: '/after/after-sales/details',
@@ -18,7 +18,7 @@ export function afterSalesDetail(params) {
   })
 }
 
-//. after sale type
+// . after sale type
 export function afterSalesType() {
   return request({
     url: '/after/after-sales/type',
@@ -26,7 +26,7 @@ export function afterSalesType() {
   })
 }
 
-//. after sale create
+// . after sale create
 export function afterSalesCreate(data) {
   return request({
     url: '/after/after-sales/create',
@@ -35,7 +35,7 @@ export function afterSalesCreate(data) {
   })
 }
 
-//. after sale channged status
+// . after sale channged status
 export function afterSalesChanngedStatus(data) {
   return request({
     url: '/after/after-sales/finish',
