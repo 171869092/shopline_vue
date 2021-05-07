@@ -4,25 +4,28 @@
       <div class="order">
         <el-card class="box-card">
           <div class="top-box">
-            <h4><span class="radius"></span>Order</h4>
+            <h4>
+              <span class="radius" />
+              Order
+            </h4>
             <div class="main">
-              <p class="text">{{dashboardForm.order}}</p>
+              <p class="text">{{ dashboardForm.order }}</p>
               <div class="image-box">
-                <img src="@/assets/home/order-circle.png" class="image">
+                <img src="@/assets/home/order-circle.png" class="image" alt="">
                 <div class="img-text">
-                  <p>{{dashboardForm.new_order}}</p>
+                  <p>{{ dashboardForm.new_order }}</p>
                   <p>Newly Added</p>
                 </div>
               </div>
               <div class="main-footer">
                 <div class="left">
                   <p>Complete</p>
-                  <p>{{dashboardForm.complete}}</p>
+                  <p>{{ dashboardForm.complete }}</p>
                 </div>
-                <div class="line"></div>
+                <div class="line" />
                 <div class="right">
                   <p>Unfinished</p>
-                  <p>{{dashboardForm.unfinished}}</p>
+                  <p>{{ dashboardForm.unfinished }}</p>
                 </div>
               </div>
             </div>
@@ -33,66 +36,68 @@
         <div class="product-list">
           <el-card class="box-card">
             <div>
-              <i class="el-icon-user-solid first"></i>
+              <i class="el-icon-user-solid first" />
               <span>My product</span>
             </div>
-            <p>{{dashboardForm.product}}</p>
+            <p>{{ dashboardForm.product }}</p>
           </el-card>
           <el-card class="box-card">
             <div>
-              <i class="el-icon-message-solid second"></i>
+              <i class="el-icon-message-solid second" />
               <span>Managed products</span>
             </div>
-            <p>{{dashboardForm.managed_product}}</p>
+            <p>{{ dashboardForm.managed_product }}</p>
           </el-card>
           <el-card class="box-card">
             <div>
-              <i class="el-icon-location third"></i>
+              <i class="el-icon-location third" />
               <span>Number of stores</span>
             </div>
-            <p>{{dashboardForm.stores_number}}</p>
+            <p>{{ dashboardForm.stores_number }}</p>
           </el-card>
           <el-card class="box-card">
             <div>
-              <i class="el-icon-coin fourth"></i>
+              <i class="el-icon-coin fourth" />
               <span>Sales amount</span>
             </div>
-            <p>{{dashboardForm.sales_amount}}</p>
+            <p>{{ dashboardForm.sales_amount }}</p>
           </el-card>
         </div>
         <div class="line-chart">
           <el-card class="box-card">
             <div class="top-box">
-              <span class="radius"></span>
+              <span class="radius" />
               <span>Logistics information</span>
             </div>
-            <div id="myChart" style="width: 100%;height:320px;"></div>
+            <div id="myChart" style="width: 100%;height:320px;" />
           </el-card>
           <el-card class="box-card">
             <div class="top-box space">
               <div>
-                <span class="radius"></span>
+                <span class="radius" />
                 <span>After sales information</span>
               </div>
-              <el-button type="text" class="btn" @click="$router.push({name: 'after'})">ALL<i class="el-icon-arrow-right"></i></el-button>
+              <el-button type="text" class="btn" @click="$router.push({name: 'after'})">ALL<i class="el-icon-arrow-right" /></el-button>
             </div>
             <el-table
               :data="dashboardForm.after_sales"
-              :header-cell-style="{background: '#f6f5fb'}">
+              :header-cell-style="{background: '#f6f5fb'}"
+            >
               <el-table-column
                 prop="order_name"
-                label="Name">
-              </el-table-column>
+                label="Name"
+              />
               <el-table-column
                 prop="state"
-                label="State">
-              </el-table-column>
+                label="State"
+              />
               <el-table-column
                 prop="after_type"
-                label="Type">
+                label="Type"
+              >
                 <template slot-scope="scope">
                   <el-tooltip class="item" effect="dark" :content="afterTypes[scope.row.after_type]" placement="top">
-                    <span>{{ afterTypes[scope.row.after_type] | ellipsis}}</span>
+                    <span>{{ afterTypes[scope.row.after_type] | ellipsis }}</span>
                   </el-tooltip>
                 </template>
               </el-table-column>
@@ -105,10 +110,10 @@
       <div class="sales-data-box">
         <el-card class="box-card">
           <div class="top-box">
-            <span class="radius"></span>
+            <span class="radius" />
             <span>Sales data</span>
           </div>
-          <div id="twoChart" style="width: 100%;height:320px;"></div>
+          <div id="twoChart" style="width: 100%;height:320px;" />
         </el-card>
       </div>
       <div class="video-box">
@@ -150,6 +155,7 @@ export default {
       'name'
     ])
   },
+  // eslint-disable-next-line vue/order-in-components
   data() {
     return {
       dashboardForm: {
