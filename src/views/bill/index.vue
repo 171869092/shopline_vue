@@ -217,10 +217,10 @@ export default {
       if (this.selOrderIds.length > 0) {
         getOrderBillFinish({ id: this.selOrderIds }).then(res => {
           if (res.code === 200) {
-            this.$message.success('The bill is settled successfully!')
+            this.$message.success(res.message)
             this.Inquire()
           } else {
-            this.$message.error('Order settlement failed!')
+            this.$message.error(res.message)
           }
         })
       } else {

@@ -164,12 +164,11 @@ export default {
       const formData = { ...this.basicsForm }
       updateUserInfo(formData).then(res => {
         if (res.code === 200) {
-          this.$message.success('Data modified successfully!')
-          // this.$store.commit("user/SET_AVATAR",this.basicsForm.enterprise_logo)
-          this.$store.commit("user/SET_AVATAR",this.basicsForm.icon)
+          this.$message.success(res.message)
+          this.$store.commit("user/SET_AVATAR", this.basicsForm.icon)
           this.init()
         } else {
-          this.$message.warning('Data modification failed!')
+          this.$message.warning(res.message)
         }
       })
     },

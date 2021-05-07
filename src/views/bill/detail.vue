@@ -159,12 +159,12 @@ export default {
         ids.push(this.bill_id)
         getOrderBillFinish({ id: ids }).then(res => {
           if (res.code === 200) {
-            this.$message.success('The bill is settled successfully!')
+            this.$message.success(res.message)
             this.$router.push({
               name: 'bill'
             })
           } else {
-            this.$message.error('Order settlement failed!')
+            this.$message.error(res.message)
           }
         })
       }
