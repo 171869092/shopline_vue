@@ -364,8 +364,40 @@ export default {
         setCookies('shopify', shopifyQuery)
         setCookies('shop', shopifyQuery.shop)
         shopifyApi({ ...shopifyQuery })
+        this.initWebSocket()
         shopifyPush({ shop: shop })
       }
+    },
+    // 初始化weosocket
+    initWebSocket() {
+      const wsuri = 'wss://socket.fbali.co/wss/test'
+      this.websock = new WebSocket(wsuri)
+      this.websock.onmessage = this.websocketonmessage
+      this.websock.onopen = this.websocketonopen
+      this.websock.onerror = this.websocketonerror
+      this.websock.onclose = this.websocketclose
+    },
+    websocketonmessage(e) { // 数据接收
+      console.log(e)
+      const redata = JSON.parse(e.data)
+      this.percentage = parseInt(redata.expr) || 0
+      this.store_url = redata.store_url
+      redata.code === '-1' ? this.typeClose = false : this.typeClose = true
+    },
+    websocketonopen() { // 连接建立之后执行send方法发送数据
+      const actions = { store_url: this.formInline.store_url }
+      this.websocketsend(JSON.stringify(actions))
+      console.log('连接建立之后执行')
+    },
+    websocketonerror() { // 连接建立失败重连
+      this.initWebSocket()
+    },
+    websocketsend(Data) { // 数据发送
+      this.websock.send(Data)
+      console.log(Data)
+    },
+    websocketclose(e) { // 关闭
+      console.log('断开连接', e)
     }
   }
 }
