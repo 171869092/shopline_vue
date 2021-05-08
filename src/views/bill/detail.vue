@@ -12,59 +12,46 @@
     </div>
     <el-card class="m20 mt0">
       <el-form :model="billDetailForm" label-width="100px" inline label-position="left">
-        <div class="box-card create-box form-wrap ml20 mr20 mb20">
-          <el-form-item label="Bill name" prop="bill_name">
-            <span class="w-300">{{ billDetailForm.bill_name }}</span>
-          </el-form-item>
-          <el-form-item label="Date" prop="date">
-            <span class="w-300">{{ billDetailForm.date }}</span>
-          </el-form-item>
-          <el-form-item label="Due Date" prop="due_date">
-            <span class="w-300">{{ billDetailForm.due_date }}</span>
-          </el-form-item>
-          <el-form-item label="Refunded" prop="refunded">
-            <span class="w-300">{{ billDetailForm.refunded }}</span>
-          </el-form-item>
-          <el-form-item label="Amount Paid" prop="amount_paid">
-            <span class="w-300">{{ billDetailForm.amount_paid }}</span>
-          </el-form-item>
-          <el-form-item label="Balance Due" prop="balance_due">
-            <span class="w-300">{{ billDetailForm.balance_due }}</span>
-          </el-form-item>
-        </div>
         <div class="box-card create-box ml20 mr20 mb20">
           <div class="form-data-box">
-            <div class="upload-logo">
-              <el-image :src="billDetailForm.enterprise_logo" style="height: 200px;width: 200px" />
+            <div class="left">
+              <div class="upload-logo">
+                <el-image :src="billDetailForm.enterprise_logo" style="height: 200px;width: 250px" />
+              </div>
+              <el-form-item label="" prop="enterprise_info">
+                <div class="mv-calc">{{ billDetailForm.enterprise_info }}</div>
+              </el-form-item>
+              <el-row :gutter="20">
+                <el-col :span="8">
+                  <el-form-item label="Bill To" prop="bill_to">
+                    <div class="bill-calc">{{ billDetailForm.bill_to }}</div>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="Ship To" prop="ship_to">
+                    <div class="bill-calc">{{ billDetailForm.ship_to }}</div>
+                  </el-form-item>
+                </el-col>
+              </el-row>
             </div>
-            <div class="form-preview">
-              <el-form-item label="Enterprise name" prop="enterprise_name">
-                <span class="w-400">{{ billDetailForm.enterprise_name }}</span>
+            <div class="right">
+              <el-form-item label=" " prop="bill_info">
+                <span class="w-400 big">{{ billDetailForm.bill_info }}</span>
               </el-form-item>
-              <el-form-item label="contact number" prop="contact_number">
-                <span class="w-400">{{ billDetailForm.contact_number }}</span>
+              <el-form-item label="#" prop="bill_name">
+                <span class="w-400">{{ billDetailForm.bill_name }}</span>
               </el-form-item>
-              <el-form-item label="Business address" prop="business_address">
-                <span class="w-400">{{ billDetailForm.business_address }}</span>
+              <el-form-item label="Date" prop="date">
+                <span class="w-400">{{ billDetailForm.date }}</span>
               </el-form-item>
-              <el-form-item label="Enterprise mailbox" prop="mailbox">
-                <span class="w-400">{{ billDetailForm.mailbox }}</span>
+              <el-form-item label="Due Date" prop="due_date">
+                <span class="w-400">{{ billDetailForm.due_date }}</span>
+              </el-form-item>
+              <el-form-item label="Balance Due" prop="balance_due">
+                <span class="w-400">{{ billDetailForm.balance_due }}</span>
               </el-form-item>
             </div>
           </div>
-          <el-divider />
-          <el-row>
-            <el-col :span="12">
-              <el-form-item label="Bill To" prop="bill_to">
-                <el-input v-model="billDetailForm.bill_to" type="textarea" size="small" :rows="6" class="mv-calc" readonly resize="none" />
-              </el-form-item>
-            </el-col>
-            <el-col :span="12">
-              <el-form-item label="Ship To" prop="ship_to">
-                <el-input v-model="billDetailForm.ship_to" type="textarea" size="small" :rows="6" class="mv-calc" readonly resize="none" />
-              </el-form-item>
-            </el-col>
-          </el-row>
         </div>
         <div class="box-card create-box ml20 mr20 mb20">
           <el-table :data="billDetailForm.order_list" class="material-table">
@@ -77,12 +64,12 @@
         </div>
         <div class="box-card create-box ml20 mr20 mb20">
           <div class="notes-form">
-            <div>
+            <div class="notes-box">
               <el-form-item label="Notes" prop="notes">
-                <el-input v-model="billDetailForm.notes" type="textarea" size="small" :rows="6" class="w-730" readonly resize="none" />
+                <div class="notesTerms">{{ billDetailForm.notes }}</div>
               </el-form-item>
               <el-form-item label="Terms" prop="terms">
-                <el-input v-model="billDetailForm.terms" type="textarea" size="small" :rows="6" class="w-730" readonly resize="none" />
+                <div class="notesTerms">{{ billDetailForm.terms }}</div>
               </el-form-item>
             </div>
             <div class="product-details">
@@ -98,14 +85,8 @@
               <el-form-item label="Total" prop="total">
                 <span>{{ billDetailForm.total }}</span>
               </el-form-item>
-              <el-form-item label="Refunded" prop="refunded">
-                <span>{{ billDetailForm.refunded }}</span>
-              </el-form-item>
-              <el-form-item label="Amount Paid" prop="amount_paid">
-                <span>{{ billDetailForm.amount_paid }}</span>
-              </el-form-item>
-              <el-form-item label="Balance Due" prop="balance_due">
-                <span>{{ billDetailForm.balance_due }}</span>
+              <el-form-item label="Refunded" prop="refund_price">
+                <span>{{ billDetailForm.refund_price }}</span>
               </el-form-item>
             </div>
           </div>
@@ -214,17 +195,42 @@ export default {
     padding: 30px 30px 15px;
     .mv-calc {
       width: calc(100vw - 70vw)!important;
+      height: 130px;
+      word-wrap: break-word;
+      word-break: normal;
+    }
+    .bill-calc {
+      width: calc(100vw - 80vw)!important;
+      height: 130px;
+      word-wrap: break-word;
+      word-break: normal;
     }
     .form-data-box {
       display: flex;
-      .upload-logo {
-        height: 200px;
-        background-color: #eee;
-        flex: 0 0 200px;
-        .img-line {
-          line-height: 200px;
-          padding-left: 10px;
-          font-size: 22px;
+      justify-content: space-between;
+      .left {
+        flex: 3;
+        padding-left: 20px;
+        .upload-logo {
+          width: 250px;
+          height: 200px;
+          background-color: #eee;
+          margin-bottom: 20px;
+          .img-line {
+            line-height: 200px;
+            padding-left: 10px;
+            font-size: 22px;
+          }
+        }
+      }
+      .right {
+        flex: 1;
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: column;
+        .big {
+          font-size: 28px;
+          font-weight: 700;
         }
       }
       .form-preview {
@@ -237,19 +243,17 @@ export default {
     .notes-form {
       display: flex;
       justify-content: space-between;
+      .notes-box {
+        flex: 3;
+        margin-right: 40px;
+      }
       .product-details {
-        flex: 0 0 400px;
+        flex: 1;
         display: flex;
         flex-direction: column;
         flex-wrap: nowrap;
       }
     }
-  }
-  .form-wrap {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    column-gap: 30px;
-    padding: 16px 24px;
   }
 }
 </style>
