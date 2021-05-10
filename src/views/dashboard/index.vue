@@ -383,7 +383,8 @@ export default {
       redata.code === '-1' ? this.typeClose = false : this.typeClose = true
     },
     websocketonopen() { // 连接建立之后执行send方法发送数据
-      const actions = { store_url: this.store_url }
+      console.log('this.store_url--',this.store_url)
+      const actions = { store_url: 'live-by-test.myshopify.com' }
       this.websocketsend(JSON.stringify(actions))
       console.log('连接建立之后执行')
     },
