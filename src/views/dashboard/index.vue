@@ -357,8 +357,6 @@ export default {
     shopifyInit() {
       const shopify = getCookies('shopify')
       const shop = getCookies('shop')
-      console.log('shopify---', shopify)
-      console.log('shop---', shop)
       if (shopify && shop) {
         const shopifyQuery = JSON.parse(shopify)
         setCookies('shopify', shopifyQuery)
@@ -385,7 +383,7 @@ export default {
       redata.code === '-1' ? this.typeClose = false : this.typeClose = true
     },
     websocketonopen() { // 连接建立之后执行send方法发送数据
-      const actions = { store_url: 'live-by-test.myshopify.com' }
+      const actions = { store_url: this.store_url }
       this.websocketsend(JSON.stringify(actions))
       console.log('连接建立之后执行')
     },
