@@ -359,6 +359,7 @@ export default {
     shopifyInit() {
       const shopify = getCookies('shopify')
       const shop = getCookies('shop')
+      this.store_url = shop
       if (shopify && shop) {
         const shopifyQuery = JSON.parse(shopify)
         setCookies('shopify', shopifyQuery)
