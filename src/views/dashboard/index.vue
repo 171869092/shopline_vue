@@ -158,6 +158,8 @@ export default {
   // eslint-disable-next-line vue/order-in-components
   data() {
     return {
+      store_url: '',
+      websock: null,
       dashboardForm: {
         id: '',
         user_id: '',
@@ -376,15 +378,11 @@ export default {
       this.websock.onclose = this.websocketclose
     },
     websocketonmessage(e) { // 数据接收
-      console.log(e)
       const redata = JSON.parse(e.data)
-      this.percentage = parseInt(redata.expr) || 0
       this.store_url = redata.store_url
-      redata.code === '-1' ? this.typeClose = false : this.typeClose = true
     },
     websocketonopen() { // 连接建立之后执行send方法发送数据
-      console.log('this.store_url--', this.store_url)
-      const actions = { store_url: ['live-by-test.myshopify.com', 'live-by-testing.myshopify.com'] }
+      const actions = { store_url: this.store_url }
       this.websocketsend(JSON.stringify(actions))
       console.log('连接建立之后执行')
     },
