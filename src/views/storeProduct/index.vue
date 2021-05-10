@@ -32,7 +32,16 @@
                 />
               </el-select>
             </div>
-
+            <div>
+              <el-select v-model="formInline.service_id" placeholder="Service id" clearable class="ml20" @change="filterOrders">
+                <el-option
+                  v-for="(item,idx) in serviceList"
+                  :key="item.id"
+                  :label="item.service_name"
+                  :value="String(idx + 1)"
+                />
+              </el-select>
+            </div>
           </div>
           <el-row v-if="typeClose && formInline.store_url === store_url" class="row-bg mb10">
             <el-col :span="2"><span>Data syncing:</span></el-col>
@@ -103,7 +112,14 @@
 </template>
 <script>
 import { debounce } from '@/utils'
-import { getStoreProductList, getCancelHosting, getStoreList, getStorePushProduct, productCost } from '@/api/product'
+import {
+  getStoreProductList,
+  getCancelHosting,
+  getStoreList,
+  getStorePushProduct,
+  productCost,
+  getServiceList
+} from '@/api/product'
 export default {
   name: 'product',
   components: {
@@ -149,11 +165,13 @@ export default {
       tabClickLabel: '',
       websock: null,
       typeClose: false,
-      store_url: ''
+      store_url: '',
+      serviceList: []
     }
   },
   created() {
     this.storeList()
+    this.handleGetServiceList()
   },
   methods: {
     // 获取店铺list
@@ -324,6 +342,13 @@ export default {
     },
     websocketclose(e) { // 关闭
       console.log('断开连接', e)
+    },
+    handleGetServiceList() {
+      getServiceList().then(res => {
+        if (res.code === 200) {
+          this.serviceList = res.data
+        }
+      })
     }
   }
 }
