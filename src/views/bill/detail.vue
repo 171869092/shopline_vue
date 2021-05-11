@@ -48,7 +48,7 @@
                 <span class="w-400">{{ billDetailForm.due_date }}</span>
               </el-form-item>
               <el-form-item label="Balance Due" prop="balance_due">
-                <span class="w-400">{{ billDetailForm.balance_due }}</span>
+                <span class="w-400">US${{ billDetailForm.balance_due }}</span>
               </el-form-item>
             </div>
           </div>
@@ -74,7 +74,7 @@
             </div>
             <div class="product-details">
               <el-form-item label="Subtotal" prop="subtotal">
-                <span>{{ billDetailForm.subtotal }}</span>
+                <span>US${{ billDetailForm.subtotal }}</span>
               </el-form-item>
               <el-form-item label="Discount(%)" prop="discount">
                 <span>{{ billDetailForm.discount }}</span>
@@ -83,10 +83,10 @@
                 <span>{{ billDetailForm.tax }}</span>
               </el-form-item>
               <el-form-item label="Total" prop="total">
-                <span>{{ billDetailForm.total }}</span>
+                <span>US${{ billDetailForm.total }}</span>
               </el-form-item>
               <el-form-item label="Refunded" prop="refund_price">
-                <span>{{ billDetailForm.refunded }}</span>
+                <span>${{ billDetailForm.refunded }}</span>
               </el-form-item>
             </div>
           </div>

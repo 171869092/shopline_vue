@@ -91,9 +91,10 @@ export default {
         { label: 'Order', value: 'order_name', width: '260' },
         { label: 'Store', value: 'store_url' },
         { label: 'Order goods and quantity', type: 'goodsSku', value: 'goods_sku', width: '220' },
-        { label: 'Product price', value: 'total_amount', width: '220' },
+        { label: 'Product price', value: 'product_total_amount', width: '220' },
         { label: 'Logistics cost', value: 'logistics_cost', width: '220' },
         { label: 'Service fee', value: 'service_fee', width: '220' },
+        { label: 'Amount', value: 'total_amount', width: '220' },
         { label: 'State', type: 'status', value: 'settlement_status', width: '220' }
       ],
       loading: false,
