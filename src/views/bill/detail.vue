@@ -56,9 +56,9 @@
         <div class="box-card create-box ml20 mr20 mb20">
           <el-table :data="billDetailForm.order_list" class="material-table">
             <el-table-column prop="ltem" label="ltem" min-width="320" />
-            <el-table-column prop="price" label="Price" width="260" />
             <el-table-column prop="quantity" label="Quantity" width="260" />
-            <el-table-column prop="total_price" label="Total price" width="260" />
+            <el-table-column prop="rate" label="Rate" width="260"></el-table-column>
+            <el-table-column prop="amount" label="Amount" width="260"></el-table-column>
           </el-table>
           <el-button type="primary" size="small" icon="el-icon-view" class="mt20" @click="iViews">Details</el-button>
         </div>
@@ -86,7 +86,7 @@
                 <span>{{ billDetailForm.total }}</span>
               </el-form-item>
               <el-form-item label="Refunded" prop="refund_price">
-                <span>{{ billDetailForm.refund_price }}</span>
+                <span>{{ billDetailForm.refunded }}</span>
               </el-form-item>
             </div>
           </div>
