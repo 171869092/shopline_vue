@@ -70,7 +70,7 @@
             </el-table-column>
             <el-table-column label="Creation time">
               <template slot-scope="scope">
-                <span>{{ scope.row.creat_time }}</span>
+                <span>{{ scope.row.create_time }}</span>
               </template>
             </el-table-column>
             <el-table-column label="Completion time">
