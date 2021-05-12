@@ -1,7 +1,7 @@
 <template>
   <div class="customer-box">
     <div v-for="(item, index) in systemList" :key="index" class="list-box" @click="handleClick(item)">
-      <h4 class="title-style">{{ item.name }}<img :src="NewIcon" class="imgIcon" v-if="item.status === '1'" /></h4>
+      <h4 class="title-style">{{ item.msg_json.update_name }}<img :src="NewIcon" class="imgIcon" v-if="item.is_read === '2'" /></h4>
       <p>{{ item.content }}</p>
       <el-divider/>
     </div>
@@ -9,40 +9,47 @@
 </template>
 
 <script>
+import { getMessageList, transferUnreadMessage } from '@/api/notice'
 export default {
   name: 'customer',
   data() {
     return {
-      systemList: [
-        {
-          name: 'masy',
-          content: 'Changes in commodity prices',
-          status: '1',
-          content_status: '1'
-        },
-        {
-          name: 'masymasy',
-          content: 'Regular channel price change',
-          status: '0',
-          content_status: '2'
-        },
-        {
-          name: 'masy',
-          content: 'Changes in commodity prices',
-          status: '0',
-          content_status: '1'
-        }
-      ],
+      systemList: [],
       NewIcon: require('@/assets/home/new.png') // 我的消息new图标
     }
   },
+  created() {
+    this.init()
+  },
   methods: {
     handleClick(val) {
-      if (val.content_status === '1') {
+      const ids = []
+      ids.push(val.id)
+      transferUnreadMessage({ id: ids }).then(res => {
+        if (res.code === 200) {
+          // console.log(res.data)
+        }
+      })
+      if (val.type === '1') {
         this.$router.push({ name: 'channelDetails', query: { list: val }})
       } else {
         this.$router.push({ name: 'priceDetails', query: { list: val }})
       }
+    },
+    // 消息列表
+    init() {
+      getMessageList({ type: ['2'] }).then(res => {
+        if (res.code === 200) {
+          this.systemList = res.data
+          this.systemList.map(item => {
+            if (item.type === '2') {
+              item.content = 'Changes in commodity prices'
+            } else {
+              item.content = 'Regular channel price change'
+            }
+          })
+        }
+      })
     }
   }
 }

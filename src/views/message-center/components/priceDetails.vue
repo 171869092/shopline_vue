@@ -2,22 +2,22 @@
   <div class="price-details-box">
     <div class="box-card p20">
       <el-button class="mr30" size="small" icon="el-icon-back" @click="handleBack" />
-      <span><span class="regular">Regular channel price change：</span>{{ priceDetails.name }}</span>
+      <span><span class="regular">Regular channel price change：</span>{{ priceDetails.msg_json.update_name }}</span>
     </div>
     <el-card class="m20 mt0">
       <el-form :model="priceDetails" label-width="140px" inline label-position="left">
         <div class="content-box">
           <el-form-item label="Trade name" prop="trade_name">
-            <span class="w-400 big">{{ priceDetails.trade_name }}</span>
+            <span class="w-400 big">{{ priceDetails.msg_json.update_name }}</span>
           </el-form-item>
           <el-form-item label="Trade name" prop="trade_name">
-            <span class="w-400">{{ priceDetails.trade_name }}</span>
+            <span class="w-400">{{ priceDetails.msg_json.update_name }}</span>
           </el-form-item>
           <el-form-item label="Original price" prop="original_price">
-            <span class="w-400">{{ priceDetails.original_price }}</span>
+            <span class="w-400">{{ priceDetails.msg_json.old_price }}</span>
           </el-form-item>
           <el-form-item label="Change price" prop="change_price">
-            <span class="w-400">{{ priceDetails.change_price }}</span>
+            <span class="w-400">{{ priceDetails.msg_json.new_price }}</span>
           </el-form-item>
         </div>
       </el-form>
@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { agreeToChangeThePrice, refuseToChangeThePrice } from '@/api/notice'
 export default {
   name: 'price-details',
   props: {
@@ -41,20 +42,49 @@ export default {
   data() {
     return {
       priceDetails: {
-        name: '',
-        trade_name: '',
-        original_price: '',
-        change_price: ''
+        id: '',
+        is_del: '',
+        is_read: '',
+        server_id: '',
+        type: '',
+        u_id: '',
+        msg_json: {
+          update_name: '',
+          old_price: '',
+          new_price: ''
+        }
       }
     }
   },
   created() {
     this.priceDetails = this.$route.query.list
+    console.log('this.priceDetails', this.priceDetails)
   },
   methods: {
     handleRefuse() {
+      const formData = {
+        product_id: this.priceDetails.msg_json.product_id,
+        store_url: this.priceDetails.msg_json.store_url
+      }
+      refuseToChangeThePrice(formData).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.message)
+          this.handleBack()
+        }
+      })
     },
     handleAgree() {
+      const formData = {
+        server_id: this.priceDetails.server_id,
+        s_id: this.priceDetails.msg_json.s_id,
+        new_price: this.priceDetails.msg_json.new_price
+      }
+      agreeToChangeThePrice(formData).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.message)
+          this.handleBack()
+        }
+      })
     },
     handleBack() {
       this.$router.push({ name: 'messages', query: { paneName: 'customer' }})

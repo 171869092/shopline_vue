@@ -28,7 +28,7 @@
         </div>
         <div class="right-menu notice" @click="handleNotice">
           <i class="el-icon-message-solid"></i>
-          <span class="round"></span>
+          <span class="round" v-if="notice.length > 0"></span>
         </div>
       </div>
     </div>
@@ -41,12 +41,18 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 // import Hamburger from '@/components/Hamburger'
 import Logo from './Sidebar/Logo'
+import { getUnreadMessage } from '@/api/notice'
 
 export default {
   components: {
     Breadcrumb,
     Logo
     // Hamburger
+  },
+  data() {
+    return {
+      notice: []
+    }
   },
   computed: {
     ...mapGetters([
@@ -57,6 +63,9 @@ export default {
     showLogo() {
       return this.$store.state.settings.sidebarLogo
     }
+  },
+  created() {
+    this.initNotice()
   },
   methods: {
     toggleSideBar() {
@@ -72,6 +81,13 @@ export default {
     },
     handleNotice() {
       this.$router.push({ name: 'messages' })
+    },
+    initNotice() {
+      getUnreadMessage().then(res => {
+        if (res.code === 200) {
+          this.notice = res.data
+        }
+      })
     }
   }
 }
