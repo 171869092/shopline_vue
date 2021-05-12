@@ -252,6 +252,40 @@ export const constantRoutes = [
       }
     ]
   },
+  {
+    path: '/messages',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'messages',
+        component: () => import('@/views/message-center/index'),
+        meta: { title: 'Messages', icon: 'el-icon-message-solid' },
+        hidden: true
+      },
+      {
+        path: 'notification',
+        name: 'notification',
+        component: () => import('@/views/message-center/components/notification'),
+        meta: { title: 'System notification data', icon: 'el-icon-message-solid' },
+        hidden: true
+      },
+      {
+        path: 'priceDetails',
+        name: 'priceDetails',
+        component: () => import('@/views/message-center/components/priceDetails'),
+        meta: { title: 'Price Details', icon: 'el-icon-message-solid' },
+        hidden: true
+      },
+      {
+        path: 'channelDetails',
+        name: 'channelDetails',
+        component: () => import('@/views/message-center/components/channelDetails'),
+        meta: { title: 'Channel Details', icon: 'el-icon-message-solid' },
+        hidden: true
+      }
+    ]
+  },
   // {
   //   path: '/edit_faq',
   //   component: Layout,

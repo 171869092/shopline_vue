@@ -26,6 +26,10 @@
             </el-dropdown-menu>
           </el-dropdown>
         </div>
+        <div class="right-menu notice" @click="handleNotice">
+          <i class="el-icon-message-solid"></i>
+          <span class="round"></span>
+        </div>
       </div>
     </div>
 
@@ -65,6 +69,9 @@ export default {
     },
     errorHandler() {
       return true
+    },
+    handleNotice() {
+      this.$router.push({ name: 'messages' })
     }
   }
 }
@@ -103,7 +110,6 @@ export default {
     &:focus {
       outline: none;
     }
-
     .right-menu-item {
       display: inline-block;
       padding: 0 8px;
@@ -151,6 +157,23 @@ export default {
           font-size: 12px;
         }
       }
+    }
+  }
+  .notice {
+    margin-right: 20px;
+    font-size: 20px;
+    color: #999;
+    position: relative;
+    cursor: pointer;
+    .round {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: #d4302f;
+      position: absolute;
+      top: 12px;
+      left: 14px;
     }
   }
 }
