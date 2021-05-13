@@ -40,7 +40,7 @@
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
+      <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" :pageSizes="pageSize" @pagination="Inquire" />
     </el-card>
   </div>
 </template>
@@ -103,7 +103,8 @@ export default {
         page: 1,
         limit: 10,
         total: 0
-      }
+      },
+      pageSize: [10, 30, 50, 100]
     }
   },
   created() {
