@@ -381,6 +381,20 @@ export default {
     websocketonmessage(e) { // 数据接收
       const redata = JSON.parse(e.data)
       this.store_url = redata.store_url
+      if (e.code === '2') {
+        const shopify = getCookies('shopify')
+        const shop = getCookies('shop')
+        this.store_url = shop
+        if (shopify && shop) {
+          const shopifyQuery = JSON.parse(shopify)
+          setCookies('shopify', shopifyQuery)
+          setCookies('shop', shopifyQuery.shop)
+          shopifyApi({ ...shopifyQuery })
+          shopifyPush({ shop: shop })
+        }
+      } else {
+        this.websocketclose()
+      }
     },
     websocketonopen() { // 连接建立之后执行send方法发送数据
       const actions = { store_url: this.store_url }
