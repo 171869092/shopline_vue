@@ -1,8 +1,8 @@
 <template>
   <div class="my-shop">
-    <!-- <div class="shop-btn-group">
+    <div class="shop-btn-group">
       <el-button type="primary" size="small" icon="el-icon-plus" @click="connectShop">Connect A Store</el-button>
-    </div> -->
+    </div>
     <el-card class="box-card">
       <el-table
         ref="multipleTable"
