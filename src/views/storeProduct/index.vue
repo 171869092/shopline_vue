@@ -42,6 +42,7 @@
                 />
               </el-select>
             </div>
+            <el-button class="ml20" size="small" type="primary" @click="syncData">Sync Data</el-button>
           </div>
           <el-row v-if="typeClose && formInline.store_url === store_url" class="row-bg mb10">
             <el-col :span="2"><span>Data syncing:</span></el-col>
@@ -118,7 +119,8 @@ import {
   getStoreList,
   getStorePushProduct,
   productCost,
-  getServiceList
+  getServiceList,
+  ManualSync
 } from '@/api/product'
 export default {
   name: 'product',
@@ -347,6 +349,13 @@ export default {
       getServiceList().then(res => {
         if (res.code === 200) {
           this.serviceList = res.data
+        }
+      })
+    },
+    syncData() {
+      ManualSync({ shop: this.store_url }).then(res => {
+        if (res.code === 200) {
+          this.$message.success('Sync start')
         }
       })
     }

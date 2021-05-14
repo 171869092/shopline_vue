@@ -150,3 +150,11 @@ export function productSkuCost(data) {
   })
 }
 
+// ManualSync
+export function ManualSync(params) {
+  return request({
+    url: '/goods/goods/manual-sync',
+    method: 'get',
+    params
+  })
+}
