@@ -261,6 +261,8 @@ export default {
       .notes-box {
         flex: 3;
         margin-right: 40px;
+        display: flex;
+        flex-direction: column;
       }
       .product-details {
         flex: 1;
