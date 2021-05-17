@@ -183,7 +183,7 @@ export default {
 .billDetail {
   overflow: hidden;
   .el-card__body {
-    background-color: #fff;
+    background-color: #fff; // 为导出pdf设置
   }
   .form-box { // 为导出pdf设置
     background-color: #fff;
