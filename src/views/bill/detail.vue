@@ -1,5 +1,5 @@
 <template>
-  <div class="billDetail">
+  <div class="billDetail" id="pdfCentent">
     <div class="box-card">
       <div class="btn-box p20">
         <div>
@@ -7,11 +7,14 @@
           <span class="mr30">{{ '【'+ billDetailForm.bill_name + '】' }}</span>
           <span class="mr30">{{ billDetailForm.bill_no }}</span>
         </div>
-        <el-button type="primary" size="small" @click="settlement">Settlement</el-button>
+        <div>
+          <el-button type="primary" size="small" @click="ExportSavePdf(htmlTitle, nowTime)">ExportDetails</el-button>
+          <el-button type="primary" size="small" @click="settlement">Settlement</el-button>
+        </div>
       </div>
     </div>
     <el-card class="m20 mt0">
-      <el-form :model="billDetailForm" label-width="100px" inline label-position="left">
+      <el-form :model="billDetailForm" label-width="100px" inline label-position="left" class="form-box">
         <div class="box-card create-box ml20 mr20 mb20">
           <div class="form-data-box">
             <div class="left">
@@ -122,7 +125,9 @@ export default {
         ship_to: '',
         order_list: []
       },
-      bill_id: ''
+      bill_id: '',
+      htmlTitle: 'detail--',
+      nowTime: new Date()
     }
   },
   created() {
@@ -174,8 +179,17 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .billDetail {
+  overflow: hidden;
+  .el-card__body {
+    background-color: #fff;
+  }
+  .form-box { // 为导出pdf设置
+    background-color: #fff;
+    width: calc(100vm);
+    height: calc(100vh);
+  }
   .box-card {
     .create-btn {
       display: flex;
@@ -190,6 +204,7 @@ export default {
     }
   }
   .create-box {
+    background-color: #fff;  // 为导出pdf设置
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 30px 30px 15px;

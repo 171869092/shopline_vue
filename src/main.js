@@ -18,7 +18,9 @@ import * as filters from './filters' // global filters
 import 'xe-utils'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
+import htmlToPdf from '@/utils/html2pdf'
 
+Vue.use(htmlToPdf)
 Vue.use(VXETable)
 // Vue.use(FBSignInButton)
 Vue.use(ElementUI, {
