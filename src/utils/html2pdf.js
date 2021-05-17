@@ -1,8 +1,29 @@
 import html2canvas from 'html2canvas'
 import JSPDF from 'jspdf'
+
+const getBas64 = (url, outputFormat = 'image/png') => {
+  return new Promise(function(resolve, reject) {
+    var canvas = document.createElement('CANVAS')
+    const ctx = canvas.getContext('2d')
+    const img = new Image()
+
+    img.crossOrigin = 'Anonymous' // 重点！设置image对象可跨域请求
+    img.onload = function() {
+      canvas.height = img.height
+      canvas.width = img.width
+      ctx.drawImage(img, 0, 0)
+      const dataURL = canvas.toDataURL(outputFormat)
+      canvas = null
+      resolve(dataURL)
+    }
+    // img.src = url; // 旧的方式
+    img.src = url + '?t=' + new Date().valueOf() // 防止oss的缓存问题
+  })
+}
 export default {
   install(Vue, options) {
-    Vue.prototype.ExportSavePdf = function(htmlTitle, currentTime) {
+    Vue.prototype.ExportSavePdf = function(htmlTitle, currentTime, imgUrl) {
+      getBas64(imgUrl)
       var element = document.getElementById('pdfCentent')
       html2canvas(element, {
         logging: false,
@@ -11,6 +32,7 @@ export default {
         scrollY: 0,
         background: '#fff'
       }).then(function(canvas) {
+        // var resImgUrl = canvas.toDataURL()
         var pdf = new JSPDF('l', 'mm', 'a4') // A4纸，横向l ，纵向p
         var ctx = canvas.getContext('2d')
         var a4w = 237; var a4h = 210// A4大小，210mm x 297mm

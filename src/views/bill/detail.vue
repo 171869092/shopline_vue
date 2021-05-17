@@ -8,7 +8,7 @@
           <span class="mr30">{{ billDetailForm.bill_no }}</span>
         </div>
         <div>
-          <el-button type="primary" size="small" @click="ExportSavePdf(htmlTitle, nowTime)">ExportDetails</el-button>
+          <el-button type="primary" size="small" @click="ExportSavePdf(htmlTitle, nowTime, billDetailForm.enterprise_logo)">ExportDetails</el-button>
           <el-button type="primary" size="small" @click="settlement">Settlement</el-button>
         </div>
       </div>
