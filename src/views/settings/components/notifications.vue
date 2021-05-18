@@ -1,6 +1,6 @@
 
 <template>
-  <div>
+  <div class="notifications-box">
     <el-table v-loading="loading" :data="tableData" style="width: 100%">
       <el-table-column label="Store name" prop="store_name" show-overflow-tooltip />
       <el-table-column label="Store Url" prop="store_url" />
@@ -84,4 +84,7 @@ export default {
 }
 </script>
 <style scoped>
+.notifications-box {
+  padding: 20px;
+}
 </style>

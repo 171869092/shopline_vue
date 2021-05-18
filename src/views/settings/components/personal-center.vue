@@ -110,7 +110,7 @@ export default {
           file.url = data['data-service-file']
           file.showProgress = false
           // this.$set(this.basicsForm, 'enterprise_logo',data['data-service-file'])
-          this.$set(this.basicsForm, 'icon',data['data-service-file'])
+          this.$set(this.basicsForm, 'icon', data['data-service-file'])
           // this.$store.commit("user/SET_AVATAR",data['data-service-file'])
           this.showImg = false
         }
@@ -146,7 +146,7 @@ export default {
       findUserInfo().then(res => {
         if (res.code === 200) {
           this.basicsForm = res.data
-          console.log('111----', res.data)
+          // console.log('111----', res.data)
         }
       })
     },
@@ -155,7 +155,7 @@ export default {
       getGoodsStoreList().then(res => {
         if (res.code === 200) {
           this.tableData = res.data
-          console.log('222---', res.data)
+          // console.log('222---', res.data)
         }
       })
     },
@@ -165,7 +165,7 @@ export default {
       updateUserInfo(formData).then(res => {
         if (res.code === 200) {
           this.$message.success(res.message)
-          this.$store.commit("user/SET_AVATAR", this.basicsForm.icon)
+          this.$store.commit('user/SET_AVATAR', this.basicsForm.icon)
           this.init()
         } else {
           this.$message.warning(res.message)
@@ -185,7 +185,7 @@ export default {
     margin-top: 0;
   }
   .box-card {
-    margin-bottom: 20px;
+    margin: 20px;
   }
   .form-box {
     display: grid;

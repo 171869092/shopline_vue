@@ -21,6 +21,10 @@
           <span slot="label"><i class="el-icon-message-solid" />personal Center</span>
           <personal />
         </el-tab-pane>
+        <el-tab-pane name="external">
+          <span slot="label"><i class="el-icon-document" />External links</span>
+          <external />
+        </el-tab-pane>
       </el-tabs>
     </el-card>
   </div>
@@ -30,13 +34,15 @@ import templates from './components/templates'
 import notifications from './components/notifications'
 import password from './components/password'
 import personal from './components/personal-center'
+import external from './components/external-links'
 export default {
   name: 'settings',
   components: {
     templates,
     notifications,
     password,
-    personal
+    personal,
+    external
   },
   props: {},
   data() {
@@ -49,8 +55,13 @@ export default {
   methods: {}
 }
 </script>
-<style scoped>
+<style lang="scss">
 .my-settings {
   padding: 30px;
+  .el-tabs--border-card {
+    .el-tabs__content {
+      padding: 0!important;
+    }
+  }
 }
 </style>
