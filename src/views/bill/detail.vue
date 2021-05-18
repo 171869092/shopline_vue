@@ -8,7 +8,7 @@
           <span class="mr30">{{ billDetailForm.bill_no }}</span>
         </div>
         <div>
-          <el-button type="primary" size="small" @click="ExportSavePdf(htmlTitle, nowTime, billDetailForm.enterprise_logo)">ExportDetails</el-button>
+          <el-button type="primary" size="small" @click="ExportSavePdf(htmlTitle, nowTime)">ExportDetails</el-button>
           <el-button type="primary" size="small" @click="settlement">Settlement</el-button>
         </div>
       </div>
@@ -19,7 +19,8 @@
           <div class="form-data-box">
             <div class="left">
               <div class="upload-logo">
-                <el-image :src="billDetailForm.enterprise_logo" style="height: 200px;width: 250px" />
+<!--                <el-image :src="billDetailForm.enterprise_logo" style="height: 200px;width: 250px" />-->
+                <el-image :src="logImg" style="height: 200px;width: 250px" />
               </div>
               <el-form-item label="" prop="enterprise_info">
                 <div class="mv-calc">{{ billDetailForm.enterprise_info }}</div>
@@ -101,6 +102,7 @@
 
 <script>
 import { getOrderBillDetail, getOrderBillFinish } from '@/api/bill'
+import axios from 'axios'
 
 export default {
   name: 'bill-detail',
@@ -127,7 +129,8 @@ export default {
       },
       bill_id: '',
       htmlTitle: 'detail--',
-      nowTime: new Date()
+      nowTime: new Date(),
+      logImg: ''
     }
   },
   created() {
@@ -172,6 +175,26 @@ export default {
         if (res.code === 200) {
           this.billDetailForm = res.data
           this.$set(this.billDetailForm, 'order_list', res.data.billLtem)
+          this.getBase64Image(this.billDetailForm.enterprise_logo, (baseUrl) => {
+            this.logImg = baseUrl
+          })
+        }
+      })
+    },
+    getBase64Image(src, callback, outputFormat) {
+      axios.get(src, { responseType: 'arraybuffer' }).then((res) => {
+        if (res.status === 200) {
+          // console.log("res返回参数：", res)
+          var uInt8Array = new Uint8Array(res.data)
+          var i = uInt8Array.length
+          var binaryString = new Array(i)
+          while (i--) {
+            binaryString[i] = String.fromCharCode(uInt8Array[i])
+          }
+          var data = binaryString.join('')
+          var base64 = window.btoa(data)
+          var dataUrl = 'data:' + (outputFormat || 'image/png') + ';base64,' + base64
+          callback.call(this, dataUrl)
         }
       })
     }
