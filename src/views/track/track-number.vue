@@ -54,6 +54,9 @@
 </template>
 
 <script>
+import { setToken } from '@/utils/auth'
+import { setCookies } from '@/utils/cookies'
+
 export default {
   name: 'track-number',
   data() {
@@ -92,6 +95,13 @@ export default {
       return this.$store.getters.language
     }
   },
+  created() {
+    setToken(this.$route.query.token)
+    setCookies(this.$route.query.uid)
+    setCookies(this.$route.query.email)
+    setCookies(this.$route.query.name)
+    setCookies(this.$route.query.language)
+  },
   methods: {
     // 切换语言
     handleSetLanguage(lang) {
@@ -118,7 +128,6 @@ export default {
     submitTrack() {
       this.$refs['trackNumberForm'].validate((valid) => {
         if (valid) {
-          console.log('1111')
           this.dialogVisible = true
         }
       })
@@ -155,7 +164,7 @@ export default {
     margin: 0!important;
   }
   .track-form-box {
-    height: 1000px;
+    height: calc(94vh - 5px);
     padding-top: 100px;
   }
 }
