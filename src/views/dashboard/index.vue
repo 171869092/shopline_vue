@@ -128,6 +128,18 @@
         />
       </div>
     </div>
+    <el-dialog
+      title="Tips"
+      :visible.sync="dialogVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
+      :show-close="false"
+      width="30%">
+      <span>Please go to Shopify to jump！</span>
+      <span slot="footer" class="dialog-footer">
+        <a :href="'http://' + shopifyUrl + '/admin/apps'" style="background-color:#ef6f38;color: #fff; display: inline-block; padding: 10px 24px; border-radius: 5px">determine</a>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -160,6 +172,8 @@ export default {
     return {
       store_url: '',
       id: '',
+      dialogVisible: false,
+      shopifyUrl: '',
       websock: null,
       dashboardForm: {
         id: '',
@@ -372,6 +386,10 @@ export default {
       }
       this.initWebSocket()
     },
+    handleDetermine() {
+      console.log('11', 'https://' + this.shopifyUrl + '/admin/apps')
+      window.open(this.$router.resolve({ path: this.shopifyUrl + '/admin/apps' }))
+    },
     // 初始化weosocket
     initWebSocket() {
       const wsuri = 'wss://socket.fbali.co/wss/test'
@@ -395,7 +413,8 @@ export default {
         setCookies('shop', shopifyQuery.shop)
         shopifyApi({ ...shopifyQuery })
       } else if (redata.code === 5) {
-        this.$message.warning('No store information is obtained, please re-enter from Shopify!')
+        this.dialogVisible = true
+        this.shopifyUrl = redata.msg
       } else {
         this.websocketclose()
       }
