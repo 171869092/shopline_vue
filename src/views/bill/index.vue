@@ -83,11 +83,11 @@
                 <span>{{ orderStatus[scope.row.bill_status] }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="Operation">
-              <template slot-scope="scope">
-                <span class="primary pointer" @click="handleView(scope.row)">See</span>
-              </template>
-            </el-table-column>
+<!--            <el-table-column label="Operation">-->
+<!--              <template slot-scope="scope">-->
+<!--                <span class="primary pointer" @click="handleView(scope.row)">See</span>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
           </el-table>
           <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
         </el-tab-pane>
