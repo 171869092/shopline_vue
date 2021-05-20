@@ -381,7 +381,7 @@ export default {
     websocketonmessage(e) { // 数据接收
       const redata = JSON.parse(e.data)
       this.store_url = redata.store_url
-      if (e.code === '2') {
+      if (e.code === 2) {
         const shopify = getCookies('shopify')
         const shop = getCookies('shop')
         this.store_url = shop
