@@ -364,9 +364,9 @@ export default {
         const shopifyQuery = JSON.parse(shopify)
         setCookies('shopify', shopifyQuery)
         setCookies('shop', shopifyQuery.shop)
-        shopifyApi({ ...shopifyQuery })
+        // shopifyApi({ ...shopifyQuery })
         this.initWebSocket()
-        shopifyPush({ shop: shop })
+        // shopifyPush({ shop: shop })
       }
     },
     // 初始化weosocket
