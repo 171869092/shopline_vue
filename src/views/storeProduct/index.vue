@@ -108,7 +108,7 @@
         <span class="mt20">There is no associated store. Please click <router-link class="primary" :to="{name: 'store'}">here</router-link> to connect to your store</span>
       </div>
     </el-card>
-    <provider :visible="providerVisible" @providerAdd="closeprovider" />
+    <provider :visible="providerVisible" @providerAdd="closeprovider" :store_url="formInline.store_url"/>
   </div>
 </template>
 <script>
@@ -282,6 +282,7 @@ export default {
               id: item.id
             }
           })
+          productObj.store_url = this.formInline.store_url
           getCancelHosting(productObj).then(res => {
             if (res.code === 200) {
               this.$message({ message: res.message, type: 'success' })

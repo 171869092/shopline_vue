@@ -39,6 +39,10 @@ export default {
     visible: {
       type: Boolean,
       default: false
+    },
+    store_url: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -78,6 +82,7 @@ export default {
   },
   methods: {
     providerAdd(type) {
+      this.$set(this.providerForm, 'store_url', this.store_url)
       if (type === 1) {
         this.$refs.providerForm.validate((valid) => {
           if (valid) {
