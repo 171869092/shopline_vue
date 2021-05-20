@@ -135,7 +135,7 @@
 import { baseChartIndex } from '@/api/user'
 import * as echarts from 'echarts'
 import { mapGetters } from 'vuex'
-import { shopifyApi, shopifyPush } from '@/api/user'
+import { shopifyApi } from '@/api/user'
 import { setCookies, getCookies } from '@/utils/cookies'
 export default {
   name: 'dashboard',
@@ -390,7 +390,7 @@ export default {
           setCookies('shopify', shopifyQuery)
           setCookies('shop', shopifyQuery.shop)
           shopifyApi({ ...shopifyQuery })
-          shopifyPush({ shop: shop })
+          // shopifyPush({ shop: shop })
         }
       } else {
         this.websocketclose()
