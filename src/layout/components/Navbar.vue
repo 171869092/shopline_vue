@@ -10,11 +10,16 @@
         <!-- <div class="download-ex">
           <i class="el-icon-download" />
         </div> -->
+        <div class="right-menu hWifi" @click="handleRequestWifi">
+          <img src="@/assets/home/wifi.png" width="30px" height="30px">
+<!--          <i class="el-icon-sort hIcon" />-->
+          <span class="real-time">{{realTime}}/ms</span>
+        </div>
         <div class="right-menu">
           <el-dropdown class="avatar-container" trigger="click">
             <div class="avatar-wrapper">
               <el-avatar :src="avatar" size="small" @error="errorHandler">
-                <img src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png"/>
+                <img src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png">
               </el-avatar>
               <span class="user-name">{{ email }}</span>
               <i class="el-icon-caret-bottom" />
@@ -27,8 +32,8 @@
           </el-dropdown>
         </div>
         <div class="right-menu notice" @click="handleNotice">
-          <i class="el-icon-message-solid"></i>
-          <span class="round" v-if="notice.length > 0"></span>
+          <i class="el-icon-message-solid" />
+          <span v-if="notice.length > 0" class="round" />
         </div>
       </div>
     </div>
@@ -42,6 +47,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 // import Hamburger from '@/components/Hamburger'
 import Logo from './Sidebar/Logo'
 import { getUnreadMessage } from '@/api/notice'
+import { getBaseMonitor } from '@/api/wifi'
 
 export default {
   components: {
@@ -51,7 +57,8 @@ export default {
   },
   data() {
     return {
-      notice: []
+      notice: [],
+      realTime: '0'
     }
   },
   computed: {
@@ -66,6 +73,7 @@ export default {
   },
   created() {
     this.initNotice()
+    this.wifiSetInterval()
   },
   methods: {
     toggleSideBar() {
@@ -87,6 +95,16 @@ export default {
         if (res.code === 200) {
           this.notice = res.data
         }
+      })
+    },
+    wifiSetInterval() {
+      setInterval(this.handleRequestWifi, 10000)
+    },
+    handleRequestWifi() {
+      const startTime = new Date()
+      getBaseMonitor().then(res => {
+        const endTime = new Date()
+        this.realTime = endTime.getTime() - startTime.getTime()
       })
     }
   }
@@ -190,6 +208,21 @@ export default {
       position: absolute;
       top: 12px;
       left: 14px;
+    }
+  }
+  .hWifi {
+    margin-right: 30px;
+    img {
+      vertical-align: sub;
+    }
+    .hIcon {
+      color: #ef6f38;
+      font-size: 12px;
+    }
+    .real-time {
+      color: #ef6f38;
+      font-size: 12px;
+      margin-left: 2px;
     }
   }
 }
