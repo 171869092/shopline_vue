@@ -159,6 +159,7 @@ export default {
   data() {
     return {
       store_url: '',
+      id: '',
       websock: null,
       dashboardForm: {
         id: '',
@@ -359,15 +360,17 @@ export default {
     shopifyInit() {
       const shopify = getCookies('shopify')
       const shop = getCookies('shop')
+      const id = getCookies('uid')
       this.store_url = shop
+      this.id = id
       if (shopify && shop) {
         const shopifyQuery = JSON.parse(shopify)
         setCookies('shopify', shopifyQuery)
         setCookies('shop', shopifyQuery.shop)
         // shopifyApi({ ...shopifyQuery })
-        this.initWebSocket()
         // shopifyPush({ shop: shop })
       }
+      this.initWebSocket()
     },
     // 初始化weosocket
     initWebSocket() {
@@ -381,10 +384,11 @@ export default {
     websocketonmessage(e) { // 数据接收
       const redata = JSON.parse(e.data)
       this.store_url = redata.store_url
-      console.log('e.code',e.code)
-      if (e.code === 2) {
+      console.log('e.code', redata.code)
+      if (redata.code === 2) {
         const shopify = getCookies('shopify')
         const shop = getCookies('shop')
+        console.log('shopify', shopify)
         this.store_url = shop
         if (shopify) {
           const shopifyQuery = JSON.parse(shopify)
@@ -399,7 +403,7 @@ export default {
     },
     websocketonopen() { // 连接建立之后执行send方法发送数据
       if (this.store_url === '' || this.store_url === undefined || this.store_url === null) {
-        const actions = { store_url: this.store_url, type: 'other' }
+        const actions = { store_url: this.store_url, type: 'other', id: this.id }
         this.websocketsend(JSON.stringify(actions))
         console.log('当店铺为空时执行')
       } else {
