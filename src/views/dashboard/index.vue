@@ -385,18 +385,17 @@ export default {
       const redata = JSON.parse(e.data)
       this.store_url = redata.store_url
       console.log('e.code', redata.code)
-      if (redata.code === 2) {
+      if (redata.code === 2 || redata.code === 3) {
         const shopify = getCookies('shopify')
         const shop = getCookies('shop')
         console.log('shopify', shopify)
         this.store_url = shop
-        if (shopify) {
-          const shopifyQuery = JSON.parse(shopify)
-          setCookies('shopify', shopifyQuery)
-          setCookies('shop', shopifyQuery.shop)
-          shopifyApi({ ...shopifyQuery })
-          // shopifyPush({ shop: shop })
-        }
+        const shopifyQuery = JSON.parse(shopify)
+        setCookies('shopify', shopifyQuery)
+        setCookies('shop', shopifyQuery.shop)
+        shopifyApi({ ...shopifyQuery })
+      } else if (redata.code === 5) {
+        this.$message.warning('No store information is obtained, please re-enter from Shopify!')
       } else {
         this.websocketclose()
       }
