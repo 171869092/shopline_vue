@@ -168,7 +168,8 @@ export default {
       websock: null,
       typeClose: false,
       store_url: '',
-      serviceList: []
+      serviceList: [],
+      platform: ''
     }
   },
   created() {
@@ -184,6 +185,7 @@ export default {
           if (res.data.length > 0) {
             this.tabList = res.data
             this.formInline.store_url = res.data[0].store_url
+            this.platform = res.data[0].platform
             this.Inquire()
             this.initWebSocket()
           }
@@ -197,6 +199,7 @@ export default {
       const formData = JSON.parse(JSON.stringify(this.formInline))
       formData.iDisplayLength = this.listQuery.limit
       formData.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
+      formData.platform = this.platform
       getStoreProductList(formData).then(res => {
         if (res.code === 200) {
           res.data.map(item => {
@@ -214,7 +217,12 @@ export default {
     productAdd(type, id) {
       this.$router.push({ name: 'productDetails', query: { type: type, id: id, stroeType: 'store' }})
     },
-    handleClick() {
+    handleClick(tab) {
+      this.tabList.map(item => {
+        if (tab.name === item.store_url) {
+          this.platform = item.platform
+        }
+      })
       this.listQuery.page = 1
       this.listQuery.limit = 10
       this.formInline.title = ''
