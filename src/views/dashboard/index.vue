@@ -172,11 +172,13 @@ export default {
     return {
       store_url: '',
       id: '',
-      code: '',
-      hmac: '',
-      host: '',
-      shop: '',
-      timestamp: '',
+      shopifyQuery: {
+        code: '',
+        hmac: '',
+        host: '',
+        shop: '',
+        timestamp: ''
+      },
       dialogVisible: false,
       shopifyUrl: '',
       websock: null,
@@ -383,12 +385,7 @@ export default {
       this.store_url = shop
       this.id = id
       if (shopify) {
-        const shopifyQuery = JSON.parse(shopify)
-        this.code = shopifyQuery.code
-        this.hmac = shopifyQuery.hmac
-        this.host = shopifyQuery.host
-        this.shop = shopifyQuery.shop
-        this.timestamp = shopifyQuery.timestamp
+        this.shopifyQuery = JSON.parse(shopify)
       }
       if (shopify && shop) {
         const shopifyQuery = JSON.parse(shopify)
@@ -430,11 +427,11 @@ export default {
     },
     websocketonopen() { // 连接建立之后执行send方法发送数据
       if (this.store_url === '' || this.store_url === undefined || this.store_url === null) {
-        const actions = { store_url: this.store_url, type: 'other', id: Number(this.id), code: this.code, hmac: this.hmac, host: this.host, shop: this.shop, timestamp: this.timestamp }
+        const actions = { store_url: this.store_url, type: 'other', id: Number(this.id), shopify: this.shopifyQuery }
         this.websocketsend(JSON.stringify(actions))
         console.log('当店铺为空时执行')
       } else {
-        const actions = { store_url: this.store_url, code: this.code, hmac: this.hmac, host: this.host, shop: this.shop, timestamp: this.timestamp, id: Number(this.id) }
+        const actions = { store_url: this.store_url, shopify: this.shopifyQuery }
         this.websocketsend(JSON.stringify(actions))
         console.log('连接建立之后执行')
       }
