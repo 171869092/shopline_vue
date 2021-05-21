@@ -172,6 +172,11 @@ export default {
     return {
       store_url: '',
       id: '',
+      code: '',
+      hmac: '',
+      host: '',
+      shop: '',
+      timestamp: '',
       dialogVisible: false,
       shopifyUrl: '',
       websock: null,
@@ -377,8 +382,14 @@ export default {
       const id = getCookies('uid')
       this.store_url = shop
       this.id = id
-      const shopifyQuery = JSON.parse(shopify)
-      console.log('shopifyQuery', shopifyQuery)
+      if (shopify) {
+        const shopifyQuery = JSON.parse(shopify)
+        this.code = shopifyQuery.code
+        this.hmac = shopifyQuery.hmac
+        this.host = shopifyQuery.host
+        this.shop = shopifyQuery.shop
+        this.timestamp = shopifyQuery.timestamp
+      }
       if (shopify && shop) {
         const shopifyQuery = JSON.parse(shopify)
         setCookies('shopify', shopifyQuery)
@@ -387,10 +398,6 @@ export default {
         // shopifyPush({ shop: shop })
       }
       this.initWebSocket()
-    },
-    handleDetermine() {
-      console.log('11', 'https://' + this.shopifyUrl + '/admin/apps')
-      window.open(this.$router.resolve({ path: this.shopifyUrl + '/admin/apps' }))
     },
     // 初始化weosocket
     initWebSocket() {
@@ -423,11 +430,11 @@ export default {
     },
     websocketonopen() { // 连接建立之后执行send方法发送数据
       if (this.store_url === '' || this.store_url === undefined || this.store_url === null) {
-        const actions = { store_url: this.store_url, type: 'other', id: Number(this.id) }
+        const actions = { store_url: this.store_url, type: 'other', id: Number(this.id), code: this.code, hmac: this.hmac, host: this.host, shop: this.shop, timestamp: this.timestamp }
         this.websocketsend(JSON.stringify(actions))
         console.log('当店铺为空时执行')
       } else {
-        const actions = { store_url: this.store_url }
+        const actions = { store_url: this.store_url, code: this.code, hmac: this.hmac, host: this.host, shop: this.shop, timestamp: this.timestamp, id: Number(this.id) }
         this.websocketsend(JSON.stringify(actions))
         console.log('连接建立之后执行')
       }
