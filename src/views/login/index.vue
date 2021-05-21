@@ -100,13 +100,20 @@ export default {
           const shopify = getCookies('shopify')
           if (shopify) {
             this.shopifyQuery = JSON.parse(shopify)
+            this.$store.dispatch('user/login', { LoginForm: this.loginForm, id: 1, shop: shop, shopify: this.shopifyQuery }).then(() => {
+              this.$router.push({ name: 'dashboard' })
+              this.loading = false
+            }).catch(() => {
+              this.loading = false
+            })
+          } else {
+            this.$store.dispatch('user/login', { LoginForm: this.loginForm, id: 1, shop: shop }).then(() => {
+              this.$router.push({ name: 'dashboard' })
+              this.loading = false
+            }).catch(() => {
+              this.loading = false
+            })
           }
-          this.$store.dispatch('user/login', { LoginForm: this.loginForm, id: 1, shop: shop, shopify: this.shopifyQuery }).then(() => {
-            this.$router.push({ name: 'dashboard' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
         } else {
           console.log('error submit!!')
           return false

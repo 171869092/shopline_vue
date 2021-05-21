@@ -149,13 +149,20 @@ export default {
           const shopify = getCookies('shopify')
           if (shopify) {
             this.shopifyQuery = JSON.parse(shopify)
+            this.$store.dispatch('user/register', { ...this.loginForm, shop: shop, shopify: this.shopifyQuery }).then(() => {
+              this.$router.push({ name: 'dashboard' })
+              this.loading = false
+            }).catch(() => {
+              this.loading = false
+            })
+          } else {
+            this.$store.dispatch('user/register', { ...this.loginForm, shop: shop }).then(() => {
+              this.$router.push({ name: 'dashboard' })
+              this.loading = false
+            }).catch(() => {
+              this.loading = false
+            })
           }
-          this.$store.dispatch('user/register', { ...this.loginForm, shop: shop, shopify: this.shopifyQuery }).then(() => {
-            this.$router.push({ name: 'dashboard' })
-            this.loading = false
-          }).catch(() => {
-            this.loading = false
-          })
         } else {
           console.log('err')
         }
