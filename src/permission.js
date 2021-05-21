@@ -21,7 +21,6 @@ router.beforeEach(async (to, from, next) => {
   if (hasToken) { // 已经有token
     console.log('hastoken init dashboard')
     const query = to.query
-    console.log('query----', to.query)
     if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
       console.log('init shoify query')
       setCookies('shopify', query)
