@@ -32,7 +32,7 @@
             </div>
           </div>
         </div>
-        <el-button type="primary" size="small" @click="settlement" class="mr10 mb10">Settlement</el-button>
+        <el-button type="primary" size="small" @click="settlement" class="mr10 mb10">Completed</el-button>
         <export-import :set-export-data="setExportData" class="mb10">
           <template slot="export">
             <el-button type="primary" size="small">Export</el-button>
