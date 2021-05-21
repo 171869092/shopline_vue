@@ -377,6 +377,8 @@ export default {
       const id = getCookies('uid')
       this.store_url = shop
       this.id = id
+      const shopifyQuery = JSON.parse(shopify)
+      console.log('shopifyQuery', shopifyQuery)
       if (shopify && shop) {
         const shopifyQuery = JSON.parse(shopify)
         setCookies('shopify', shopifyQuery)
