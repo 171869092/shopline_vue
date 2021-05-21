@@ -79,7 +79,14 @@ export default {
           { required: true, message: 'Can not be empty', trigger: 'blur' }
         ]
       },
-      loading: false
+      loading: false,
+      shopifyQuery: {
+        code: '',
+        hmac: '',
+        host: '',
+        shop: '',
+        timestamp: ''
+      }
     }
   },
   computed: {},
@@ -90,7 +97,11 @@ export default {
         if (valid) {
           this.loading = true
           const shop = getCookies('shop') || ''
-          this.$store.dispatch('user/login', { LoginForm: this.loginForm, id: 1, shop: shop }).then(() => {
+          const shopify = getCookies('shopify')
+          if (shopify) {
+            this.shopifyQuery = JSON.parse(shopify)
+          }
+          this.$store.dispatch('user/login', { LoginForm: this.loginForm, id: 1, shop: shop, shopify: this.shopifyQuery }).then(() => {
             this.$router.push({ name: 'dashboard' })
             this.loading = false
           }).catch(() => {
