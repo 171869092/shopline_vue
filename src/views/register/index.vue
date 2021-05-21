@@ -97,7 +97,14 @@ export default {
       },
       loading: false,
       startCount: false,
-      timeCount: 60
+      timeCount: 60,
+      shopifyQuery: {
+        code: '',
+        hmac: '',
+        host: '',
+        shop: '',
+        timestamp: ''
+      }
     }
   },
   computed: {},
@@ -139,7 +146,11 @@ export default {
           // const shopify = getSession('shopify')
           // const shop = shopify && shopify.shop ? shopify.shop : ''
           const shop = getCookies('shop') || ''
-          this.$store.dispatch('user/register', { ...this.loginForm, shop: shop }).then(() => {
+          const shopify = getCookies('shopify')
+          if (shopify) {
+            this.shopifyQuery = JSON.parse(shopify)
+          }
+          this.$store.dispatch('user/register', { ...this.loginForm, shop: shop, shopify: this.shopifyQuery }).then(() => {
             this.$router.push({ name: 'dashboard' })
             this.loading = false
           }).catch(() => {
