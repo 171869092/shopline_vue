@@ -427,11 +427,11 @@ export default {
     },
     websocketonopen() { // 连接建立之后执行send方法发送数据
       if (this.store_url === '' || this.store_url === undefined || this.store_url === null) {
-        const actions = { store_url: this.store_url, type: 'other', id: Number(this.id), shopify: this.shopifyQuery }
+        const actions = { store_url: this.store_url, type: 'other', id: Number(this.id) }
         this.websocketsend(JSON.stringify(actions))
         console.log('当店铺为空时执行')
       } else {
-        const actions = { store_url: this.store_url, shopify: this.shopifyQuery }
+        const actions = { store_url: this.store_url }
         this.websocketsend(JSON.stringify(actions))
         console.log('连接建立之后执行')
       }
