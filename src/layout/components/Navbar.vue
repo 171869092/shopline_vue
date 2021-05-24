@@ -58,7 +58,8 @@ export default {
   data() {
     return {
       notice: [],
-      realTime: '0'
+      realTime: '0',
+      wifiTime: ''
     }
   },
   computed: {
@@ -82,6 +83,7 @@ export default {
     async logout() {
       await this.$store.dispatch('user/logout')
       window.clearInterval(window.timer)
+      this.clearWifiInterval()
       this.$router.push({ name: 'home' })
     },
     errorHandler() {
@@ -98,7 +100,10 @@ export default {
       })
     },
     wifiSetInterval() {
-      setInterval(this.handleRequestWifi, 10000)
+      this.wifiTime = setInterval(this.handleRequestWifi, 10000)
+    },
+    clearWifiInterval() {
+      clearInterval(this.wifiTime)
     },
     handleRequestWifi() {
       const startTime = new Date()
