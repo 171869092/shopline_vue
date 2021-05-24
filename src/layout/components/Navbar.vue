@@ -11,8 +11,11 @@
           <i class="el-icon-download" />
         </div> -->
         <div class="right-menu hWifi" @click="handleRequestWifi">
-          <img src="@/assets/home/wifi.png" width="30px" height="30px">
-<!--          <i class="el-icon-sort hIcon" />-->
+          <img v-if="realTime > 0 && realTime <= 500" src="@/assets/home/wifi4.png" width="25px" height="25px">
+          <img v-if="realTime > 500 && realTime <= 1000" src="@/assets/home/wifi3.png" width="25px" height="25px">
+          <img v-if="realTime > 1000 && realTime <= 1500" src="@/assets/home/wifi2.png" width="25px" height="25px">
+          <img v-if="realTime > 1500 && realTime <= 2000" src="@/assets/home/wifi1.png" width="25px" height="25px">
+          <img v-if="realTime > 2000 || realTime === '0'" src="@/assets/home/wifi0.png" width="25px" height="25px">
           <span class="real-time">{{realTime}}/ms</span>
         </div>
         <div class="right-menu">
