@@ -1,107 +1,105 @@
 <template>
   <div v-loading="loading" class="productDetails p30">
-    <el-row :gutter="20">
-      <el-col :span="20" :offset="2">
-        <el-form ref="formData" :model="formData" :rules="formRule" label-width="140px" label-position="top">
-          <!-- <div class="product-header mb20 flexbox justify-space-between"> -->
-          <el-row>
-            <el-col :span="1"> <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack" /></el-col>
-            <el-col :span="18"> <label class="ml20">{{ formData.title }}</label></el-col>
-            <el-col :span="5">
-              <div style="float: right;">
-                <el-button v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" size="small" class="button-border" @click="ProductDelete">Delete product</el-button>
-                <el-button size="small" type="primary" :loading="SubmitLoading" @click="submit">Save</el-button>
-              </div>
-            </el-col>
-          </el-row>
+    <el-form ref="formData" :model="formData" :rules="formRule" label-width="140px" label-position="top">
+      <!-- <div class="product-header mb20 flexbox justify-space-between"> -->
+      <el-row>
+        <el-col :span="1"> <el-button size="small" class="button-border" icon="el-icon-back" @click="productBack" /></el-col>
+        <el-col :span="18"> <label class="ml20">{{ formData.title }}</label></el-col>
+        <el-col :span="5">
+          <div style="float: right;">
+            <el-button v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" size="small" class="button-border" @click="ProductDelete">Delete product</el-button>
+            <el-button size="small" type="primary" :loading="SubmitLoading" @click="submit">Save</el-button>
+          </div>
+        </el-col>
+      </el-row>
 
-          <!-- </div> -->
-          <el-card class="box-card">
-            <el-form-item label="Title:" prop="title">
-              <el-input v-model="formData.title" placeholder="Title" />
-            </el-form-item>
-            <el-form-item v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" label="Source URL:" style="display: flex;">
-              <el-link v-if="platform_index_id" :href="`https://aliexpress.com/item/${platform_index_id}.html`" type="primary" target="_blank" style="margin-left:20px">{{ `https://aliexpress.com/item/${platform_index_id}.html` }}</el-link>
-            </el-form-item>
-            <el-form-item label="Product status:" prop="status">
-              <el-select v-model="formData.status" class="w-480">
-                <el-option v-for="(item,idx) in statusOptions" :key="idx" :label="item" :value="String(idx + 1)" />
-              </el-select>
-            </el-form-item>
-            <el-form-item label="Description:" prop="describe">
-              <tinymce ref="tinymces" v-model="formData.describe" :height="400" />
-            </el-form-item>
-          </el-card>
+      <!-- </div> -->
+      <el-card class="box-card">
+        <el-form-item label="Title:" prop="title">
+          <el-input v-model="formData.title" placeholder="Title" />
+        </el-form-item>
+        <el-form-item v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" label="Source URL:" style="display: flex;">
+          <el-link v-if="platform_index_id" :href="`https://aliexpress.com/item/${platform_index_id}.html`" type="primary" target="_blank" style="margin-left:20px">{{ `https://aliexpress.com/item/${platform_index_id}.html` }}</el-link>
+        </el-form-item>
+        <el-form-item label="Product status:" prop="status">
+          <el-select v-model="formData.status" class="w-480">
+            <el-option v-for="(item,idx) in statusOptions" :key="idx" :label="item" :value="String(idx + 1)" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Description:" prop="describe">
+          <tinymce ref="tinymces" v-model="formData.describe" :height="400" />
+        </el-form-item>
+      </el-card>
 
-          <!-- 橱窗图库： -->
-          <el-card class="box-card">
-            <div slot="header" class="flexbox justify-space-between align-center">
-              <div><span style="color:red">*</span><span style="font-weight: 600;">Media:</span></div>
-              <div>
-                <el-button size="mini" type="primary" @click="openUploadPrint">Add image</el-button>
-              </div>
-            </div>
-            <!-- <print-popover ref="window_img" :list="formData.images" @delImg="delImg" @update="updateimg" /> -->
-            <shop-window ref="shopWindow" :img-list="formData.images" @update="updateImgList" @delete="deleteImg" />
+      <!-- 橱窗图库： -->
+      <el-card class="box-card">
+        <div slot="header" class="flexbox justify-space-between align-center">
+          <div><span style="color:red">*</span><span style="font-weight: 600;">Media:</span></div>
+          <div>
+            <el-button size="mini" type="primary" @click="openUploadPrint">Add image</el-button>
+          </div>
+        </div>
+        <!-- <print-popover ref="window_img" :list="formData.images" @delImg="delImg" @update="updateimg" /> -->
+        <shop-window ref="shopWindow" :img-list="formData.images" @update="updateImgList" @delete="deleteImg" />
 
-          </el-card>
-          <!-- Pricing -->
-          <el-card v-if="!variantsCheck && !formData.options_tag" class="box-card">
-            <div slot="header" class="flexbox justify-space-between align-center">
-              <div><span style="color:red">*</span><span style="font-weight: 600;">Pricing:</span></div>
-            </div>
-            <div class="flexbox ml20">
-              <el-form-item label="Price" prop="Price">
-                <el-input v-model="formData.price" type="number" placeholder="Price" class="w-230">
-                  <div slot="prefix" style="padding:0 8px">{{ formData.signal || '$' }}</div>
-                  <!-- <i slot="prefix">$</i> -->
-                </el-input>
-              </el-form-item>
-              <el-form-item label="Compare at Price" prop="compare_price" class="w-230" style="margin-left: 120px;">
-                <el-input v-model="formData.compare_price" type="number" placeholder="Compare at Price">
-                  <div slot="prefix" style="padding:0 8px">{{ formData.signal || '$' }}</div>
-                </el-input>
-              </el-form-item>
-              <el-form-item label="Cost per item" prop="cost" class="w-230" style="margin-left: 120px;">
-                <el-input v-model="formData.cost" type="number" placeholder="Cost per item">
-                  <div slot="prefix" style="padding:0 8px">{{ formData.signal || '$' }}</div>
-                </el-input>
-              </el-form-item>
-            </div>
-          </el-card>
+      </el-card>
+      <!-- Pricing -->
+      <el-card v-if="!variantsCheck && !formData.options_tag" class="box-card">
+        <div slot="header" class="flexbox justify-space-between align-center">
+          <div><span style="color:red">*</span><span style="font-weight: 600;">Pricing:</span></div>
+        </div>
+        <div class="flexbox ml20">
+          <el-form-item label="Price" prop="Price">
+            <el-input v-model="formData.price" type="number" placeholder="Price" class="w-230">
+              <div slot="prefix" style="padding:0 8px">{{ formData.signal || '$' }}</div>
+              <!-- <i slot="prefix">$</i> -->
+            </el-input>
+          </el-form-item>
+          <el-form-item label="Compare at Price" prop="compare_price" class="w-230" style="margin-left: 120px;">
+            <el-input v-model="formData.compare_price" type="number" placeholder="Compare at Price">
+              <div slot="prefix" style="padding:0 8px">{{ formData.signal || '$' }}</div>
+            </el-input>
+          </el-form-item>
+          <el-form-item label="Cost per item" prop="cost" class="w-230" style="margin-left: 120px;">
+            <el-input v-model="formData.cost" type="number" placeholder="Cost per item">
+              <div slot="prefix" style="padding:0 8px">{{ formData.signal || '$' }}</div>
+            </el-input>
+          </el-form-item>
+        </div>
+      </el-card>
 
-          <!-- cost&vendor： -->
-          <el-card
-            v-if="$route.query.stroeType == 'store'"
-            class="box-card"
-          >
-            <div slot="header" class="flexbox justify-space-between align-center">
-              <div><span style="color:red">*</span><span style="font-weight: 600;">Cost&Vendor:</span></div>
-            </div>
-            <el-table
-              ref="vendorTable"
-              v-loading="vendorLoading"
-              :data="formData.cost_vender_list"
-              style="width: 100%"
-              highlight-current-row
-              fit
-              :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
-            >
-              <el-table-column v-for="(item, idx) in vendorList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
-                <template slot-scope="scope">
-                  <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
-                  <span v-if="item.type == 'pictures'">
+      <!-- cost&vendor： -->
+      <el-card
+        v-if="$route.query.stroeType == 'store'"
+        class="box-card"
+      >
+        <div slot="header" class="flexbox justify-space-between align-center">
+          <div><span style="color:red">*</span><span style="font-weight: 600;">Cost&Vendor:</span></div>
+        </div>
+        <el-table
+          ref="vendorTable"
+          v-loading="vendorLoading"
+          :data="formData.cost_vender_list"
+          style="width: 100%"
+          highlight-current-row
+          fit
+          :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
+        >
+          <el-table-column v-for="(item, idx) in vendorList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
+            <template slot-scope="scope">
+              <span v-if="item.type == undefined">{{ scope.row[item.value] }}</span>
+              <span v-if="item.type == 'pictures'">
                     <el-image :src="scope.row.img_url" class="sku_image">
                       <div slot="error" class="image-slot">
                         <i class="el-icon-picture-outline" style="font-size: 30px;" />
                       </div>
                     </el-image>
                   </span>
-                  <span v-if="item.type == 'tips'">
+              <span v-if="item.type == 'tips'">
                     <span v-if="scope.row.price">{{ scope.row.price }}</span>
                     <span v-else>Waiting for reply</span>
                   </span>
-                  <span v-if="item.type == 'select' && scope.row.price">
+              <span v-if="item.type == 'select' && scope.row.price">
                     <el-select v-model="scope.row.country" @change="selectClick(scope.row.country,scope.$index)">
                       <el-option
                         v-for="(price, key) in scope.row.list"
@@ -111,187 +109,185 @@
                       />
                     </el-select>
                   </span>
-                </template>
-              </el-table-column>
-            </el-table>
+            </template>
+          </el-table-column>
+        </el-table>
 
-          </el-card>
+      </el-card>
 
-          <!-- 商品 -->
-          <el-card class="box-card mt10">
-            <div slot="header" class="flexbox justify-space-between align-center">
-              <div><span style="color:red">*</span><span style="font-weight: 600;">Variants:</span></div>
-              <!-- <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button> -->
-              <div v-if="$route.query.type == 'edit' && formData.options_tag">
-                <el-button size="mini" type="primary" icon="el-icon-plus" @click="addVariant()">Add variant</el-button>
-                <el-button size="mini" @click="editOptions()">Edit options</el-button>
-              </div>
-            </div>
-            <div>
-              <el-checkbox v-if="!formData.options_tag || isAddVariants" v-model="variantsCheck">This product has multiple options, like different sizes or colors</el-checkbox>
-              <el-button v-if="variantsCheck && optionsList.length < 3" class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
-            </div>
-            <!-- 新增属性 -->
-            <el-alert
-              v-if="showAlert"
-              class="mt10"
-              title="You can't have more than 100 product variants. To save product, remove some options to keep variants under 100."
-              type="warning"
-              show-icon
-              :closable="false"
-              style="width:850px"
-            />
-            <el-table
-              v-if="variantsCheck"
-              ref="optionsTable"
-              :data="optionsList"
-              :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
-              class="mt20 variantsTabel"
-              style="width:850px"
-            >
-              <el-table-column prop="option" label="OPTIONS" width="280">
-                <template slot-scope="scope">
-                  <div class="d-height f-l mb5 ml5">Option {{ scope.$index + 1 }}</div>
-                  <el-form-item class="mb0" label-width="0">
-                    <el-popover
-                      v-model="scope.row.showList"
-                      placement="bottom-end"
-                      width="250"
-                      trigger="click"
+      <!-- 商品 -->
+      <el-card class="box-card mt10">
+        <div slot="header" class="flexbox justify-space-between align-center">
+          <div><span style="color:red">*</span><span style="font-weight: 600;">Variants:</span></div>
+          <!-- <el-button class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addSkuData()">Add SKU</el-button> -->
+          <div v-if="$route.query.type == 'edit' && formData.options_tag">
+            <el-button size="mini" type="primary" icon="el-icon-plus" @click="addVariant()">Add variant</el-button>
+            <el-button size="mini" @click="editOptions()">Edit options</el-button>
+          </div>
+        </div>
+        <div>
+          <el-checkbox v-if="!formData.options_tag || isAddVariants" v-model="variantsCheck">This product has multiple options, like different sizes or colors</el-checkbox>
+          <el-button v-if="variantsCheck && optionsList.length < 3" class="f-r" type="primary" icon="el-icon-plus" size="small" @click="addOption()">Add another option</el-button>
+        </div>
+        <!-- 新增属性 -->
+        <el-alert
+          v-if="showAlert"
+          class="mt10"
+          title="You can't have more than 100 product variants. To save product, remove some options to keep variants under 100."
+          type="warning"
+          show-icon
+          :closable="false"
+          style="width:850px"
+        />
+        <el-table
+          v-if="variantsCheck"
+          ref="optionsTable"
+          :data="optionsList"
+          :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
+          class="mt20 variantsTabel"
+          style="width:850px"
+        >
+          <el-table-column prop="option" label="OPTIONS" width="280">
+            <template slot-scope="scope">
+              <div class="d-height f-l mb5 ml5">Option {{ scope.$index + 1 }}</div>
+              <el-form-item class="mb0" label-width="0">
+                <el-popover
+                  v-model="scope.row.showList"
+                  placement="bottom-end"
+                  width="250"
+                  trigger="click"
+                >
+                  <ul class="option-list">
+                    <li
+                      v-for="(item, key) in options"
+                      :key="key"
+                      class="option-item"
+                      :class="[scope.row.option == item ? 'active' : '']"
+                      @click="selectOption(scope.row, item)"
                     >
-                      <ul class="option-list">
-                        <li
-                          v-for="(item, key) in options"
-                          :key="key"
-                          class="option-item"
-                          :class="[scope.row.option == item ? 'active' : '']"
-                          @click="selectOption(scope.row, item)"
-                        >
-                          <span>{{ item }}</span>
-                        </li>
-                      </ul>
-                      <!-- <el-button slot="reference">click 激活</el-button> -->
-                      <el-input slot="reference" v-model="scope.row.option" class="w-250" @change="tagsChange" />
-                    </el-popover>
-                  </el-form-item>
-                </template>
-              </el-table-column>
+                      <span>{{ item }}</span>
+                    </li>
+                  </ul>
+                  <!-- <el-button slot="reference">click 激活</el-button> -->
+                  <el-input slot="reference" v-model="scope.row.option" class="w-250" @change="tagsChange" />
+                </el-popover>
+              </el-form-item>
+            </template>
+          </el-table-column>
 
-              <el-table-column prop="optionVlue" align="left">
-                <template slot-scope="scope">
-                  <div class="flexbox justify-flex-end d-height">
-                    <span v-show="optionsList.length > 1" class="primary cursor_p f-r" @click="RemoveOption(scope.$index, scope.row)">Remove</span>
-                  </div>
-                  <el-form-item class="mb0" label-width="0">
-                    <input-tag v-model="scope.row.tags" class="option-input-tag" :add-tag-on-blur="true" :limit="20" @input="tagsChange" />
-                  </el-form-item>
-                </template>
-              </el-table-column>
-            </el-table>
-            <!-- 生成属性 -->
-            <div class="mb10">
-              <label v-if="variantsCheck && isAddVariants">Preview</label>
-              <el-button v-if="$route.query.type == 'edit' && showDelBtn" size="mini" type="primary" plain @click="deleteVariants()">Delete variants</el-button>
-            </div>
-            <vxe-table
-              v-if="(variantsCheck && isAddVariants) || formData.options_tag"
-              ref="xTable"
-              border
-              show-overflow
-              highlight-hover-row
-              empty-text="No Data"
-              align="center"
-              :loading="preLoading"
-              max-height="500"
-              :scroll-y="{gt: 50}"
-              :data="tableData"
-              @checkbox-all="selectChangeEvent"
-              @checkbox-change="selectChangeEvent"
-            >
-              <vxe-table-column type="checkbox" width="100" />
-              <vxe-table-column title="Picture" field="sku_image" width="100">
-                <template v-slot="{ row, rowIndex }">
-                  <el-image class="sku_image" :src="row.sku_image" @click.native="openPrint(row, rowIndex)">
-                    <div slot="error" class="image-slot">
-                      <i class="error-icon el-icon-picture-outline" />
-                    </div>
-                  </el-image>
-                </template>
-              </vxe-table-column>
-              <template v-if="$route.query.type === 'edit'">
-                <vxe-table-column v-for="(variant, key) in variantsTitle" :key="variant + key" :title="variant">
-                  <template v-slot="{ row }">
-                    <el-form-item class="mb0" label-width="0">
-                      <el-input
-                        v-model="row.option[variant]"
-                        size="mini"
-                        clearable
-                        :disabled="$route.query.type === 'add'"
-                        class="p5_input"
-                        @change="changeVariants(variant)"
-                      />
-                    </el-form-item>
-                  </template>
-                </vxe-table-column>
+          <el-table-column prop="optionVlue" align="left">
+            <template slot-scope="scope">
+              <div class="flexbox justify-flex-end d-height">
+                <span v-show="optionsList.length > 1" class="primary cursor_p f-r" @click="RemoveOption(scope.$index, scope.row)">Remove</span>
+              </div>
+              <el-form-item class="mb0" label-width="0">
+                <input-tag v-model="scope.row.tags" class="option-input-tag" :add-tag-on-blur="true" :limit="20" @input="tagsChange" />
+              </el-form-item>
+            </template>
+          </el-table-column>
+        </el-table>
+        <!-- 生成属性 -->
+        <div class="mb10">
+          <label v-if="variantsCheck && isAddVariants">Preview</label>
+          <el-button v-if="$route.query.type == 'edit' && showDelBtn" size="mini" type="primary" plain @click="deleteVariants()">Delete variants</el-button>
+        </div>
+        <vxe-table
+          v-if="(variantsCheck && isAddVariants) || formData.options_tag"
+          ref="xTable"
+          border
+          show-overflow
+          highlight-hover-row
+          empty-text="No Data"
+          align="center"
+          :loading="preLoading"
+          max-height="500"
+          :scroll-y="{gt: 50}"
+          :data="tableData"
+          @checkbox-all="selectChangeEvent"
+          @checkbox-change="selectChangeEvent"
+        >
+          <vxe-table-column type="checkbox" width="100" />
+          <vxe-table-column title="Picture" field="sku_image" width="100">
+            <template v-slot="{ row, rowIndex }">
+              <el-image class="sku_image" :src="row.sku_image" @click.native="openPrint(row, rowIndex)">
+                <div slot="error" class="image-slot">
+                  <i class="error-icon el-icon-picture-outline" />
+                </div>
+              </el-image>
+            </template>
+          </vxe-table-column>
+          <template v-if="$route.query.type === 'edit'">
+            <vxe-table-column v-for="(variant, key) in variantsTitle" :key="variant + key" :title="variant">
+              <template v-slot="{ row }">
+                <el-form-item class="mb0" label-width="0">
+                  <el-input
+                    v-model="row.option[variant]"
+                    size="mini"
+                    clearable
+                    :disabled="$route.query.type === 'add'"
+                    class="p5_input"
+                    @change="changeVariants(variant)"
+                  />
+                </el-form-item>
               </template>
-              <vxe-table-column v-if="$route.query.type === 'add'" title="variant" field="variant">
-                <template v-slot="{ row }">
-                  <span>{{ row.variant }}</span>
-                </template>
-              </vxe-table-column>
-              <vxe-table-column title="Price" field="sku_price">
-                <template v-slot="{ row }">
-                  <el-form-item class="mb0" label-width="0">
-                    <el-input v-model="row.sku_price" clearable size="mini" class="p5_input" placeholder="Price">
-                      <span slot="prefix" style="padding:0 8px">{{ row.signal || '$' }}</span>
-                    </el-input>
-                  </el-form-item>
-                </template>
-              </vxe-table-column>
-              <vxe-table-column title="Compare at price" field="compare_price">
-                <template v-slot="{ row }">
-                  <el-form-item class="mb0" label-width="0">
-                    <el-input v-model="row.compare_price" clearable size="mini" class="p5_input" placeholder="0.00">
-                      <span slot="prefix" style="padding:0 8px">{{ row.signal || '$' }}</span>
-                    </el-input>
-                  </el-form-item>
-                </template>
-              </vxe-table-column>
-              <vxe-table-column title="Cost" field="sku_cost">
-                <template v-slot="{ row }">
-                  <el-form-item class="mb0" label-width="0">
-                    <el-input v-model="row.sku_cost" type="number" min="0.00" clearable size="mini" class="p5_input" placeholder="0.00">
-                      <div slot="prefix" style="padding:0 8px">{{ row.signal || '$' }}</div>
-                    </el-input>
-                  </el-form-item>
-                </template>
-              </vxe-table-column>
-              <vxe-table-column title="Quantity" field="sku_number">
-                <template v-slot="{ row }">
-                  <el-form-item class="mb0" label-width="0">
-                    <el-input-number v-model="row.sku_number" class="p5_input" size="mini" :min="1" controls-position="right" />
-                  </el-form-item>
-                </template>
-              </vxe-table-column>
-              <vxe-table-column title="SKU" field="sku">
-                <template v-slot="{ row }">
-                  <el-form-item class="mb0" label-width="0">
-                    <el-input v-model="row.sku" size="mini" clearable class="p5_input" placeholder="SKU" />
-                  </el-form-item>
-                </template>
-              </vxe-table-column>
-              <vxe-table-column title="Operating" width="120px">
-                <template v-slot="{ row, rowIndex }">
-                  <div class="icon-border" @click="delSkuData(row, rowIndex)">
-                    <i class="el-icon-delete-solid cursor_p" />
-                  </div>
-                </template>
-              </vxe-table-column>
-            </vxe-table>
-          </el-card>
-        </el-form>
-      </el-col>
-    </el-row>
+            </vxe-table-column>
+          </template>
+          <vxe-table-column v-if="$route.query.type === 'add'" title="variant" field="variant">
+            <template v-slot="{ row }">
+              <span>{{ row.variant }}</span>
+            </template>
+          </vxe-table-column>
+          <vxe-table-column title="Price" field="sku_price">
+            <template v-slot="{ row }">
+              <el-form-item class="mb0" label-width="0">
+                <el-input v-model="row.sku_price" clearable size="mini" class="w_100" placeholder="Price">
+                  <span slot="prefix" style="padding:0 8px">{{ row.signal || '$' }}</span>
+                </el-input>
+              </el-form-item>
+            </template>
+          </vxe-table-column>
+          <vxe-table-column title="Compare at price" field="compare_price">
+            <template v-slot="{ row }">
+              <el-form-item class="mb0" label-width="0">
+                <el-input v-model="row.compare_price" clearable size="mini" class="w_100" placeholder="0.00">
+                  <span slot="prefix" style="padding:0 8px">{{ row.signal || '$' }}</span>
+                </el-input>
+              </el-form-item>
+            </template>
+          </vxe-table-column>
+          <vxe-table-column title="Cost" field="sku_cost">
+            <template v-slot="{ row }">
+              <el-form-item class="mb0" label-width="0">
+                <el-input v-model="row.sku_cost" type="number" min="0.00" clearable size="mini" class="w_100" placeholder="0.00">
+                  <div slot="prefix" style="padding:0 8px">{{ row.signal || '$' }}</div>
+                </el-input>
+              </el-form-item>
+            </template>
+          </vxe-table-column>
+          <vxe-table-column title="Quantity" field="sku_number">
+            <template v-slot="{ row }">
+              <el-form-item class="mb0" label-width="0">
+                <el-input-number v-model="row.sku_number" class="w_100" size="mini" :min="1" controls-position="right" />
+              </el-form-item>
+            </template>
+          </vxe-table-column>
+          <vxe-table-column title="SKU" field="sku">
+            <template v-slot="{ row }">
+              <el-form-item class="mb0" label-width="0">
+                <el-input v-model="row.sku" size="mini" clearable class="w_100" placeholder="SKU" />
+              </el-form-item>
+            </template>
+          </vxe-table-column>
+          <vxe-table-column title="Operating" width="120px">
+            <template v-slot="{ row, rowIndex }">
+              <div class="icon-border" @click="delSkuData(row, rowIndex)">
+                <i class="el-icon-delete-solid cursor_p" />
+              </div>
+            </template>
+          </vxe-table-column>
+        </vxe-table>
+      </el-card>
+    </el-form>
     <!-- <edit-print :visible.sync="printvisible" :is-upload="editPrintUpload" :sku-img="skuImage" @close="closePrint" />
     <upload-print :visible.sync="uploadPrintvisible" @close="closeUploadPrint" /> -->
     <select-pictures

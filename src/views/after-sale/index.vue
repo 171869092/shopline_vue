@@ -94,14 +94,11 @@
                 <span>{{ scope.row.status }}</span>
               </template>
             </el-table-column>
-
-
             <el-table-column label="Vendor">
               <template slot-scope="scope">
                 <span>{{ scope.row.vendor }}</span>
               </template>
             </el-table-column>
-            
           </el-table>
           <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
         </el-tab-pane>
@@ -145,7 +142,6 @@ export default {
       afterStatus: { 0: 'ALL', 2: 'In Processing', 3: 'Completed' },
       tabList: [
         { label: 'ALL', name: '0' },
-        
         { label: 'In Processing', name: '2' },
         { label: 'Completed', name: '3' }
       ],
@@ -202,12 +198,10 @@ export default {
           // }else{
           //   this.product = []
           // }
-        
           console.log('product: ',this.tableData)
         }
-        
       }).catch(err => {
-        console.log('err',err)
+        console.log('err', err)
       }).finally(() => {
         this.loading = false
       })

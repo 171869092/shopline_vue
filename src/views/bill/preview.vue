@@ -88,14 +88,14 @@ export default {
       tableData: [],
       // 列表表头
       labelList: [
-        { label: 'Order', value: 'order_name', width: '260' },
-        { label: 'Store', value: 'store_url' },
-        { label: 'Order goods and quantity', type: 'goodsSku', value: 'goods_sku', width: '220' },
-        { label: 'Product price', value: 'product_total_amount', width: '220' },
-        { label: 'Logistics cost', value: 'logistics_cost', width: '220' },
-        { label: 'Service fee', value: 'service_fee', width: '220' },
-        { label: 'Amount', value: 'total_amount', width: '220' },
-        { label: 'State', type: 'status', value: 'settlement_status', width: '220' }
+        { label: 'Order', value: 'order_name', width: '180' },
+        { label: 'Store', value: 'store_url', width: '200' },
+        { label: 'Order goods and quantity', type: 'goodsSku', value: 'goods_sku' },
+        { label: 'Product price', value: 'product_total_amount', width: '140' },
+        { label: 'Logistics cost', value: 'logistics_cost', width: '140' },
+        { label: 'Service fee', value: 'service_fee', width: '140' },
+        { label: 'Amount', value: 'total_amount', width: '140' },
+        { label: 'State', type: 'status', value: 'settlement_status', width: '120' }
       ],
       loading: false,
       // 分页

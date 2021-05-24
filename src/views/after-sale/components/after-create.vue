@@ -1,83 +1,81 @@
 <template>
   <div v-loading="loading" class="order-detail p30">
-    <el-row :gutter="20">
-      <el-col :span="20" :offset="2">
-        <div class="top-box">
-          <div class="order-header flexbox">
-            <el-button
-              size="small"
-              class="button-border"
-              icon="el-icon-back"
-              @click="$router.back()"
-            />
-            <div class="order-id ml20">
-              Order No：<span class="primary">{{ order_no }}</span>
+    <div class="top-box">
+      <div class="order-header flexbox">
+        <el-button
+          size="small"
+          class="button-border"
+          icon="el-icon-back"
+          @click="$router.back()"
+        />
+        <div class="order-id ml20">
+          Order No：<span class="primary">{{ order_no }}</span>
+        </div>
+      </div>
+      <el-button size="small" type="primary" :loading="SubmitLoading" @click="submit">Submit</el-button>
+    </div>
+    <div class="order-cell">
+      <el-form ref="formData" :model="formData" :rules="formRule" label-width="140px" label-position="top">
+        <!-- After Sales Information -->
+        <el-card class="box-card mt20">
+          <div slot="header">
+            <div class="detail-block-title">
+              <div><h2>After Sales Information</h2></div>
             </div>
           </div>
-          <el-button size="small" type="primary" :loading="SubmitLoading" @click="submit">Submit</el-button>
-        </div>
-        <div class="order-cell">
-          <el-form ref="formData" :model="formData" :rules="formRule" label-width="140px" label-position="top">
-            <!-- After Sales Information -->
-            <el-card class="box-card mt20">
-              <div slot="header">
-                <div class="detail-block-title">
-                  <div><h2>After Sales Information</h2></div>
-                </div>
-              </div>
-              <div class="detail-block-title custul">
-                <el-col :span="8">
-                  <el-form-item label="After Sales Type:" prop="after_type" class="custItem">
-                    <el-select v-model="formData.after_type" class="w-180 custSel" prop="after_type">
-                      <el-option v-for="(item,idx) in dataType" :key="idx" :label="item" :value="idx" />
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="After Sales Mode:" prop="after_model">
-                    <el-select v-model="formData.after_model" class="w-180 custSel">
-                      <el-option v-for="(item,idx) in saleMode" :key="idx" :label="item" :value="String(idx + 1)" />
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="After Sales Products:" prop="product_json">
-                    <el-select v-model="formData.product_json" multiple class="w-180 custSel">
-                      <el-option v-for="item in productArr" :key="item.id" :label="item.third_goods_name" :value="item.id" />
-                    </el-select>
-                  </el-form-item>
-                </el-col>
-              </div>
-            </el-card>
-            <!-- Text Content -->
-            <el-card class="box-card mt20">
-              <div slot="header">
-                <div class="detail-block-title">
-                  <div><h2>Text Content</h2></div>
-                </div>
-              </div>
-              <el-input v-model="formData.content" :rows="8" style="margin: 20px 0;" type="textarea" placeholder="请输入内容" />
-            </el-card>
-            <!-- Picture Content -->
-            <el-card class="box-card mt20">
-              <div slot="header">
-                <div class="detail-block-title">
-                  <div><h2>Picture Content</h2></div>
-                </div>
-              </div>
-              <div slot="header" class="flexbox justidfy-space-between align-center">
-                <!-- <div><span style="color:red">*</span><span style="font-weight: 600;">Media:</span></div> -->
-                <!-- <div>
-                                   <el-button size="mini" type="primary" @click="openUploadPrint">Add image</el-button>
-                               </div> -->
-              </div>
-              <!-- <print-popover ref="window_img" :list="formData.images" @delImg="delImg" @update="updateimg" /> -->
-              <shop-window ref="shopWindow" :img-list="formData.images" @update="updateImgList" @delete="deleteImg" />
-            </el-card>
-          </el-form>
-        </div>
-      </el-col>
-    </el-row>
+          <div class="detail-block-title custul">
+            <el-row :gutter="77">
+              <el-col :span="8">
+                <el-form-item label="After Sales Type:" prop="after_type" class="custItem">
+                  <el-select v-model="formData.after_type" class="w_100" prop="after_type">
+                    <el-option v-for="(item,idx) in dataType" :key="idx" :label="item" :value="idx" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="After Sales Mode:" prop="after_model">
+                  <el-select v-model="formData.after_model" class="w_100">
+                    <el-option v-for="(item,idx) in saleMode" :key="idx" :label="item" :value="String(idx + 1)" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="After Sales Products:" prop="product_json">
+                  <el-select v-model="formData.product_json" multiple class="w_100">
+                    <el-option v-for="item in productArr" :key="item.id" :label="item.third_goods_name" :value="item.id" />
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-row>
+          </div>
+        </el-card>
+        <!-- Text Content -->
+        <el-card class="box-card mt20">
+          <div slot="header">
+            <div class="detail-block-title">
+              <div><h2>Text Content</h2></div>
+            </div>
+          </div>
+          <el-input v-model="formData.content" :rows="8" style="margin: 20px 0;" type="textarea" placeholder="请输入内容" />
+        </el-card>
+        <!-- Picture Content -->
+        <el-card class="box-card mt20">
+          <div slot="header">
+            <div class="detail-block-title">
+              <div><h2>Picture Content</h2></div>
+            </div>
+          </div>
+          <div slot="header" class="flexbox justidfy-space-between align-center">
+            <!-- <div><span style="color:red">*</span><span style="font-weight: 600;">Media:</span></div> -->
+            <!-- <div>
+                               <el-button size="mini" type="primary" @click="openUploadPrint">Add image</el-button>
+                           </div> -->
+          </div>
+          <!-- <print-popover ref="window_img" :list="formData.images" @delImg="delImg" @update="updateimg" /> -->
+          <shop-window ref="shopWindow" :img-list="formData.images" @update="updateImgList" @delete="deleteImg" />
+        </el-card>
+      </el-form>
+    </div>
   </div>
 </template>
 
@@ -280,7 +278,7 @@ export default {
   }
 }
 </script>
-<style scoped>
+<style scoped lang="scss">
 .top-box {
   display: flex;
   justify-content: space-between;
@@ -290,4 +288,11 @@ export default {
         padding-right: 300px;
         list-style:none;
     }
+.detail-block-title {
+  h2 {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+  }
+}
 </style>

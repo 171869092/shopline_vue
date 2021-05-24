@@ -1,167 +1,164 @@
 <template>
   <div v-loading="loading" class="order-detail p30">
-    <el-row :gutter="20">
-      <el-col :span="20" :offset="2">
-        <!-- <el-row> -->
-        <!-- <div class="flexbox"> -->
-        <div class="top-box">
-          <div class="order-header flexbox">
-            <el-button
-              size="small"
-              class="button-border"
-              icon="el-icon-back"
-              @click="$router.back()"
-            />
-            <div class="order-id ml20">
-              Order No：<span class="primary">{{ order_no }}</span>
-            </div>
-          </div>
-          <el-button size="small" type="primary" @click="complete">Completed</el-button>
+    <div class="top-box">
+      <div class="order-header flexbox">
+        <el-button
+          size="small"
+          class="button-border"
+          icon="el-icon-back"
+          @click="$router.back()"
+        />
+        <div class="order-id ml20">
+          Order No：<span class="primary">{{ order_no }}</span>
         </div>
+      </div>
+      <el-button size="small" type="primary" @click="complete">Completed</el-button>
+    </div>
+    <div class="order-cell">
+      <!-- After Sales Information -->
+      <el-card class="box-card mt20">
+        <div slot="header">
+          <div class="detail-block-title">
+            <div><h2>After Sales Information</h2></div>
+          </div>
+        </div>
+        <div class="detail-block-title custul">
+          <el-form>
+            <el-col :span="8">
+              <el-form-item label="After Sales Type:">
+                <span class="inx_text">{{ tableData.after_type }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="After Sales Mode:">
+                <span class="inx_text">{{ tableData.after_model }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="8">
+              <el-form-item label="After Sales Products:">
+                <span v-for="(item,ids) in tableData.product_json" :key="ids" class="inx_text">{{ item.sku_name }}</span>
+              </el-form-item>
+            </el-col>
+          </el-form>
+        </div>
+      </el-card>
 
-        <div class="order-cell">
-          <!-- After Sales Information -->
-          <el-card class="box-card mt20">
+      <el-card class="box-card mt20">
+        <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
+          <el-tab-pane label="Text Content" name="first">
+            <!-- Text Content -->
             <div slot="header">
               <div class="detail-block-title">
-                <div><h2>After Sales Information</h2></div>
+                <div><h2>Text Content</h2></div>
               </div>
             </div>
-            <div class="detail-block-title custul">
-              <el-form>
-                <el-col :span="8">
-                  <el-form-item label="After Sales Type:">{{ tableData.after_type }}</el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="After Sales Mode:">{{ tableData.after_model }}</el-form-item>
-                </el-col>
-                <el-col :span="8">
-                  <el-form-item label="After Sales Products:">
-                    <span v-for="(item,ids) in tableData.product_json" :key="ids">{{ item.sku_name }}</span>
-                  </el-form-item>
-                </el-col>
-              </el-form>
-            </div>
-          </el-card>
+            <textarea v-model="tableData.content" class="el-textarea__inner" :disabled="true" autosize placeholder="请输入内容" />
+          </el-tab-pane>
 
-          <el-card class="box-card mt20">
-            <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-              <el-tab-pane label="Text Content" name="first">
-                <!-- Text Content -->
-                <div slot="header">
-                  <div class="detail-block-title">
-                    <div><h2>Text Content</h2></div>
-                  </div>
-                </div>
-                <textarea v-model="tableData.content" class="el-textarea__inner" :disabled="true" autosize placeholder="请输入内容" />
-              </el-tab-pane>
-
-              <el-tab-pane label="Picture Content" name="second">
-                <!-- Picture Content -->
-                <el-dialog :visible.sync="dialogVisible" width="550px" >
-                  <div class="block" style="height: 500px;">
-                    <el-image accept="image/png, image/jpeg" style="width: 500px; height: 500px; float:left;" :src="thisImgs">
-                      <!-- <div slot="error" class="image-slot">
-                          <i class="el-icon-picture-outline" style="font-size: 30px;" />
-                        </div> -->
-                    </el-image>
-                  </div>
-                </el-dialog>
-
-                <div v-for="fit in showImg" :key="fit" class="block">
-                  <!-- <span class="demonstration">{{ fit }}</span> -->
-
-                  <el-image
-                    ref="thisImg"
-                    accept="image/png, image/jpeg"
-                    class="sku_image"
-                    style="width: 100px; height: 100px; float:left;"
-                    :src="fit"
-                    :fit="fit"
-                    @click="preview(fit)"
-                  >
-
-                      <div slot="error" class="image-slot">
-                        <i class="el-icon-picture-outline" style="font-size: 30px;" />
-                      </div>
-                    </el-image>
-                  <!-- </el-dialog> -->
-
-                  <!-- <el-image
-                    accept="image/png, image/jpeg"
-                    class="sku_image"
-                    style="width: 100px; height: 100px; float:left;"
-                    :src="fit"
-                    :fit="fit"
-                  >
-                    <div slot="error" class="image-slot">
+          <el-tab-pane label="Picture Content" name="second">
+            <!-- Picture Content -->
+            <el-dialog :visible.sync="dialogVisible" width="550px" >
+              <div class="block" style="height: 500px;">
+                <el-image accept="image/png, image/jpeg" style="width: 500px; height: 500px; float:left;" :src="thisImgs">
+                  <!-- <div slot="error" class="image-slot">
                       <i class="el-icon-picture-outline" style="font-size: 30px;" />
-                    </div>
-                  </el-image> -->
-                </div>
-
-              </el-tab-pane>
-            </el-tabs>
-          </el-card>
-
-          <!-- Text Content -->
-          <!-- <el-card class="box-card mt20">
-                        <div slot="header">
-                            <div class="detail-block-title">
-                                <div><h2>Text Content</h2></div>
-                            </div>
-                        </div>
-                        <textarea class="el-textarea__inner" :disabled="true" v-model="tableData.content" autosize placeholder="请输入内容" />
-                    </el-card> -->
-
-          <!-- Picture Content -->
-          <!-- <el-card class="box-card mt20">
-                        <div slot="header">
-                            <div class="detail-block-title">
-                                <div><h2>Picture Content</h2></div>
-                            </div>
-                        </div>
-                            <div slot="header" class="flexbox justidfy-space-between align-center">
-                            </div>
-                    </el-card> -->
-
-          <div v-for="(item,k) in tableData.reply" :key="k">
-            <!-- Reply Message -->
-            <el-card class="box-card mt20">
-              <div slot="header">
-                <div class="detail-block-title">
-                  <div><h2>Reply Message</h2></div>
-                </div>
-              </div>
-              <textarea v-model="item.reply_info" class="el-textarea__inner" :disabled="true" autosize placeholder="请输入内容" />
-            </el-card>
-
-            <!-- Reply to Picture -->
-            <el-card class="box-card mt20">
-              <div slot="header">
-                <div class="detail-block-title">
-                  <div><h2>Reply to Picture</h2></div>
-                </div>
-              </div>
-              <div v-for="fit in item.reply_img" :key="fit" class="block">
-                <!-- <span class="demonstration">{{ fit }}</span> -->
-                <el-image
-                  class="sku_image"
-                  style="width: 100px; height: 100px; float:left;"
-                  :src="fit"
-                  :fit="fit"
-                >
-                  <div slot="error" class="image-slot">
-                    <i class="el-icon-picture-outline" style="font-size: 30px;" />
-                  </div>
+                    </div> -->
                 </el-image>
               </div>
-            </el-card>
-          </div>
+            </el-dialog>
 
-        </div>
-      </el-col>
-    </el-row>
+            <div v-for="fit in showImg" :key="fit" class="block">
+              <!-- <span class="demonstration">{{ fit }}</span> -->
+
+              <el-image
+                ref="thisImg"
+                accept="image/png, image/jpeg"
+                class="sku_image"
+                style="width: 100px; height: 100px; float:left;"
+                :src="fit"
+                :fit="fit"
+                @click="preview(fit)"
+              >
+
+                <div slot="error" class="image-slot">
+                  <i class="el-icon-picture-outline" style="font-size: 30px;" />
+                </div>
+              </el-image>
+              <!-- </el-dialog> -->
+
+              <!-- <el-image
+                accept="image/png, image/jpeg"
+                class="sku_image"
+                style="width: 100px; height: 100px; float:left;"
+                :src="fit"
+                :fit="fit"
+              >
+                <div slot="error" class="image-slot">
+                  <i class="el-icon-picture-outline" style="font-size: 30px;" />
+                </div>
+              </el-image> -->
+            </div>
+
+          </el-tab-pane>
+        </el-tabs>
+      </el-card>
+
+      <!-- Text Content -->
+      <!-- <el-card class="box-card mt20">
+                    <div slot="header">
+                        <div class="detail-block-title">
+                            <div><h2>Text Content</h2></div>
+                        </div>
+                    </div>
+                    <textarea class="el-textarea__inner" :disabled="true" v-model="tableData.content" autosize placeholder="请输入内容" />
+                </el-card> -->
+
+      <!-- Picture Content -->
+      <!-- <el-card class="box-card mt20">
+                    <div slot="header">
+                        <div class="detail-block-title">
+                            <div><h2>Picture Content</h2></div>
+                        </div>
+                    </div>
+                        <div slot="header" class="flexbox justidfy-space-between align-center">
+                        </div>
+                </el-card> -->
+
+      <div v-for="(item,k) in tableData.reply" :key="k">
+        <!-- Reply Message -->
+        <el-card class="box-card mt20">
+          <div slot="header">
+            <div class="detail-block-title">
+              <div><h2>Reply Message</h2></div>
+            </div>
+          </div>
+          <textarea v-model="item.reply_info" class="el-textarea__inner" :disabled="true" autosize placeholder="请输入内容" />
+        </el-card>
+
+        <!-- Reply to Picture -->
+        <el-card class="box-card mt20">
+          <div slot="header">
+            <div class="detail-block-title">
+              <div><h2>Reply to Picture</h2></div>
+            </div>
+          </div>
+          <div v-for="fit in item.reply_img" :key="fit" class="block">
+            <!-- <span class="demonstration">{{ fit }}</span> -->
+            <el-image
+              class="sku_image"
+              style="width: 100px; height: 100px; float:left;margin-bottom: 20px"
+              :src="fit"
+              :fit="fit"
+            >
+              <div slot="error" class="image-slot">
+                <i class="el-icon-picture-outline" style="font-size: 30px;" />
+              </div>
+            </el-image>
+          </div>
+        </el-card>
+      </div>
+
+    </div>
   </div>
 </template>
 <script>
@@ -319,6 +316,9 @@ export default {
     font-size: 16px;
     font-weight: 600;
     margin: 0;
+  }
+  .inx_text {
+    color: #777;
   }
 }
 .block {
