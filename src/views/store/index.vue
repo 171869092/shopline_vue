@@ -1,6 +1,13 @@
 <template>
   <div class="my-shop">
     <div class="shop-btn-group">
+      <el-dropdown split-button type="primary" trigger="click" size="small" class="mr20" @command="handleCommand">
+        {{chooseStore}}
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="1">Shopify</el-dropdown-item>
+          <el-dropdown-item command="2">Woo Commerce</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
       <el-button type="primary" size="small" icon="el-icon-plus" @click="connectShop">Connect A Store</el-button>
     </div>
     <el-card class="box-card">
@@ -166,6 +173,7 @@ export default {
         { label: '1month', value: '30' },
         { label: 'Orders by date', value: 'Orders' }
       ],
+      chooseStore: 'Shopify',
       rules: {
         store_url: [
           { required: true, message: 'store_url', trigger: 'blur' }
@@ -351,6 +359,16 @@ export default {
       if (row.is_del !== '3') {
         this.tabClickIndex = row.index
         this.tabClickLabel = column.label
+      }
+    },
+    handleCommand(command) {
+      if (command === '1') {
+        this.chooseStore = 'Shopify'
+        this.Inquire()
+      } else {
+        this.chooseStore = 'Woo Commerce'
+        this.tableData = []
+        this.listQuery.total = 0
       }
     }
   }
