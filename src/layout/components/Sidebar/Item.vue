@@ -32,10 +32,13 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .sub-el-icon {
   color: currentColor;
   width: 1em;
   height: 1em;
+}
+.el-submenu__title {
+  font-weight: bold;
 }
 </style>

@@ -212,11 +212,14 @@ export default {
       selectRows: [],
       origin: -1, // 选择起始行索引
       keepDown: false, // 是否按住shift键
-      pin: false // 这里给一个变量，默认为false，不按住
+      pin: false, // 这里给一个变量，默认为false，不按住
+      jumpRoute: '1'
     }
   },
   computed: {},
   created() {
+    this.jumpRoute = this.$route.name
+    console.log('1111', this.jumpRoute)
     this.init()
     this.Inquire()
   },
@@ -289,6 +292,11 @@ export default {
       //   spinner: 'el-icon-loading',
       //   background: 'rgba(0, 0, 0, 0.7)'
       // })
+      if (this.jumpRoute === 'shopify') {
+        this.formQuery.plat_form = '1'
+      } else {
+        this.formQuery.plat_form = '2'
+      }
       this.loading = true
       this.selOrderIds = []
       this.formQuery.iDisplayLength = this.listQuery.limit

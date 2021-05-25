@@ -139,12 +139,19 @@ export const constantRoutes = [
   {
     path: '/orders',
     component: Layout,
+    meta: { title: 'Orders', icon: 'el-icon-tickets' },
     children: [
       {
-        path: 'index',
-        name: 'orders',
+        path: 'shopify',
+        name: 'shopify',
         component: () => import('@/views/orders/index'),
-        meta: { title: 'Orders', icon: 'el-icon-tickets' }
+        meta: { title: 'Shopify', icon: 'el-icon-tickets' }
+      },
+      {
+        path: 'woo-commerces',
+        name: 'woo-commerces',
+        component: () => import('@/views/orders/index'),
+        meta: { title: 'Woo Commerce', icon: 'el-icon-tickets' }
       },
       {
         path: 'detail',
