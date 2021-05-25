@@ -1,6 +1,7 @@
 import router from './router'
 import store from './store'
 // import { Message } from 'element-ui'
+// 注释版本为"nprogress": "0.2.0",
 // import NProgress from 'nprogress' // progress bar
 // import 'nprogress/nprogress.css' // progress bar style
 import { getToken } from '@/utils/auth' // get token from cookie
