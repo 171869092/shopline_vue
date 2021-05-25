@@ -55,3 +55,11 @@ export function checkShop(params) {
     params
   })
 }
+
+export function shopStoreSaved(params) {
+  return request({
+    url: '/shop/store/saved',
+    method: 'post',
+    data: params
+  })
+}

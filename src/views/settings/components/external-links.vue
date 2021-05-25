@@ -16,7 +16,7 @@
       </el-table-column>
       <el-table-column label="Operation">
         <template slot-scope="scope">
-          <span>{{ scope.row.operation }}</span>
+          <span class="pointer" :data-clipboard-text="scope.row.store_url" id="copy_text" @click="copy">{{ scope.row.operation }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -91,6 +91,7 @@
 </template>
 
 <script>
+import Clipboard from 'clipboard'
 import { getToken } from '@/utils/auth'
 import { getCookies } from '@/utils/cookies'
 import { getStoreList } from '@/api/product'
@@ -214,6 +215,18 @@ export default {
         default:
           break
       }
+    },
+    // 复制
+    copy() {
+      const clipboard = new Clipboard('#copy_text')
+      clipboard.on('success', e => {
+        this.$message.success('Copy successfully！')
+        clipboard.destroy()
+      })
+      clipboard.on('error', e => {
+        this.$message.warning('This browser does not support automatic copy！')
+        clipboard.destroy()
+      })
     }
   }
 }

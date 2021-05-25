@@ -3,12 +3,12 @@
     <div class="language-change-box">
       <el-row>
         <el-col :offset="11" :span="5">
-          <img src="" style="width: 150px; height: 80px; background-color:#ccc;"/>
+          <img src="" style="width: 150px; height: 80px; background-color:#ccc;">
         </el-col>
         <el-col :offset="4" :span="4">
           <el-dropdown trigger="click" class="international" @command="handleSetLanguage">
             <div>
-              {{getLanguageLabel(language,languageList)}}
+              {{ getLanguageLabel(language,languageList) }}
             </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="en" :disabled="language==='en'">English</el-dropdown-item>
@@ -18,13 +18,13 @@
         </el-col>
       </el-row>
     </div>
-    <el-divider/>
+    <el-divider />
     <div class="track-form-box">
       <el-form ref="trackNumberForm" label-position="top" :model="trackNumberForm" :rules="trackNumberFormRules">
         <el-row>
           <el-col :offset="6" :span="12">
             <el-form-item label="Enter the order number to query the order information for after-sales-service" prop="number" class="mt5">
-              <el-input v-model="trackNumberForm.number" size="large" placeholder="Please enter order number"/>
+              <el-input v-model="trackNumberForm.number" size="large" placeholder="Please enter order number" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
@@ -36,14 +36,19 @@
       </el-form>
     </div>
     <el-dialog
-      title="Authentication"
       :visible.sync="dialogVisible"
       width="50%"
       top="40vh"
       :before-close="handleClose">
+      <div slot="title">
+        Authentication
+        <el-tooltip class="item" effect="dark" content="in order to ensure that the information is correct, we need to conduct a brief authentication. please understand the inconvenience caused" placement="right">
+          <i class="el-icon-question" />
+        </el-tooltip>
+      </div>
       <el-form ref="AuthenticationForm" label-position="top" :model="AuthenticationForm" :rules="AuthenticationRules">
         <el-form-item label="Please enter the email information you filled in when you purchased the product" prop="product">
-          <el-input v-model="AuthenticationForm.product" size="large" placeholder="Please enter the email information you filled in when you purchased the product"/>
+          <el-input v-model="AuthenticationForm.product" size="large" placeholder="Please enter the email information you filled in when you purchased the product" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -87,7 +92,8 @@ export default {
         product: [
           { required: true, message: 'Please enter the email information you filled in when you purchased the product', trigger: 'blur' }
         ]
-      }
+      },
+      submitStatus: '1'
     }
   },
   computed: {
@@ -143,6 +149,8 @@ export default {
     // 确认发送
     handleSubmit() {
       this.dialogVisible = false
+      // this.submitStatus = '2'
+      this.$router.push({ name: 'track-details', query: { submitStatus: this.submitStatus }})
     }
   }
 }

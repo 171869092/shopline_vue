@@ -87,6 +87,12 @@ export const constantRoutes = [
     hidden: true
   },
   {
+    path: '/track-details',
+    component: () => import('@/views/track/details'),
+    name: 'track-details',
+    hidden: true
+  },
+  {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true

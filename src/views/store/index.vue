@@ -1,14 +1,17 @@
 <template>
   <div class="my-shop">
     <div class="shop-btn-group">
-      <el-dropdown split-button type="primary" trigger="click" size="small" class="mr20" @command="handleCommand">
-        {{chooseStore}}
+      <el-dropdown type="primary"  size="small" @command="handleCommand">
+        <el-button type="primary" size="small">
+          <i class="el-icon-plus"></i>
+          Connect A Store
+        </el-button>
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="1">Shopify</el-dropdown-item>
           <el-dropdown-item command="2">Woo Commerce</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
-      <el-button type="primary" size="small" icon="el-icon-plus" @click="connectShop">Connect A Store</el-button>
+<!--      <el-button type="primary" size="small" icon="el-icon-plus" @click="connectShop">Connect A Store</el-button>-->
     </div>
     <el-card class="box-card">
       <el-table
@@ -67,7 +70,7 @@
       </el-table>
       <pagination :total="listQuery.total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="Inquire" />
     </el-card>
-    <el-dialog title="Connect to Shopify" width="650px" :visible.sync="dialogvisible" :close-on-click-modal="false" @close="closeDialog">
+    <el-dialog :title="Connect" width="650px" :visible.sync="dialogvisible" :close-on-click-modal="false" @close="closeDialog">
       <el-form ref="storeForm" :model="storeForm" :rules="rules" @submit.native.prevent="submitConnect">
         <el-form-item prop="store_url" :show-message="false">
           <el-input v-model="storeForm.store_url" autocomplete="off" placeholder="Shopify store URL">
@@ -108,6 +111,26 @@
         <el-button size="small" type="primary" :disabled="storeForm.store_url === ''" :loading="submitLoading" @click="submitConnect">Connect</el-button>
       </div>
     </el-dialog>
+    <el-dialog :title="Connect" width="650px" :visible.sync="dialogConnectVisible" :close-on-click-modal="false" @close="closeConnectDialog">
+      <el-form ref="storeConnectForm" :model="storeConnectForm" :rules="rules" @submit.native.prevent="submitConnect">
+        <el-form-item prop="store_name" :show-message="false">
+          <el-input v-model="storeConnectForm.store_name" autocomplete="off" placeholder="Woo Commerce store name" />
+        </el-form-item>
+        <el-form-item prop="store_url" :show-message="false">
+          <el-input v-model="storeConnectForm.store_url" autocomplete="off" placeholder="Woo Commerce store URL" />
+        </el-form-item>
+        <el-form-item prop="API KEY" :show-message="false">
+          <el-input v-model="storeConnectForm.api_key" autocomplete="off" placeholder="Woo Commerce store api_key" />
+        </el-form-item>
+        <el-form-item prop="SECRET KEY" :show-message="false">
+          <el-input v-model="storeConnectForm.secret_key" autocomplete="off" placeholder="Woo Commerce store secret_key" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" @click="closeConnectDialog">Cancel</el-button>
+        <el-button size="small" type="primary" :disabled="storeConnectForm.store_url === '' || storeConnectForm.store_name === ''" :loading="ConnectSubmitLoading" @click="newSubmitConnect">Connect</el-button>
+      </div>
+    </el-dialog>
     <el-dialog
       title="Store Configuration"
       :visible.sync="configDialog"
@@ -132,7 +155,7 @@
 </template>
 <script>
 // import { shopList, shopPush, testStoreConnect, connectStore, c_name, editStore, checkShop } from '@/api/shop'
-import { shopList, testStoreConnect, c_name, editStore, checkShop } from '@/api/shop'
+import { shopList, testStoreConnect, c_name, editStore, checkShop, shopStoreSaved } from '@/api/shop'
 export default {
   name: 'shop',
   components: {
@@ -167,13 +190,22 @@ export default {
         location_id: '',
         pull_date: ''
       },
+      storeConnectForm: {
+        store_url: '',
+        store_name: '',
+        api_key: '',
+        secret_key: ''
+      },
       stutas: '',
       importList: [
         { label: '7 days', value: '7' },
         { label: '1month', value: '30' },
         { label: 'Orders by date', value: 'Orders' }
       ],
-      chooseStore: 'Shopify',
+      Connect: 'Connect to Shopify',
+      ConnectCommand: 1,
+      ConnectSubmitLoading: false,
+      dialogConnectVisible: false,
       rules: {
         store_url: [
           { required: true, message: 'store_url', trigger: 'blur' }
@@ -283,6 +315,26 @@ export default {
         }
       })
     },
+    newSubmitConnect() {
+      this.ConnectSubmitLoading = true
+      const formData = {}
+      formData.store_url = this.storeConnectForm.store_url
+      formData.store_name = this.storeConnectForm.store_name
+      formData.api_key = this.storeConnectForm.api_key
+      formData.secret_key = this.storeConnectForm.secret_key
+      formData.type = this.ConnectCommand
+      shopStoreSaved(formData).then(res => {
+        if (res.code === 200) {
+          this.dialogConnectVisible = false
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+    },
+    closeConnectDialog() {
+      this.$refs.storeConnectForm.resetFields()
+      this.dialogConnectVisible = false
+    },
     submitConnect() {
       this.submitLoading = true
       const url = `${this.storeForm.store_url}.myshopify.com`
@@ -363,12 +415,13 @@ export default {
     },
     handleCommand(command) {
       if (command === '1') {
-        this.chooseStore = 'Shopify'
-        this.Inquire()
+        this.dialogvisible = true
+        this.Connect = 'Connect to Shopify'
+        this.ConnectCommand = 1
       } else {
-        this.chooseStore = 'Woo Commerce'
-        this.tableData = []
-        this.listQuery.total = 0
+        this.dialogConnectVisible = true
+        this.Connect = 'Connect to Woo Commerce'
+        this.ConnectCommand = 2
       }
     }
   }
