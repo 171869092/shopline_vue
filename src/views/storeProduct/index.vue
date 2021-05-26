@@ -215,7 +215,7 @@ export default {
       this.productSelection = val
     },
     productAdd(type, id) {
-      this.$router.push({ name: 'productDetails', query: { type: type, id: id, stroeType: 'store' }})
+      this.$router.push({ name: 'productDetails', query: { type: type, id: id, stroeType: 'store', platform: this.platform }})
     },
     handleClick(tab) {
       this.tabList.map(item => {

@@ -378,7 +378,8 @@ export default {
       imgList: [],
       tableData: [],
       selectedVariants: [],
-      platform_index_id: ''
+      platform_index_id: '',
+      platform: ''
     }
   },
   computed: {
@@ -413,6 +414,7 @@ export default {
     }
   },
   created() {
+    this.platform = this.$route.query.platform
     if (this.$route.query.type === 'edit') {
       this.getForm()
     }
@@ -458,7 +460,7 @@ export default {
           this.loading = false
         })
       } else {
-        getStoreProductEdit({ id: this.$route.query.id }).then(res => {
+        getStoreProductEdit({ id: this.$route.query.id, platform: this.platform }).then(res => {
           if (res.code === 200) {
             this.formData = res.data
             if (res.data.options) {
