@@ -8,6 +8,7 @@
         <el-col :offset="4" :span="4">
           <el-dropdown trigger="click" class="international" @command="handleSetLanguage">
             <div>
+              <img src="@/assets/home/lang.png" height="20px" class="mr5">
               {{ getLanguageLabel(language,languageList) }}
             </div>
             <el-dropdown-menu slot="dropdown">
