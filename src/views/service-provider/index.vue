@@ -20,7 +20,8 @@
           </div>
         </div>
       </div>
-      <el-button type="primary" size="small" @click="dialogVisible = true" class="mr10 mb10">Newly Added</el-button>
+      <el-button type="primary" size="small" class="mr10 mb10" @click="dialogVisible = true">Newly Added</el-button>
+      <el-button type="primary" size="small" class="mr10 mb10" @click="inviteVisible = true">Invite to</el-button>
       <el-table
         ref="multipleTable"
         v-loading="loading"
@@ -56,7 +57,7 @@
       <div class="dialog-box">
         <div class="mr20">
           <div v-for="(item,index) in codeList" :key="index" class="code-box">
-            <el-input type="text" v-model="item.code" placeholder="Please input activation code" clearable class="mb20"></el-input>
+            <el-input v-model="item.code" type="text" placeholder="Please input activation code" clearable class="mb20"></el-input>
             <el-button v-if="index !== 0" icon="el-icon-circle-close" type="text" class="btn" @click="handleIconClose(index)"></el-button>
           </div>
         </div>
@@ -69,10 +70,21 @@
         <el-button type="primary" @click="handleDetermine">Determine</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="Invitation link"
+      :visible.sync="inviteVisible"
+      width="30%"
+      :before-close="handleInviteClose">
+      <div class="dialog-box">{{ invite.url }}</div>
+      <span slot="footer" class="dialog-footer">
+        <el-button id="copy_url" type="primary" :data-clipboard-text="invite.url" @click="handleCopy">Copy</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import Clipboard from 'clipboard'
 import { debounce } from '@/utils'
 import { getGoodsServiceList, getGoodsActivationByCode } from '@/api/service'
 
@@ -98,9 +110,13 @@ export default {
       tableData: [],
       loading: false,
       dialogVisible: false,
+      inviteVisible: false,
       codeList: [{
         code: ''
-      }]
+      }],
+      invite: {
+        url: 'www.Invitation link Settle in.com'
+      }
     }
   },
   methods: {
@@ -172,6 +188,26 @@ export default {
     // 删除不为第一条的激活码
     handleIconClose(val) {
       this.codeList.splice(val, 1)
+    },
+    // 关闭invite弹框
+    handleInviteClose(done) {
+      this.$confirm('Confirm close？')
+        .then(_ => {
+          done()
+        })
+        .catch(_ => {})
+    },
+    // 复制链接
+    handleCopy() {
+      const clipboard = new Clipboard('#copy_url')
+      clipboard.on('success', e => {
+        this.$message.success('Copy successfully！')
+        clipboard.destroy()
+      })
+      clipboard.on('error', e => {
+        this.$message.warning('This browser does not support automatic copy！')
+        clipboard.destroy()
+      })
     }
   }
 }

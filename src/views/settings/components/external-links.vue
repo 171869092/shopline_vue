@@ -16,7 +16,7 @@
       </el-table-column>
       <el-table-column label="Operation">
         <template slot-scope="scope">
-          <span class="pointer" :data-clipboard-text="scope.row.store_url" id="copy_text" @click="copy">{{ scope.row.operation }}</span>
+          <span id="copy_text" class="pointer" :data-clipboard-text="scope.row.store_url" @click="copy">{{ scope.row.operation }}</span>
         </template>
       </el-table-column>
     </el-table>
