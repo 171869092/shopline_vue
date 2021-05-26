@@ -213,13 +213,13 @@ export default {
       origin: -1, // 选择起始行索引
       keepDown: false, // 是否按住shift键
       pin: false, // 这里给一个变量，默认为false，不按住
-      jumpRoute: '1'
+      jumpRoute: '1',
+      platForm: ''
     }
   },
   computed: {},
   created() {
     this.jumpRoute = this.$route.name
-    console.log('1111', this.jumpRoute)
     this.init()
     this.Inquire()
   },
@@ -335,7 +335,12 @@ export default {
       this.Inquire()
     },
     toLink(row) {
-      this.$router.push({ name: 'orders-detail', query: { order_id: row.id, order_no: row.order_name }})
+      if (this.jumpRoute === 'shopify') {
+        this.platForm = '1'
+      } else {
+        this.platForm = '2'
+      }
+      this.$router.push({ name: 'orders-detail', query: { order_id: row.id, order_no: row.order_name, platForm: this.platForm }})
     },
     logDetail(row) {
       this.dialogVisible = true

@@ -165,7 +165,8 @@ export default {
       ],
       detailInfo: {},
       loading: false,
-      selectedProduct: ''
+      selectedProduct: '',
+      platForm: ''
     }
   },
   computed: {
@@ -192,6 +193,7 @@ export default {
     }
   },
   created() {
+    this.platForm = this.$route.query.platForm
     this.init()
   },
   methods: {
@@ -203,7 +205,7 @@ export default {
       //   background: 'rgba(0, 0, 0, 0.7)'
       // })
       this.loading = true
-      getOrderInfo({ orders_id: this.order_id })
+      getOrderInfo({ orders_id: this.order_id, plat_form: this.platForm })
         .then((res) => {
           console.log(res.data)
           if (res.code === 200) {
