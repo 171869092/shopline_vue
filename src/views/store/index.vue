@@ -271,6 +271,11 @@ export default {
       shopList(this.formQuery).then(res => {
         console.log(res.data)
         if (res.code === 200) {
+          res.data.data.map(it => {
+            if (it.platform === '') {
+              it.platform = 'Woo Commerce'
+            }
+          })
           this.tableData = res.data.data
           this.listQuery.total = +res.data.pagination.totalCount
         }
@@ -353,7 +358,11 @@ export default {
         if (valid) {
           this.ConnectSubmitLoading = true
           const formData = {}
-          formData.store_url = this.storeConnectForm.store_url
+          if (this.storeConnectForm.store_url.slice(0, 7) === 'http://') {
+            formData.store_url = this.storeConnectForm.store_url
+          } else {
+            formData.store_url = 'http://' + this.storeConnectForm.store_url
+          }
           formData.store_name = this.storeConnectForm.store_name
           formData.api_key = this.storeConnectForm.api_key
           formData.serect_key = this.storeConnectForm.serect_key
@@ -364,12 +373,14 @@ export default {
           shopStoreSaved(formData).then(res => {
             if (res.code === 200) {
               this.closeConnectDialog()
-              this.$message.success('OK!')
+              this.$message.success(res.message)
               this.ConnectSubmitLoading = false
+              this.Inquire()
             } else {
               this.closeConnectDialog()
               this.$message.error(res.message)
               this.ConnectSubmitLoading = false
+              this.Inquire()
             }
           }).catch(e => {
             console.log(e)
