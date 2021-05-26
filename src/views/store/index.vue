@@ -56,6 +56,11 @@
             <span v-else><i class="el-icon-check" style="color: green" /></span>
           </template>
         </el-table-column>
+        <el-table-column label="operating">
+          <template slot-scope="scope">
+            <el-button :disabled="scope.row.platform === 'Shopify'" type="text" @click="handleEdit(scope.row)">edit</el-button>
+          </template>
+        </el-table-column>
         <!-- <el-table-column label="Create Time">
           <template slot-scope="scope">
             <div>{{ scope.row.create_time }}</div>
@@ -111,24 +116,24 @@
         <el-button size="small" type="primary" :disabled="storeForm.store_url === ''" :loading="submitLoading" @click="submitConnect">Connect</el-button>
       </div>
     </el-dialog>
-    <el-dialog :title="Connect" width="650px" :visible.sync="dialogConnectVisible" :close-on-click-modal="false" @close="closeConnectDialog">
-      <el-form ref="storeConnectForm" :model="storeConnectForm" :rules="rules" @submit.native.prevent="submitConnect">
-        <el-form-item prop="store_name" :show-message="false">
-          <el-input v-model="storeConnectForm.store_name" autocomplete="off" placeholder="Woo Commerce store name" />
+    <el-dialog :title="Connect" width="650px" :visible.sync="dialogConnectVisible" :close-on-click-modal="false" :destroy-on-close="true" @close="closeConnectDialog">
+      <el-form ref="storeConnectForm" :model="storeConnectForm" :rules="storeConnectRules" label-position="right" label-width="130px">
+        <el-form-item label="STORE NAME" prop="store_name">
+          <el-input v-model="storeConnectForm.store_name" placeholder="Woo Commerce STORE NAME" />
         </el-form-item>
-        <el-form-item prop="store_url" :show-message="false">
-          <el-input v-model="storeConnectForm.store_url" autocomplete="off" placeholder="Woo Commerce store URL" />
+        <el-form-item label="STORE URL" prop="store_url">
+          <el-input v-model="storeConnectForm.store_url" placeholder="Woo Commerce STORE URL" />
         </el-form-item>
-        <el-form-item prop="API KEY" :show-message="false">
-          <el-input v-model="storeConnectForm.api_key" autocomplete="off" placeholder="Woo Commerce store api_key" />
+        <el-form-item label="API KEY" prop="api_key">
+          <el-input v-model="storeConnectForm.api_key" placeholder="Woo Commerce API KEY" />
         </el-form-item>
-        <el-form-item prop="SECRET KEY" :show-message="false">
-          <el-input v-model="storeConnectForm.secret_key" autocomplete="off" placeholder="Woo Commerce store secret_key" />
+        <el-form-item label="SECRET KEY" prop="serect_key">
+          <el-input v-model="storeConnectForm.serect_key" placeholder="Woo Commerce SECRET KEY" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="closeConnectDialog">Cancel</el-button>
-        <el-button size="small" type="primary" :disabled="storeConnectForm.store_url === '' || storeConnectForm.store_name === ''" :loading="ConnectSubmitLoading" @click="newSubmitConnect">Connect</el-button>
+        <el-button size="small" type="primary" :loading="ConnectSubmitLoading" @click="newSubmitConnect">Connect</el-button>
       </div>
     </el-dialog>
     <el-dialog
@@ -194,7 +199,7 @@ export default {
         store_url: '',
         store_name: '',
         api_key: '',
-        secret_key: ''
+        serect_key: ''
       },
       stutas: '',
       importList: [
@@ -206,6 +211,8 @@ export default {
       ConnectCommand: 1,
       ConnectSubmitLoading: false,
       dialogConnectVisible: false,
+      ConnectEdit: false,
+      ConnectId: '',
       rules: {
         store_url: [
           { required: true, message: 'store_url', trigger: 'blur' }
@@ -230,6 +237,20 @@ export default {
         ],
         Orders_by_date: [
           { required: true, message: 'Orders by date', trigger: 'blur' }
+        ]
+      },
+      storeConnectRules: {
+        store_name: [
+          { required: true, message: 'store_name is required', trigger: 'blur' }
+        ],
+        store_url: [
+          { required: true, message: 'store_url is required', trigger: 'blur' }
+        ],
+        api_key: [
+          { required: true, message: 'api_key is required', trigger: 'blur' }
+        ],
+        serect_key: [
+          { required: true, message: 'serect_key is required', trigger: 'blur' }
         ]
       }
     }
@@ -315,24 +336,58 @@ export default {
         }
       })
     },
+    // 编辑Woo Commerce
+    handleEdit(row) {
+      this.handleCommand('2')
+      this.storeConnectForm.store_name = row.store_name
+      this.storeConnectForm.store_url = row.store_url
+      this.storeConnectForm.api_key = row.api_key
+      this.storeConnectForm.serect_key = row.serect_key
+      this.ConnectEdit = true
+      this.ConnectId = row.id
+    },
+    // 新增Woo Commerce
     newSubmitConnect() {
-      this.ConnectSubmitLoading = true
-      const formData = {}
-      formData.store_url = this.storeConnectForm.store_url
-      formData.store_name = this.storeConnectForm.store_name
-      formData.api_key = this.storeConnectForm.api_key
-      formData.secret_key = this.storeConnectForm.secret_key
-      formData.type = this.ConnectCommand
-      shopStoreSaved(formData).then(res => {
-        if (res.code === 200) {
-          this.dialogConnectVisible = false
+      console.log('this.storeConnectForm', this.storeConnectForm)
+      this.$refs['storeConnectForm'].validate((valid) => {
+        if (valid) {
+          this.ConnectSubmitLoading = true
+          const formData = {}
+          formData.store_url = this.storeConnectForm.store_url
+          formData.store_name = this.storeConnectForm.store_name
+          formData.api_key = this.storeConnectForm.api_key
+          formData.serect_key = this.storeConnectForm.serect_key
+          formData.type = this.ConnectCommand
+          if (this.ConnectEdit === true) {
+            formData.id = Number(this.ConnectId)
+          }
+          shopStoreSaved(formData).then(res => {
+            if (res.code === 200) {
+              this.closeConnectDialog()
+              this.$message.success('OK!')
+              this.ConnectSubmitLoading = false
+            } else {
+              this.closeConnectDialog()
+              this.$message.error(res.message)
+              this.ConnectSubmitLoading = false
+            }
+          }).catch(e => {
+            console.log(e)
+            this.ConnectSubmitLoading = false
+          })
         } else {
-          this.$message.error(res.message)
+          this.$message.warning('Please fill in the required fields!')
         }
       })
     },
+    // 关闭Woo Commerce
     closeConnectDialog() {
-      this.$refs.storeConnectForm.resetFields()
+      this.storeConnectForm = {
+        store_url: '',
+        store_name: '',
+        api_key: '',
+        serect_key: ''
+      }
       this.dialogConnectVisible = false
     },
     submitConnect() {
@@ -389,7 +444,7 @@ export default {
     tableRowClassName({ row, rowIndex }) {
       // 把每一行的索引放进row
       row.index = rowIndex
-      console.log(row)
+      // console.log(row)
       if (row.is_del === '3') {
         return 'warning-row'
       } else {
@@ -413,12 +468,14 @@ export default {
         this.tabClickLabel = column.label
       }
     },
+    // 选择添加的是Woo Commerce还是Shopify
     handleCommand(command) {
       if (command === '1') {
         this.dialogvisible = true
         this.Connect = 'Connect to Shopify'
         this.ConnectCommand = 1
       } else {
+        this.ConnectEdit = false
         this.dialogConnectVisible = true
         this.Connect = 'Connect to Woo Commerce'
         this.ConnectCommand = 2
