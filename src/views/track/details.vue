@@ -93,10 +93,10 @@
           <el-tab-pane :label="$t('track.detail.informationActive.secondLabel')" name="second">
             <el-form ref="information" :model="feedBackInformation" label-width="160px" label-position="left">
               <el-tabs v-model="feedBackInformation.innerAfterSalesActive" type="card">
-                <el-tab-pane label="Text reply" name="first">
+                <el-tab-pane :label="$t('track.detail.informationActive.textReply')" name="first">
                   <el-input v-model="feedBackInformation.description" type="textarea" :rows="8" placeholder="请输入内容" />
                 </el-tab-pane>
-                <el-tab-pane label="Picture reply" name="second">
+                <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">
                   <el-image class="sku_image" style="width: 50px; height: 50px" :src="feedBackInformation.img_url" fit="cover">
                     <div slot="error" class="image-slot">
                       <i
