@@ -55,8 +55,9 @@
       :before-close="handleClose">
       <div class="dialog-box">
         <div class="mr20">
-          <div v-for="(item,index) in codeList" :key="index">
+          <div v-for="(item,index) in codeList" :key="index" class="code-box">
             <el-input type="text" v-model="item.code" placeholder="Please input activation code" clearable class="mb20"></el-input>
+            <el-button v-if="index !== 0" icon="el-icon-circle-close" type="text" class="btn" @click="handleIconClose(index)"></el-button>
           </div>
         </div>
         <div>
@@ -64,7 +65,7 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">Cancel</el-button>
+        <el-button @click="handleCancel">Cancel</el-button>
         <el-button type="primary" @click="handleDetermine">Determine</el-button>
       </span>
     </el-dialog>
@@ -141,6 +142,7 @@ export default {
     handleClose(done) {
       this.$confirm('Confirm close？')
         .then(_ => {
+          this.handleCancel()
           done()
         })
         .catch(_ => {})
@@ -161,6 +163,15 @@ export default {
           this.Inquire()
         }
       })
+    },
+    // 取消
+    handleCancel() {
+      this.codeList = [{ code: '' }]
+      this.dialogVisible = false
+    },
+    // 删除不为第一条的激活码
+    handleIconClose(val) {
+      this.codeList.splice(val, 1)
     }
   }
 }
@@ -173,6 +184,17 @@ export default {
     padding: 0 30px;
     display: grid;
     grid-template-columns: 3fr 1fr;
+    .code-box {
+      position: relative;
+      .btn {
+        position: absolute;
+        top: 3px;
+        right: -46px;
+        font-size: 24px;
+        color: #999;
+        padding: 0;
+      }
+    }
     .btn {
       font-size: 24px;
       color: #999;
