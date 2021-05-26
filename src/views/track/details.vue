@@ -53,7 +53,47 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-button type="primary" @click="dialogVisible = true">After sales</el-button>
+      <div class="information-box">
+        <el-tabs v-show="submitStatus === '2'" v-model="afterSalesActive" type="card" class="tabs-box" @tab-click="handleAfterSalesClick">
+          <el-tab-pane v-for="item in informationActive" :label="item.label" :name="item.name">
+            <el-form ref="information" :model="item.information" label-width="160px" label-position="left">
+              <el-form-item v-if="item.name === 'first'" label="After sale products:">
+                <span class="in_txt">{{ item.information.products }}</span>
+              </el-form-item>
+              <el-row v-if="item.name === 'first'" :gutter="77" >
+                <el-col :span="10">
+                  <el-form-item label="After sales type:">
+                    <span class="in_txt">{{ item.information.type }}</span>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="10" :offset="4">
+                  <el-form-item label="After sales mode:">
+                    <span class="in_txt">{{ item.information.mode }}</span>
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-tabs v-model="item.information.innerAfterSalesActive" type="card">
+                <el-tab-pane label="Text reply" name="first">
+                  <el-input v-model="item.information.description" type="textarea" :rows="8" placeholder="请输入内容" />
+                </el-tab-pane>
+                <el-tab-pane label="Picture reply" name="second">
+                  <el-image class="sku_image" style="width: 50px; height: 50px" :src="item.information.img_url" fit="cover">
+                    <div slot="error" class="image-slot">
+                      <i
+                        class="el-icon-picture-outline"
+                        style="font-size: 30px;"
+                      />
+                    </div>
+                  </el-image>
+                </el-tab-pane>
+              </el-tabs>
+            </el-form>
+          </el-tab-pane>
+        </el-tabs>
+        <div class="btn-box">
+          <el-button type="primary" class="btn" @click="dialogVisible = true">After sales</el-button>
+        </div>
+      </div>
       <el-dialog :visible.sync="dialogVisible" width="60%" class="p20">
         <el-form ref="dialogForm" :model="dialogForm" label-width="160px" label-position="left">
           <el-form-item label="After sale products:" prop="products">
@@ -196,7 +236,34 @@ export default {
           label: 'Refund only'
         }
       ],
-      activeName: 'first'
+      activeName: 'first',
+      afterSalesActive: 'first',
+      informationActive: [
+        {
+          label: 'After sales information',
+          name: 'first',
+          information: {
+            products: 'cat',
+            type: 'Product damage',
+            mode: 'Return / exchange',
+            innerAfterSalesActive: 'first',
+            description: 'Seriously damaged products need to be returned and replaced',
+            img_url: ''
+          }
+        },
+        {
+          label: 'Feedback information',
+          name: 'second',
+          information: {
+            products: '',
+            type: '',
+            mode: '',
+            innerAfterSalesActive: 'first',
+            description: 'Seriously damaged products need to be returned and replaced',
+            img_url: ''
+          }
+        }
+      ]
     }
   },
   computed: {
@@ -239,6 +306,9 @@ export default {
     // 提交
     submit() {
       this.dialogVisible = false
+    },
+    // 切换information
+    handleAfterSalesClick(tab) {
     }
   }
 }
@@ -247,6 +317,7 @@ export default {
 <style scoped lang="scss">
 .details-box {
   background-color: #f1f1f1;
+  height: 100%;
   padding:0 20px 20px;
   .language-change-box {
     .international {
@@ -271,6 +342,23 @@ export default {
       display: flex;
       justify-content: space-between;
       margin-bottom: 20px;
+    }
+    .information-box {
+      margin-top: 40px;
+      display: flex;
+      .tabs-box {
+        flex: 3;
+        .in_txt {
+          color: #777;
+        }
+      }
+      .btn-box {
+        flex: 1;
+        overflow: hidden;
+        .btn {
+          float: right;
+        }
+      }
     }
   }
 }
