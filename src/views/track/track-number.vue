@@ -23,13 +23,13 @@
       <el-form ref="trackNumberForm" label-position="top" :model="trackNumberForm" :rules="trackNumberFormRules">
         <el-row>
           <el-col :offset="6" :span="12">
-            <el-form-item label="Enter the order number to query the order information for after-sales-service" prop="number" class="mt5">
-              <el-input v-model="trackNumberForm.number" size="large" placeholder="Please enter order number" />
+            <el-form-item :label="$t('track.trackNumberForm.label')" prop="number" class="mt5">
+              <el-input v-model="trackNumberForm.number" size="large" :placeholder="$t('track.trackNumberForm.placeholder')" />
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="" class="ml20 mt50">
-              <el-button type="primary" size="large" @click="submitTrack">Track</el-button>
+              <el-button type="primary" size="large" @click="submitTrack">{{ $t('track.trackNumberForm.track')}}</el-button>
             </el-form-item>
           </el-col>
         </el-row>
@@ -41,18 +41,18 @@
       top="40vh"
       :before-close="handleClose">
       <div slot="title">
-        Authentication
-        <el-tooltip class="item" effect="dark" content="in order to ensure that the information is correct, we need to conduct a brief authentication. please understand the inconvenience caused" placement="right">
+        {{ $t('track.authentication.title') }}
+        <el-tooltip class="item" effect="dark" :content="$t('track.authentication.content')" placement="right">
           <i class="el-icon-question" />
         </el-tooltip>
       </div>
       <el-form ref="AuthenticationForm" label-position="top" :model="AuthenticationForm" :rules="AuthenticationRules">
-        <el-form-item label="Please enter the email information you filled in when you purchased the product" prop="product">
-          <el-input v-model="AuthenticationForm.product" size="large" placeholder="Please enter the email information you filled in when you purchased the product" />
+        <el-form-item :label="$t('track.authentication.message')" prop="product">
+          <el-input v-model="AuthenticationForm.product" size="large" :placeholder="$t('track.authentication.message')" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="handleSubmit">Submit</el-button>
+        <el-button type="primary" @click="handleSubmit">{{ $t('track.authentication.btn') }}</el-button>
       </span>
     </el-dialog>
   </div>
@@ -61,7 +61,6 @@
 <script>
 import { setToken } from '@/utils/auth'
 import { setCookies } from '@/utils/cookies'
-
 export default {
   name: 'track-number',
   data() {
@@ -140,7 +139,7 @@ export default {
     },
     // 关闭弹框
     handleClose(done) {
-      this.$confirm('确认关闭？')
+      this.$confirm(this.$t('track.Close.sure'))
         .then(_ => {
           done()
         })
@@ -149,7 +148,7 @@ export default {
     // 确认发送
     handleSubmit() {
       this.dialogVisible = false
-      // this.submitStatus = '2'
+      this.submitStatus = this.AuthenticationForm.product
       this.$router.push({ name: 'track-details', query: { submitStatus: this.submitStatus }})
     }
   }

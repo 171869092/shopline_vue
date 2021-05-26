@@ -30,10 +30,11 @@
         <div class="order-id ml20">
           <span class="primary">{{ orderDetailForm.order_no }}</span>
         </div>
-        <el-button size="small" type="primary" @click="$router.back()">Search again</el-button>
+        <el-button size="small" type="primary" @click="$router.back()">{{ $t('track.detail.searchAgain') }}</el-button>
       </div>
       <el-divider />
       <el-table
+        v-if="labelIsShow"
         :data="tableData"
         style="width: 100%"
         highlight-current-row
@@ -91,11 +92,11 @@
           </el-tab-pane>
         </el-tabs>
         <div class="btn-box">
-          <el-button type="primary" class="btn" @click="dialogVisible = true">After sales</el-button>
+          <el-button type="primary" class="btn" @click="handleClickAfterSales">{{ $t('track.detail.afterSales') }}</el-button>
         </div>
       </div>
       <el-dialog :visible.sync="dialogVisible" width="60%" class="p20">
-        <el-form ref="dialogForm" :model="dialogForm" label-width="160px" label-position="left">
+        <el-form ref="dialogForm" :rules="dialogFormRules" :model="dialogForm" label-width="160px" label-position="left">
           <el-form-item label="After sale products:" prop="products">
             <el-select v-model="dialogForm.products" placeholder="Select Products" multiple style="width:100%">
               <el-option
@@ -175,10 +176,10 @@ export default {
       },
       // 列表表头
       labelList: [
-        { label: 'Picture', value: 'picture', type: 'image', width: '200' },
-        { label: 'Product', value: 'Product', width: '500' },
-        { label: 'Amount', value: 'amount' },
-        { label: 'Price', value: 'prices' }
+        { label: this.$t('track.detail.tableData.picture'), value: 'picture', type: 'image', width: '200' },
+        { label: this.$t('track.detail.tableData.product'), value: 'Product', width: '500' },
+        { label: this.$t('track.detail.tableData.amount'), value: 'amount' },
+        { label: this.$t('track.detail.tableData.prices'), value: 'prices' }
       ],
       tableData: [
         {
@@ -195,8 +196,19 @@ export default {
         }
       ],
       dialogVisible: false,
+      labelIsShow: true,
       dialogForm: {
-        products: ''
+        products: '',
+        type: '',
+        mode: '',
+        description: '',
+        reply_img: []
+      },
+      dialogFormRules: {
+        products: [{ required: true, message: 'After sale products is required', trigger: 'blur' }],
+        type: [{ required: true, message: 'After sales type is required', trigger: 'blur' }],
+        mode: [{ required: true, message: 'After sales mode is required', trigger: 'blur' }],
+        description: [{ required: true, validator: this.checkDescription, trigger: 'blur' }]
       },
       productsList: [
         {
@@ -286,6 +298,10 @@ export default {
         type: 'success'
       })
       // 触发重新加载事件
+      this.labelIsShow = false
+      this.$nextTick(() => {
+        this.labelIsShow = true
+      })
     },
     // 根据value显示label
     getLanguageLabel(val, list) {
@@ -303,12 +319,37 @@ export default {
     updateImgList(list) {
       this.dialogForm.reply_img = list
     },
+    // 打开弹窗
+    handleClickAfterSales() {
+      this.dialogForm = {}
+      this.dialogVisible = true
+    },
     // 提交
     submit() {
-      this.dialogVisible = false
+      this.$refs['dialogForm'].validate((valid) => {
+        if (valid) {
+          console.log('dialogForm', this.dialogForm)
+          this.dialogVisible = false
+        }
+      })
     },
     // 切换information
     handleAfterSalesClick(tab) {
+    },
+    checkDescription(rule, value, callback) {
+      if (this.activeName === 'first') {
+        if (!value) {
+          return callback(new Error('Text reply is required！'))
+        } else {
+          callback()
+        }
+      } else {
+        if (!value) {
+          return callback(new Error('Picture reply is required！'))
+        } else {
+          callback()
+        }
+      }
     }
   }
 }
