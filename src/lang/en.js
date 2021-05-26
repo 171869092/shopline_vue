@@ -25,7 +25,22 @@ export default {
         amount: 'Amount',
         prices: 'Price'
       },
-      afterSales: 'After sales'
+      afterSales: 'After sales',
+      informationActive: {
+        firstLabel: 'After sales information',
+        secondLabel: 'Feedback information',
+        products: 'After sale products',
+        type: 'After sales type',
+        mode: 'After sales mode',
+        textReply: 'Text reply',
+        pictureReply: 'Picture reply',
+        description: 'Description',
+        sub: 'Submit',
+        selectProducts: 'Please Select Products',
+        selectType: 'Please Select Type',
+        selectMode: 'Please Select Mode',
+        selectTextReply: 'Please enter content'
+      }
     }
   }
 }

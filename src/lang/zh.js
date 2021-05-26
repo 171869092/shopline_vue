@@ -25,7 +25,22 @@ export default {
         amount: '数量',
         prices: '价格'
       },
-      afterSales: '售后'
+      afterSales: '售后',
+      informationActive: {
+        firstLabel: '售后信息',
+        secondLabel: '反馈信息',
+        products: '售后产品',
+        type: '售后类型',
+        mode: '售后模式',
+        textReply: '文字回复',
+        pictureReply: '图片回复',
+        description: '描述',
+        sub: '提交',
+        selectProducts: '请选择产品',
+        selectType: '请选择类型',
+        selectMode: '请选择模式',
+        selectTextReply: '请输入内容'
+      }
     }
   }
 }

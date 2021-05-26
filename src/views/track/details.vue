@@ -56,29 +56,48 @@
       </el-table>
       <div class="information-box">
         <el-tabs v-show="submitStatus === '2'" v-model="afterSalesActive" type="card" class="tabs-box" @tab-click="handleAfterSalesClick">
-          <el-tab-pane v-for="item in informationActive" :label="item.label" :name="item.name">
-            <el-form ref="information" :model="item.information" label-width="160px" label-position="left">
-              <el-form-item v-if="item.name === 'first'" label="After sale products:">
-                <span class="in_txt">{{ item.information.products }}</span>
+          <el-tab-pane :label="$t('track.detail.informationActive.firstLabel')" name="first">
+            <el-form ref="information" :model="afterSalesInformation" label-width="160px" label-position="left">
+              <el-form-item :label="$t('track.detail.informationActive.products') + ':'">
+                <span class="in_txt">{{ afterSalesInformation.products }}</span>
               </el-form-item>
-              <el-row v-if="item.name === 'first'" :gutter="77" >
+              <el-row :gutter="77" >
                 <el-col :span="10">
-                  <el-form-item label="After sales type:">
-                    <span class="in_txt">{{ item.information.type }}</span>
+                  <el-form-item :label="$t('track.detail.informationActive.type') + ':'">
+                    <span class="in_txt">{{ afterSalesInformation.type }}</span>
                   </el-form-item>
                 </el-col>
                 <el-col :span="10" :offset="4">
-                  <el-form-item label="After sales mode:">
-                    <span class="in_txt">{{ item.information.mode }}</span>
+                  <el-form-item :label="$t('track.detail.informationActive.mode') + ':'">
+                    <span class="in_txt">{{ afterSalesInformation.mode }}</span>
                   </el-form-item>
                 </el-col>
               </el-row>
-              <el-tabs v-model="item.information.innerAfterSalesActive" type="card">
+              <el-tabs v-model="afterSalesInformation.innerAfterSalesActive" type="card">
+                <el-tab-pane :label="$t('track.detail.informationActive.textReply')" name="first">
+                  <el-input v-model="afterSalesInformation.description" type="textarea" :rows="8" placeholder="请输入内容" />
+                </el-tab-pane>
+                <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">
+                  <el-image class="sku_image" style="width: 50px; height: 50px" :src="afterSalesInformation.img_url" fit="cover">
+                    <div slot="error" class="image-slot">
+                      <i
+                        class="el-icon-picture-outline"
+                        style="font-size: 30px;"
+                      />
+                    </div>
+                  </el-image>
+                </el-tab-pane>
+              </el-tabs>
+            </el-form>
+          </el-tab-pane>
+          <el-tab-pane :label="$t('track.detail.informationActive.secondLabel')" name="second">
+            <el-form ref="information" :model="feedBackInformation" label-width="160px" label-position="left">
+              <el-tabs v-model="feedBackInformation.innerAfterSalesActive" type="card">
                 <el-tab-pane label="Text reply" name="first">
-                  <el-input v-model="item.information.description" type="textarea" :rows="8" placeholder="请输入内容" />
+                  <el-input v-model="feedBackInformation.description" type="textarea" :rows="8" placeholder="请输入内容" />
                 </el-tab-pane>
                 <el-tab-pane label="Picture reply" name="second">
-                  <el-image class="sku_image" style="width: 50px; height: 50px" :src="item.information.img_url" fit="cover">
+                  <el-image class="sku_image" style="width: 50px; height: 50px" :src="feedBackInformation.img_url" fit="cover">
                     <div slot="error" class="image-slot">
                       <i
                         class="el-icon-picture-outline"
@@ -97,8 +116,8 @@
       </div>
       <el-dialog :visible.sync="dialogVisible" width="60%" class="p20">
         <el-form ref="dialogForm" :rules="dialogFormRules" :model="dialogForm" label-width="160px" label-position="left">
-          <el-form-item label="After sale products:" prop="products">
-            <el-select v-model="dialogForm.products" placeholder="Select Products" multiple style="width:100%">
+          <el-form-item :label="$t('track.detail.informationActive.products') + ':'" prop="products">
+            <el-select v-model="dialogForm.products" :placeholder="$t('track.detail.informationActive.selectProducts')" multiple style="width:100%">
               <el-option
                 v-for="(item, key) in productsList"
                 :key="key"
@@ -109,8 +128,8 @@
           </el-form-item>
           <el-row :gutter="77">
             <el-col :span="10">
-              <el-form-item label="After sales type:" prop="type">
-                <el-select v-model="dialogForm.type" placeholder="Select Products" style="width:100%">
+              <el-form-item :label="$t('track.detail.informationActive.type') + ':'" prop="type">
+                <el-select v-model="dialogForm.type" :placeholder="$t('track.detail.informationActive.selectType')" style="width:100%">
                   <el-option
                     v-for="(item, key) in typeList"
                     :key="key"
@@ -121,8 +140,8 @@
               </el-form-item>
             </el-col>
             <el-col :span="10" :offset="4">
-              <el-form-item label="After sales mode:" prop="mode">
-                <el-select v-model="dialogForm.mode" placeholder="Select Products" style="width:100%">
+              <el-form-item :label="$t('track.detail.informationActive.mode') + ':'" prop="mode">
+                <el-select v-model="dialogForm.mode" :placeholder="$t('track.detail.informationActive.selectMode')" style="width:100%">
                   <el-option
                     v-for="(item, key) in modeList"
                     :key="key"
@@ -133,19 +152,19 @@
               </el-form-item>
             </el-col>
           </el-row>
-          <el-form-item label="Description" prop="description">
+          <el-form-item :label="$t('track.detail.informationActive.description')" prop="description">
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-              <el-tab-pane label="Text reply" name="first">
-                <el-input v-model="dialogForm.description" type="textarea" :rows="8" placeholder="请输入内容" />
+              <el-tab-pane :label="$t('track.detail.informationActive.textReply')" name="first">
+                <el-input v-model="dialogForm.description" type="textarea" :rows="8" :placeholder="$t('track.detail.informationActive.selectTextReply')" />
               </el-tab-pane>
-              <el-tab-pane label="Picture reply" name="second">
+              <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">
                 <shop-window ref="shopWindow" :img-list="dialogForm.reply_img" @update="updateImgList" />
               </el-tab-pane>
             </el-tabs>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button type="primary" @click="submit">Submit</el-button>
+          <el-button type="primary" @click="submit">{{ $t('track.detail.informationActive.sub') }}</el-button>
         </div>
       </el-dialog>
     </div>
@@ -174,13 +193,6 @@ export default {
       orderDetailForm: {
         order_no: '#1234'
       },
-      // 列表表头
-      labelList: [
-        { label: this.$t('track.detail.tableData.picture'), value: 'picture', type: 'image', width: '200' },
-        { label: this.$t('track.detail.tableData.product'), value: 'Product', width: '500' },
-        { label: this.$t('track.detail.tableData.amount'), value: 'amount' },
-        { label: this.$t('track.detail.tableData.prices'), value: 'prices' }
-      ],
       tableData: [
         {
           picture: '',
@@ -250,37 +262,33 @@ export default {
       ],
       activeName: 'first',
       afterSalesActive: 'first',
-      informationActive: [
-        {
-          label: 'After sales information',
-          name: 'first',
-          information: {
-            products: 'cat',
-            type: 'Product damage',
-            mode: 'Return / exchange',
-            innerAfterSalesActive: 'first',
-            description: 'Seriously damaged products need to be returned and replaced',
-            img_url: ''
-          }
-        },
-        {
-          label: 'Feedback information',
-          name: 'second',
-          information: {
-            products: '',
-            type: '',
-            mode: '',
-            innerAfterSalesActive: 'first',
-            description: 'Seriously damaged products need to be returned and replaced',
-            img_url: ''
-          }
-        }
-      ]
+      afterSalesInformation: {
+        products: 'cat',
+        type: 'Product damage',
+        mode: 'Return / exchange',
+        innerAfterSalesActive: 'first',
+        description: 'Seriously damaged products need to be returned and replaced',
+        img_url: ''
+      },
+      feedBackInformation: {
+        innerAfterSalesActive: 'first',
+        description: 'Seriously damaged products need to be returned and replaced',
+        img_url: ''
+      }
     }
   },
   computed: {
     language() {
       return this.$store.getters.language
+    },
+    // 列表表头
+    labelList() {
+      return [
+        { label: this.$t('track.detail.tableData.picture'), value: 'picture', type: 'image', width: '200' },
+        { label: this.$t('track.detail.tableData.product'), value: 'Product', width: '500' },
+        { label: this.$t('track.detail.tableData.amount'), value: 'amount' },
+        { label: this.$t('track.detail.tableData.prices'), value: 'prices' }
+      ]
     }
   },
   created() {
