@@ -133,7 +133,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="closeConnectDialog">Cancel</el-button>
-        <el-button size="small" type="primary" :loading="ConnectSubmitLoading" @click="newSubmitConnect">Connect</el-button>
+        <el-button size="small" type="primary" :loading="ConnectSubmitLoading" @click="newSubmitConnect">determine</el-button>
       </div>
     </el-dialog>
     <el-dialog
