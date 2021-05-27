@@ -101,6 +101,10 @@ export default {
     ordersId: {
       type: Array,
       default: () => []
+    },
+    platForm: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -180,7 +184,7 @@ export default {
         }
       } else {
         this.submitLoading = true
-        orderJoinQueue({ orders_id: this.ordersId.toString(), type: '2' }).then(res => {
+        orderJoinQueue({ orders_id: this.ordersId.toString(), type: '2', plat_form: this.platForm }).then(res => {
           console.log(res.data)
           if (res.code === 200) {
             this.dialogVisible = false
@@ -199,7 +203,7 @@ export default {
     submit() {
       this.tipDialogVisible = false
       this.submitLoading = true
-      orderJoinQueue({ goods: this.selectedProduct, orders_id: this.ordersId.toString(), type: '1' }).then(res => {
+      orderJoinQueue({ goods: this.selectedProduct, orders_id: this.ordersId.toString(), type: '1', plat_form: this.platForm }).then(res => {
         console.log(res.data)
         if (res.code === 200) {
           this.dialogVisible = false

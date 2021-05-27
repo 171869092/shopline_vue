@@ -133,7 +133,7 @@
         </el-tab-pane>
       </el-tabs>
     </el-card>
-    <unhosting-products :visible.sync="dialogVisible" :list="unhostingData" :orders-id="selOrderIds" @close="closeDialog" />
+    <unhosting-products :visible.sync="dialogVisible" :platForm="jumpRoute === 'shopify' ? '1' : '2'" :list="unhostingData" :orders-id="selOrderIds" @close="closeDialog" />
     <el-dialog title="Manual Order placing" :visible.sync="tipDialogVisible" :append-to-body="true" width="30%" class="dialog-border">
       <div>
         Chosen orders will be allocated to the vendors following your product's hosting setting.
@@ -370,10 +370,15 @@ export default {
     },
     next() {
       this.submitLoading = true
-      getOrderGoods({ orders_id: this.selOrderIds.toString() })
+      if (this.jumpRoute === 'shopify') {
+        this.platForm = '1'
+      } else {
+        this.platForm = '2'
+      }
+      getOrderGoods({ orders_id: this.selOrderIds.toString(), plat_form: this.platForm })
         .then((res) => {
           if (res.code === 4998) {
-            orderJoinQueue({ orders_id: this.selOrderIds.toString(), type: '2' }).then(res => {
+            orderJoinQueue({ orders_id: this.selOrderIds.toString(), type: '2', plat_form: this.platForm }).then(res => {
               if (res.code === 200) {
                 this.$message.success(res.message)
                 this.submitLoading = false
