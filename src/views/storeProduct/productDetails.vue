@@ -510,7 +510,6 @@ export default {
       }
       this.formData.sku_list = this.tableData.filter(Boolean)
       this.formData.options = this.optionsList
-      console.log(this.formData)
       this.$refs.formData.validate((valid) => {
         if (valid) {
           this.SubmitLoading = true
@@ -524,6 +523,7 @@ export default {
               this.SubmitLoading = false
             })
           } else {
+            this.formData.platform = this.platform
             getStoreProductSave(this.formData).then(res => {
               if (res.code === 200) {
                 this.$message({ message: res.message, type: 'success' })
