@@ -75,7 +75,9 @@
       :visible.sync="inviteVisible"
       width="30%"
       :before-close="handleInviteClose">
-      <div class="dialog-box">{{ invite.url }}</div>
+      <div class="dialog-box">
+        <a :href="invite.url" style="font-weight: bold; font-size: 22px;">www.Invitation link Settle in.com</a>
+      </div>
       <span slot="footer" class="dialog-footer">
         <el-button id="copy_url" type="primary" :data-clipboard-text="invite.url" @click="handleCopy">Copy</el-button>
       </span>
@@ -115,7 +117,7 @@ export default {
         code: ''
       }],
       invite: {
-        url: 'www.Invitation link Settle in.com'
+        url: 'https://dongketech.com/#/registered?' + window.btoa('type') + window.btoa('FbAli')
       }
     }
   },
