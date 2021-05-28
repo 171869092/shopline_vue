@@ -21,7 +21,7 @@
         </div>
       </div>
       <el-button type="primary" size="small" class="mr10 mb10" @click="dialogVisible = true">Newly Added</el-button>
-      <el-button type="primary" size="small" class="mr10 mb10" @click="inviteVisible = true">Invite to</el-button>
+      <el-button type="primary" size="small" class="mr10 mb10" @click="handleInvite">Invite to</el-button>
       <el-table
         ref="multipleTable"
         v-loading="loading"
@@ -88,7 +88,7 @@
 <script>
 import Clipboard from 'clipboard'
 import { debounce } from '@/utils'
-import { getGoodsServiceList, getGoodsActivationByCode } from '@/api/service'
+import { getGoodsServiceList, getGoodsActivationByCode, getGk } from '@/api/service'
 
 export default {
   name: 'service-provider',
@@ -117,7 +117,7 @@ export default {
         code: ''
       }],
       invite: {
-        url: 'https://dongketech.com/#/registered?' + window.btoa('type') + window.btoa('FbAli')
+        url: 'https://dongketech.com/#/registered?' + window.btoa('type')
       }
     }
   },
@@ -209,6 +209,17 @@ export default {
       clipboard.on('error', e => {
         this.$message.warning('This browser does not support automatic copy！')
         clipboard.destroy()
+      })
+    },
+    handleInvite() {
+      this.inviteVisible = true
+      getGk().then(res => {
+        if (res.code === 200) {
+          const key = res.data.key1 + '-' + res.data.key2
+          this.invite.url += key
+        } else {
+          this.$message.error(res.message)
+        }
       })
     }
   }

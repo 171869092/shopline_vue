@@ -16,3 +16,12 @@ export function getGoodsActivationByCode(data) {
     data: data
   })
 }
+
+// 获取邀请链接编号
+export function getGk(params) {
+  return request({
+    url: '/gk',
+    method: 'get',
+    params
+  })
+}
