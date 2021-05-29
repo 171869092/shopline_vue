@@ -76,7 +76,7 @@
       width="30%"
       :before-close="handleInviteClose">
       <div class="dialog-box">
-        <a :href="invite.url" style="font-weight: bold; font-size: 22px;">www.Invitation link Settle in.com</a>
+        <a :href="invite.url" style="font-weight: bold; font-size: 22px;">https://dongketech.com/#/registered</a>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button id="copy_url" type="primary" :data-clipboard-text="invite.url" @click="handleCopy">Copy</el-button>
