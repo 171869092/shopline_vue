@@ -27,21 +27,21 @@
             <el-row :gutter="77">
               <el-col :span="8">
                 <el-form-item label="After Sales Type:" prop="after_type" class="custItem">
-                  <el-select v-model="formData.after_type" class="w_100" prop="after_type">
+                  <el-select v-model="formData.after_type" class="w_100" prop="after_type" placeholder="please select">
                     <el-option v-for="(item,idx) in dataType" :key="idx" :label="item" :value="idx" />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="After Sales Mode:" prop="after_model">
-                  <el-select v-model="formData.after_model" class="w_100">
+                  <el-select v-model="formData.after_model" class="w_100" placeholder="please select">
                     <el-option v-for="(item,idx) in saleMode" :key="idx" :label="item" :value="String(idx + 1)" />
                   </el-select>
                 </el-form-item>
               </el-col>
               <el-col :span="8">
                 <el-form-item label="After Sales Products:" prop="product_json">
-                  <el-select v-model="formData.product_json" multiple class="w_100">
+                  <el-select v-model="formData.product_json" multiple class="w_100" placeholder="please select">
                     <el-option v-for="item in productArr" :key="item.id" :label="item.third_goods_name" :value="item.id" />
                   </el-select>
                 </el-form-item>
@@ -56,7 +56,7 @@
               <div><h2>Text Content</h2></div>
             </div>
           </div>
-          <el-input v-model="formData.content" :rows="8" style="margin: 20px 0;" type="textarea" placeholder="请输入内容" />
+          <el-input v-model="formData.content" :rows="8" style="margin: 20px 0;" type="textarea" placeholder="please input" />
         </el-card>
         <!-- Picture Content -->
         <el-card class="box-card mt20">
@@ -114,7 +114,7 @@ export default {
       loading: false,
       detailInfo: [],
       dataType: [],
-      saleMode: ['Return/exchange', 'Return and refund', 'Refund only'],
+      saleMode: ['Return/exchange', 'Return and refund', 'Refund only', 'Other'],
       productArr: [],
       imgList: [],
       orderInfo: [],
