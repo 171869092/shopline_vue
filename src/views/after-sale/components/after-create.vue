@@ -68,7 +68,7 @@
           <div slot="header" class="flexbox justidfy-space-between align-center">
             <!-- <div><span style="color:red">*</span><span style="font-weight: 600;">Media:</span></div> -->
             <!-- <div>
-                               <el-button size="mini" type="primary" @click="openUploadPrint">Add image</el-button>
+                              <el-button size="mini" type="primary" @click="openUploadPrint">Add image</el-button>
                            </div> -->
           </div>
           <!-- <print-popover ref="window_img" :list="formData.images" @delImg="delImg" @update="updateimg" /> -->
