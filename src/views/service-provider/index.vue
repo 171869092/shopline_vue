@@ -192,12 +192,8 @@ export default {
       this.codeList.splice(val, 1)
     },
     // 关闭invite弹框
-    handleInviteClose(done) {
-      this.$confirm('Confirm close？')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
+    handleInviteClose() {
+      this.inviteVisible = false
     },
     // 复制链接
     handleCopy() {
