@@ -26,9 +26,9 @@
               <el-select v-model="formInline.status" placeholder="Status" clearable class="ml20" @change="filterOrders">
                 <el-option
                   v-for="(item,idx) in statusOptions"
-                  :key="item"
-                  :label="item"
-                  :value="String(idx + 1)"
+                  :key="idx"
+                  :label="item.label"
+                  :value="item.value"
                 />
               </el-select>
             </div>
@@ -143,7 +143,16 @@ export default {
         { label: 'Hosting', value: 'service_name' }
         // { label: 'Operating', type: 'Operating' }
       ],
-      statusOptions: ['Active', 'Draft'],
+      statusOptions: [
+        {
+          value: 1,
+          label: 'Active'
+        },
+        {
+          value: 2,
+          label: 'Draft'
+        }
+      ],
       tableData: [],
       productSelection: [],
       loading: false,
@@ -203,7 +212,7 @@ export default {
       getStoreProductList(formData).then(res => {
         if (res.code === 200) {
           res.data.map(item => {
-            item.status = item.status === '1' ? 'Active' : 'Draft'
+            item.status = item.status === 1 ? 'Active' : 'Draft'
           })
           this.tableData = res.data
           this.listQuery.total = +res.iTotalRecords
