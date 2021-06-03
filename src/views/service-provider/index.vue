@@ -21,7 +21,7 @@
         </div>
       </div>
       <el-button type="primary" size="small" class="mr10 mb10" @click="dialogVisible = true">Newly Added</el-button>
-      <el-button type="primary" size="small" class="mr10 mb10" @click="handleInvite">Invite to</el-button>
+      <el-button type="primary" size="small" class="mr10 mb10" @click="handleInvite">Invite</el-button>
       <el-table
         ref="multipleTable"
         v-loading="loading"
