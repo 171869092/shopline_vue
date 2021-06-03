@@ -23,7 +23,7 @@
         </el-form-item>
         <el-form-item label="Product status:" prop="status">
           <el-select v-model="formData.status" class="w-480">
-            <el-option v-for="(item,idx) in statusOptions" :key="idx" :label="item" :value="String(idx + 1)" />
+            <el-option v-for="(item,idx) in statusOptions" :key="idx" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="Description:" prop="describe">
@@ -325,7 +325,7 @@ export default {
       formData: {
         title: '',
         describe: '',
-        status: '2',
+        status: '',
         sku_list: [],
         images: [],
         options: [],
@@ -360,7 +360,15 @@ export default {
       variantsTitle: [],
       variantsCheck: false,
       options: ['Size', 'Color', 'Material', 'Style', 'Title'],
-      statusOptions: ['Active', 'Draft'],
+      statusOptions: [
+        {
+          value: 1,
+          label: 'Active'
+        },
+        {
+          value: 2,
+          label: 'Draft'
+        }],
       vendorLoading: false,
       dialogImageUrl: '',
       SubmitLoading: false,
