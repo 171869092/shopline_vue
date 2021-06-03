@@ -238,9 +238,9 @@ export const constantRoutes = [
     children: [
       {
         path: 'index',
-        name: 'service-provider',
+        name: 'source-agent',
         component: () => import('@/views/service-provider/index'),
-        meta: { title: 'Service provider', icon: 'el-icon-user-solid' }
+        meta: { title: 'Source Agent', icon: 'el-icon-user-solid' }
         // hidden: true
       }
     ]
