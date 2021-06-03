@@ -6,7 +6,8 @@
       style="width: 100%">
       <el-table-column label="Title">
         <template slot-scope="scope">
-          <span class="link" @click="handleOpenDialog">{{ scope.row.title }}</span>
+<!--          <span class="link" @click="handleOpenDialog">{{ scope.row.title }}</span>-->
+          <span>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Links">
@@ -20,7 +21,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog
+<!--    <el-dialog
       title="New Template"
       :visible.sync="dialogVisible"
       top="10vh"
@@ -63,7 +64,7 @@
           <el-dropdown trigger="click" @command="handleCommand">
             <el-button type="primary" size="small">
               Insert Variable
-              <i class="el-icon-arrow-down el-icon--right" />
+              <i class="el-icon-arrow-down el-icon&#45;&#45;right" />
             </el-button>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="a">Order Number</el-dropdown-item>
@@ -86,7 +87,7 @@
         <el-table-column property="type" label="Category" width="150" />
         <el-table-column property="description" label="Description" />
       </el-table>
-    </el-dialog>
+    </el-dialog>-->
   </div>
 </template>
 
@@ -99,9 +100,9 @@ import { template_uses_list } from '@/api/notifications'
 
 export default {
   name: 'external-links',
-  components: {
+  /*  components: {
     Tinymce: () => import('@/components/Tinymce')
-  },
+  },*/
   data() {
     return {
       tableData: [
@@ -116,8 +117,8 @@ export default {
           operation: 'copy'
         }
       ],
-      dialogVisible: false,
-      dialogTableVisible: false,
+      // dialogVisible: false,
+      // dialogTableVisible: false,
       newTemplateForm: {
         template_name: '',
         description: '',
@@ -171,18 +172,17 @@ export default {
         })
         .catch(_ => {})
     },
-    // 取消保存
-    handleCancel() {
-      this.dialogVisible = false
-    },
-    // 保存
-    handleSave() {
-      this.dialogVisible = false
-    },
-    // 点击标题
-    handleOpenDialog() {
-      this.dialogVisible = true
-    },
+    /*  // 取消保存
+     handleCancel() {
+       this.dialogVisible = false
+     },
+     // 保存
+     handleSave() {
+       this.dialogVisible = false
+     },  // 点击标题
+     handleOpenDialog() {
+       this.dialogVisible = true
+     },*/
     init() {
       getStoreList().then(res => {
         if (res.code === 200) {

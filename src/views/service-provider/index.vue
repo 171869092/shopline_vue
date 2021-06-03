@@ -14,6 +14,24 @@
             />
           </div>
         </div>
+        <div class="filter-control flexbox mb20 mr20">
+          <div class="filter-item">
+            <el-select
+              v-model="formQuery.type"
+              collapse-tags
+              placeholder="Ship status"
+              style="width:100%"
+              @change="filterBill"
+            >
+              <el-option
+                v-for="(item, key) in typeList"
+                :key="key"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </div>
+        </div>
         <div class="filter-control flexbox mb20">
           <div class="filter-item">
             <el-date-picker v-model="formQuery.data" type="daterange" value-format="yyyy-MM-dd" range-separator="至" start-placeholder="startDate" end-placeholder="endDate" />
@@ -44,6 +62,11 @@
         <el-table-column label="Time">
           <template slot-scope="scope">
             <span>{{ scope.row.create_time }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="Type">
+          <template slot-scope="scope">
+            <span>{{ scope.row.type }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -102,6 +125,7 @@ export default {
     return {
       formQuery: {
         name: '',
+        type: '1',
         data: ''
       },
       listQuery: {
@@ -118,7 +142,21 @@ export default {
       }],
       invite: {
         url: 'https://dongketech.com/#/registered?' + window.btoa('type')
-      }
+      },
+      typeList: [
+        {
+          value: '1',
+          label: 'ALL'
+        },
+        {
+          value: '2',
+          label: 'Invitation'
+        },
+        {
+          value: '3',
+          label: 'Binding'
+        }
+      ]
     }
   },
   methods: {
@@ -157,13 +195,8 @@ export default {
       })
     },
     // 关闭弹框
-    handleClose(done) {
-      this.$confirm('Confirm close？')
-        .then(_ => {
-          this.handleCancel()
-          done()
-        })
-        .catch(_ => {})
+    handleClose() {
+      this.handleCancel()
     },
     // 增加激活码
     handleAdd() {
@@ -229,6 +262,8 @@ export default {
     padding: 0 30px;
     display: grid;
     grid-template-columns: 3fr 1fr;
+    max-height: 560px;
+    overflow-y: auto;
     .code-box {
       position: relative;
       .btn {
