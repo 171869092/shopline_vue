@@ -98,7 +98,7 @@
       :visible.sync="inviteVisible"
       width="30%"
       :before-close="handleInviteClose">
-      <div class="dialog-box">
+      <div style="text-align: center">
         <a :href="invite.url" style="font-weight: bold; font-size: 22px;">https://dongketech.com/#/registered</a>
       </div>
       <span slot="footer" class="dialog-footer">
