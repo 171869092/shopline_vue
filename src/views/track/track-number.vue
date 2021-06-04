@@ -36,7 +36,7 @@
         </el-row>
       </el-form>
     </div>
-    <el-dialog
+<!--    <el-dialog
       :visible.sync="dialogVisible"
       width="50%"
       top="40vh"
@@ -55,7 +55,7 @@
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="handleSubmit">{{ $t('track.authentication.btn') }}</el-button>
       </span>
-    </el-dialog>
+    </el-dialog>-->
   </div>
 </template>
 
@@ -134,11 +134,11 @@ export default {
     submitTrack() {
       this.$refs['trackNumberForm'].validate((valid) => {
         if (valid) {
-          this.dialogVisible = true
+          this.$router.push({ name: 'track-details', query: { submitStatus: this.submitStatus }})
         }
       })
-    },
-    // 关闭弹框
+    }
+    /* // 关闭弹框
     handleClose(done) {
       this.$confirm(this.$t('track.Close.sure'))
         .then(_ => {
@@ -150,8 +150,7 @@ export default {
     handleSubmit() {
       this.dialogVisible = false
       this.submitStatus = this.AuthenticationForm.product
-      this.$router.push({ name: 'track-details', query: { submitStatus: this.submitStatus }})
-    }
+    }*/
   }
 }
 </script>
@@ -173,7 +172,7 @@ export default {
   }
   .track-form-box {
     height: calc(94vh - 5px);
-    padding-top: 100px;
+    padding-top: 40px;
   }
 }
 </style>
