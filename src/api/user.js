@@ -103,3 +103,11 @@ export function updateUserInfo(data) {
     data: data
   })
 }
+// 真实用户售后
+export function realInfo(data) {
+  return request({
+    url: '/base/index/reacl-info',
+    method: 'get',
+    params: data
+  })
+}
