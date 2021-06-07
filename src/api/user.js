@@ -111,3 +111,11 @@ export function realInfo(data) {
     params: data
   })
 }
+// 真实用户售后提交
+export function afterSalesReal(data) {
+  return request({
+    url: '/after/after-sales/reacl',
+    method: 'get',
+    params: data
+  })
+}

@@ -61,7 +61,7 @@
       <el-dialog :visible.sync="dialogVisible" width="60%" class="p20">
         <el-form ref="dialogForm" :rules="dialogFormRules" :model="dialogForm" label-width="160px" label-position="left">
           <el-form-item :label="$t('track.detail.informationActive.products') + ':'" prop="products">
-            <el-select v-model="dialogForm.products" :placeholder="$t('track.detail.informationActive.selectProducts')" multiple style="width:100%">
+            <el-select v-model="dialogForm.product_json" :placeholder="$t('track.detail.informationActive.selectProducts')" multiple style="width:100%">
               <el-option
                 v-for="(item, key) in productsList"
                 :key="key"
@@ -73,24 +73,24 @@
           <el-row :gutter="77">
             <el-col :span="10">
               <el-form-item :label="$t('track.detail.informationActive.type') + ':'" prop="type">
-                <el-select v-model="dialogForm.type" :placeholder="$t('track.detail.informationActive.selectType')" style="width:100%">
+                <el-select v-model="dialogForm.after_type" :placeholder="$t('track.detail.informationActive.selectType')" style="width:100%">
                   <el-option
                     v-for="(item, key) in typeList"
                     :key="key"
-                    :label="item.label"
-                    :value="item.value"
+                    :label="item"
+                    :value="key"
                   />
                 </el-select>
               </el-form-item>
             </el-col>
             <el-col :span="10" :offset="4">
               <el-form-item :label="$t('track.detail.informationActive.mode') + ':'" prop="mode">
-                <el-select v-model="dialogForm.mode" :placeholder="$t('track.detail.informationActive.selectMode')" style="width:100%">
+                <el-select v-model="dialogForm.after_model" :placeholder="$t('track.detail.informationActive.selectMode')" style="width:100%">
                   <el-option
                     v-for="(item, key) in modeList"
                     :key="key"
-                    :label="item.label"
-                    :value="item.value"
+                    :label="item"
+                    :value="String(key + 1)"
                   />
                 </el-select>
               </el-form-item>
@@ -99,10 +99,10 @@
           <el-form-item :label="$t('track.detail.informationActive.description')" prop="description">
             <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
               <el-tab-pane :label="$t('track.detail.informationActive.textReply')" name="first">
-                <el-input v-model="dialogForm.description" type="textarea" :rows="8" :placeholder="$t('track.detail.informationActive.selectTextReply')" />
+                <el-input v-model="dialogForm.content" type="textarea" :rows="8" :placeholder="$t('track.detail.informationActive.selectTextReply')" />
               </el-tab-pane>
               <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">
-                <shop-window ref="shopWindow" :img-list="dialogForm.reply_img" @update="updateImgList" />
+                <shop-window ref="shopWindow" :img-list="dialogForm.image" @update="updateImgList" />
               </el-tab-pane>
             </el-tabs>
           </el-form-item>
@@ -117,26 +117,26 @@
         <el-tab-pane :label="$t('track.detail.informationActive.firstLabel')" name="first">
           <el-form ref="information" :model="afterSalesInformation" label-width="160px" label-position="left">
             <el-form-item :label="$t('track.detail.informationActive.products') + ':'">
-              <span class="in_txt">{{ afterSalesInformation.products }}</span>
+              <span class="in_txt">{{ afterSalesInformation.product_json }}</span>
             </el-form-item>
             <el-row :gutter="77" >
               <el-col :span="10">
                 <el-form-item :label="$t('track.detail.informationActive.type') + ':'">
-                  <span class="in_txt">{{ afterSalesInformation.type }}</span>
+                  <span class="in_txt">{{ afterSalesInformation.after_type }}</span>
                 </el-form-item>
               </el-col>
               <el-col :span="10" :offset="4">
                 <el-form-item :label="$t('track.detail.informationActive.mode') + ':'">
-                  <span class="in_txt">{{ afterSalesInformation.mode }}</span>
+                  <span class="in_txt">{{ afterSalesInformation.after_model }}</span>
                 </el-form-item>
               </el-col>
             </el-row>
             <el-tabs v-model="afterSalesInformation.innerAfterSalesActive" type="card">
               <el-tab-pane :label="$t('track.detail.informationActive.textReply')" name="first">
-                <el-input v-model="afterSalesInformation.description" type="textarea" :rows="4" placeholder="Seriously damaged products need to be returned and replaced" />
+                <el-input v-model="afterSalesInformation.content" type="textarea" :rows="4" placeholder="Seriously damaged products need to be returned and replaced" />
               </el-tab-pane>
               <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">
-                <el-image class="sku_image" style="width: 50px; height: 50px" :src="afterSalesInformation.img_url" fit="cover">
+                <el-image class="sku_image" style="width: 50px; height: 50px" :src="afterSalesInformation.image" fit="cover">
                   <div slot="error" class="image-slot">
                     <i
                       class="el-icon-picture-outline"
@@ -152,10 +152,10 @@
           <el-form ref="information" :model="feedBackInformation" label-width="160px" label-position="left">
             <el-tabs v-model="feedBackInformation.innerAfterSalesActive" type="card">
               <el-tab-pane :label="$t('track.detail.informationActive.textReply')" name="first">
-                <el-input v-model="feedBackInformation.description" type="textarea" :rows="4" placeholder="Seriously damaged products need to be returned and replaced" />
+                <el-input v-model="feedBackInformation.content" type="textarea" :rows="4" placeholder="Seriously damaged products need to be returned and replaced" />
               </el-tab-pane>
               <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">
-                <el-image class="sku_image" style="width: 50px; height: 50px" :src="feedBackInformation.img_url" fit="cover">
+                <el-image class="sku_image" style="width: 50px; height: 50px" :src="feedBackInformation.image" fit="cover">
                   <div slot="error" class="image-slot">
                     <i
                       class="el-icon-picture-outline"
@@ -176,8 +176,9 @@
 </template>
 
 <script>
-import { realInfo } from '@/api/user'
+import { realInfo, afterSalesReal } from '@/api/user'
 import { getCookies } from '@/utils/cookies'
+import { afterSalesType } from '@/api/after'
 export default {
   name: 'track-number',
   data() {
@@ -215,11 +216,11 @@ export default {
       showAfterSale: false,
       tableData: [],
       dialogForm: {
-        products: '',
-        type: '',
-        mode: '',
-        description: '',
-        reply_img: []
+        product_json: '',
+        after_type: '',
+        after_model: '',
+        content: '',
+        image: []
       },
       dialogFormRules: {
         products: [{ required: true, message: 'After sale products is required', trigger: 'blur' }],
@@ -227,58 +228,23 @@ export default {
         mode: [{ required: true, message: 'After sales mode is required', trigger: 'blur' }],
         description: [{ required: true, validator: this.checkDescription, trigger: 'blur' }]
       },
-      productsList: [
-        {
-          value: '1',
-          label: '选项一'
-        },
-        {
-          value: '2',
-          label: '选项二'
-        },
-        {
-          value: '3',
-          label: '选项三'
-        }
-      ],
-      typeList: [
-        {
-          value: '1',
-          label: 'Product damage'
-        },
-        {
-          value: '2',
-          label: 'Goods not received'
-        }
-      ],
-      modeList: [
-        {
-          value: '1',
-          label: 'Return/ exchange'
-        },
-        {
-          value: '2',
-          label: 'Return and refund'
-        },
-        {
-          value: '3',
-          label: 'Refund only'
-        }
-      ],
+      productsList: [],
+      typeList: [],
+      modeList: ['Return/exchange', 'Return and refund', 'Refund only', 'Other'],
       activeName: 'first',
       afterSalesActive: 'first',
       afterSalesInformation: {
-        products: 'cat',
-        type: 'Product damage',
-        mode: 'Return / exchange',
+        product_json: 'cat',
+        after_type: 'Product damage',
+        after_model: 'Return / exchange',
         innerAfterSalesActive: 'first',
-        description: 'Seriously damaged products need to be returned and replaced',
-        img_url: ''
+        content: 'Seriously damaged products need to be returned and replaced',
+        image: ''
       },
       feedBackInformation: {
         innerAfterSalesActive: 'first',
-        description: 'Seriously damaged products need to be returned and replaced',
-        img_url: ''
+        content: 'Seriously damaged products need to be returned and replaced',
+        image: ''
       },
       customerId: ''
     }
@@ -301,6 +267,16 @@ export default {
     this.customerId = getCookies('uid')
   },
   methods: {
+    // 获取售后类型
+    getAfterSalesType() {
+      afterSalesType().then(res => {
+        if (res.code === 200) {
+          this.typeList = res.data
+        }
+      }).catch(error => {
+        console.log(error)
+      })
+    },
     // 切换语言
     handleSetLanguage(lang) {
       // 选择语言
@@ -366,8 +342,30 @@ export default {
     submit() {
       this.$refs['dialogForm'].validate((valid) => {
         if (valid) {
-          console.log('dialogForm', this.dialogForm)
-          this.dialogVisible = false
+          // {
+          //   "third_order_no": "third_order_no",
+          //   "order_no": "wc",
+          //   "store_url": "https://www.deguisement-live-mania.fr/wp-json/wc/v2/orders",
+          //   "order_name":"order_name",
+          //   "total":"total",
+          //   "cost": "cost",
+          //   "product_json": "product_json",
+          //   "shipping_json": "shipping_json",
+          //   "state":2,
+          //   "vendor": "vendor",
+          //   "payment_time": "payment_time",
+          //   "after_model": 1,
+          //   "after_type": 2,
+          //   "content": "content",
+          //   "image": ["image"],
+          //   "user_id": 147,
+          //   "server_id": 1,
+          //   "order_create": "order_create"
+          // }
+          afterSalesReal(this.dialogForm).then(res => {
+            console.log('dialogForm', this.dialogForm)
+            this.dialogVisible = false
+          })
         }
       })
     },
