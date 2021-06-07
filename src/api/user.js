@@ -115,7 +115,7 @@ export function realInfo(data) {
 export function afterSalesReal(data) {
   return request({
     url: '/after/after-sales/reacl',
-    method: 'get',
-    params: data
+    method: 'post',
+    data: data
   })
 }

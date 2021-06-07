@@ -39,8 +39,11 @@ export default {
         selectProducts: 'Please Select Products',
         selectType: 'Please Select Type',
         selectMode: 'Please Select Mode',
-        selectTextReply: 'Please enter content'
-      }
+        selectTextReply: 'Please enter your reply...'
+      },
+      reply: 'reply',
+      record: 'record',
+      replySubmit: 'submit'
     }
   }
 }

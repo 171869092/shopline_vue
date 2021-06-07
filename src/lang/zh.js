@@ -39,8 +39,11 @@ export default {
         selectProducts: '请选择产品',
         selectType: '请选择类型',
         selectMode: '请选择模式',
-        selectTextReply: '请输入内容'
-      }
+        selectTextReply: '请输入您的回复'
+      },
+      reply: '回复',
+      record: '历史记录',
+      replySubmit: '提交'
     }
   }
 }
