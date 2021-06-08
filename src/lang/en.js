@@ -43,7 +43,11 @@ export default {
       },
       reply: 'reply',
       record: 'record',
-      replySubmit: 'submit'
+      replySubmit: 'submit',
+      recordForm: {
+        seller: 'Seller',
+        oneself: 'Oneself'
+      }
     }
   }
 }

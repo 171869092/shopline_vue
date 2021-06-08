@@ -43,7 +43,11 @@ export default {
       },
       reply: '回复',
       record: '历史记录',
-      replySubmit: '提交'
+      replySubmit: '提交',
+      recordForm: {
+        seller: '卖家',
+        oneself: '买家'
+      }
     }
   }
 }

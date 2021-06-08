@@ -196,7 +196,7 @@
         <el-button type="primary" class="btn" @click="handleClickAfterSales">{{ $t('track.detail.afterSales') }}</el-button>
       </div>
     </div>
-    <el-dialog :visible.sync="replyVisible" width="60%" class="p20">
+    <el-dialog :visible.sync="replyVisible" width="60%" class="p20" @close="handleClose">
       <el-form ref="replyForm" :rules="replyRules" :model="replyForm">
         <el-form-item label="" prop="reply" class="feed-reply-box">
           <el-input v-model="replyForm.reply" type="textarea" :rows="10" placeholder="Please enter your reply..." />
@@ -224,6 +224,46 @@
       <div slot="footer">
         <el-button type="primary" @click="handleReplySubmit">{{ $t('track.detail.replySubmit') }}</el-button>
       </div>
+    </el-dialog>
+    <el-dialog :visible.sync="recordVisible" width="60%" class="p20" @close="handleRecordClose">
+<!--      <el-form ref="recordForm" :model="recordForm">
+        <el-form-item label="" prop="reply" class="feed-reply-box">
+          <el-input v-model="recordForm.reply" type="textarea" :rows="10" placeholder="Please enter your reply..." />
+          <div v-if="recordForm.image">
+            <span v-for="(item, index) in recordForm.image" :key="index">
+              <el-image :src="item.url" style="height: 100px;width: 120px" class="mt10 mr10"/>
+            </span>
+          </div>
+        </el-form-item>
+      </el-form>-->
+      <el-table
+        :data="recordForm"
+        style="width: 100%"
+        highlight-current-row
+        fit
+        :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
+      >
+        <el-table-column :label="$t('track.detail.recordForm.seller')" prop="seller">
+          <template slot-scope="scope">
+            <span>{{scope.row.sellerReply}}</span>
+            <div v-if="scope.row.sellerImage">
+              <span v-for="(item, index) in scope.row.sellerImage" :key="index">
+                <el-image :src="item.url" style="height: 100px;width: 120px" class="mt10 mr10"/>
+              </span>
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column :label="$t('track.detail.recordForm.oneself')" prop="oneself">
+          <template slot-scope="scope">
+            <span>{{scope.row.oneselfReply}}</span>
+            <div v-if="scope.row.oneselfImage">
+              <span v-for="(item, index) in scope.row.oneselfImage" :key="index">
+                <el-image :src="item.url" style="height: 100px;width: 120px" class="mt10 mr10"/>
+              </span>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
     </el-dialog>
   </div>
 </template>
@@ -290,28 +330,12 @@ export default {
         {
           afterSalesActive: 'first',
           afterSalesInformation: {
-            product_json: 'cat',
-            after_type: 'Product damage',
-            after_model: 'Return / exchange',
+            product_json: '',
+            after_type: '',
+            after_model: '',
             innerAfterSalesActive: 'first',
-            content: 'Seriously damaged products need to be returned and replaced',
-            image: ''
-          },
-          feedBackInformation: {
-            innerAfterSalesActive: 'first',
-            content: 'Seriously damaged products need to be returned and replaced',
-            image: ''
-          }
-        },
-        {
-          afterSalesActive: 'first',
-          afterSalesInformation: {
-            product_json: 'cat',
-            after_type: 'Product damage',
-            after_model: 'Return / exchange',
-            innerAfterSalesActive: 'first',
-            content: 'Seriously damaged products need to be returned and replaced',
-            image: ''
+            content: '',
+            image: []
           },
           feedBackInformation: {
             innerAfterSalesActive: 'first',
@@ -344,7 +368,22 @@ export default {
         store_url: '',
         vendor: '',
         server_id: []
-      }
+      },
+      recordVisible: false,
+      recordForm: [
+        {
+          sellerReply: '卖家回复',
+          sellerImage: ['https://dx-tech-bucket.s3.amazonaws.com/20210608063351823004e277ddcface2f218754b9372640b5', 'https://dx-tech-bucket.s3.amazonaws.com/20210608063351823004e277ddcface2f218754b9372640b5'],
+          oneselfReply: '买家回复',
+          oneselfImage: ['https://dx-tech-bucket.s3.amazonaws.com/20210608063351823004e277ddcface2f218754b9372640b5']
+        },
+        {
+          sellerReply: '卖家回复',
+          sellerImage: [],
+          oneselfReply: '',
+          oneselfImage: ['https://dx-tech-bucket.s3.amazonaws.com/20210608063351823004e277ddcface2f218754b9372640b5']
+        }
+      ]
     }
   },
   computed: {
@@ -421,8 +460,15 @@ export default {
           }
           if (res.data.after.length > 0) {
             this.showAfterSale = true
+            res.data.after.map((it, inx) => {
+              this.afterList[inx].afterSalesInformation.product_json = res.data.after[inx].product_json
+              this.afterList[inx].afterSalesInformation.after_type = res.data.after[inx].after_type
+              this.afterList[inx].afterSalesInformation.after_model = res.data.after[inx].after_model
+              this.afterList[inx].afterSalesInformation.content = res.data.after[inx].content
+              this.afterList[inx].afterSalesInformation.image = res.data.after[inx].image
+            })
           }
-          if (res.data.after.length < res.data.good.length) {
+          if (res.data.after.length === 0) {
             this.showAfterSaleBtn = true
           }
         }
@@ -464,15 +510,15 @@ export default {
             this.formData.image.push(it.url)
           })
           this.formData.order_name = this.selectionList[0].order.order_name
-          // this.formData.order_no = this.selectionList[0].order.order_no
-          this.formData.order_no = '123456'
+          this.formData.order_no = this.selectionList[0].order.order_no
+          // this.formData.order_no = '123456'
           this.formData.order_create = this.selectionList[0].order.order_create
           this.formData.payment_time = this.selectionList[0].order.payment_time
           this.formData.state = this.selectionList[0].order.state
           this.formData.total = this.selectionList[0].order.total
           this.formData.third_order_no = this.selectionList[0].order.thirdParty_order_on
-          // this.formData.store_url = this.selectionList[0].goods_cost_vender.store_url
-          this.formData.store_url = 'live-by-test.myshopify.com'
+          this.formData.store_url = this.selectionList[0].goods_cost_vender.store_url
+          // this.formData.store_url = 'live-by-test.myshopify.com'
           const arr = []
           let newArr = []
           this.selectionList.map(it => {
@@ -487,7 +533,6 @@ export default {
             this.formData.vendor = newArr.toString()
             this.formData.server_id = newArr.toString()
           }
-          console.log('this.formData.vendor--', this.formData.vendor)
           afterSalesReal(this.formData).then(res => {
             if (res.code === 200) {
               this.dialogVisible = false
@@ -502,7 +547,9 @@ export default {
       this.replyVisible = true
     },
     // feedback 时，历史记录查看按钮
-    handleClickRecord() {},
+    handleClickRecord() {
+      this.recordVisible = true
+    },
     // 多选
     shiftMultiple(selection) {
       this.selectionList = selection
@@ -587,10 +634,19 @@ export default {
         console.log(err)
       })
     },
-    // 回复提交
-    handleReplySubmit() {
+    // 回复关闭
+    handleClose() {
       this.replyVisible = false
       this.replyForm = this.$options.data().replyForm
+    },
+    // 回复提交
+    handleReplySubmit() {
+      this.handleClose()
+    },
+    // 历史记录查询关闭
+    handleRecordClose() {
+      this.recordVisible = false
+      this.recordForm = this.$options.data().recordForm
     }
   }
 }
