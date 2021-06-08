@@ -59,17 +59,6 @@
           </el-tab-pane>
 
           <el-tab-pane label="Picture Content" name="second">
-            <!-- Picture Content -->
-            <el-dialog :visible.sync="dialogVisible" width="550px" >
-              <div class="block" style="height: 500px;">
-                <el-image accept="image/png, image/jpeg" style="width: 500px; height: 500px; float:left;" :src="thisImgs">
-                  <!-- <div slot="error" class="image-slot">
-                      <i class="el-icon-picture-outline" style="font-size: 30px;" />
-                    </div> -->
-                </el-image>
-              </div>
-            </el-dialog>
-
             <div v-for="fit in showImg" :key="fit" class="block">
               <!-- <span class="demonstration">{{ fit }}</span> -->
 
@@ -80,7 +69,7 @@
                 style="width: 100px; height: 100px; float:left;"
                 :src="fit"
                 :fit="fit"
-                @click="preview(fit)"
+                :preview-src-list="[fit]"
               >
 
                 <div slot="error" class="image-slot">
@@ -152,6 +141,7 @@
               style="width: 100px; height: 100px; float:left;margin-bottom: 20px"
               :src="fit"
               :fit="fit"
+              :preview-src-list="[fit]"
             >
               <div slot="error" class="image-slot">
                 <i class="el-icon-picture-outline" style="font-size: 30px;" />
@@ -281,13 +271,6 @@ export default {
       }).finally(() => {
 
       })
-    },
-
-    // .preview
-    preview(src) {
-      this.dialogVisible = true
-      console.log('this.$refs', src)
-      this.thisImgs = src
     },
     // 确认售后
     confirmAfterSales() {
