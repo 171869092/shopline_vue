@@ -118,7 +118,7 @@
             </el-upload>
             <div v-if="dialogForm.image">
               <span v-for="(item, index) in dialogForm.image" :key="index">
-                <el-image :src="item.url" style="height: 100px;width: 120px" class="mt10 mr10"/>
+                <el-image :src="item.url" style="height: 100px;width: 120px" class="mt10 mr10" />
               </span>
             </div>
           </el-form-item>
@@ -155,7 +155,7 @@
                   </el-tab-pane>
                   <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">
                     <span v-for="(it, inx) in item.afterSalesInformation.image" :key="inx">
-                      <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="it"></el-image>
+                      <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="it" />
                     </span>
                   </el-tab-pane>
                 </el-tabs>
@@ -168,10 +168,10 @@
                     <el-input v-model="item.feedBackInformation.reply_info" type="textarea" readonly :rows="4" placeholder="Seriously damaged products need to be returned and replaced" />
                   </el-tab-pane>
                   <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">
-                    <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="item.feedBackInformation.reply_img"></el-image>
-<!--                    <span v-for="(it, inx) in item.feedBackInformation.image" :key="inx">-->
-<!--                      <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="it"></el-image>-->
-<!--                    </span>-->
+                    <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="item.feedBackInformation.reply_img" />
+                    <!--                    <span v-for="(it, inx) in item.feedBackInformation.image" :key="inx">-->
+                    <!--                      <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="it"></el-image>-->
+                    <!--                    </span>-->
                   </el-tab-pane>
                 </el-tabs>
               </el-form>
@@ -207,7 +207,7 @@
           </el-upload>
           <div v-if="replyForm.image">
             <span v-for="(item, index) in replyForm.image" :key="index">
-              <el-image :src="item.url" style="height: 100px;width: 120px" class="mt10 mr10"/>
+              <el-image :src="item.url" style="height: 100px;width: 120px" class="mt10 mr10" />
             </span>
           </div>
         </el-form-item>
@@ -227,8 +227,8 @@
         >
           <el-table-column :label="$t('track.detail.recordForm.seller')" prop="seller">
             <template slot-scope="scope">
-              <span>{{scope.row.reply_info}}</span>
-              <el-image v-if="scope.row.reply_img" :src="scope.row.reply_img" style="height: 100px;width: 120px" class="mt10 mr10"/>
+              <span>{{ scope.row.reply_info }}</span>
+              <el-image v-if="scope.row.reply_img" :src="scope.row.reply_img" style="height: 23px;width: 28px;vertical-align: middle;" class="mt10 mr10" />
             </template>
           </el-table-column>
         </el-table>
@@ -241,8 +241,8 @@
         >
           <el-table-column :label="$t('track.detail.recordForm.oneself')" prop="oneself">
             <template slot-scope="scope">
-              <span>{{scope.row.reply_info}}</span>
-              <el-image v-if="scope.row.reply_img" :src="scope.row.reply_img" style="height: 100px;width: 120px" class="mt10 mr10"/>
+              <span>{{ scope.row.reply_info }}</span>
+              <el-image v-if="scope.row.reply_img" :src="scope.row.reply_img" style="height: 23px;width: 28px;vertical-align: middle;" class="mr10 ml10" />
             </template>
           </el-table-column>
         </el-table>
@@ -254,7 +254,7 @@
 <script>
 import { realInfo, afterSalesReal } from '@/api/user'
 import { getCookies } from '@/utils/cookies'
-import { afterSalesType, afterSalesCreate } from '@/api/after'
+import { afterSalesType, afterSalesReply } from '@/api/after'
 import { uploadImage } from '@/api/product'
 export default {
   name: 'track-number',
@@ -357,7 +357,13 @@ export default {
         seller: [],
         reacl: []
       },
-      replyFormData: {}
+      replyFormData: {
+        a_id: '',
+        reply_info: '',
+        reply_img: [],
+        reply_user: '',
+        type: 3
+      }
     }
   },
   computed: {
@@ -518,7 +524,8 @@ export default {
     // feedback 时，回复按钮
     handleClickReply(val) {
       this.replyVisible = true
-      this.replyFormData = val.afterSalesInformation
+      this.replyFormData.a_id = val.afterSalesInformation.id
+      this.replyFormData.reply_user = val.afterSalesInformation.user_id.toString()
     },
     // feedback 时，历史记录查看按钮
     handleClickRecord() {
@@ -615,9 +622,11 @@ export default {
     },
     // 回复提交
     handleReplySubmit() {
-      this.replyFormData.content = this.replyForm.reply
-      this.replyFormData.image = this.replyForm.image
-      afterSalesCreate(this.replyFormData).then(res => {
+      this.replyFormData.reply_info = this.replyForm.reply
+      this.replyForm.image.map(it => {
+        this.replyFormData.reply_img.push(it.url)
+      })
+      afterSalesReply(this.replyFormData).then(res => {
         this.$message.success(res.message)
         this.handleClose()
       })

@@ -275,7 +275,7 @@ export default {
     // 确认售后
     confirmAfterSales() {
       const formData = {
-        id: this.confirmSend
+        id: Number(this.confirmSend)
       }
       afterSalesConfirmSend(formData).then(res => {
         if (res.code === 200) {

@@ -52,3 +52,12 @@ export function afterSalesConfirmSend(data) {
     data: data
   })
 }
+
+// . after sale reply
+export function afterSalesReply(data) {
+  return request({
+    url: '/after/after-sales/reply',
+    method: 'post',
+    data: data
+  })
+}
