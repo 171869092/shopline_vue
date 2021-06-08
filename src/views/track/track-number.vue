@@ -135,7 +135,7 @@
             <el-tab-pane :label="$t('track.detail.informationActive.firstLabel')" name="first">
               <el-form ref="information" :model="item.afterSalesInformation" label-width="160px" label-position="left">
                 <el-form-item :label="$t('track.detail.informationActive.products') + ':'">
-                  <span class="in_txt">{{ item.afterSalesInformation.product_json }}</span>
+                  <span class="in_txt">{{ item.afterSalesInformation.product_json[0].product_json }}</span>
                 </el-form-item>
                 <el-row :gutter="77">
                   <el-col :span="10">
@@ -154,14 +154,9 @@
                     <el-input v-model="item.afterSalesInformation.content" type="textarea" :rows="4" placeholder="Seriously damaged products need to be returned and replaced" />
                   </el-tab-pane>
                   <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">
-                    <el-image class="sku_image" style="width: 50px; height: 50px" :src="item.afterSalesInformation.image" fit="cover">
-                      <div slot="error" class="image-slot">
-                        <i
-                          class="el-icon-picture-outline"
-                          style="font-size: 30px;"
-                        />
-                      </div>
-                    </el-image>
+                    <span v-for="(it, inx) in item.afterSalesInformation.image" :key="inx">
+                      <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="it"></el-image>
+                    </span>
                   </el-tab-pane>
                 </el-tabs>
               </el-form>
@@ -173,14 +168,9 @@
                     <el-input v-model="item.feedBackInformation.content" type="textarea" :rows="4" placeholder="Seriously damaged products need to be returned and replaced" />
                   </el-tab-pane>
                   <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">
-                    <el-image class="sku_image" style="width: 50px; height: 50px" :src="item.feedBackInformation.image" fit="cover">
-                      <div slot="error" class="image-slot">
-                        <i
-                          class="el-icon-picture-outline"
-                          style="font-size: 30px;"
-                        />
-                      </div>
-                    </el-image>
+                    <span v-for="(it, inx) in item.feedBackInformation.image" :key="inx">
+                      <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="it"></el-image>
+                    </span>
                   </el-tab-pane>
                 </el-tabs>
               </el-form>
@@ -188,7 +178,7 @@
           </el-tabs>
         </div>
         <div v-if="item.afterSalesActive === 'second'" class="after-btn-box">
-          <el-button type="text" class="btn" @click="handleClickReply">{{ $t('track.detail.reply') }}</el-button>
+          <el-button type="text" class="btn" @click="handleClickReply(item)">{{ $t('track.detail.reply') }}</el-button>
           <el-button type="text" class="btn" @click="handleClickRecord">{{ $t('track.detail.record') }}</el-button>
         </div>
       </div>
@@ -226,16 +216,6 @@
       </div>
     </el-dialog>
     <el-dialog :visible.sync="recordVisible" width="60%" class="p20" @close="handleRecordClose">
-<!--      <el-form ref="recordForm" :model="recordForm">
-        <el-form-item label="" prop="reply" class="feed-reply-box">
-          <el-input v-model="recordForm.reply" type="textarea" :rows="10" placeholder="Please enter your reply..." />
-          <div v-if="recordForm.image">
-            <span v-for="(item, index) in recordForm.image" :key="index">
-              <el-image :src="item.url" style="height: 100px;width: 120px" class="mt10 mr10"/>
-            </span>
-          </div>
-        </el-form-item>
-      </el-form>-->
       <el-table
         :data="recordForm"
         style="width: 100%"
@@ -271,7 +251,7 @@
 <script>
 import { realInfo, afterSalesReal } from '@/api/user'
 import { getCookies } from '@/utils/cookies'
-import { afterSalesType } from '@/api/after'
+import { afterSalesType, afterSalesCreate } from '@/api/after'
 import { uploadImage } from '@/api/product'
 export default {
   name: 'track-number',
@@ -339,8 +319,8 @@ export default {
           },
           feedBackInformation: {
             innerAfterSalesActive: 'first',
-            content: 'Seriously damaged products need to be returned and replaced',
-            image: ''
+            content: '',
+            image: []
           }
         }
       ],
@@ -372,18 +352,19 @@ export default {
       recordVisible: false,
       recordForm: [
         {
-          sellerReply: '卖家回复',
+          sellerReply: 'Seller reply text',
           sellerImage: ['https://dx-tech-bucket.s3.amazonaws.com/20210608063351823004e277ddcface2f218754b9372640b5', 'https://dx-tech-bucket.s3.amazonaws.com/20210608063351823004e277ddcface2f218754b9372640b5'],
-          oneselfReply: '买家回复',
+          oneselfReply: 'Buyer reply text',
           oneselfImage: ['https://dx-tech-bucket.s3.amazonaws.com/20210608063351823004e277ddcface2f218754b9372640b5']
         },
         {
-          sellerReply: '卖家回复',
+          sellerReply: 'Seller reply text',
           sellerImage: [],
           oneselfReply: '',
           oneselfImage: ['https://dx-tech-bucket.s3.amazonaws.com/20210608063351823004e277ddcface2f218754b9372640b5']
         }
-      ]
+      ],
+      replyFormData: {}
     }
   },
   computed: {
@@ -461,11 +442,8 @@ export default {
           if (res.data.after.length > 0) {
             this.showAfterSale = true
             res.data.after.map((it, inx) => {
-              this.afterList[inx].afterSalesInformation.product_json = res.data.after[inx].product_json
-              this.afterList[inx].afterSalesInformation.after_type = res.data.after[inx].after_type
-              this.afterList[inx].afterSalesInformation.after_model = res.data.after[inx].after_model
-              this.afterList[inx].afterSalesInformation.content = res.data.after[inx].content
-              this.afterList[inx].afterSalesInformation.image = res.data.after[inx].image
+              this.afterList[inx].afterSalesInformation = { ...this.afterList[inx].afterSalesInformation, ...res.data.after[inx] }
+              this.afterList[inx].feedBackInformation = { ...this.afterList[inx].feedBackInformation, ...res.data.after[inx].reply[0] }
             })
           }
           if (res.data.after.length === 0) {
@@ -522,6 +500,7 @@ export default {
           const arr = []
           let newArr = []
           this.selectionList.map(it => {
+            it.goods_cost_vender.product_json = this.dialogForm.product_json
             this.formData.product_json.push(it.goods_cost_vender)
             arr.push(it.goods_cost_vender.service_id)
           })
@@ -543,8 +522,9 @@ export default {
       })
     },
     // feedback 时，回复按钮
-    handleClickReply() {
+    handleClickReply(val) {
       this.replyVisible = true
+      this.replyFormData = val.afterSalesInformation
     },
     // feedback 时，历史记录查看按钮
     handleClickRecord() {
@@ -641,7 +621,12 @@ export default {
     },
     // 回复提交
     handleReplySubmit() {
-      this.handleClose()
+      this.replyFormData.content = this.replyForm.reply
+      this.replyFormData.image = this.replyForm.image
+      afterSalesCreate(this.replyFormData).then(res => {
+        this.$message.success(res.message)
+        this.handleClose()
+      })
     },
     // 历史记录查询关闭
     handleRecordClose() {

@@ -12,7 +12,10 @@
           Order No：<span class="primary">{{ order_no }}</span>
         </div>
       </div>
-      <el-button size="small" type="primary" @click="complete">Completed</el-button>
+      <div>
+        <el-button v-if="type === '2'" size="small" type="primary" @click="confirmAfterSales">confirm after sales</el-button>
+        <el-button size="small" type="primary" @click="complete">Completed</el-button>
+      </div>
     </div>
     <div class="order-cell">
       <!-- After Sales Information -->
@@ -162,7 +165,7 @@
   </div>
 </template>
 <script>
-import { afterSalesChanngedStatus, afterSalesDetail } from '@/api/after'
+import { afterSalesChanngedStatus, afterSalesDetail, afterSalesConfirmSend } from '@/api/after'
 export default {
   name: 'after-detail',
   components: {
@@ -200,7 +203,9 @@ export default {
       showImg: [],
       replyImg: [],
       dialogVisible: false,
-      thisImgs: ''
+      thisImgs: '',
+      type: '1',
+      confirmSend: ''
     }
   },
   computed: {
@@ -245,6 +250,8 @@ export default {
           // if (res.data.reply){
           //   this.replyImg = res.data.reply
           // }
+          this.type = res.data.type
+          this.confirmSend = res.data.id
         }
         console.log(this.tableData)
       }).catch(err => {
@@ -281,6 +288,17 @@ export default {
       this.dialogVisible = true
       console.log('this.$refs', src)
       this.thisImgs = src
+    },
+    // 确认售后
+    confirmAfterSales() {
+      const formData = {
+        id: this.confirmSend
+      }
+      afterSalesConfirmSend(formData).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.message)
+        }
+      })
     }
   }
 }

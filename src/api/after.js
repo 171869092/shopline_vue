@@ -43,3 +43,12 @@ export function afterSalesChanngedStatus(data) {
     data: data
   })
 }
+
+// . after sale confirm send
+export function afterSalesConfirmSend(data) {
+  return request({
+    url: '/after/after-sales/confirm-send',
+    method: 'post',
+    data: data
+  })
+}
