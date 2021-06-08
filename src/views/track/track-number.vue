@@ -165,12 +165,13 @@
               <el-form ref="information" :model="item.feedBackInformation" label-width="160px" label-position="left">
                 <el-tabs v-model="item.feedBackInformation.innerAfterSalesActive" type="card">
                   <el-tab-pane :label="$t('track.detail.informationActive.textReply')" name="first">
-                    <el-input v-model="item.feedBackInformation.content" type="textarea" :rows="4" placeholder="Seriously damaged products need to be returned and replaced" />
+                    <el-input v-model="item.feedBackInformation.reply_info" type="textarea" readonly :rows="4" placeholder="Seriously damaged products need to be returned and replaced" />
                   </el-tab-pane>
                   <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">
-                    <span v-for="(it, inx) in item.feedBackInformation.image" :key="inx">
-                      <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="it"></el-image>
-                    </span>
+                    <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="item.feedBackInformation.reply_img"></el-image>
+<!--                    <span v-for="(it, inx) in item.feedBackInformation.image" :key="inx">-->
+<!--                      <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="it"></el-image>-->
+<!--                    </span>-->
                   </el-tab-pane>
                 </el-tabs>
               </el-form>
@@ -216,34 +217,36 @@
       </div>
     </el-dialog>
     <el-dialog :visible.sync="recordVisible" width="60%" class="p20" @close="handleRecordClose">
-      <el-table
-        :data="recordForm"
-        style="width: 100%"
-        highlight-current-row
-        fit
-        :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
-      >
-        <el-table-column :label="$t('track.detail.recordForm.seller')" prop="seller">
-          <template slot-scope="scope">
-            <span>{{scope.row.sellerReply}}</span>
-            <div v-if="scope.row.sellerImage">
-              <span v-for="(item, index) in scope.row.sellerImage" :key="index">
-                <el-image :src="item.url" style="height: 100px;width: 120px" class="mt10 mr10"/>
-              </span>
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column :label="$t('track.detail.recordForm.oneself')" prop="oneself">
-          <template slot-scope="scope">
-            <span>{{scope.row.oneselfReply}}</span>
-            <div v-if="scope.row.oneselfImage">
-              <span v-for="(item, index) in scope.row.oneselfImage" :key="index">
-                <el-image :src="item.url" style="height: 100px;width: 120px" class="mt10 mr10"/>
-              </span>
-            </div>
-          </template>
-        </el-table-column>
-      </el-table>
+      <div class="record-box">
+        <el-table
+          :data="recordForm.seller"
+          style="width: 100%"
+          highlight-current-row
+          fit
+          :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
+        >
+          <el-table-column :label="$t('track.detail.recordForm.seller')" prop="seller">
+            <template slot-scope="scope">
+              <span>{{scope.row.reply_info}}</span>
+              <el-image v-if="scope.row.reply_img" :src="scope.row.reply_img" style="height: 100px;width: 120px" class="mt10 mr10"/>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-table
+          :data="recordForm.reacl"
+          style="width: 100%"
+          highlight-current-row
+          fit
+          :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
+        >
+          <el-table-column :label="$t('track.detail.recordForm.oneself')" prop="oneself">
+            <template slot-scope="scope">
+              <span>{{scope.row.reply_info}}</span>
+              <el-image v-if="scope.row.reply_img" :src="scope.row.reply_img" style="height: 100px;width: 120px" class="mt10 mr10"/>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -350,20 +353,10 @@ export default {
         server_id: []
       },
       recordVisible: false,
-      recordForm: [
-        {
-          sellerReply: 'Seller reply text',
-          sellerImage: ['https://dx-tech-bucket.s3.amazonaws.com/20210608063351823004e277ddcface2f218754b9372640b5', 'https://dx-tech-bucket.s3.amazonaws.com/20210608063351823004e277ddcface2f218754b9372640b5'],
-          oneselfReply: 'Buyer reply text',
-          oneselfImage: ['https://dx-tech-bucket.s3.amazonaws.com/20210608063351823004e277ddcface2f218754b9372640b5']
-        },
-        {
-          sellerReply: 'Seller reply text',
-          sellerImage: [],
-          oneselfReply: '',
-          oneselfImage: ['https://dx-tech-bucket.s3.amazonaws.com/20210608063351823004e277ddcface2f218754b9372640b5']
-        }
-      ],
+      recordForm: {
+        seller: [],
+        reacl: []
+      },
       replyFormData: {}
     }
   },
@@ -443,7 +436,8 @@ export default {
             this.showAfterSale = true
             res.data.after.map((it, inx) => {
               this.afterList[inx].afterSalesInformation = { ...this.afterList[inx].afterSalesInformation, ...res.data.after[inx] }
-              this.afterList[inx].feedBackInformation = { ...this.afterList[inx].feedBackInformation, ...res.data.after[inx].reply[0] }
+              this.afterList[inx].feedBackInformation = { ...this.afterList[inx].feedBackInformation, ...res.data.after[inx].reply.seller[res.data.after[inx].reply.seller.length - 1] }
+              this.recordForm = res.data.after[inx].reply
             })
           }
           if (res.data.after.length === 0) {
@@ -727,6 +721,10 @@ export default {
       width: 100px;
       height: 30px;
     }
+  }
+  .record-box {
+    display: flex;
+    justify-content: center;
   }
 }
 </style>
