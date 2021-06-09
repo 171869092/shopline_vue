@@ -132,12 +132,19 @@ export const constantRoutes = [
   {
     path: '/product',
     component: Layout,
+    meta: { title: 'Products', icon: 'el-icon-data-line' },
     children: [
       {
-        path: 'index',
+        path: 'product',
         name: 'product',
         component: () => import('@/views/product/index'),
-        meta: { title: 'Products', icon: 'el-icon-data-line' }
+        meta: { title: 'Products' }
+      },
+      {
+        path: 'quoted',
+        name: 'quoted',
+        component: () => import('@/views/product/quoted'),
+        meta: { title: 'Quoted' }
       }
     ]
   },
@@ -151,13 +158,13 @@ export const constantRoutes = [
         path: 'shopify',
         name: 'shopify',
         component: () => import('@/views/orders/index'),
-        meta: { title: 'Shopify', icon: 'el-icon-tickets' }
+        meta: { title: 'Shopify' }
       },
       {
         path: 'woo-commerces',
         name: 'woo-commerces',
         component: () => import('@/views/orders/index'),
-        meta: { title: 'Woo Commerce', icon: 'el-icon-tickets' }
+        meta: { title: 'Woo Commerce' }
       },
       {
         path: 'detail',
