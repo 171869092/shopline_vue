@@ -60,8 +60,6 @@
 
           <el-tab-pane label="Picture Content" name="second">
             <div v-for="fit in showImg" :key="fit" class="block">
-              <!-- <span class="demonstration">{{ fit }}</span> -->
-
               <el-image
                 ref="thisImg"
                 accept="image/png, image/jpeg"
@@ -76,81 +74,45 @@
                   <i class="el-icon-picture-outline" style="font-size: 30px;" />
                 </div>
               </el-image>
-              <!-- </el-dialog> -->
-
-              <!-- <el-image
-                accept="image/png, image/jpeg"
-                class="sku_image"
-                style="width: 100px; height: 100px; float:left;"
-                :src="fit"
-                :fit="fit"
-              >
-                <div slot="error" class="image-slot">
-                  <i class="el-icon-picture-outline" style="font-size: 30px;" />
-                </div>
-              </el-image> -->
             </div>
 
           </el-tab-pane>
         </el-tabs>
       </el-card>
-
-      <!-- Text Content -->
-      <!-- <el-card class="box-card mt20">
-                    <div slot="header">
-                        <div class="detail-block-title">
-                            <div><h2>Text Content</h2></div>
-                        </div>
-                    </div>
-                    <textarea class="el-textarea__inner" :disabled="true" v-model="tableData.content" autosize placeholder="请输入内容" />
-                </el-card> -->
-
-      <!-- Picture Content -->
-      <!-- <el-card class="box-card mt20">
-                    <div slot="header">
-                        <div class="detail-block-title">
-                            <div><h2>Picture Content</h2></div>
-                        </div>
-                    </div>
-                        <div slot="header" class="flexbox justidfy-space-between align-center">
-                        </div>
-                </el-card> -->
-
-      <div v-for="(item,k) in tableData.reply" :key="k">
-        <!-- Reply Message -->
+      <div v-for="(item, k) in tableData.reply" :key="k">
         <el-card class="box-card mt20">
-          <div slot="header">
-            <div class="detail-block-title">
-              <div><h2>Reply Message</h2></div>
-            </div>
-          </div>
-          <textarea v-model="item.reply_info" class="el-textarea__inner" :disabled="true" autosize placeholder="请输入内容" />
-        </el-card>
-
-        <!-- Reply to Picture -->
-        <el-card class="box-card mt20">
-          <div slot="header">
-            <div class="detail-block-title">
-              <div><h2>Reply to Picture</h2></div>
-            </div>
-          </div>
-          <div v-for="fit in item.reply_img" :key="fit" class="block">
-            <!-- <span class="demonstration">{{ fit }}</span> -->
-            <el-image
-              class="sku_image"
-              style="width: 100px; height: 100px; float:left;margin-bottom: 20px"
-              :src="fit"
-              :fit="fit"
-              :preview-src-list="[fit]"
-            >
-              <div slot="error" class="image-slot">
-                <i class="el-icon-picture-outline" style="font-size: 30px;" />
+          <el-tabs v-model="item.activeReplyName" type="card" @tab-click="handleClick">
+            <el-tab-pane label="Reply Message" name="first">
+              <div slot="header">
+                <div class="detail-block-title">
+                  <div><h2>Reply Message</h2></div>
+                </div>
               </div>
-            </el-image>
-          </div>
+              <textarea v-model="item.reply_info" class="el-textarea__inner" :disabled="true" autosize placeholder="请输入内容" />
+            </el-tab-pane>
+            <el-tab-pane label="Reply Message" name="second">
+              <div slot="header">
+                <div class="detail-block-title">
+                  <div><h2>Reply to Picture</h2></div>
+                </div>
+              </div>
+              <div v-for="fit in item.reply_img" :key="fit" class="block">
+                <el-image
+                  class="sku_image"
+                  style="width: 100px; height: 100px; float:left;margin-bottom: 20px"
+                  :src="fit"
+                  :fit="fit"
+                  :preview-src-list="[fit]"
+                >
+                  <div slot="error" class="image-slot">
+                    <i class="el-icon-picture-outline" style="font-size: 30px;" />
+                  </div>
+                </el-image>
+              </div>
+            </el-tab-pane>
+          </el-tabs>
         </el-card>
       </div>
-
     </div>
   </div>
 </template>
@@ -185,10 +147,7 @@ export default {
         third_order_no: '',
         total: '',
         vendor: '',
-        reply: {
-          reply_info: '',
-          reply_img: []
-        }
+        reply: []
       },
       showImg: [],
       replyImg: [],
@@ -237,13 +196,16 @@ export default {
         if (res.code === 200) {
           this.tableData = res.data
           this.showImg = res.data.image
-          // if (res.data.reply){
-          //   this.replyImg = res.data.reply
-          // }
+          this.tableData.reply.map(it => {
+            if (it.reply_info === '') {
+              this.$set(it, 'activeReplyName', 'second')
+            } else {
+              this.$set(it, 'activeReplyName', 'first')
+            }
+          })
           this.type = res.data.type
           this.confirmSend = res.data.id
         }
-        console.log(this.tableData)
       }).catch(err => {
         console.log(err)
       }).finally(() => {
