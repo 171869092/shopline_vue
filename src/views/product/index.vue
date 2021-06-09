@@ -53,6 +53,9 @@
             <div v-if="item.type == 'product'" style="color:#ef6f38" class="pointer" @click="productAdd('edit',scope.row.id)">
               <span>{{ scope.row.title }}</span>
             </div>
+            <div v-if="item.type == 'shop'">
+              <span>{{ getLabelOfValue(scope.row.store_url, storeList) }}</span>
+            </div>
           </template>
         </el-table-column>
       </el-table>
@@ -98,10 +101,9 @@ export default {
         { label: '', value: '', type: 'image', width: '200' },
         { label: 'Product', value: 'id', type: 'product', width: '500' },
         { label: 'Status', value: 'status' },
-        { label: 'Inventory', value: 'stock' }
-        // { label: 'Type', value: 'type' },
-        // { label: 'Hosting', value: 'service_name' },
-        // { label: 'Operating', type: 'Operating' }
+        { label: 'Inventory', value: 'stock' },
+        { label: 'Shop', value: 'store_url', type: 'shop' },
+        { label: 'Hosting', value: 'service_name' }
       ],
       statusOptions: ['Active', 'Draft'],
       tableData: [],
@@ -137,6 +139,15 @@ export default {
           this.storeList = res.data
         }
       })
+    },
+    // 根据value获取label
+    getLabelOfValue(val, list) {
+      const obj = list.find(it => it.store_url === val)
+      if (obj) {
+        return obj.store_name
+      } else {
+        return val
+      }
     },
     // 查询
     Inquire() {
