@@ -145,6 +145,13 @@ export const constantRoutes = [
         name: 'quoted',
         component: () => import('@/views/product/quoted'),
         meta: { title: 'Quoted' }
+      },
+      {
+        path: 'quoted/detail',
+        name: 'quoted-detail',
+        component: () => import('@/views/product/quotedDetail'),
+        meta: { title: 'Quoted Detail' },
+        hidden: true
       }
     ]
   },
@@ -170,7 +177,7 @@ export const constantRoutes = [
         path: 'detail',
         name: 'orders-detail',
         component: () => import('@/views/orders/detail'),
-        meta: { title: 'Orders Detail', icon: 'el-icon-tickets' },
+        meta: { title: 'Orders Detail' },
         hidden: true
       }
     ]
