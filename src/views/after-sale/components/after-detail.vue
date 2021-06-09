@@ -13,7 +13,7 @@
         </div>
       </div>
       <div>
-        <el-button v-if="type === '2'" size="small" type="primary" @click="confirmAfterSales">confirm after sales</el-button>
+        <el-button v-if="type === '2' && is_push !== '3'" size="small" type="primary" @click="confirmAfterSales">confirm after sales</el-button>
         <el-button size="small" type="primary" @click="complete">Completed</el-button>
       </div>
     </div>
@@ -154,6 +154,7 @@ export default {
       dialogVisible: false,
       thisImgs: '',
       type: '1',
+      is_push: '1',
       confirmSend: ''
     }
   },
@@ -204,6 +205,7 @@ export default {
             }
           })
           this.type = res.data.type
+          this.is_push = res.data.is_push
           this.confirmSend = res.data.id
         }
       }).catch(err => {
@@ -242,6 +244,7 @@ export default {
       afterSalesConfirmSend(formData).then(res => {
         if (res.code === 200) {
           this.$message.success(res.message)
+          this.getAfterSalesDetail()
         }
       })
     }
