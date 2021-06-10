@@ -6,7 +6,7 @@
           <router-link :to="{name: 'home'}">
             <img class="cursor_p" src="@/assets/home/logo@2x.png" alt="" style="width:130px">
           </router-link>
-          <div><el-button @click="SignIn">Sign in</el-button></div>
+          <div><el-button @click="SignIn">Sigin in</el-button></div>
         </div>
         <div class="login-form">
           <div class="login-tip">
