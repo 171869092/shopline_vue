@@ -1,7 +1,7 @@
 <template>
   <div class="register-box">
-    <div class="login-box flexbox justify-center align-center">
-      <div class="login">
+    <div class="register flexbox justify-center align-center">
+      <div class="register-inner">
         <div class="login-header flexbox justify-space-between">
           <router-link :to="{name: 'home'}">
             <img class="cursor_p" src="@/assets/home/logo@2x.png" alt="" style="width:130px">
@@ -165,7 +165,7 @@ export default {
 .register-box {
   height: 100vh;
   overflow: auto;
-  .login-box {
+  .register {
     margin-top: calc(100vh - 80vh);
     margin-bottom: calc(100vh - 80vh);
   }
