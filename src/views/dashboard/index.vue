@@ -330,10 +330,10 @@ export default {
           delivered.push(it.delivered)
           received.push(it.received)
           received_goods.push(it.received_goods)
-          store_name.push(it.store_name)
+          store_name.push(it.store_url.split('.')[0])
         })
         for (const key in res.data.line) {
-          lineStores.push(res.data.line[key].store_name)
+          lineStores.push(res.data.line[key].store_url.split('.')[0])
           datas.push(res.data.line[key])
         }
         const lineStore = [...new Set(lineStores)]
