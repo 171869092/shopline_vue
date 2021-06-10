@@ -34,260 +34,266 @@
           <h5>Quoted price</h5>
           <el-button type="primary" size="small" @click="isTotal = !isTotal">{{ isTotal ? 'Total' : 'Details' }}</el-button>
         </div>
-        <div v-for="(item, key) in formData.temporary" :key="key" class="price-box">
-          <div class="title-box">
-            <div class="title" :style="{'background-color': item.newData ? item.titleStyle : '#ccc'}" @click="item.newData = true">
-              <img src="@/assets/home/drag.png" width="25px" height="25px">
-              <span style="margin: 0 20px">{{ key }}</span>
-              <span>{{ item.time }}</span>
+        <draggable v-model="draggableList">
+          <div v-for="(item, key) in draggableList" :key="key" class="price-box">
+            <div class="title-box">
+              <div class="title" :style="{'background-color': item.newData ? item.titleStyle : '#ccc'}" @click="item.newData = true">
+                <img src="@/assets/home/drag.png" width="25px" height="25px">
+                <span style="margin: 0 20px">{{ item.title }}</span>
+                <span>{{ item.time }}</span>
+              </div>
+              <div v-if="item.oldTableData.length > 0" class="title" :style="{'background-color': item.newData ? '#ccc' : item.titleStyle}" @click="item.newData = false">
+                <span style="margin: 0 20px">{{ item.title }}</span>
+                <span>{{ item.time }}</span>
+              </div>
             </div>
-            <div v-if="item.oldTableData.length > 0" class="title" :style="{'background-color': item.newData ? '#ccc' : item.titleStyle}" @click="item.newData = false">
-              <span style="margin: 0 20px">{{ key }}</span>
-              <span>{{ item.time }}</span>
-            </div>
+            <el-table
+              v-if="item.newData"
+              ref="multipleTable"
+              :data="item.newTableData"
+              style="width: 100%"
+              highlight-current-row
+              fit
+              border
+              :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
+            >
+              <el-table-column label="Serial" prop="serial">
+                <template slot-scope="scope">
+                  <span v-if="item.someThingAdopt">
+                    <el-checkbox v-model="item.check" @click="handleClickCheckbox(item)" @change="handleChangeCheckbox(item.check ? scope : scope.$index)" />
+                  </span>
+                  <span v-if="!item.someThingAdopt">{{ scope.row.serial }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column label="Picture" prop="picture">
+                <template slot-scope="scope">
+                  <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.picture" fit="cover">
+                    <div slot="error" class="image-slot">
+                      <i class="el-icon-picture-outline" style="font-size: 30px;" />
+                    </div>
+                  </el-image>
+                </template>
+              </el-table-column>
+              <el-table-column label="Color" prop="color" />
+              <el-table-column label="Color1" prop="color1" />
+              <el-table-column :label="'FR_('+ '~' + 'days)'" prop="fr" :min-width="isTotal ? '300px' : ''">
+                <template slot-scope="scope">
+                  <span v-if="!isTotal">{{ scope.row.fr }}</span>
+                  <span v-if="isTotal" class="change-style">
+                    <span class="left">
+                      <span class="title">Total</span>
+                      <span>{{ scope.row.frTotal }}</span>
+                    </span>
+                    <span class="right">
+                      <span class="title">Details</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
+                    </span>
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column :label="'UK_('+ '~' + 'days)'" prop="uk" :min-width="isTotal ? '300px' : ''">
+                <template slot-scope="scope">
+                  <span v-if="!isTotal">{{ scope.row.uk }}</span>
+                  <span v-if="isTotal" class="change-style">
+                    <span class="left">
+                      <span class="title">Total</span>
+                      <span>{{ scope.row.frTotal }}</span>
+                    </span>
+                    <span class="right">
+                      <span class="title">Details</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
+                    </span>
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column :label="'US_('+ '~' + 'days)'" prop="us" :min-width="isTotal ? '300px' : ''">
+                <template slot-scope="scope">
+                  <span v-if="!isTotal">{{ scope.row.us }}</span>
+                  <span v-if="isTotal" class="change-style">
+                    <span class="left">
+                      <span class="title">Total</span>
+                      <span>{{ scope.row.frTotal }}</span>
+                    </span>
+                    <span class="right">
+                      <span class="title">Details</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
+                    </span>
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column :label="'AU_('+ '~' + 'days)'" prop="au" :min-width="isTotal ? '300px' : ''">
+                <template slot-scope="scope">
+                  <span v-if="!isTotal">{{ scope.row.au }}</span>
+                  <span v-if="isTotal" class="change-style">
+                    <span class="left">
+                      <span class="title">Total</span>
+                      <span>{{ scope.row.frTotal }}</span>
+                    </span>
+                    <span class="right">
+                      <span class="title">Details</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
+                    </span>
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column :label="'CA_('+ '~' + 'days)'" prop="ca" :min-width="isTotal ? '300px' : ''">
+                <template slot-scope="scope">
+                  <span v-if="!isTotal">{{ scope.row.ca }}</span>
+                  <span v-if="isTotal" class="change-style">
+                    <span class="left">
+                      <span class="title">Total</span>
+                      <span>{{ scope.row.frTotal }}</span>
+                    </span>
+                    <span class="right">
+                      <span class="title">Details</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
+                    </span>
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column label="Operation">
+                <template slot-scope="scope">
+                  <span style="color: #ef6f38; cursor: pointer" @click="handleAdopt(scope, item)">Adopt</span>
+                </template>
+              </el-table-column>
+            </el-table>
+            <el-table
+              v-if="item.oldTableData.length > 0 && !item.newData"
+              ref="multipleTable"
+              :data="item.oldTableData"
+              style="width: 100%"
+              highlight-current-row
+              fit
+              border
+              :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
+            >
+              <el-table-column label="Serial" prop="serial" />
+              <el-table-column label="Picture" prop="picture">
+                <template slot-scope="scope">
+                  <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.picture" fit="cover">
+                    <div slot="error" class="image-slot">
+                      <i class="el-icon-picture-outline" style="font-size: 30px;" />
+                    </div>
+                  </el-image>
+                </template>
+              </el-table-column>
+              <el-table-column label="Color" prop="color" />
+              <el-table-column label="Color1" prop="color1" />
+              <el-table-column :label="'FR_('+ '~' + 'days)'" prop="fr" :min-width="isTotal ? '300px' : ''">
+                <template slot-scope="scope">
+                  <span v-if="!isTotal">{{ scope.row.fr }}</span>
+                  <span v-if="isTotal" class="change-style">
+                    <span class="left">
+                      <span class="title">Total</span>
+                      <span>{{ scope.row.frTotal }}</span>
+                    </span>
+                    <span class="right">
+                      <span class="title">Details</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
+                    </span>
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column :label="'UK_('+ '~' + 'days)'" prop="uk" :min-width="isTotal ? '300px' : ''">
+                <template slot-scope="scope">
+                  <span v-if="!isTotal">{{ scope.row.uk }}</span>
+                  <span v-if="isTotal" class="change-style">
+                    <span class="left">
+                      <span class="title">Total</span>
+                      <span>{{ scope.row.frTotal }}</span>
+                    </span>
+                    <span class="right">
+                      <span class="title">Details</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
+                    </span>
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column :label="'US_('+ '~' + 'days)'" prop="us" :min-width="isTotal ? '300px' : ''">
+                <template slot-scope="scope">
+                  <span v-if="!isTotal">{{ scope.row.us }}</span>
+                  <span v-if="isTotal" class="change-style">
+                    <span class="left">
+                      <span class="title">Total</span>
+                      <span>{{ scope.row.frTotal }}</span>
+                    </span>
+                    <span class="right">
+                      <span class="title">Details</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
+                    </span>
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column :label="'AU_('+ '~' + 'days)'" prop="au" :min-width="isTotal ? '300px' : ''">
+                <template slot-scope="scope">
+                  <span v-if="!isTotal">{{ scope.row.au }}</span>
+                  <span v-if="isTotal" class="change-style">
+                    <span class="left">
+                      <span class="title">Total</span>
+                      <span>{{ scope.row.frTotal }}</span>
+                    </span>
+                    <span class="right">
+                      <span class="title">Details</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
+                    </span>
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column :label="'CA_('+ '~' + 'days)'" prop="ca" :min-width="isTotal ? '300px' : ''">
+                <template slot-scope="scope">
+                  <span v-if="!isTotal">{{ scope.row.ca }}</span>
+                  <span v-if="isTotal" class="change-style">
+                    <span class="left">
+                      <span class="title">Total</span>
+                      <span>{{ scope.row.frTotal }}</span>
+                    </span>
+                    <span class="right">
+                      <span class="title">Details</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
+                    </span>
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column label="Operation">
+                <template>
+                  <span>Adopt</span>
+                </template>
+              </el-table-column>
+            </el-table>
           </div>
-          <el-table
-            v-if="item.newData"
-            ref="multipleTable"
-            :data="item.newTableData"
-            style="width: 100%"
-            highlight-current-row
-            fit
-            border
-            :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
-          >
-            <el-table-column label="Serial" prop="serial">
-              <template slot-scope="scope">
-                <span v-if="item.someThingAdopt">
-                  <el-checkbox v-model="item.check" @click="handleClickCheckbox(item)" @change="handleChangeCheckbox(item.check ? scope : scope.$index)"></el-checkbox>
-                </span>
-                <span v-if="!item.someThingAdopt">{{ scope.row.serial }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column label="Picture" prop="picture">
-              <template slot-scope="scope">
-                <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.picture" fit="cover">
-                  <div slot="error" class="image-slot">
-                    <i class="el-icon-picture-outline" style="font-size: 30px;" />
-                  </div>
-                </el-image>
-              </template>
-            </el-table-column>
-            <el-table-column label="Color" prop="color"></el-table-column>
-            <el-table-column label="Color1" prop="color1"></el-table-column>
-            <el-table-column :label="'FR_('+ '~' + 'days)'" prop="fr" :min-width="isTotal ? '300px' : ''">
-              <template slot-scope="scope">
-                <span v-if="!isTotal">{{ scope.row.fr }}</span>
-                <span v-if="isTotal" class="change-style">
-                  <span class="left">
-                    <span class="title">Total</span>
-                    <span>{{ scope.row.frTotal }}</span>
-                  </span>
-                  <span class="right">
-                    <span class="title">Details</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                  </span>
-                </span>
-              </template>
-            </el-table-column>
-            <el-table-column :label="'UK_('+ '~' + 'days)'" prop="uk" :min-width="isTotal ? '300px' : ''">
-              <template slot-scope="scope">
-                <span v-if="!isTotal">{{ scope.row.uk }}</span>
-                <span v-if="isTotal" class="change-style">
-                  <span class="left">
-                    <span class="title">Total</span>
-                    <span>{{ scope.row.frTotal }}</span>
-                  </span>
-                  <span class="right">
-                    <span class="title">Details</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                  </span>
-                </span>
-              </template>
-            </el-table-column>
-            <el-table-column :label="'US_('+ '~' + 'days)'" prop="us" :min-width="isTotal ? '300px' : ''">
-              <template slot-scope="scope">
-                <span v-if="!isTotal">{{ scope.row.us }}</span>
-                <span v-if="isTotal" class="change-style">
-                  <span class="left">
-                    <span class="title">Total</span>
-                    <span>{{ scope.row.frTotal }}</span>
-                  </span>
-                  <span class="right">
-                    <span class="title">Details</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                  </span>
-                </span>
-              </template>
-            </el-table-column>
-            <el-table-column :label="'AU_('+ '~' + 'days)'" prop="au" :min-width="isTotal ? '300px' : ''">
-              <template slot-scope="scope">
-                <span v-if="!isTotal">{{ scope.row.au }}</span>
-                <span v-if="isTotal" class="change-style">
-                  <span class="left">
-                    <span class="title">Total</span>
-                    <span>{{ scope.row.frTotal }}</span>
-                  </span>
-                  <span class="right">
-                    <span class="title">Details</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                  </span>
-                </span>
-              </template>
-            </el-table-column>
-            <el-table-column :label="'CA_('+ '~' + 'days)'" prop="ca" :min-width="isTotal ? '300px' : ''">
-              <template slot-scope="scope">
-                <span v-if="!isTotal">{{ scope.row.ca }}</span>
-                <span v-if="isTotal" class="change-style">
-                  <span class="left">
-                    <span class="title">Total</span>
-                    <span>{{ scope.row.frTotal }}</span>
-                  </span>
-                  <span class="right">
-                    <span class="title">Details</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                  </span>
-                </span>
-              </template>
-            </el-table-column>
-            <el-table-column label="Operation">
-              <template slot-scope="scope">
-                <span style="color: #ef6f38; cursor: pointer" @click="handleAdopt(scope, item)">Adopt</span>
-              </template>
-            </el-table-column>
-          </el-table>
-          <el-table
-            v-if="item.oldTableData.length > 0 && !item.newData"
-            ref="multipleTable"
-            :data="item.oldTableData"
-            style="width: 100%"
-            highlight-current-row
-            fit
-            border
-            :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
-          >
-            <el-table-column label="Serial" prop="serial"></el-table-column>
-            <el-table-column label="Picture" prop="picture">
-              <template slot-scope="scope">
-                <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.picture" fit="cover">
-                  <div slot="error" class="image-slot">
-                    <i class="el-icon-picture-outline" style="font-size: 30px;" />
-                  </div>
-                </el-image>
-              </template>
-            </el-table-column>
-            <el-table-column label="Color" prop="color"></el-table-column>
-            <el-table-column label="Color1" prop="color1"></el-table-column>
-            <el-table-column :label="'FR_('+ '~' + 'days)'" prop="fr" :min-width="isTotal ? '300px' : ''">
-              <template slot-scope="scope">
-                <span v-if="!isTotal">{{ scope.row.fr }}</span>
-                <span v-if="isTotal" class="change-style">
-                  <span class="left">
-                    <span class="title">Total</span>
-                    <span>{{ scope.row.frTotal }}</span>
-                  </span>
-                  <span class="right">
-                    <span class="title">Details</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                  </span>
-                </span>
-              </template>
-            </el-table-column>
-            <el-table-column :label="'UK_('+ '~' + 'days)'" prop="uk" :min-width="isTotal ? '300px' : ''">
-              <template slot-scope="scope">
-                <span v-if="!isTotal">{{ scope.row.uk }}</span>
-                <span v-if="isTotal" class="change-style">
-                  <span class="left">
-                    <span class="title">Total</span>
-                    <span>{{ scope.row.frTotal }}</span>
-                  </span>
-                  <span class="right">
-                    <span class="title">Details</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                  </span>
-                </span>
-              </template>
-            </el-table-column>
-            <el-table-column :label="'US_('+ '~' + 'days)'" prop="us" :min-width="isTotal ? '300px' : ''">
-              <template slot-scope="scope">
-                <span v-if="!isTotal">{{ scope.row.us }}</span>
-                <span v-if="isTotal" class="change-style">
-                  <span class="left">
-                    <span class="title">Total</span>
-                    <span>{{ scope.row.frTotal }}</span>
-                  </span>
-                  <span class="right">
-                    <span class="title">Details</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                  </span>
-                </span>
-              </template>
-            </el-table-column>
-            <el-table-column :label="'AU_('+ '~' + 'days)'" prop="au" :min-width="isTotal ? '300px' : ''">
-              <template slot-scope="scope">
-                <span v-if="!isTotal">{{ scope.row.au }}</span>
-                <span v-if="isTotal" class="change-style">
-                  <span class="left">
-                    <span class="title">Total</span>
-                    <span>{{ scope.row.frTotal }}</span>
-                  </span>
-                  <span class="right">
-                    <span class="title">Details</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                  </span>
-                </span>
-              </template>
-            </el-table-column>
-            <el-table-column :label="'CA_('+ '~' + 'days)'" prop="ca" :min-width="isTotal ? '300px' : ''">
-              <template slot-scope="scope">
-                <span v-if="!isTotal">{{ scope.row.ca }}</span>
-                <span v-if="isTotal" class="change-style">
-                  <span class="left">
-                    <span class="title">Total</span>
-                    <span>{{ scope.row.frTotal }}</span>
-                  </span>
-                  <span class="right">
-                    <span class="title">Details</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                    <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                  </span>
-                </span>
-              </template>
-            </el-table-column>
-            <el-table-column label="Operation">
-              <template>
-                <span>Adopt</span>
-              </template>
-            </el-table-column>
-          </el-table>
-        </div>
+        </draggable>
       </el-card>
     </el-form>
   </div>
 </template>
 
 <script>
+import draggable from 'vuedraggable'
 export default {
   name: 'quoted-detail',
+  components: {
+    draggable
+  },
   data() {
     return {
       formData: {
@@ -379,7 +385,8 @@ export default {
       formDataRules: {},
       isTotal: false,
       someThingAdopt: false,
-      adoptList: []
+      adoptList: [],
+      draggableList: []
     }
   },
   created() {
@@ -389,10 +396,13 @@ export default {
     init() {
       for (const key in this.formData.temporary) {
         this.$set(this.formData.temporary[key], 'newData', true)
+        this.$set(this.formData.temporary[key], 'title', key)
         this.$set(this.formData.temporary[key], 'titleStyle', this.getColorRender())
         this.$set(this.formData.temporary[key], 'check', false)
         this.$set(this.formData.temporary[key], 'someThingAdopt', false)
+        this.draggableList.push(this.formData.temporary[key])
       }
+      console.log('this.draggableList', this.draggableList)
     },
     // Cancellation
     cancellation() {},
@@ -440,16 +450,16 @@ export default {
     handleClickCheckbox(item) {
       item.check = !item.check
     },
+    // have a problem
     handleChangeCheckbox(scope) {
       const re = /^[0-9]+.?[0-9]*/
       if (!re.test(scope)) {
         this.adoptList.push(scope.row)
       } else {
-        this.adoptList.forEach((value, index, array) => {
-          if (index === scope) {
-            array.splice(value, 1)
-          }
-        })
+        console.log('arr11', this.adoptList)
+        console.log('scope', scope)
+        this.adoptList = this.adoptList.splice(scope, 1)
+        console.log('arr', this.adoptList)
       }
     }
   }
