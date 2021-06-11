@@ -33,7 +33,7 @@
                     including shipping, products, inventory, and vendors for
                     your e-commerce business.</span>
                 </div>
-                <div class="banner-button">
+                <div v-if="isShow" class="banner-button">
                   <router-link class="login-btn" :to="{ name: 'register' }">
                     <el-button type="primary">Try It Free</el-button>
                   </router-link>
@@ -236,6 +236,7 @@
 import { setCookies } from '@/utils/cookies'
 import Navbar from '@/views/home/components/navbar'
 import footerHome from '@/views/home/components/footer'
+import { getToken } from '@/utils/auth'
 export default {
   components: {
     Navbar,
@@ -267,7 +268,8 @@ export default {
         { url: require('@/assets/home/swiper-3@2x.png') },
         { url: require('@/assets/home/swiper-4@2x.png') },
         { url: require('@/assets/home/swiper-5@2x.png') }
-      ]
+      ],
+      isShow: false
     }
   },
   created() {
@@ -276,6 +278,12 @@ export default {
     if (Object.hasOwnProperty.call(query, 'hmac')) {
       setCookies('shopify', query)
       setCookies('shop', query.shop)
+    }
+    const token = getToken()
+    if (token === undefined) {
+      this.isShow = true
+    } else {
+      this.isShow = false
     }
   },
   methods: {
