@@ -114,7 +114,7 @@ export default {
       loading: false,
       detailInfo: [],
       dataType: [],
-      saleMode: ['Return/exchange', 'Return and refund', 'Refund only', 'Other'],
+      saleMode: ['Resend', 'Refund', 'Return/Refund', 'Other'],
       productArr: [],
       imgList: [],
       orderInfo: [],
