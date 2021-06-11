@@ -60,7 +60,7 @@
               <el-table-column label="Serial" prop="serial">
                 <template slot-scope="scope">
                   <span v-if="item.someThingAdopt">
-                    <el-checkbox v-model="item.check" @click="handleClickCheckbox(item)" @change="handleChangeCheckbox(item.check ? scope : scope.$index)" />
+                    <el-checkbox v-model="item.check" @click="handleClickCheckbox(item)" @change="handleChangeCheckbox(item)" />
                   </span>
                   <span v-if="!item.someThingAdopt">{{ scope.row.serial }}</span>
                 </template>
@@ -385,6 +385,8 @@ export default {
       formDataRules: {},
       isTotal: false,
       someThingAdopt: false,
+      adoptTureList: [],
+      adoptFalseList: [],
       adoptList: [],
       draggableList: []
     }
@@ -424,7 +426,7 @@ export default {
       }
       if (item.someThingAdopt === false) {
         item.check = false
-        this.handleChangeCheckbox(scope.$index)
+        this.handleChangeCheckbox(item)
       }
     },
     // Dynamically generate random colors
@@ -439,10 +441,12 @@ export default {
     },
     // Save
     handleSave() {
-      if (this.adoptList.length === 0) {
+      if (this.adoptTureList.length === 0) {
         this.$message.warning('Please select at least one piece of data to adopt!')
       } else {
-        this.adoptList = [...new Set(this.adoptList)]
+        this.adoptTureList.map(it => {
+          this.adoptList.push(...it.value)
+        })
         console.log('this.adoptList', this.adoptList)
       }
     },
@@ -451,16 +455,26 @@ export default {
       item.check = !item.check
     },
     // have a problem
-    handleChangeCheckbox(scope) {
-      const re = /^[0-9]+.?[0-9]*/
-      if (!re.test(scope)) {
-        this.adoptList.push(scope.row)
+    handleChangeCheckbox(val) {
+      if (val.check === true) {
+        this.adoptTureList.push({
+          key: val.title,
+          value: val.newTableData
+        })
       } else {
-        console.log('arr11', this.adoptList)
-        console.log('scope', scope)
-        this.adoptList = this.adoptList.splice(scope, 1)
-        console.log('arr', this.adoptList)
+        this.adoptFalseList.push({
+          key: val.title,
+          value: val.newTableData
+        })
       }
+      this.adoptFalseList.map((it, inx, arr) => {
+        this.adoptTureList.map((value, index, array) => {
+          if (value.key === it.key) {
+            arr.splice(inx, 1)
+            return array.splice(index, 1)
+          }
+        })
+      })
     }
   }
 }
