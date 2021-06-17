@@ -4,7 +4,7 @@
       <div class="flexbox mb20">
         <div>
           <el-input
-            v-model="formInline.title"
+            v-model="formInline.product_title"
             prefix-icon="el-icon-search"
             placeholder="Filter products"
             clearable
@@ -18,16 +18,16 @@
               v-for="(item,idx) in statusOptions"
               :key="item"
               :label="item"
-              :value="String(idx + 1)"
+              :value="idx"
             />
           </el-select>
         </div>
         <div>
-          <el-select v-model="formInline.service" placeholder="service id" clearable class="ml20" @change="filterOrders">
+          <el-select v-model="formInline.server_id" placeholder="service id" clearable class="ml20" @change="filterOrders">
             <el-option
               v-for="(item,idx) in storeList"
               :key="idx"
-              :label="item.store_url"
+              :label="item.service_name"
               :value="item.id"
             />
           </el-select>
@@ -54,11 +54,11 @@
                 </div>
               </el-image>
             </span>
-            <div v-if="item.type === 'product'" style="color:#ef6f38" class="pointer" @click="productDetails('edit',scope.row.id)">
-              <span>{{ scope.row.title }}</span>
+            <div v-if="item.type === 'product'" style="color:#ef6f38" class="pointer" @click="productDetails('edit',scope.row.product_id)">
+              <span>{{ scope.row.product_title }}</span>
             </div>
             <div v-if="item.type === 'shop'">
-              <span>{{ getLabelOfValue(scope.row.store_url, storeList) }}</span>
+              <span>{{ scope.row.server_id.toString() }}</span>
             </div>
             <div v-if="item.type === 'Operation'">
               <span style="color: #c45354" @click="handleDelete(scope)">Delete</span>
@@ -74,7 +74,7 @@
 
 <script>
 import { debounce } from '@/utils'
-import { getAllProductList, getStoreList } from '@/api/product'
+import { getServiceList, getQuotedList, getQuotedLabel } from '@/api/product'
 
 export default {
   name: 'quoted',
@@ -84,19 +84,19 @@ export default {
   data() {
     return {
       formInline: {
-        title: '',
+        product_title: '',
         status: '',
-        service: ''
+        server_id: ''
       },
-      statusOptions: ['Active', 'Draft'],
+      statusOptions: [],
       storeList: [],
       productSelection: [],
       // List header
       labelList: [
-        { label: '', value: '', type: 'image', width: '200' },
-        { label: 'Product', value: 'id', type: 'product', width: '500' },
+        { label: '', value: 'img', type: 'image', width: '200' },
+        { label: 'Product', value: 'product_title', type: 'product', width: '500' },
         { label: 'Status', value: 'status' },
-        { label: 'service', value: 'store_url', type: 'shop' },
+        { label: 'service', value: 'server_id', type: 'shop' },
         { label: 'Operation', type: 'Operation' }
       ],
       tableData: [],
@@ -119,9 +119,14 @@ export default {
     }, 1000),
     // Get a list of stores
     initData() {
-      getStoreList().then(res => {
+      getServiceList().then(res => {
         if (res.code === 200) {
           this.storeList = res.data
+        }
+      })
+      getQuotedLabel().then(res => {
+        if (res.code === 200) {
+          this.statusOptions = res.data
         }
       })
     },
@@ -139,11 +144,8 @@ export default {
       const formData = JSON.parse(JSON.stringify(this.formInline))
       formData.iDisplayLength = this.listQuery.limit
       formData.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
-      getAllProductList(formData).then(res => {
+      getQuotedList(formData).then(res => {
         if (res.code === 200) {
-          res.data.map(item => {
-            item.status = item.status === '1' ? 'Active' : 'Draft'
-          })
           this.tableData = res.data
           this.listQuery.total = +res.iTotalRecords
           this.loading = false
@@ -152,9 +154,9 @@ export default {
     },
     // 根据value获取label
     getLabelOfValue(val, list) {
-      const obj = list.find(it => it.store_url === val)
+      const obj = list.find(it => it.value === val)
       if (obj) {
-        return obj.store_name
+        return obj.label
       } else {
         return val
       }

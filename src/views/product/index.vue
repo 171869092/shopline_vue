@@ -2,6 +2,7 @@
   <div class="product">
     <div class="mb20">
       <div class="flexbox justify-flex-end">
+        <el-button type="primary" icon="el-icon-check" size="small" @click="collectPrices('add')">Collect prices</el-button>
         <el-button icon="el-icon-connection" size="small" class="button-border" @click="assignStore('add')">Assign store</el-button>
         <el-button type="primary" icon="el-icon-plus" size="small" class="" @click="productAdd('add')">Add products</el-button>
       </div>
@@ -84,11 +85,29 @@
         <el-button type="primary" :loading="submitLoading" @click="submit('dialogForm')">Submit</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="Select Vendor" :visible.sync="vendorVisible" width="700px" center :before-close="providerAdd">
+      <el-form ref="vendorForm" :model="vendorForm" size="small" label-width="170px" :rules="rules">
+        <el-form-item label="Vendor:" prop="service_id">
+          <el-select v-model="vendorForm.service_id" filterable class="w-350">
+            <el-option v-for="item in ServiceList" :key="item.id" :label="item.service_name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Countries:" prop="country">
+          <el-select v-model="vendorForm.country" multiple filterable class="w-350">
+            <el-option v-for="item in countriesList" :key="item.two_code" :label="item.name_en" :value="item.two_code" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" @click="providerAdd">Cancel</el-button>
+        <el-button size="small" type="primary" @click="providerAdd(1)">Confirm</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { debounce } from '@/utils'
-import { getStoreList, getAllProductList, allGoodsSelectStore } from '@/api/product'
+import { getStoreList, getAllProductList, allGoodsSelectStore, getServiceList, getCountryList } from '@/api/product'
 export default {
   name: 'product',
   components: {
@@ -110,6 +129,7 @@ export default {
       productSelection: [],
       loading: false,
       dialogvisible: false,
+      vendorVisible: false,
       submitLoading: false,
       listQuery: {
         total: 0,
@@ -124,7 +144,21 @@ export default {
         store_id: '',
         product_list: []
       },
-      storeList: []
+      storeList: [],
+      vendorForm: {
+        service_id: '',
+        country: []
+      },
+      ServiceList: [],
+      countriesList: [],
+      rules: {
+        service_id: [
+          { required: true, message: 'please choose', trigger: 'change' }
+        ],
+        country: [
+          { required: true, validator: this.country, trigger: 'change' }
+        ]
+      }
     }
   },
   created() {
@@ -137,6 +171,16 @@ export default {
       getStoreList().then(res => {
         if (res.code === 200) {
           this.storeList = res.data
+        }
+      })
+      getServiceList().then(res => {
+        if (res.code === 200) {
+          this.ServiceList = res.data
+        }
+      })
+      getCountryList().then(res => {
+        if (res.code === 200) {
+          this.countriesList = res.data
         }
       })
     },
@@ -206,7 +250,38 @@ export default {
     filterOrders: debounce(function() {
       this.listQuery.page = 1
       this.Inquire()
-    }, 1000)
+    }, 1000),
+    collectPrices(val) {
+      this.vendorVisible = true
+    },
+    providerAdd(type) {
+      if (type === 1) {
+        this.$refs.vendorForm.validate((valid) => {
+          if (valid) {
+            console.log('111')
+            this.vendorVisible = false
+            this.vendorForm = this.$options.data().vendorForm
+          } else {
+            this.$message.warning('Please complete the required fields!')
+            return false
+          }
+        })
+      } else {
+        this.vendorVisible = false
+        this.vendorForm = this.$options.data().vendorForm
+      }
+    },
+    country(rule, value, callback) {
+      if (rule.required) {
+        if ((value == null) || (value.length === 0)) {
+          callback('please choose!')
+        }
+        if (value.length > 5) {
+          callback('Choose no more than 5 countries')
+        }
+      }
+      callback()
+    }
   }
 }
 </script>

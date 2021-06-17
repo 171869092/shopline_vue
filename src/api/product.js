@@ -158,3 +158,21 @@ export function ManualSync(params) {
     params
   })
 }
+
+// 报价列表
+export function getQuotedList(params) {
+  return request({
+    url: '/goods/goods/quoted-list',
+    method: 'get',
+    params
+  })
+}
+
+// 获取状态标签
+export function getQuotedLabel(params) {
+  return request({
+    url: '/goods/goods/quoted-label ',
+    method: 'get',
+    params
+  })
+}
