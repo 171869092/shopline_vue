@@ -157,7 +157,6 @@ export default {
     this.tableData.map(it => {
       this.$set(it, 'uid', getCookies('uid'))
     })
-    console.log('111', this.tableData)
   },
   methods: {
     // 打开新窗口

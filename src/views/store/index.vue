@@ -358,7 +358,7 @@ export default {
         if (valid) {
           this.ConnectSubmitLoading = true
           const formData = {}
-          if (this.storeConnectForm.store_url.slice(0, 7) === 'http://') {
+          if (this.storeConnectForm.store_url.slice(0, 4) === 'http') {
             formData.store_url = this.storeConnectForm.store_url
           } else {
             formData.store_url = 'http://' + this.storeConnectForm.store_url

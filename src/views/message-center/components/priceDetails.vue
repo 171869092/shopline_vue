@@ -19,6 +19,12 @@
           <el-form-item label="Change price" prop="change_price">
             <span class="w-400">{{ priceDetails.msg_json.new_price }}</span>
           </el-form-item>
+          <el-form-item label="Service charge" prop="old_service_fee">
+            <span class="w-400">{{ priceDetails.msg_json.old_service_fee }}</span>
+          </el-form-item>
+          <el-form-item label="Service charge" prop="new_service_fee">
+            <span class="w-400">{{ priceDetails.msg_json.new_service_fee }}</span>
+          </el-form-item>
         </div>
       </el-form>
       <div class="btn-box">
@@ -51,7 +57,9 @@ export default {
         msg_json: {
           update_name: '',
           old_price: '',
-          new_price: ''
+          new_price: '',
+          new_service_fee: '',
+          old_service_fee: ''
         }
       }
     }
