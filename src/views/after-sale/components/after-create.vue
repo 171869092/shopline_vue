@@ -259,6 +259,7 @@ export default {
         // return {url: item.url}
       })
       this.formData.image = imgs
+      this.formData.order_create = this.orderInfo.order_create_time
       // console.log(this.formData)
       // return false
       this.$refs.formData.validate((validate) => {
