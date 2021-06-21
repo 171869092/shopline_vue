@@ -47,8 +47,8 @@
         </div>
       </el-card>
       <div class="mt20">
-        <el-button size="small" :type="isCustomer ? 'primary' : ''" @click="isCustomer = true">Customer</el-button>
-        <el-button v-if="isForward" size="small" :type="isCustomer ? '' : 'primary'" @click="isCustomer = false">Vendor</el-button>
+        <el-button size="small" :type="isCustomer ? 'primary' : ''" class="w-300" @click="isCustomer = true">Customer</el-button>
+        <el-button v-if="isForward" size="small" :type="isCustomer ? '' : 'primary'" class="w-300" style="margin-left: 0" @click="isCustomer = false">Vendor</el-button>
       </div>
       <div v-show="isCustomer" class="mt20 HMain">
         <div class="after-main">
