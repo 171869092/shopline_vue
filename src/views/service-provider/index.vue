@@ -38,7 +38,7 @@
           </div>
         </div>
       </div>
-      <el-button type="primary" size="small" class="mr10 mb10" @click="dialogVisible = true">Newly Added</el-button>
+      <el-button type="primary" size="small" class="mr10 mb10" @click="dialogVisible = true">Add</el-button>
       <el-button type="primary" size="small" class="mr10 mb10" @click="handleInvite">Invite</el-button>
       <el-table
         ref="multipleTable"
@@ -90,7 +90,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleCancel">Cancel</el-button>
-        <el-button type="primary" @click="handleDetermine">Determine</el-button>
+        <el-button type="primary" @click="handleDetermine">Confirm</el-button>
       </span>
     </el-dialog>
     <el-dialog
