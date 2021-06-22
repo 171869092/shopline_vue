@@ -3,10 +3,11 @@
     <el-table
       ref="multipleTable"
       :data="tableData"
-      style="width: 100%">
+      style="width: 100%"
+    >
       <el-table-column label="Title">
         <template slot-scope="scope">
-<!--          <span class="link" @click="handleOpenDialog">{{ scope.row.title }}</span>-->
+          <!--          <span class="link" @click="handleOpenDialog">{{ scope.row.title }}</span>-->
           <span>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
@@ -21,7 +22,7 @@
         </template>
       </el-table-column>
     </el-table>
-<!--    <el-dialog
+    <!--    <el-dialog
       title="New Template"
       :visible.sync="dialogVisible"
       top="10vh"
@@ -106,13 +107,13 @@ export default {
   data() {
     return {
       tableData: [
-        {
+        /* {
           title: '物流查询',
           store_url: 'www.dkwuliuchaxun.com',
           operation: 'copy'
-        },
+        },*/
         {
-          title: '售后申请',
+          title: 'After sales application',
           store_url: 'www.dkshoushenqing.com',
           operation: 'copy'
         }
