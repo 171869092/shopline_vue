@@ -1,7 +1,10 @@
 <template>
   <div class="customer-box">
     <div v-for="(item, index) in systemList" :key="index" class="list-box" @click="handleClick(item)">
-      <h4 class="title-style">{{ item.msg_json.update_name }}<img :src="NewIcon" class="imgIcon" v-if="item.is_read === '2'" /></h4>
+      <div class="flexbox">
+        <h4 class="title-style">{{ item.msg_json.update_name }}<img v-if="item.is_read === '2'" :src="NewIcon" class="imgIcon" /></h4>
+        <span>{{ item.create_time }}</span>
+      </div>
       <p>{{ item.content }}</p>
       <el-divider/>
     </div>
@@ -60,6 +63,10 @@ export default {
   padding: 5px 30px;
   .list-box {
     cursor: pointer;
+    .flexbox {
+      display: flex;
+      justify-content: space-between;
+    }
     .title-style {
       .imgIcon {
         width: 30px;

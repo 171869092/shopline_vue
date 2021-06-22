@@ -1,7 +1,10 @@
 <template>
   <div class="system-box">
     <div v-for="(item, index) in systemList" :key="index" class="list-box" @click="handleClick(item)">
-      <h4 class="title-style">{{ item.name }}<img :src="NewIcon" class="imgIcon" v-if="item.status === '1'" /></h4>
+      <div class="flexbox">
+        <h4 class="title-style">{{ item.name }}<img v-if="item.status === '1'" :src="NewIcon" class="imgIcon" /></h4>
+        <span>{{ item.time }}</span>
+      </div>
       <p>{{ item.content }}</p>
       <el-divider/>
     </div>
@@ -17,17 +20,20 @@ export default {
         {
           name: 'Administrators',
           content: 'hello,we will launch new functions on january 1, 2020. Please pay attention to our official website',
-          status: '0'
+          status: '0',
+          time: '2021-05-13 10:34:46'
         },
         {
           name: 'Administrators',
           content: 'hello,we will launch new functions on january 1, 2020. Please pay attention to our official website',
-          status: '1'
+          status: '1',
+          time: '2021-05-13 10:34:46'
         },
         {
           name: 'Administrators',
           content: 'hello,we will launch new functions on january 1, 2020. Please pay attention to our official website',
-          status: '0'
+          status: '0',
+          time: '2021-05-13 10:34:46'
         }
       ],
       NewIcon: require('@/assets/home/new.png') // 我的消息new图标
@@ -46,6 +52,10 @@ export default {
   padding: 5px 30px;
   .list-box {
     cursor: pointer;
+    .flexbox {
+      display: flex;
+      justify-content: space-between;
+    }
     .title-style {
       .imgIcon {
         width: 30px;
