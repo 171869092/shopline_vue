@@ -176,3 +176,12 @@ export function getQuotedLabel(params) {
     params
   })
 }
+
+// 创建报价
+export function createQuoted(data) {
+  return request({
+    url: '/goods/goods/create-quoted',
+    method: 'post',
+    data
+  })
+}

@@ -2,7 +2,7 @@
   <div class="product">
     <div class="mb20">
       <div class="flexbox justify-flex-end">
-        <el-button type="primary" icon="el-icon-check" size="small" @click="collectPrices('add')">Collect prices</el-button>
+        <el-button type="primary" icon="el-icon-check" size="small" @click="collectPrices">Collect prices</el-button>
         <el-button icon="el-icon-connection" size="small" class="button-border" @click="assignStore('add')">Assign store</el-button>
         <el-button type="primary" icon="el-icon-plus" size="small" class="" @click="productAdd('add')">Add products</el-button>
       </div>
@@ -85,7 +85,7 @@
         <el-button type="primary" :loading="submitLoading" @click="submit('dialogForm')">Submit</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="Select Vendor" :visible.sync="vendorVisible" width="700px" center :before-close="providerAdd">
+    <el-dialog title="Select Vendor" :visible.sync="vendorVisible" width="700px" :close-on-click-modal="false" center :before-close="providerAdd">
       <el-form ref="vendorForm" :model="vendorForm" size="small" label-width="170px" :rules="rules">
         <el-form-item label="Vendor:" prop="service_id">
           <el-select v-model="vendorForm.service_id" filterable class="w-350">
@@ -107,7 +107,7 @@
 </template>
 <script>
 import { debounce } from '@/utils'
-import { getStoreList, getAllProductList, allGoodsSelectStore, getServiceList, getCountryList } from '@/api/product'
+import { getStoreList, getAllProductList, allGoodsSelectStore, getServiceList, getCountryList, createQuoted } from '@/api/product'
 export default {
   name: 'product',
   components: {
@@ -251,16 +251,35 @@ export default {
       this.listQuery.page = 1
       this.Inquire()
     }, 1000),
-    collectPrices(val) {
-      this.vendorVisible = true
+    collectPrices() {
+      if (this.productSelection.length === 0) {
+        this.$message.warning('Please select at least one piece of data!')
+      } else {
+        this.vendorVisible = true
+      }
     },
     providerAdd(type) {
       if (type === 1) {
         this.$refs.vendorForm.validate((valid) => {
           if (valid) {
-            console.log('111')
-            this.vendorVisible = false
-            this.vendorForm = this.$options.data().vendorForm
+            const ids = []
+            const service = []
+            this.productSelection.map(it => {
+              ids.push(it.id)
+            })
+            service.push(this.vendorForm.service_id)
+            const formData = {
+              product_id: ids,
+              service: service,
+              country: this.vendorForm.country
+            }
+            createQuoted(formData).then(res => {
+              if (res.code === 200) {
+                this.$message.success(res.message)
+                this.vendorVisible = false
+                this.vendorForm = this.$options.data().vendorForm
+              }
+            })
           } else {
             this.$message.warning('Please complete the required fields!')
             return false

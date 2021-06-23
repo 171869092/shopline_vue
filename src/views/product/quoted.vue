@@ -147,7 +147,7 @@ export default {
       getQuotedList(formData).then(res => {
         if (res.code === 200) {
           this.tableData = res.data
-          this.listQuery.total = +res.iTotalRecords
+          this.listQuery.total = +res.total
           this.loading = false
         }
       })
