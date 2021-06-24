@@ -185,3 +185,12 @@ export function createQuoted(data) {
     data
   })
 }
+
+// 报价详情
+export function getQuotedEdit(params) {
+  return request({
+    url: '/goods/goods/quoted-edit',
+    method: 'get',
+    params
+  })
+}

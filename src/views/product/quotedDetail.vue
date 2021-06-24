@@ -11,7 +11,7 @@
       <el-card class="m20 mt0">
         <div class="card-innerBox">
           <el-form-item label="Title" prop="title">
-            <el-input v-model="formData.title" placeholder="Title" />
+            <el-input v-model="formData.product_title" placeholder="Title" />
           </el-form-item>
           <el-form-item label="Source URL" prop="url">
             <el-input v-model="formData.url" placeholder="Title" />
@@ -23,9 +23,7 @@
         <el-divider />
         <div class="card-innerBox">
           <el-form-item label="">
-            <span v-for="(it, key) in formData.image" :key="key" class="mr30">
-              <el-image :src="it" style="height: 180px;width: 200px" />
-            </span>
+            <el-image :src="formData.img" style="height: 180px;width: 200px" />
           </el-form-item>
         </div>
       </el-card>
@@ -62,20 +60,20 @@
                   <span v-if="item.someThingAdopt">
                     <el-checkbox v-model="item.check" @click="handleClickCheckbox(item)" @change="handleChangeCheckbox(item)" />
                   </span>
-                  <span v-if="!item.someThingAdopt">{{ scope.row.serial }}</span>
+                  <span v-if="!item.someThingAdopt">{{ scope.$index + 1 }}</span>
                 </template>
               </el-table-column>
-              <el-table-column label="Picture" prop="picture">
+              <el-table-column label="Picture" prop="img">
                 <template slot-scope="scope">
-                  <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.picture" fit="cover">
+                  <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img" fit="cover">
                     <div slot="error" class="image-slot">
                       <i class="el-icon-picture-outline" style="font-size: 30px;" />
                     </div>
                   </el-image>
                 </template>
               </el-table-column>
-              <el-table-column label="Color" prop="color" />
-              <el-table-column label="Color1" prop="color1" />
+              <el-table-column label="Size" prop="size" />
+              <el-table-column label="Weight" prop="weight" />
               <el-table-column :label="'FR_('+ '~' + 'days)'" prop="fr" :min-width="isTotal ? '300px' : ''">
                 <template slot-scope="scope">
                   <span v-if="!isTotal">{{ scope.row.fr }}</span>
@@ -178,17 +176,17 @@
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
             >
               <el-table-column label="Serial" prop="serial" />
-              <el-table-column label="Picture" prop="picture">
+              <el-table-column label="Picture" prop="img">
                 <template slot-scope="scope">
-                  <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.picture" fit="cover">
+                  <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img" fit="cover">
                     <div slot="error" class="image-slot">
                       <i class="el-icon-picture-outline" style="font-size: 30px;" />
                     </div>
                   </el-image>
                 </template>
               </el-table-column>
-              <el-table-column label="Color" prop="color" />
-              <el-table-column label="Color1" prop="color1" />
+              <el-table-column label="Size" prop="size" />
+              <el-table-column label="Weight" prop="weight" />
               <el-table-column :label="'FR_('+ '~' + 'days)'" prop="fr" :min-width="isTotal ? '300px' : ''">
                 <template slot-scope="scope">
                   <span v-if="!isTotal">{{ scope.row.fr }}</span>
@@ -289,6 +287,7 @@
 
 <script>
 import draggable from 'vuedraggable'
+import { getQuotedEdit } from '@/api/product'
 export default {
   name: 'quoted-detail',
   components: {
@@ -297,10 +296,17 @@ export default {
   data() {
     return {
       formData: {
-        title: 'With Box luxury brand sunglasses women sun glasses mens sunglasses vintage brand designer Fashion Cat Eye sunglasses womens',
-        url: 'https://fbali.co/storeProduct/productDetails?type=edit&id=11663&storeType=store&platform=1',
-        image: ['https://ae01.alicdn.com/kf/H3db85a897ef148c5a6c1447d31515e34K/With-Box-luxury-brand-sunglasses-women-sun-glasses-mens-sunglasses-vintage-brand-designer-Fashion-Cat-Eye.jpg', 'https://ae01.alicdn.com/kf/H3db85a897ef148c5a6c1447d31515e34K/With-Box-luxury-brand-sunglasses-women-sun-glasses-mens-sunglasses-vintage-brand-designer-Fashion-Cat-Eye.jpg', 'https://ae01.alicdn.com/kf/H3db85a897ef148c5a6c1447d31515e34K/With-Box-luxury-brand-sunglasses-women-sun-glasses-mens-sunglasses-vintage-brand-designer-Fashion-Cat-Eye.jpg'],
-        temporary: {
+        product_title: '',
+        url: '',
+        img: '',
+        pre: {
+          sub_data: []
+        },
+        next: {
+          sub_data: []
+        },
+        temporary: {}
+        /* temporary: {
           'live-by-test': {
             time: '2020-02-05 15:15:15',
             newTableData: [
@@ -380,7 +386,7 @@ export default {
             ],
             oldTableData: []
           }
-        }
+        }*/
       },
       formDataRules: {},
       isTotal: false,
@@ -388,22 +394,46 @@ export default {
       adoptTureList: [],
       adoptFalseList: [],
       adoptList: [],
-      draggableList: []
+      draggableList: [],
+      id: ''
     }
   },
   created() {
+    this.id = this.$route.query.id
     this.init()
   },
   methods: {
     init() {
-      for (const key in this.formData.temporary) {
-        this.$set(this.formData.temporary[key], 'newData', true)
-        this.$set(this.formData.temporary[key], 'title', key)
-        this.$set(this.formData.temporary[key], 'titleStyle', this.getColorRender())
-        this.$set(this.formData.temporary[key], 'check', false)
-        this.$set(this.formData.temporary[key], 'someThingAdopt', false)
-        this.draggableList.push(this.formData.temporary[key])
+      const data = {
+        id: this.id
       }
+      getQuotedEdit(data).then(res => {
+        if (res.code === 200) {
+          this.formData = res.data
+          const temporary = {
+            title: this.formData.server_id,
+            time: this.formData.create_time,
+            newTableData: this.formData.next.sub_data,
+            oldTableData: this.formData.pre.sub_data,
+            newData: true,
+            titleStyle: this.getColorRender(),
+            check: false,
+            someThingAdopt: false
+          }
+          /* for (const key in temporary) {
+            this.$set(temporary[key], 'newData', true)
+            this.$set(temporary[key], 'title', key)
+            this.$set(temporary[key], 'titleStyle', this.getColorRender())
+            this.$set(temporary[key], 'check', false)
+            this.$set(temporary[key], 'someThingAdopt', false)
+            // this.draggableList.push(this.formData.temporary[key])
+          }*/
+          this.draggableList.push(temporary)
+          // this.$set(this.draggableList.newTableData, 'newData', true)
+          // this.$set(this.draggableList, 'title', this.formData.server_id)
+          console.log('1111', this.formData)
+        }
+      })
       console.log('this.draggableList', this.draggableList)
     },
     // Cancellation

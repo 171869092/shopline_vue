@@ -54,7 +54,7 @@
                 </div>
               </el-image>
             </span>
-            <div v-if="item.type === 'product'" style="color:#ef6f38" class="pointer" @click="productDetails('edit',scope.row.product_id)">
+            <div v-if="item.type === 'product'" style="color:#ef6f38" class="pointer" @click="productDetails('edit',scope.row.id)">
               <span>{{ scope.row.product_title }}</span>
             </div>
             <div v-if="item.type === 'shop'">
