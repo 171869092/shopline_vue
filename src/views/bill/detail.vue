@@ -204,14 +204,15 @@ export default {
 
 <style lang="scss">
 .billDetail {
-  overflow: hidden;
+  height: 100%;
+  overflow: auto;
   .el-card__body {
     background-color: #fff; // 为导出pdf设置
   }
   .form-box { // 为导出pdf设置
     background-color: #fff;
     width: calc(100vm);
-    height: calc(100vh);
+    //height: calc(100vh);
   }
   .box-card {
     .create-btn {
