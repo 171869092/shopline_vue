@@ -14,6 +14,9 @@
             <el-input v-model="formData.product_title" placeholder="Title" />
           </el-form-item>
           <el-form-item label="Source URL" prop="url">
+            <el-link v-if="platform_index_id" :href="`https://aliexpress.com/item/${platform_index_id}.html`" type="primary" target="_blank" style="margin-left:20px">
+              {{ `https://aliexpress.com/item/${platform_index_id}.html` }}
+            </el-link>
             <el-input v-model="formData.url" placeholder="Title" />
           </el-form-item>
         </div>
@@ -287,7 +290,7 @@
 
 <script>
 import draggable from 'vuedraggable'
-import { getQuotedEdit } from '@/api/product'
+import { getQuotedEdit, getAllProductEdit } from '@/api/product'
 export default {
   name: 'quoted-detail',
   components: {
@@ -395,11 +398,14 @@ export default {
       adoptFalseList: [],
       adoptList: [],
       draggableList: [],
-      id: ''
+      id: '',
+      product_id: '',
+      platform_index_id: ''
     }
   },
   created() {
     this.id = this.$route.query.id
+    this.product_id = this.$route.query.product_id
     this.init()
   },
   methods: {
@@ -435,6 +441,11 @@ export default {
         }
       })
       console.log('this.draggableList', this.draggableList)
+      getAllProductEdit({ id: this.product_id }).then(res => {
+        if (res.code === 200) {
+          this.platform_index_id = res.data.platform_index_id
+        }
+      })
     },
     // Cancellation
     cancellation() {},

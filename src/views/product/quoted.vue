@@ -47,14 +47,14 @@
         <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
           <template slot-scope="scope">
             <span v-if="item.type === undefined">{{ scope.row[item.value] }}</span>
-            <span v-if="item.type === 'image'" @click="productDetails('edit',scope.row.id)">
+            <span v-if="item.type === 'image'" @click="productDetails('edit',scope.row)">
               <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img_url" fit="cover">
                 <div slot="error" class="image-slot">
                   <i class="el-icon-picture-outline" style="font-size: 30px;" />
                 </div>
               </el-image>
             </span>
-            <div v-if="item.type === 'product'" style="color:#ef6f38" class="pointer" @click="productDetails('edit',scope.row.id)">
+            <div v-if="item.type === 'product'" style="color:#ef6f38" class="pointer" @click="productDetails('edit',scope.row)">
               <span>{{ scope.row.product_title }}</span>
             </div>
             <div v-if="item.type === 'shop'">
@@ -135,8 +135,8 @@ export default {
       this.productSelection = val
     },
     // Product details page
-    productDetails(type, id) {
-      this.$router.push({ name: 'quoted-detail', query: { type: type, id: id }})
+    productDetails(type, row) {
+      this.$router.push({ name: 'quoted-detail', query: { type: type, id: row.id, product_id: row.product_id }})
     },
     // init list
     Inquire() {
