@@ -59,9 +59,6 @@
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
             >
               <el-table-column v-for="(item, idx) in labelList" :key="idx" :label="item.label" :prop="item.value">
-                <template slot="header" slot-scope="scope">
-                  <div>{{ scope.column.label }}</div>
-                </template>
                 <template slot-scope="scope">
                   <span v-if="item.type === undefined">{{ scope.row[item.value] }}</span>
                   <span v-if="item.type === 'serial'">
@@ -76,6 +73,26 @@
                         <i class="el-icon-picture-outline" style="font-size: 30px;" />
                       </div>
                     </el-image>
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column v-for="item2 in countryLabelList" :key="item2.label" :label="item2.label" :prop="item2.value">
+                <template slot="header" slot-scope="scope">
+                  <div>{{ scope.column.label }}</div>
+                </template>
+                <template slot-scope="scope">
+                  <span v-if="!isTotal">{{ scope.row[item2.value].total }}</span>
+                  <span v-if="isTotal" class="change-style">
+                    <span class="left">
+                      <span class="title">Total</span>
+                      <span>{{ scope.row[item2.value].total }}</span>
+                    </span>
+                    <span class="right">
+                      <span class="title">Details</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row[item2.value].product_price }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row[item2.value].service_price }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row[item2.value].logistics_fee }}</span>
+                    </span>
                   </span>
                 </template>
               </el-table-column>
@@ -217,6 +234,26 @@
                   </span>
                 </template>
               </el-table-column>
+              <el-table-column v-for="item2 in countryLabelList" :key="item2.label" :label="item2.label" :prop="item2.value">
+                <template slot="header" slot-scope="scope">
+                  <div>{{ scope.column.label }}</div>
+                </template>
+                <template slot-scope="scope">
+                  <span v-if="!isTotal">{{ scope.row[item2.value].total }}</span>
+                  <span v-if="isTotal" class="change-style">
+                    <span class="left">
+                      <span class="title">Total</span>
+                      <span>{{ scope.row[item2.value].total }}</span>
+                    </span>
+                    <span class="right">
+                      <span class="title">Details</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row[item2.value].product_price }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row[item2.value].service_price }}</span>
+                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row[item2.value].logistics_fee }}</span>
+                    </span>
+                  </span>
+                </template>
+              </el-table-column>
 <!--              <el-table-column label="Serial" prop="serial" />
               <el-table-column label="Picture" prop="img">
                 <template slot-scope="scope">
@@ -345,6 +382,7 @@ export default {
         { label: 'Product_price', value: 'product_price' },
         { label: 'Service_price', value: 'service_price' }
       ],
+      countryLabelList: [],
       formData: {
         product_title: '',
         url: '',
