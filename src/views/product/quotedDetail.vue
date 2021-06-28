@@ -11,13 +11,13 @@
       <el-card class="m20 mt0">
         <div class="card-innerBox">
           <el-form-item label="Title" prop="title">
-            <el-input v-model="formData.product_title" placeholder="Title" />
+            <el-input v-model="formData.product_title" placeholder="Title" readonly />
           </el-form-item>
           <el-form-item label="Source URL" prop="url">
             <el-link v-if="platform_index_id" :href="`https://aliexpress.com/item/${platform_index_id}.html`" type="primary" target="_blank" style="margin-left:20px">
               {{ `https://aliexpress.com/item/${platform_index_id}.html` }}
             </el-link>
-            <el-input v-model="formData.url" placeholder="Title" />
+            <el-input v-model="formData.url" placeholder="Source URL" readonly />
           </el-form-item>
         </div>
       </el-card>
@@ -58,7 +58,28 @@
               border
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
             >
-              <el-table-column label="Serial" prop="serial">
+              <el-table-column v-for="(item, idx) in labelList" :key="idx" :label="item.label" :prop="item.value">
+                <template slot="header" slot-scope="scope">
+                  <div>{{ scope.column.label }}</div>
+                </template>
+                <template slot-scope="scope">
+                  <span v-if="item.type === undefined">{{ scope.row[item.value] }}</span>
+                  <span v-if="item.type === 'serial'">
+                    <span v-if="scope.row.someThingAdopt">
+                      <el-checkbox v-model="item.check" @click="handleClickCheckbox(item)" @change="handleChangeCheckbox(item)" />
+                    </span>
+                    <span v-if="!scope.row.someThingAdopt">{{ scope.row[item.value] }}</span>
+                  </span>
+                  <span v-if="item.type === 'img'">
+                    <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img" fit="cover">
+                      <div slot="error" class="image-slot">
+                        <i class="el-icon-picture-outline" style="font-size: 30px;" />
+                      </div>
+                    </el-image>
+                  </span>
+                </template>
+              </el-table-column>
+<!--              <el-table-column label="Serial" prop="serial">
                 <template slot-scope="scope">
                   <span v-if="item.someThingAdopt">
                     <el-checkbox v-model="item.check" @click="handleClickCheckbox(item)" @change="handleChangeCheckbox(item)" />
@@ -161,10 +182,10 @@
                     </span>
                   </span>
                 </template>
-              </el-table-column>
+              </el-table-column>-->
               <el-table-column label="Operation">
                 <template slot-scope="scope">
-                  <span style="color: #ef6f38; cursor: pointer" @click="handleAdopt(scope, item)">Adopt</span>
+                  <span style="color: #ef6f38; cursor: pointer" @click="handleAdopt(scope.row, item)">Adopt</span>
                 </template>
               </el-table-column>
             </el-table>
@@ -178,7 +199,25 @@
               border
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
             >
-              <el-table-column label="Serial" prop="serial" />
+              <el-table-column v-for="(item, idx) in labelList" :key="idx" :label="item.label" :prop="item.value">
+                <template slot="header" slot-scope="scope">
+                  <div>{{ scope.column.label }}</div>
+                </template>
+                <template slot-scope="scope">
+                  <span v-if="item.type === undefined">{{ scope.row[item.value] }}</span>
+                  <span v-if="item.type === 'serial'">
+                    <span>{{ scope.$index + 1 }}</span>
+                  </span>
+                  <span v-if="item.type === 'img'">
+                    <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img" fit="cover">
+                      <div slot="error" class="image-slot">
+                        <i class="el-icon-picture-outline" style="font-size: 30px;" />
+                      </div>
+                    </el-image>
+                  </span>
+                </template>
+              </el-table-column>
+<!--              <el-table-column label="Serial" prop="serial" />
               <el-table-column label="Picture" prop="img">
                 <template slot-scope="scope">
                   <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img" fit="cover">
@@ -274,7 +313,7 @@
                     </span>
                   </span>
                 </template>
-              </el-table-column>
+              </el-table-column>-->
               <el-table-column label="Operation">
                 <template>
                   <span>Adopt</span>
@@ -298,6 +337,14 @@ export default {
   },
   data() {
     return {
+      labelList: [
+        { label: 'Serial', value: 'serial', type: 'serial' },
+        { label: 'Picture', value: 'img', type: 'img' },
+        { label: 'Size', value: 'size' },
+        { label: 'Weight(G)', value: 'weight' },
+        { label: 'Product_price', value: 'product_price' },
+        { label: 'Service_price', value: 'service_price' }
+      ],
       formData: {
         product_title: '',
         url: '',
@@ -435,9 +482,15 @@ export default {
             // this.draggableList.push(this.formData.temporary[key])
           }*/
           this.draggableList.push(temporary)
+          this.draggableList.map(it => {
+            it.newTableData.map((item, inx) => {
+              this.$set(item, 'serial', inx + 1)
+              this.$set(item, 'check', false)
+              this.$set(item, 'someThingAdopt', false)
+            })
+          })
           // this.$set(this.draggableList.newTableData, 'newData', true)
           // this.$set(this.draggableList, 'title', this.formData.server_id)
-          console.log('1111', this.formData)
         }
       })
       console.log('this.draggableList', this.draggableList)
@@ -452,12 +505,14 @@ export default {
     // Determine whether the target node can be placed when dragging
     allowDrop(draggingNode, dropNode, type) {},
     // Adopt
-    handleAdopt(scope, item) {
-      item.someThingAdopt = !item.someThingAdopt
+    handleAdopt(row, item) {
+      row.someThingAdopt = !row.someThingAdopt
       const list = []
-      for (const key in this.formData.temporary) {
-        list.push(this.formData.temporary[key].someThingAdopt)
-      }
+      this.draggableList.map(it => {
+        it.newTableData.map(e => {
+          list.push(e.someThingAdopt)
+        })
+      })
       let a = ''
       a = list.find(it => it === true)
       if (a === true) {
@@ -465,9 +520,9 @@ export default {
       } else {
         this.someThingAdopt = false
       }
-      if (item.someThingAdopt === false) {
-        item.check = false
-        this.handleChangeCheckbox(item)
+      if (row.someThingAdopt === false) {
+        row.check = false
+        this.handleChangeCheckbox(row)
       }
     },
     // Dynamically generate random colors
