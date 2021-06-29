@@ -40,25 +40,25 @@
             <div class="title-box">
               <div class="title" :style="{'background-color': item.newData ? item.titleStyle : '#ccc'}" @click="item.newData = true">
                 <img src="@/assets/home/drag.png" width="25px" height="25px">
-                <span style="margin: 0 20px">{{ item.title }}</span>
+                <span style="margin: 0 20px">{{ getValueOfLabel(item.title, storeList) }}</span>
                 <span>{{ item.time }}</span>
               </div>
-              <div v-if="item.oldTableData.length > 0" class="title" :style="{'background-color': item.newData ? '#ccc' : item.titleStyle}" @click="item.newData = false">
-                <span style="margin: 0 20px">{{ item.title }}</span>
+              <div v-if="item.pre.length > 0" class="title" :style="{'background-color': item.newData ? '#ccc' : item.titleStyle}" @click="item.newData = false">
+                <span style="margin: 0 20px">{{ getValueOfLabel(item.title, storeList) }}</span>
                 <span>{{ item.time }}</span>
               </div>
             </div>
             <el-table
               v-if="item.newData"
               ref="multipleTable"
-              :data="item.newTableData"
+              :data="item.next"
               style="width: 100%"
               highlight-current-row
               fit
               border
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
             >
-              <el-table-column v-for="(item, idx) in labelList" :key="idx" :label="item.label" :prop="item.value">
+              <el-table-column v-for="(item, idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width" fixed="left">
                 <template slot-scope="scope">
                   <span v-if="item.type === undefined">{{ scope.row[item.value] }}</span>
                   <span v-if="item.type === 'serial'">
@@ -76,7 +76,7 @@
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column v-for="item2 in countryLabelList" :key="item2.label" :label="item2.label" :prop="item2.value">
+              <el-table-column v-for="item2 in countryLabelList" :key="item2.label" :label="item2.label" :prop="item2.value" :width="item.width">
                 <template slot="header" slot-scope="scope">
                   <div>{{ scope.column.label }}</div>
                 </template>
@@ -96,127 +96,23 @@
                   </span>
                 </template>
               </el-table-column>
-<!--              <el-table-column label="Serial" prop="serial">
-                <template slot-scope="scope">
-                  <span v-if="item.someThingAdopt">
-                    <el-checkbox v-model="item.check" @click="handleClickCheckbox(item)" @change="handleChangeCheckbox(item)" />
-                  </span>
-                  <span v-if="!item.someThingAdopt">{{ scope.$index + 1 }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column label="Picture" prop="img">
-                <template slot-scope="scope">
-                  <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img" fit="cover">
-                    <div slot="error" class="image-slot">
-                      <i class="el-icon-picture-outline" style="font-size: 30px;" />
-                    </div>
-                  </el-image>
-                </template>
-              </el-table-column>
-              <el-table-column label="Size" prop="size" />
-              <el-table-column label="Weight" prop="weight" />
-              <el-table-column :label="'FR_('+ '~' + 'days)'" prop="fr" :min-width="isTotal ? '300px' : ''">
-                <template slot-scope="scope">
-                  <span v-if="!isTotal">{{ scope.row.fr }}</span>
-                  <span v-if="isTotal" class="change-style">
-                    <span class="left">
-                      <span class="title">Total</span>
-                      <span>{{ scope.row.frTotal }}</span>
-                    </span>
-                    <span class="right">
-                      <span class="title">Details</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                    </span>
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="'UK_('+ '~' + 'days)'" prop="uk" :min-width="isTotal ? '300px' : ''">
-                <template slot-scope="scope">
-                  <span v-if="!isTotal">{{ scope.row.uk }}</span>
-                  <span v-if="isTotal" class="change-style">
-                    <span class="left">
-                      <span class="title">Total</span>
-                      <span>{{ scope.row.frTotal }}</span>
-                    </span>
-                    <span class="right">
-                      <span class="title">Details</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                    </span>
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="'US_('+ '~' + 'days)'" prop="us" :min-width="isTotal ? '300px' : ''">
-                <template slot-scope="scope">
-                  <span v-if="!isTotal">{{ scope.row.us }}</span>
-                  <span v-if="isTotal" class="change-style">
-                    <span class="left">
-                      <span class="title">Total</span>
-                      <span>{{ scope.row.frTotal }}</span>
-                    </span>
-                    <span class="right">
-                      <span class="title">Details</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                    </span>
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="'AU_('+ '~' + 'days)'" prop="au" :min-width="isTotal ? '300px' : ''">
-                <template slot-scope="scope">
-                  <span v-if="!isTotal">{{ scope.row.au }}</span>
-                  <span v-if="isTotal" class="change-style">
-                    <span class="left">
-                      <span class="title">Total</span>
-                      <span>{{ scope.row.frTotal }}</span>
-                    </span>
-                    <span class="right">
-                      <span class="title">Details</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                    </span>
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="'CA_('+ '~' + 'days)'" prop="ca" :min-width="isTotal ? '300px' : ''">
-                <template slot-scope="scope">
-                  <span v-if="!isTotal">{{ scope.row.ca }}</span>
-                  <span v-if="isTotal" class="change-style">
-                    <span class="left">
-                      <span class="title">Total</span>
-                      <span>{{ scope.row.frTotal }}</span>
-                    </span>
-                    <span class="right">
-                      <span class="title">Details</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                    </span>
-                  </span>
-                </template>
-              </el-table-column>-->
-              <el-table-column label="Operation">
+              <el-table-column label="Operation" width="120" fixed="right">
                 <template slot-scope="scope">
                   <span style="color: #ef6f38; cursor: pointer" @click="handleAdopt(scope.row, item)">Adopt</span>
                 </template>
               </el-table-column>
             </el-table>
             <el-table
-              v-if="item.oldTableData.length > 0 && !item.newData"
+              v-if="item.pre.length > 0 && !item.newData"
               ref="multipleTable"
-              :data="item.oldTableData"
+              :data="item.pre"
               style="width: 100%"
               highlight-current-row
               fit
               border
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
             >
-              <el-table-column v-for="(item, idx) in labelList" :key="idx" :label="item.label" :prop="item.value">
+              <el-table-column v-for="(item, idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width" fixed="left">
                 <template slot="header" slot-scope="scope">
                   <div>{{ scope.column.label }}</div>
                 </template>
@@ -234,7 +130,7 @@
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column v-for="item2 in countryLabelList" :key="item2.label" :label="item2.label" :prop="item2.value">
+              <el-table-column v-for="item2 in countryLabelList" :key="item2.label" :label="item2.label" :prop="item2.value" :width="item.width">
                 <template slot="header" slot-scope="scope">
                   <div>{{ scope.column.label }}</div>
                 </template>
@@ -254,104 +150,7 @@
                   </span>
                 </template>
               </el-table-column>
-<!--              <el-table-column label="Serial" prop="serial" />
-              <el-table-column label="Picture" prop="img">
-                <template slot-scope="scope">
-                  <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img" fit="cover">
-                    <div slot="error" class="image-slot">
-                      <i class="el-icon-picture-outline" style="font-size: 30px;" />
-                    </div>
-                  </el-image>
-                </template>
-              </el-table-column>
-              <el-table-column label="Size" prop="size" />
-              <el-table-column label="Weight" prop="weight" />
-              <el-table-column :label="'FR_('+ '~' + 'days)'" prop="fr" :min-width="isTotal ? '300px' : ''">
-                <template slot-scope="scope">
-                  <span v-if="!isTotal">{{ scope.row.fr }}</span>
-                  <span v-if="isTotal" class="change-style">
-                    <span class="left">
-                      <span class="title">Total</span>
-                      <span>{{ scope.row.frTotal }}</span>
-                    </span>
-                    <span class="right">
-                      <span class="title">Details</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                    </span>
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="'UK_('+ '~' + 'days)'" prop="uk" :min-width="isTotal ? '300px' : ''">
-                <template slot-scope="scope">
-                  <span v-if="!isTotal">{{ scope.row.uk }}</span>
-                  <span v-if="isTotal" class="change-style">
-                    <span class="left">
-                      <span class="title">Total</span>
-                      <span>{{ scope.row.frTotal }}</span>
-                    </span>
-                    <span class="right">
-                      <span class="title">Details</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                    </span>
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="'US_('+ '~' + 'days)'" prop="us" :min-width="isTotal ? '300px' : ''">
-                <template slot-scope="scope">
-                  <span v-if="!isTotal">{{ scope.row.us }}</span>
-                  <span v-if="isTotal" class="change-style">
-                    <span class="left">
-                      <span class="title">Total</span>
-                      <span>{{ scope.row.frTotal }}</span>
-                    </span>
-                    <span class="right">
-                      <span class="title">Details</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                    </span>
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="'AU_('+ '~' + 'days)'" prop="au" :min-width="isTotal ? '300px' : ''">
-                <template slot-scope="scope">
-                  <span v-if="!isTotal">{{ scope.row.au }}</span>
-                  <span v-if="isTotal" class="change-style">
-                    <span class="left">
-                      <span class="title">Total</span>
-                      <span>{{ scope.row.frTotal }}</span>
-                    </span>
-                    <span class="right">
-                      <span class="title">Details</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                    </span>
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column :label="'CA_('+ '~' + 'days)'" prop="ca" :min-width="isTotal ? '300px' : ''">
-                <template slot-scope="scope">
-                  <span v-if="!isTotal">{{ scope.row.ca }}</span>
-                  <span v-if="isTotal" class="change-style">
-                    <span class="left">
-                      <span class="title">Total</span>
-                      <span>{{ scope.row.frTotal }}</span>
-                    </span>
-                    <span class="right">
-                      <span class="title">Details</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row.frDetailP }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row.frDetailS }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row.frDetailL }}</span>
-                    </span>
-                  </span>
-                </template>
-              </el-table-column>-->
-              <el-table-column label="Operation">
+              <el-table-column label="Operation" width="120" fixed="right">
                 <template>
                   <span>Adopt</span>
                 </template>
@@ -366,7 +165,7 @@
 
 <script>
 import draggable from 'vuedraggable'
-import { getQuotedEdit, getAllProductEdit } from '@/api/product'
+import { getQuotedEdit, getAllProductEdit, getServiceList } from '@/api/product'
 export default {
   name: 'quoted-detail',
   components: {
@@ -375,12 +174,12 @@ export default {
   data() {
     return {
       labelList: [
-        { label: 'Serial', value: 'serial', type: 'serial' },
-        { label: 'Picture', value: 'img', type: 'img' },
-        { label: 'Size', value: 'size' },
-        { label: 'Weight(G)', value: 'weight' },
-        { label: 'Product_price', value: 'product_price' },
-        { label: 'Service_price', value: 'service_price' }
+        { label: 'Serial', value: 'serial', type: 'serial', width: '80' },
+        { label: 'Picture', value: 'img', type: 'img', width: '120' },
+        { label: 'Size', value: 'size', width: '120' },
+        { label: 'Weight(G)', value: 'weight', width: '120' },
+        { label: 'Product_price', value: 'product_price', width: '150' },
+        { label: 'Service_price', value: 'service_price', width: '150'}
       ],
       countryLabelList: [],
       formData: {
@@ -394,87 +193,6 @@ export default {
           sub_data: []
         },
         temporary: {}
-        /* temporary: {
-          'live-by-test': {
-            time: '2020-02-05 15:15:15',
-            newTableData: [
-              {
-                serial: '1',
-                picture: 'https://ae01.alicdn.com/kf/H3db85a897ef148c5a6c1447d31515e34K/With-Box-luxury-brand-sunglasses-women-sun-glasses-mens-sunglasses-vintage-brand-designer-Fashion-Cat-Eye.jpg',
-                color: 'red',
-                color1: 'red1',
-                fr: '$ 4.21',
-                uk: '$ 4.21',
-                us: '$ 4.21',
-                au: '$ 4.21',
-                ca: '$ 4.21',
-                frTotal: '$ 55554.21',
-                frDetailP: '2222.21',
-                frDetailS: '2222.21',
-                frDetailL: '2222.21'
-              }
-            ],
-            oldTableData: [
-              {
-                serial: '1',
-                picture: 'https://ae01.alicdn.com/kf/H3db85a897ef148c5a6c1447d31515e34K/With-Box-luxury-brand-sunglasses-women-sun-glasses-mens-sunglasses-vintage-brand-designer-Fashion-Cat-Eye.jpg',
-                color: 'black',
-                color1: 'black1',
-                fr: '$ 110.21',
-                uk: '$ 110.21',
-                us: '$ 110.21',
-                au: '$ 110.21',
-                ca: '$ 110.21',
-                frTotal: '$ 54.21',
-                frDetailP: '2.21',
-                frDetailS: '2.21',
-                frDetailL: '22.21'
-              }
-            ]
-          },
-          'live-by-testing': {
-            time: '2020-02-05 15:15:15',
-            newTableData: [
-              {
-                serial: '1',
-                picture: 'https://ae01.alicdn.com/kf/H3db85a897ef148c5a6c1447d31515e34K/With-Box-luxury-brand-sunglasses-women-sun-glasses-mens-sunglasses-vintage-brand-designer-Fashion-Cat-Eye.jpg',
-                color: 'red',
-                color1: 'red1',
-                fr: '$ 4.21',
-                uk: '$ 4.21',
-                us: '$ 4.21',
-                au: '$ 4.21',
-                ca: '$ 4.21',
-                frTotal: '$ 55554.21',
-                frDetailP: '2222.21',
-                frDetailS: '2222.21',
-                frDetailL: '2222.21'
-              }
-            ],
-            oldTableData: []
-          },
-          'deguisement-mania': {
-            time: '2020-02-05 15:15:15',
-            newTableData: [
-              {
-                serial: '1',
-                picture: 'https://ae01.alicdn.com/kf/H3db85a897ef148c5a6c1447d31515e34K/With-Box-luxury-brand-sunglasses-women-sun-glasses-mens-sunglasses-vintage-brand-designer-Fashion-Cat-Eye.jpg',
-                color: 'red',
-                color1: 'red1',
-                fr: '/',
-                uk: '/',
-                us: '/',
-                au: '/',
-                ca: '/',
-                frTotal: '/',
-                frDetailP: '/',
-                frDetailS: '/',
-                frDetailL: '/'
-              }
-            ],
-            oldTableData: []
-          }
-        }*/
       },
       formDataRules: {},
       isTotal: false,
@@ -485,7 +203,8 @@ export default {
       draggableList: [],
       id: '',
       product_id: '',
-      platform_index_id: ''
+      platform_index_id: '',
+      storeList: []
     }
   },
   created() {
@@ -495,43 +214,94 @@ export default {
   },
   methods: {
     init() {
+      getServiceList().then(res => {
+        if (res.code === 200) {
+          this.storeList = res.data
+        }
+      })
       const data = {
         id: this.id
       }
       getQuotedEdit(data).then(res => {
         if (res.code === 200) {
           this.formData = res.data
-          const temporary = {
-            title: this.formData.server_id,
-            time: this.formData.create_time,
-            newTableData: this.formData.next.sub_data,
-            oldTableData: this.formData.pre.sub_data,
-            newData: true,
-            titleStyle: this.getColorRender(),
-            check: false,
-            someThingAdopt: false
-          }
-          /* for (const key in temporary) {
+          const temporary = res.data.sub_data
+          for (const key in temporary) {
             this.$set(temporary[key], 'newData', true)
             this.$set(temporary[key], 'title', key)
             this.$set(temporary[key], 'titleStyle', this.getColorRender())
-            this.$set(temporary[key], 'check', false)
-            this.$set(temporary[key], 'someThingAdopt', false)
-            // this.draggableList.push(this.formData.temporary[key])
-          }*/
-          this.draggableList.push(temporary)
+            this.draggableList.push(temporary[key])
+          }
+          const country = res.data.country.split(',')
+          const labelList = []
           this.draggableList.map(it => {
-            it.newTableData.map((item, inx) => {
+            it.next.map((item, inx) => {
               this.$set(item, 'serial', inx + 1)
               this.$set(item, 'check', false)
               this.$set(item, 'someThingAdopt', false)
+              country.map(e => {
+                const sum = {
+                  label: e,
+                  value: e,
+                  type: 'dynamic',
+                  width: '500'
+                }
+                labelList.push(sum)
+              })
             })
           })
-          // this.$set(this.draggableList.newTableData, 'newData', true)
-          // this.$set(this.draggableList, 'title', this.formData.server_id)
+          const newobj = {}
+          const arr = labelList.reduce((preVal, curVal) => {
+            newobj[curVal.label] ? '' : newobj[curVal.label] = preVal.push(curVal)
+            return preVal
+          }, [])
+          this.countryLabelList = arr
+          this.draggableList.map(it => {
+            it.next.map(item => {
+              if (item.result !== null) {
+                item.result.map((it, inx) => {
+                  if (item.result[inx].country_code === arr[inx].label) {
+                    this.$set(item, arr[inx].label, item.result[inx])
+                  }
+                })
+              } else {
+                arr.map((it, inx) => {
+                  const obj = {
+                    country_code: arr[inx].label,
+                    id: null,
+                    logistics_fee: null,
+                    product_price: null,
+                    service_price: null,
+                    total: null
+                  }
+                  this.$set(item, arr[inx].label, obj)
+                })
+              }
+            })
+            it.pre.map(item => {
+              if (item.result !== null) {
+                item.result.map((it, inx) => {
+                  if (item.result[inx].country_code === arr[inx].label) {
+                    this.$set(item, arr[inx].label, item.result[inx])
+                  }
+                })
+              } else {
+                arr.map((it, inx) => {
+                  const obj = {
+                    country_code: arr[inx].label,
+                    id: null,
+                    logistics_fee: null,
+                    product_price: null,
+                    service_price: null,
+                    total: null
+                  }
+                  this.$set(item, arr[inx].label, obj)
+                })
+              }
+            })
+          })
         }
       })
-      console.log('this.draggableList', this.draggableList)
       getAllProductEdit({ id: this.product_id }).then(res => {
         if (res.code === 200) {
           this.platform_index_id = res.data.platform_index_id
@@ -547,7 +317,7 @@ export default {
       row.someThingAdopt = !row.someThingAdopt
       const list = []
       this.draggableList.map(it => {
-        it.newTableData.map(e => {
+        it.next.map(e => {
           list.push(e.someThingAdopt)
         })
       })
@@ -593,12 +363,12 @@ export default {
       if (val.check === true) {
         this.adoptTureList.push({
           key: val.title,
-          value: val.newTableData
+          value: val.next
         })
       } else {
         this.adoptFalseList.push({
           key: val.title,
-          value: val.newTableData
+          value: val.next
         })
       }
       this.adoptFalseList.map((it, inx, arr) => {
@@ -609,6 +379,14 @@ export default {
           }
         })
       })
+    },
+    getValueOfLabel(num, sum) {
+      const obj = sum.find(it => it.id === num)
+      if (obj) {
+        return obj.service_name
+      } else {
+        return num
+      }
     }
   }
 }
