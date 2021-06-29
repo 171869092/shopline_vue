@@ -61,6 +61,7 @@
               <el-table-column v-for="(item, idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width" fixed="left">
                 <template slot-scope="scope">
                   <span v-if="item.type === undefined">{{ scope.row[item.value] }}</span>
+                  <span v-if="item.type === 'dollar'">$ {{ scope.row[item.value] ? scope.row[item.value] : 0 }}</span>
                   <span v-if="item.type === 'serial'">
                     <span v-if="scope.row.someThingAdopt">
                       <el-checkbox v-model="item.check" @click="handleClickCheckbox(item)" @change="handleChangeCheckbox(item)" />
@@ -76,22 +77,24 @@
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column v-for="item2 in countryLabelList" :key="item2.label" :label="item2.label" :prop="item2.value" :width="item.width">
+              <el-table-column v-for="item2 in countryLabelList" :key="item2.label" :label="item2.label" :prop="item2.value" :width="isTotal ? item2.width : '150'">
                 <template slot="header" slot-scope="scope">
                   <div>{{ scope.column.label }}</div>
                 </template>
                 <template slot-scope="scope">
-                  <span v-if="!isTotal">{{ scope.row[item2.value].total }}</span>
-                  <span v-if="isTotal" class="change-style">
-                    <span class="left">
-                      <span class="title">Total</span>
-                      <span>{{ scope.row[item2.value].total }}</span>
-                    </span>
-                    <span class="right">
-                      <span class="title">Details</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row[item2.value].product_price }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row[item2.value].service_price }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row[item2.value].logistics_fee }}</span>
+                  <span v-if="item2.type === 'dynamic'">
+                    <span v-if="!isTotal">$ {{ scope.row[item2.value].total ? scope.row[item2.value].total : 0 }}</span>
+                    <span v-if="isTotal" class="change-style">
+                      <span class="left">
+                        <span class="title">Total</span>
+                        <span>$ {{ scope.row[item2.value].total ? scope.row[item2.value].total : 0 }}</span>
+                      </span>
+                      <span class="right">
+                        <span class="title">Details</span>
+                        <span class="spanOneLine"><span style="font-weight: 600">Product: </span>$ {{ scope.row[item2.value].product_price ? scope.row[item2.value].product_price : 0 }}</span>
+                        <span class="spanOneLine"><span style="font-weight: 600">Service: </span>$ {{ scope.row[item2.value].service_price ? scope.row[item2.value].service_price : 0 }}</span>
+                        <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>$ {{ scope.row[item2.value].logistics_fee ? scope.row[item2.value].logistics_fee : 0 }}</span>
+                      </span>
                     </span>
                   </span>
                 </template>
@@ -118,6 +121,7 @@
                 </template>
                 <template slot-scope="scope">
                   <span v-if="item.type === undefined">{{ scope.row[item.value] }}</span>
+                  <span v-if="item.type === 'dollar'">$ {{ scope.row[item.value] ? scope.row[item.value] : 0 }}</span>
                   <span v-if="item.type === 'serial'">
                     <span>{{ scope.$index + 1 }}</span>
                   </span>
@@ -130,22 +134,24 @@
                   </span>
                 </template>
               </el-table-column>
-              <el-table-column v-for="item2 in countryLabelList" :key="item2.label" :label="item2.label" :prop="item2.value" :width="item.width">
+              <el-table-column v-for="item2 in countryLabelList" :key="item2.label" :label="item2.label" :prop="item2.value" :width="isTotal ? item2.width : '150'">
                 <template slot="header" slot-scope="scope">
                   <div>{{ scope.column.label }}</div>
                 </template>
                 <template slot-scope="scope">
-                  <span v-if="!isTotal">{{ scope.row[item2.value].total }}</span>
-                  <span v-if="isTotal" class="change-style">
-                    <span class="left">
-                      <span class="title">Total</span>
-                      <span>{{ scope.row[item2.value].total }}</span>
-                    </span>
-                    <span class="right">
-                      <span class="title">Details</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Product: </span>{{ scope.row[item2.value].product_price }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Service: </span>{{ scope.row[item2.value].service_price }}</span>
-                      <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>{{ scope.row[item2.value].logistics_fee }}</span>
+                  <span v-if="item2.type === 'dynamic'">
+                    <span v-if="!isTotal">$ {{ scope.row[item2.value].total ? scope.row[item2.value].total : 0 }}</span>
+                    <span v-if="isTotal" class="change-style">
+                      <span class="left">
+                        <span class="title">Total</span>
+                        <span>$ {{ scope.row[item2.value].total ? scope.row[item2.value].total : 0 }}</span>
+                      </span>
+                      <span class="right">
+                        <span class="title">Details</span>
+                        <span class="spanOneLine"><span style="font-weight: 600">Product: </span>$ {{ scope.row[item2.value].product_price ? scope.row[item2.value].product_price : 0 }}</span>
+                        <span class="spanOneLine"><span style="font-weight: 600">Service: </span>$ {{ scope.row[item2.value].service_price ? scope.row[item2.value].service_price : 0 }}</span>
+                        <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>$ {{ scope.row[item2.value].logistics_fee ? scope.row[item2.value].logistics_fee : 0 }}</span>
+                      </span>
                     </span>
                   </span>
                 </template>
@@ -178,8 +184,8 @@ export default {
         { label: 'Picture', value: 'img', type: 'img', width: '120' },
         { label: 'Size', value: 'size', width: '120' },
         { label: 'Weight(G)', value: 'weight', width: '120' },
-        { label: 'Product_price', value: 'product_price', width: '150' },
-        { label: 'Service_price', value: 'service_price', width: '150'}
+        { label: 'Product_price', value: 'product_price', type: 'dollar', width: '150' },
+        { label: 'Service_price', value: 'service_price', type: 'dollar', width: '150' }
       ],
       countryLabelList: [],
       formData: {
@@ -244,7 +250,7 @@ export default {
                   label: e,
                   value: e,
                   type: 'dynamic',
-                  width: '500'
+                  width: '260'
                 }
                 labelList.push(sum)
               })
