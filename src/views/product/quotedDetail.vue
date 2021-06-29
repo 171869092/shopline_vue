@@ -7,7 +7,7 @@
         <el-button v-if="someThingAdopt" type="primary" size="small" @click="handleSave">Save</el-button>
       </div>
     </div>
-    <el-form :model="formData" :rules="formDataRules" label-width="160px" label-position="top">
+    <el-form v-loading="loading" :model="formData" :rules="formDataRules" label-width="160px" label-position="top">
       <el-card class="m20 mt0">
         <div class="card-innerBox">
           <el-form-item label="Title" prop="title">
@@ -79,7 +79,7 @@
               </el-table-column>
               <el-table-column v-for="item2 in countryLabelList" :key="item2.label" :label="item2.label" :prop="item2.value" :width="isTotal ? item2.width : '150'">
                 <template slot="header" slot-scope="scope">
-                  <div>{{ scope.column.label }}</div>
+                  <div>{{ scope.column.label }}( {{ dayList[key] }} day)</div>
                 </template>
                 <template slot-scope="scope">
                   <span v-if="item2.type === 'dynamic'">
@@ -136,7 +136,7 @@
               </el-table-column>
               <el-table-column v-for="item2 in countryLabelList" :key="item2.label" :label="item2.label" :prop="item2.value" :width="isTotal ? item2.width : '150'">
                 <template slot="header" slot-scope="scope">
-                  <div>{{ scope.column.label }}</div>
+                  <div>{{ scope.column.label }}( {{ dayList[key] }} day)</div>
                 </template>
                 <template slot-scope="scope">
                   <span v-if="item2.type === 'dynamic'">
@@ -179,6 +179,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       labelList: [
         { label: 'Serial', value: 'serial', type: 'serial', width: '80' },
         { label: 'Picture', value: 'img', type: 'img', width: '120' },
@@ -210,7 +211,8 @@ export default {
       id: '',
       product_id: '',
       platform_index_id: '',
-      storeList: []
+      storeList: [],
+      dayList: []
     }
   },
   created() {
@@ -220,6 +222,7 @@ export default {
   },
   methods: {
     init() {
+      this.loading = true
       getServiceList().then(res => {
         if (res.code === 200) {
           this.storeList = res.data
@@ -261,13 +264,20 @@ export default {
             newobj[curVal.label] ? '' : newobj[curVal.label] = preVal.push(curVal)
             return preVal
           }, [])
+          arr.map(it => {
+            this.dayList.push('0-0')
+          })
           this.countryLabelList = arr
+          const heaven = []
           this.draggableList.map(it => {
             it.next.map(item => {
               if (item.result !== null) {
                 item.result.map((it, inx) => {
                   if (item.result[inx].country_code === arr[inx].label) {
                     this.$set(item, arr[inx].label, item.result[inx])
+                    if (it.heaven) {
+                      heaven.push(it.heaven)
+                    }
                   }
                 })
               } else {
@@ -306,6 +316,16 @@ export default {
               }
             })
           })
+          if (heaven.length > 0) {
+            const heavenArr = Array.from(new Set(heaven))
+            heavenArr.map(it => {
+              if (it === '') {
+                return 0
+              }
+            })
+            this.dayList = heavenArr
+          }
+          this.loading = false
         }
       })
       getAllProductEdit({ id: this.product_id }).then(res => {
