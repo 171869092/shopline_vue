@@ -17,7 +17,7 @@
             <el-link v-if="platform_index_id" :href="`https://aliexpress.com/item/${platform_index_id}.html`" type="primary" target="_blank" style="margin-left:20px">
               {{ `https://aliexpress.com/item/${platform_index_id}.html` }}
             </el-link>
-            <el-input v-model="formData.url" placeholder="Source URL" readonly />
+            <el-input v-if="!platform_index_id" v-model="formData.url" placeholder="Source URL" readonly />
           </el-form-item>
         </div>
       </el-card>
@@ -26,7 +26,7 @@
         <el-divider />
         <div class="card-innerBox">
           <el-form-item label="">
-            <el-image :src="formData.img" style="height: 180px;width: 200px" />
+            <el-image v-for="(img, key) in formData.img" :key="key" :src="img" :preview-src-list="[img]" style="height: 120px;width: 150px;margin-right: 20px" />
           </el-form-item>
         </div>
       </el-card>
@@ -195,13 +195,7 @@ export default {
       formData: {
         product_title: '',
         url: '',
-        img: '',
-        pre: {
-          sub_data: []
-        },
-        next: {
-          sub_data: []
-        },
+        img: [],
         temporary: {}
       },
       formDataRules: {},
@@ -246,8 +240,10 @@ export default {
           }
           const country = res.data.country.split(',')
           const labelList = []
+          const imgList = []
           this.draggableList.map(it => {
             it.next.map((item, inx) => {
+              imgList.push(item.img)
               this.$set(item, 'serial', inx + 1)
               this.$set(item, 'check', false)
               this.$set(item, 'someThingAdopt', false)
@@ -262,6 +258,7 @@ export default {
               })
             })
           })
+          this.formData.img = imgList
           const newobj = {}
           const arr = labelList.reduce((preVal, curVal) => {
             newobj[curVal.label] ? '' : newobj[curVal.label] = preVal.push(curVal)
