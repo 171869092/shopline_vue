@@ -7,13 +7,13 @@
       <el-table-column label="Platform" prop="platform" />
       <el-table-column label="Notifation Customer" prop="notifation_customer">
         <template slot-scope="scope">
-          <el-tooltip :content="scope.row.notifation_customer == '1' ? 'Enabled' : 'Disabled'" placement="top">
+          <el-tooltip :content="scope.row.notifation_customer == '2' ? 'Enabled' : 'Disabled'" placement="top">
             <el-switch
               v-model="scope.row.notifation_customer"
               active-color="#13ce66"
               inactive-color="#ff4949"
-              active-value="1"
-              inactive-value="2"
+              active-value="2"
+              inactive-value="1"
               @change="(value) => statusChange(value, scope.row)"
             />
           </el-tooltip>
