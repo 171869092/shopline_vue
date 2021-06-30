@@ -3,8 +3,8 @@
     <div class="box-card">
       <div class="btn-box p20">
         <el-button class="mr30" size="small" icon="el-icon-back" @click="$router.back()" />
-        <el-button v-if="!someThingAdopt" type="primary" size="small" @click="cancellation">Cancellation</el-button>
-        <el-button v-if="someThingAdopt" type="primary" size="small" @click="handleSave">Save</el-button>
+<!--        <el-button v-if="!someThingAdopt" type="primary" size="small" @click="cancellation">Cancellation</el-button>-->
+<!--        <el-button v-if="someThingAdopt" type="primary" size="small" @click="handleSave">Save</el-button>-->
       </div>
     </div>
     <el-form v-loading="loading" :model="formData" :rules="formDataRules" label-width="160px" label-position="top">
@@ -53,6 +53,7 @@
               ref="multipleTable"
               :data="item.next"
               style="width: 100%"
+              :span-method="objectSpanMethod"
               highlight-current-row
               fit
               border
@@ -63,10 +64,11 @@
                   <span v-if="item.type === undefined">{{ scope.row[item.value] }}</span>
                   <span v-if="item.type === 'dollar'">$ {{ scope.row[item.value] ? scope.row[item.value] : 0 }}</span>
                   <span v-if="item.type === 'serial'">
-                    <span v-if="scope.row.someThingAdopt">
-                      <el-checkbox v-model="item.check" @click="handleClickCheckbox(item)" @change="handleChangeCheckbox(item)" />
-                    </span>
-                    <span v-if="!scope.row.someThingAdopt">{{ scope.row[item.value] }}</span>
+                    <span>{{ scope.row[item.value] }}</span>
+<!--                    <span v-if="scope.row.someThingAdopt">-->
+<!--                      <el-checkbox v-model="item.check" @click="handleClickCheckbox(item)" @change="handleChangeCheckbox(item)" />-->
+<!--                    </span>-->
+<!--                    <span v-if="!scope.row.someThingAdopt">{{ scope.row[item.value] }}</span>-->
                   </span>
                   <span v-if="item.type === 'img'">
                     <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img" fit="cover">
@@ -111,6 +113,7 @@
               :data="item.pre"
               style="width: 100%"
               highlight-current-row
+              :span-method="objectSpanMethod"
               fit
               border
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
@@ -171,7 +174,7 @@
 
 <script>
 import draggable from 'vuedraggable'
-import { getQuotedEdit, getAllProductEdit, getServiceList } from '@/api/product'
+import { getQuotedEdit, getAllProductEdit, getServiceList, upStatusQuoted } from '@/api/product'
 export default {
   name: 'quoted-detail',
   components: {
@@ -340,7 +343,15 @@ export default {
     allowDrop(draggingNode, dropNode, type) {},
     // Adopt
     handleAdopt(row, item) {
-      row.someThingAdopt = !row.someThingAdopt
+      upStatusQuoted({ id: row.quoted_id }).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.message)
+          this.$router.push({ name: 'quoted' })
+        } else {
+          this.$message.error(res.message)
+        }
+      })
+      /* row.someThingAdopt = !row.someThingAdopt
       const list = []
       this.draggableList.map(it => {
         it.next.map(e => {
@@ -357,7 +368,7 @@ export default {
       if (row.someThingAdopt === false) {
         row.check = false
         this.handleChangeCheckbox(row)
-      }
+      }*/
     },
     // Dynamically generate random colors
     getColorRender() {
@@ -412,6 +423,18 @@ export default {
         return obj.service_name
       } else {
         return num
+      }
+    },
+    objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+      let arr = []
+      this.draggableList.map(item => {
+        arr = item.next
+      })
+      if (column.label === 'Operation') {
+        return {
+          rowspan: arr.length,
+          colspan: 1
+        }
       }
     }
   }

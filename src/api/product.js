@@ -203,3 +203,12 @@ export function deleteQuoted(data) {
     data
   })
 }
+
+// adopt
+export function upStatusQuoted(data) {
+  return request({
+    url: '/goods/goods/up-status',
+    method: 'post',
+    data
+  })
+}

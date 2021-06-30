@@ -48,7 +48,7 @@
           <template slot-scope="scope">
             <span v-if="item.type === undefined">{{ scope.row[item.value] }}</span>
             <span v-if="item.type === 'image'" @click="productDetails('edit',scope.row)">
-              <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img_url" fit="cover">
+              <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img" fit="cover">
                 <div slot="error" class="image-slot">
                   <i class="el-icon-picture-outline" style="font-size: 30px;" />
                 </div>
