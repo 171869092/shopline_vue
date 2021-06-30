@@ -194,3 +194,12 @@ export function getQuotedEdit(params) {
     params
   })
 }
+
+// 删除报价
+export function deleteQuoted(data) {
+  return request({
+    url: '/goods/goods/quoted-del',
+    method: 'post',
+    data
+  })
+}

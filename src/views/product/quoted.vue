@@ -61,7 +61,7 @@
               <span>{{ scope.row.server_id.toString() }}</span>
             </div>
             <div v-if="item.type === 'Operation'">
-              <span style="color: #c45354" @click="handleDelete(scope)">Delete</span>
+              <span style="color: #c45354;cursor: pointer;" @click="handleDelete(scope.row)">Delete</span>
             </div>
           </template>
         </el-table-column>
@@ -74,7 +74,7 @@
 
 <script>
 import { debounce } from '@/utils'
-import { getServiceList, getQuotedList, getQuotedLabel } from '@/api/product'
+import { getServiceList, getQuotedList, getQuotedLabel, deleteQuoted } from '@/api/product'
 
 export default {
   name: 'quoted',
@@ -162,8 +162,15 @@ export default {
       }
     },
     // 删除
-    handleDelete(scope) {
-      this.Inquire()
+    handleDelete(row) {
+      deleteQuoted({ id: row.id }).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.message)
+          this.Inquire()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     }
   }
 }

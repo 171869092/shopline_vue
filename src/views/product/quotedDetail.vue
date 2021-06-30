@@ -58,7 +58,7 @@
               border
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
             >
-              <el-table-column v-for="(item, idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width" fixed="left">
+              <el-table-column v-for="(item, idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width" :min-width="item.width ? item.width : '150'" fixed="left">
                 <template slot-scope="scope">
                   <span v-if="item.type === undefined">{{ scope.row[item.value] }}</span>
                   <span v-if="item.type === 'dollar'">$ {{ scope.row[item.value] ? scope.row[item.value] : 0 }}</span>
@@ -185,8 +185,8 @@ export default {
         { label: 'Picture', value: 'img', type: 'img', width: '120' },
         { label: 'Size', value: 'size', width: '120' },
         { label: 'Weight(G)', value: 'weight', width: '120' },
-        { label: 'Product_price', value: 'product_price', type: 'dollar', width: '150' },
-        { label: 'Service_price', value: 'service_price', type: 'dollar', width: '150' }
+        { label: 'Product_price', value: 'product_price', type: 'dollar' },
+        { label: 'Service_price', value: 'service_price', type: 'dollar' }
       ],
       countryLabelList: [],
       formData: {
