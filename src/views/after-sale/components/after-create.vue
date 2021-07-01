@@ -146,14 +146,16 @@ export default {
   },
 
   created() {
+    this.productArr = this.$route.query.productsList
     this.detailInfo = this.$route.query.detailInfo
-    this.detailInfo.goods_info.forEach((item, index) => {
-      this.productArr.push(item)
-    })
     this.orderInfo = this.detailInfo
-    console.log('orderInfo: ', this.orderInfo)
-    // console.log('detailInfo: ',this.detailInfo)
-    // console.log('productArr:', this.productArr)
+    const afterDialog = this.$route.query.afterDialog
+    this.formData.after_type = afterDialog.type ? afterDialog.type : ''
+    this.formData.after_model = afterDialog.mode ? afterDialog.mode : ''
+    this.formData.product_json = afterDialog.products ? afterDialog.products : ''
+    console.log('this.productArr', this.productArr)
+    console.log('this.formData', this.formData)
+    console.log('this.$route.query.afterDialog', afterDialog)
     this.getAfterSalesType()
   },
   methods: {

@@ -10,24 +10,21 @@
       <div class="order-id ml20">
         Order No：<span class="primary">{{ order_no }}</span>
       </div>
-      <el-select v-model="selectedProduct" v-if="isShowProductIndex" @change="handleChange(selectedProduct)" placeholder="Select Product">
+      <el-select v-if="isShowProductIndex" v-model="selectedProduct" placeholder="Select Product" @change="handleChange(selectedProduct)">
         <el-option
           v-for="item in options"
           :key="item.value"
           :label="item.label"
-          :value="item.value">
-        </el-option>
+          :value="item.value"
+        />
       </el-select>
-      <!-- <div style="float:right;" class="order-id ml20">
-       <el-button type="primary" size="small" @click="afterSales">Confirm After Sales</el-button>
-      </div> -->
     </div>
-    <div v-for="(info,key) in detailInfo" :key="key" class="order-cell" :id="'product'+key">
+    <div v-for="(info,key) in detailInfo" :id="'product'+key" :key="key" class="order-cell">
       <el-card class="box-card mt20">
         <div slot="header">
           <div class="detail-block-title">
-            <div >
-              <h2>Product <span v-if="isShowProductIndex">{{ key+1 }} </span><span style="float:right;"><el-button type="primary" size="small" @click="afterSales(info)">Confirm After Sales</el-button></span></h2>
+            <div>
+              <h2>Product <span v-if="isShowProductIndex">{{ key+1 }} </span><span style="float:right;"><el-button type="primary" size="small" style="margin-top: -10px" @click="afterSales(info)">After Sales</el-button></span></h2>
             </div>
           </div>
         </div>
@@ -48,7 +45,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column prop="third_goods_name" label="Products" min-width="150"/>
+          <el-table-column prop="third_goods_name" label="Products" min-width="150" />
           <el-table-column prop="third_sku_name" label="Price&Amount" width="200">
             <template slot-scope="scope">
               <span>{{ `${scope.row.third_price} x ${scope.row.sku_num}` }}</span>
@@ -146,10 +143,39 @@
         </div>
       </el-card>
     </div>
+    <el-dialog
+      title="After sales"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <el-form label-position="right" label-width="80px" :model="afterDialog">
+        <el-form-item label="Type">
+          <el-select v-model="afterDialog.type" style="width: 95%">
+            <el-option v-for="(item,idx) in typeList" :key="idx" :label="item" :value="idx" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Mode">
+          <el-select v-model="afterDialog.mode" style="width: 95%">
+            <el-option v-for="(item,idx) in modeList" :key="idx" :label="item" :value="String(idx + 1)" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Products">
+          <el-select v-model="afterDialog.products" multiple style="width: 95%">
+            <el-option v-for="item in productsList" :key="item.id" :label="item.third_goods_name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" @click="handleAfterSales">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { getOrderInfo } from '@/api/orders'
+import { afterSalesType } from '@/api/after'
 export default {
   name: 'orders-detail',
   props: {},
@@ -165,8 +191,18 @@ export default {
       ],
       detailInfo: {},
       loading: false,
+      dialogVisible: false,
       selectedProduct: '',
-      platForm: ''
+      platForm: '',
+      afterDialog: {
+        type: '',
+        mode: '',
+        products: ''
+      },
+      typeList: [],
+      modeList: ['Resend', 'Refund', 'Return/Refund', 'Other'],
+      productsList: [],
+      orderInfo: {}
     }
   },
   computed: {
@@ -198,16 +234,9 @@ export default {
   },
   methods: {
     init() {
-      // const loading = this.$loading({
-      //   lock: true,
-      //   text: 'Loading',
-      //   spinner: 'el-icon-loading',
-      //   background: 'rgba(0, 0, 0, 0.7)'
-      // })
       this.loading = true
       getOrderInfo({ orders_id: this.order_id, plat_form: this.platForm })
         .then((res) => {
-          console.log(res.data)
           if (res.code === 200) {
             this.detailInfo = res.data
           }
@@ -216,9 +245,13 @@ export default {
           console.log(err)
         })
         .finally(() => {
-          // loading.close()
           this.loading = false
         })
+      afterSalesType().then(res => {
+        if (res.code === 200) {
+          this.typeList = res.data
+        }
+      })
     },
     handleChange(index) {
       const id = 'product' + index
@@ -227,8 +260,20 @@ export default {
       })
     },
     afterSales(info) {
-      // console.log(info)
-      this.$router.push({ name: 'after-create', query: { type: 'create', id: this.order_id, order_no: this.$route.query.order_no, detailInfo: info }})
+      this.orderInfo = info
+      info.goods_info.forEach(item => {
+        this.productsList.push(item)
+      })
+      this.dialogVisible = true
+    },
+    handleClose() {
+      this.afterDialog = this.$options.data().afterDialog
+      this.productsList = []
+      this.dialogVisible = false
+    },
+    handleAfterSales() {
+      this.$router.push({ name: 'after-create', query: { type: 'create', id: this.order_id, order_no: this.$route.query.order_no, detailInfo: this.orderInfo, productsList: this.productsList, afterDialog: this.afterDialog }})
+      this.handleClose()
     }
   }
 }
