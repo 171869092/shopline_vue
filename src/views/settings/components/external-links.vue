@@ -3,10 +3,11 @@
     <el-table
       ref="multipleTable"
       :data="tableData"
-      style="width: 100%">
+      style="width: 100%"
+    >
       <el-table-column label="Title">
         <template slot-scope="scope">
-<!--          <span class="link" @click="handleOpenDialog">{{ scope.row.title }}</span>-->
+          <!--          <span class="link" @click="handleOpenDialog">{{ scope.row.title }}</span>-->
           <span>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
@@ -17,11 +18,11 @@
       </el-table-column>
       <el-table-column label="Operation">
         <template slot-scope="scope">
-          <span id="copy_text" class="pointer" :data-clipboard-text="scope.row.store_url" @click="copy">{{ scope.row.operation }}</span>
+          <span id="copy_text" class="pointer" :data-clipboard-text="'https://fbali.co/track?uid=' + scope.row.uid" @click="copy">{{ scope.row.operation }}</span>
         </template>
       </el-table-column>
     </el-table>
-<!--    <el-dialog
+    <!--    <el-dialog
       title="New Template"
       :visible.sync="dialogVisible"
       top="10vh"
@@ -93,7 +94,7 @@
 
 <script>
 import Clipboard from 'clipboard'
-import { getToken } from '@/utils/auth'
+// import { getToken } from '@/utils/auth'
 import { getCookies } from '@/utils/cookies'
 import { getStoreList } from '@/api/product'
 import { template_uses_list } from '@/api/notifications'
@@ -106,13 +107,13 @@ export default {
   data() {
     return {
       tableData: [
-        {
+        /* {
           title: '物流查询',
           store_url: 'www.dkwuliuchaxun.com',
           operation: 'copy'
-        },
+        },*/
         {
-          title: '售后申请',
+          title: 'After sales application',
           store_url: 'www.dkshoushenqing.com',
           operation: 'copy'
         }
@@ -153,15 +154,21 @@ export default {
       ]
     }
   },
+  created() {
+    this.tableData.map(it => {
+      this.$set(it, 'uid', getCookies('uid'))
+    })
+  },
   methods: {
     // 打开新窗口
     handleOpenNewWindow() {
-      const token = getToken()
+      // const token = getToken()
       const uid = getCookies('uid')
-      const email = getCookies('email')
-      const name = getCookies('name')
+      // const email = getCookies('email')
+      // const name = getCookies('name')
       const language = getCookies('language')
-      const routeUrl = this.$router.resolve({ path: '/track', query: { token: token, uid: uid, email: email, name: name, language: language }})
+      // const routeUrl = this.$router.resolve({ path: '/track', query: { token: token, uid: uid, email: email, name: name, language: language }})
+      const routeUrl = this.$router.resolve({ path: '/track', query: { uid: uid, language: language }})
       window.open(routeUrl.href, '_blank')
     },
     // 关闭弹框

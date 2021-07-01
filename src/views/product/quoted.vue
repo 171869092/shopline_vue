@@ -4,7 +4,7 @@
       <div class="flexbox mb20">
         <div>
           <el-input
-            v-model="formInline.title"
+            v-model="formInline.product_title"
             prefix-icon="el-icon-search"
             placeholder="Filter products"
             clearable
@@ -18,16 +18,16 @@
               v-for="(item,idx) in statusOptions"
               :key="item"
               :label="item"
-              :value="String(idx + 1)"
+              :value="idx"
             />
           </el-select>
         </div>
         <div>
-          <el-select v-model="formInline.service" placeholder="service id" clearable class="ml20" @change="filterOrders">
+          <el-select v-model="formInline.server_id" placeholder="service id" clearable class="ml20" @change="filterOrders">
             <el-option
               v-for="(item,idx) in storeList"
               :key="idx"
-              :label="item.store_url"
+              :label="item.service_name"
               :value="item.id"
             />
           </el-select>
@@ -47,21 +47,21 @@
         <el-table-column v-for="(item,idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width">
           <template slot-scope="scope">
             <span v-if="item.type === undefined">{{ scope.row[item.value] }}</span>
-            <span v-if="item.type === 'image'" @click="productDetails('edit',scope.row.id)">
-              <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img_url" fit="cover">
+            <span v-if="item.type === 'image'" @click="productDetails('edit',scope.row)">
+              <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img" fit="cover">
                 <div slot="error" class="image-slot">
                   <i class="el-icon-picture-outline" style="font-size: 30px;" />
                 </div>
               </el-image>
             </span>
-            <div v-if="item.type === 'product'" style="color:#ef6f38" class="pointer" @click="productDetails('edit',scope.row.id)">
-              <span>{{ scope.row.title }}</span>
+            <div v-if="item.type === 'product'" style="color:#ef6f38" class="pointer" @click="productDetails('edit',scope.row)">
+              <span>{{ scope.row.product_title }}</span>
             </div>
             <div v-if="item.type === 'shop'">
-              <span>{{ getLabelOfValue(scope.row.store_url, storeList) }}</span>
+              <span>{{ scope.row.server_id.toString() }}</span>
             </div>
             <div v-if="item.type === 'Operation'">
-              <span style="color: #c45354" @click="handleDelete(scope)">Delete</span>
+              <span style="color: #c45354;cursor: pointer;" @click="handleDelete(scope.row)">Delete</span>
             </div>
           </template>
         </el-table-column>
@@ -74,7 +74,7 @@
 
 <script>
 import { debounce } from '@/utils'
-import { getAllProductList, getStoreList } from '@/api/product'
+import { getServiceList, getQuotedList, getQuotedLabel, deleteQuoted } from '@/api/product'
 
 export default {
   name: 'quoted',
@@ -84,19 +84,19 @@ export default {
   data() {
     return {
       formInline: {
-        title: '',
+        product_title: '',
         status: '',
-        service: ''
+        server_id: ''
       },
-      statusOptions: ['Active', 'Draft'],
+      statusOptions: [],
       storeList: [],
       productSelection: [],
       // List header
       labelList: [
-        { label: '', value: '', type: 'image', width: '200' },
-        { label: 'Product', value: 'id', type: 'product', width: '500' },
+        { label: '', value: 'img', type: 'image', width: '200' },
+        { label: 'Product', value: 'product_title', type: 'product', width: '500' },
         { label: 'Status', value: 'status' },
-        { label: 'service', value: 'store_url', type: 'shop' },
+        { label: 'service', value: 'server_id', type: 'shop' },
         { label: 'Operation', type: 'Operation' }
       ],
       tableData: [],
@@ -119,9 +119,14 @@ export default {
     }, 1000),
     // Get a list of stores
     initData() {
-      getStoreList().then(res => {
+      getServiceList().then(res => {
         if (res.code === 200) {
           this.storeList = res.data
+        }
+      })
+      getQuotedLabel().then(res => {
+        if (res.code === 200) {
+          this.statusOptions = res.data
         }
       })
     },
@@ -130,8 +135,8 @@ export default {
       this.productSelection = val
     },
     // Product details page
-    productDetails(type, id) {
-      this.$router.push({ name: 'quoted-detail', query: { type: type, id: id }})
+    productDetails(type, row) {
+      this.$router.push({ name: 'quoted-detail', query: { type: type, id: row.id, product_id: row.product_id }})
     },
     // init list
     Inquire() {
@@ -139,29 +144,33 @@ export default {
       const formData = JSON.parse(JSON.stringify(this.formInline))
       formData.iDisplayLength = this.listQuery.limit
       formData.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
-      getAllProductList(formData).then(res => {
+      getQuotedList(formData).then(res => {
         if (res.code === 200) {
-          res.data.map(item => {
-            item.status = item.status === '1' ? 'Active' : 'Draft'
-          })
           this.tableData = res.data
-          this.listQuery.total = +res.iTotalRecords
+          this.listQuery.total = +res.total
           this.loading = false
         }
       })
     },
     // 根据value获取label
     getLabelOfValue(val, list) {
-      const obj = list.find(it => it.store_url === val)
+      const obj = list.find(it => it.value === val)
       if (obj) {
-        return obj.store_name
+        return obj.label
       } else {
         return val
       }
     },
     // 删除
-    handleDelete(scope) {
-      this.Inquire()
+    handleDelete(row) {
+      deleteQuoted({ id: row.id }).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.message)
+          this.Inquire()
+        } else {
+          this.$message.error(res.message)
+        }
+      })
     }
   }
 }

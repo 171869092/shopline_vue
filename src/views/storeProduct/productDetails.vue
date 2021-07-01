@@ -18,8 +18,9 @@
         <el-form-item label="Title:" prop="title">
           <el-input v-model="formData.title" placeholder="Title" />
         </el-form-item>
-        <el-form-item v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" label="Source URL:" style="display: flex;">
-          <el-link v-if="platform_index_id" :href="`https://aliexpress.com/item/${platform_index_id}.html`" type="primary" target="_blank" style="margin-left:20px">{{ `https://aliexpress.com/item/${platform_index_id}.html` }}</el-link>
+        <el-form-item v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" label="Source URL:">
+          <el-input v-if="!platform_index_id" v-model="formData.source_url" placeholder="Source URL" />
+          <el-link v-if="platform_index_id" :href="`https://aliexpress.com/item/${platform_index_id}.html`" type="primary" target="_blank">{{ `https://aliexpress.com/item/${platform_index_id}.html` }}</el-link>
         </el-form-item>
         <el-form-item label="Product status:" prop="status">
           <el-select v-model="formData.status" class="w-480">
@@ -325,6 +326,7 @@ export default {
       formData: {
         title: '',
         describe: '',
+        source_url: '',
         status: '',
         sku_list: [],
         images: [],

@@ -158,3 +158,57 @@ export function ManualSync(params) {
     params
   })
 }
+
+// 报价列表
+export function getQuotedList(params) {
+  return request({
+    url: '/goods/goods/quoted-list',
+    method: 'get',
+    params
+  })
+}
+
+// 获取状态标签
+export function getQuotedLabel(params) {
+  return request({
+    url: '/goods/goods/quoted-label ',
+    method: 'get',
+    params
+  })
+}
+
+// 创建报价
+export function createQuoted(data) {
+  return request({
+    url: '/goods/goods/create-quoted',
+    method: 'post',
+    data
+  })
+}
+
+// 报价详情
+export function getQuotedEdit(params) {
+  return request({
+    url: '/goods/goods/quoted-edit',
+    method: 'get',
+    params
+  })
+}
+
+// 删除报价
+export function deleteQuoted(data) {
+  return request({
+    url: '/goods/goods/quoted-del',
+    method: 'post',
+    data
+  })
+}
+
+// adopt
+export function upStatusQuoted(data) {
+  return request({
+    url: '/goods/goods/up-status',
+    method: 'post',
+    data
+  })
+}
