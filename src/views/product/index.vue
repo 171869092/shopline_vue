@@ -103,6 +103,17 @@
         <el-button size="small" type="primary" @click="providerAdd(1)">Confirm</el-button>
       </div>
     </el-dialog>
+    <el-dialog :visible.sync="PromptVisible" width="700px" :close-on-click-modal="false" :before-close="Prompt">
+      <span slot="title">
+        <img src="@/assets/home/prompt.png" class="mr20" width="20px" height="20px">
+        <span>Prompt</span>
+      </span>
+      <div style="text-align: center">Please add pictures to SKU variants</div>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" style="background-color:#f68a1d; color: #fff; border: 0 none" @click="Prompt(2)">Add</el-button>
+        <el-button size="small" type="primary" @click="Prompt(1)">Submit</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -158,7 +169,8 @@ export default {
         country: [
           { required: true, validator: this.country, trigger: 'change' }
         ]
-      }
+      },
+      PromptVisible: false
     }
   },
   created() {
@@ -275,9 +287,13 @@ export default {
             }
             createQuoted(formData).then(res => {
               if (res.code === 200) {
-                this.$message.success(res.message)
-                this.vendorVisible = false
-                this.vendorForm = this.$options.data().vendorForm
+                if (res.data !== null && res.data.code === 401) {
+                  this.PromptVisible = true
+                } else {
+                  this.$message.success(res.message)
+                  this.vendorVisible = false
+                  this.vendorForm = this.$options.data().vendorForm
+                }
               }
             })
           } else {
@@ -300,6 +316,40 @@ export default {
         }
       }
       callback()
+    },
+    Prompt(type) {
+      if (type === 1) {
+        const ids = []
+        const service = []
+        this.productSelection.map(it => {
+          ids.push(it.id)
+        })
+        service.push(this.vendorForm.service_id)
+        const formData = {
+          product_id: ids,
+          service: service,
+          country: this.vendorForm.country,
+          type: 1
+        }
+        createQuoted(formData).then(res => {
+          if (res.code === 200) {
+            this.$message.success(res.message)
+            this.vendorVisible = false
+            this.PromptVisible = false
+            this.vendorForm = this.$options.data().vendorForm
+          }
+        })
+      } else if (type === 2) {
+        let id = ''
+        this.productSelection.map(it => {
+          id = it.id
+        })
+        this.productAdd('edit', id)
+        this.PromptVisible = false
+        this.vendorVisible = false
+      } else {
+        this.PromptVisible = false
+      }
     }
   }
 }
