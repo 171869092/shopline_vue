@@ -170,7 +170,8 @@ export default {
           { required: true, validator: this.country, trigger: 'change' }
         ]
       },
-      PromptVisible: false
+      PromptVisible: false,
+      ids: []
     }
   },
   created() {
@@ -287,13 +288,17 @@ export default {
             }
             createQuoted(formData).then(res => {
               if (res.code === 200) {
-                if (res.data !== null && res.data.code === 401) {
+                if (res.message.code === 401) {
+                  this.$message.warning(res.message.msg)
                   this.PromptVisible = true
+                  this.ids.push(res.message.id)
                 } else {
                   this.$message.success(res.message)
                   this.vendorVisible = false
                   this.vendorForm = this.$options.data().vendorForm
                 }
+              } else {
+                this.$message.error(res.message.msg)
               }
             })
           } else {
@@ -319,14 +324,10 @@ export default {
     },
     Prompt(type) {
       if (type === 1) {
-        const ids = []
         const service = []
-        this.productSelection.map(it => {
-          ids.push(it.id)
-        })
         service.push(this.vendorForm.service_id)
         const formData = {
-          product_id: ids,
+          product_id: this.ids,
           service: service,
           country: this.vendorForm.country,
           type: 1
@@ -337,6 +338,8 @@ export default {
             this.vendorVisible = false
             this.PromptVisible = false
             this.vendorForm = this.$options.data().vendorForm
+          } else {
+            this.$message.error(res.message.msg)
           }
         })
       } else if (type === 2) {
