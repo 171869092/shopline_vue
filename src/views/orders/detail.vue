@@ -149,19 +149,19 @@
       width="30%"
       :before-close="handleClose"
     >
-      <el-form label-position="right" label-width="80px" :model="afterDialog">
-        <el-form-item label="Type">
-          <el-select v-model="afterDialog.type" style="width: 95%">
+      <el-form ref="afterDialog" label-position="right" label-width="100px" :model="afterDialog" :rules="formRule">
+        <el-form-item label="Type" prop="after_type">
+          <el-select v-model="afterDialog.after_type" style="width: 95%">
             <el-option v-for="(item,idx) in typeList" :key="idx" :label="item" :value="idx" />
           </el-select>
         </el-form-item>
-        <el-form-item label="Mode">
-          <el-select v-model="afterDialog.mode" style="width: 95%">
+        <el-form-item label="Mode" prop="after_model">
+          <el-select v-model="afterDialog.after_model" style="width: 95%">
             <el-option v-for="(item,idx) in modeList" :key="idx" :label="item" :value="String(idx + 1)" />
           </el-select>
         </el-form-item>
-        <el-form-item label="Products">
-          <el-select v-model="afterDialog.products" multiple style="width: 95%">
+        <el-form-item label="Products" prop="product_json">
+          <el-select v-model="afterDialog.product_json" multiple style="width: 95%">
             <el-option v-for="item in productsList" :key="item.id" :label="item.third_goods_name" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -202,7 +202,18 @@ export default {
       typeList: [],
       modeList: ['Resend', 'Refund', 'Return/Refund', 'Other'],
       productsList: [],
-      orderInfo: {}
+      orderInfo: {},
+      formRule: {
+        after_type: [
+          { required: true, message: 'Please enter a after type', trigger: 'blur' }
+        ],
+        after_model: [
+          { required: true, message: 'Please enter a after mode', trigger: 'blur' }
+        ],
+        product_json: [
+          { required: true, message: 'Please enter a Products', trigger: 'blur' }
+        ]
+      }
     }
   },
   computed: {
@@ -272,8 +283,31 @@ export default {
       this.dialogVisible = false
     },
     handleAfterSales() {
-      this.$router.push({ name: 'after-create', query: { type: 'create', id: this.order_id, order_no: this.$route.query.order_no, detailInfo: this.orderInfo, productsList: this.productsList, afterDialog: this.afterDialog }})
-      this.handleClose()
+      this.$refs.afterDialog.validate((valid) => {
+        if (valid) {
+          const after_type = this.typeList[this.afterDialog.after_type]
+          const after_model = this.modeList[this.afterDialog.after_model]
+          const product_json = this.getValueOfLabel(this.afterDialog.product_json, this.productsList)
+          this.$router.push({ name: 'after-create', query: { id: this.order_id, order_no: this.$route.query.order_no, after_type: after_type, after_model: after_model, product_json: product_json }})
+          this.handleClose()
+        } else {
+          this.$message.warning('Please complete the required fields first!')
+        }
+      })
+    },
+    // 转换product_json
+    getValueOfLabel(num, sum) {
+      let obj = {}
+      let arr = []
+      num.map(it => {
+        obj = sum.find(item => item.id === it)
+      })
+      if (obj) {
+        arr.push(obj.third_goods_name)
+      } else {
+        arr = num
+      }
+      return arr
     }
   }
 }
