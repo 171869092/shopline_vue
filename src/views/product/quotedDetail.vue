@@ -342,7 +342,11 @@ export default {
     allowDrop(draggingNode, dropNode, type) {},
     // Adopt
     handleAdopt(row, item) {
-      upStatusQuoted({ id: row.quoted_id }).then(res => {
+      const formData = {
+        id: row.quoted_id,
+        service_id: Number(item.title)
+      }
+      upStatusQuoted(formData).then(res => {
         if (res.code === 200) {
           this.$message.success(res.message)
           this.$router.push({ name: 'quoted' })
@@ -350,24 +354,6 @@ export default {
           this.$message.error(res.message)
         }
       })
-      /* row.someThingAdopt = !row.someThingAdopt
-      const list = []
-      this.draggableList.map(it => {
-        it.next.map(e => {
-          list.push(e.someThingAdopt)
-        })
-      })
-      let a = ''
-      a = list.find(it => it === true)
-      if (a === true) {
-        this.someThingAdopt = a
-      } else {
-        this.someThingAdopt = false
-      }
-      if (row.someThingAdopt === false) {
-        row.check = false
-        this.handleChangeCheckbox(row)
-      }*/
     },
     // Dynamically generate random colors
     getColorRender() {
