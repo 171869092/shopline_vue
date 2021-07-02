@@ -103,7 +103,8 @@
               </el-table-column>
               <el-table-column label="Operation" width="120" fixed="right">
                 <template slot-scope="scope">
-                  <span style="color: #ef6f38; cursor: pointer" @click="handleAdopt(scope.row, item)">Adopt</span>
+                  <span v-if="formData.status === 1">Adopt</span>
+                  <span v-if="formData.status !== 1" style="color: #ef6f38; cursor: pointer" @click="handleAdopt(scope.row, item)">Adopt</span>
                 </template>
               </el-table-column>
             </el-table>
@@ -196,6 +197,7 @@ export default {
         product_title: '',
         url: '',
         img: [],
+        status: '',
         temporary: {}
       },
       formDataRules: {},
