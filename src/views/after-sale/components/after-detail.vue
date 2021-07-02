@@ -52,7 +52,7 @@
       <div v-show="isCustomer" class="mt20 HMain">
         <!-- After Sales Message record -->
         <el-card class="box-card mt20">
-          <div v-if="isCustomerMessageRecord" class="message_record">
+          <div v-if="isCustomerMessageRecord" id="hc_message_record" class="message_record">
             <div v-for="(item, idx) in customerAfterSaleInfo.messageList" :key="idx" class="message-box" :class="[item.user_id === user_id ? 'right' : 'left']">
               <div class="title">
                 <el-image
@@ -125,7 +125,7 @@
       <div v-show="isForward && !isCustomer" class="mt20 HMain">
         <!-- After Sales Message record -->
         <el-card class="box-card mt20">
-          <div v-if="isVendorMessageRecord" class="message_record">
+          <div v-if="isVendorMessageRecord" id="hv_message_record" class="message_record">
             <div v-for="(item, idx) in vendorAfterSaleInfo.messageList" :key="idx" class="message-box" :class="[item.user_id === user_id ? 'right' : 'left']">
               <div class="title">
                 <el-image
@@ -264,6 +264,17 @@ export default {
     order_id() {
       return this.$route.query.order_id
     }
+  },
+  updated() {
+    this.$nextTick(() => {
+      if (this.isCustomer) {
+        const scr = document.getElementById('hc_message_record')
+        scr.scrollTop = scr.scrollHeight
+      } else {
+        const scr = document.getElementById('hv_message_record')
+        scr.scrollTop = scr.scrollHeight
+      }
+    })
   },
   created() {
     this.user_id = getCookies('uid')

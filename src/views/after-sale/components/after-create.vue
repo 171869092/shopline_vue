@@ -51,7 +51,7 @@
       </div>
       <!-- After Sales Message record -->
       <el-card class="box-card mt20">
-        <div v-if="isMessageRecord" class="message_record">
+        <div v-if="isMessageRecord" id="h_message_record" class="message_record">
           <div v-for="(item, idx) in afterSaleInfo.messageList" :key="idx" class="message-box" :class="[item.user_id === user_id ? 'right' : 'left']">
             <div class="title">
               <el-image
@@ -104,9 +104,10 @@
             :show-file-list="false"
             :http-request="Upload"
             :before-upload="handleBeforeUpload"
-            :on-change="handleChange">
+            :on-change="handleChange"
+          >
             <div class="el-upload__text">
-              <i class="el-icon-picture"/>
+              <i class="el-icon-picture" />
             </div>
           </el-upload>
         </div>
@@ -175,6 +176,12 @@ export default {
     product_json() {
       return this.$route.query.product_json
     }
+  },
+  updated() {
+    this.$nextTick(() => {
+      const scr = document.getElementById('h_message_record')
+      scr.scrollTop = scr.scrollHeight
+    })
   },
   created() {
     this.getAfterSalesType()
