@@ -93,16 +93,21 @@
         </div>
       </el-card>
       <!-- After Sales Reply -->
-      <el-card class="box-card mt20" />
+      <el-card class="chat_box mt20">
+        <tinymce ref="tinymces" v-model="afterSaleInfo.template_content" menubar :height="250" @reply="handleReply" />
+      </el-card>
     </div>
   </div>
 </template>
 
 <script>
 import { afterSalesType } from '@/api/after'
-import { getSession } from '@/utils/session'
+import { getCookies } from '@/utils/cookies'
 export default {
   name: 'after-create',
+  components: {
+    Tinymce: () => import('../components/tinymce')
+  },
   data() {
     return {
       loading: false,
@@ -147,7 +152,7 @@ export default {
   },
   created() {
     this.getAfterSalesType()
-    this.user_id = getSession('user').uid
+    this.user_id = getCookies('uid')
     this.init()
   },
   methods: {
@@ -167,7 +172,7 @@ export default {
     init() {
       this.afterSaleInfo.messageList = [
         {
-          user_id: 147,
+          user_id: '147',
           avatar: 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728',
           user_name: 'TOM',
           time: '2020/11/18 20:28:57',
@@ -175,7 +180,7 @@ export default {
           message_img: ['https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728']
         },
         {
-          user_id: 206,
+          user_id: '206',
           avatar: 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728',
           user_name: 'Little Fairy',
           time: '2020/11/18 20:28:57',
@@ -183,7 +188,7 @@ export default {
           message_img: ['https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728']
         },
         {
-          user_id: 147,
+          user_id: '147',
           avatar: 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728',
           user_name: 'TOM',
           time: '2020/11/17 20:28:57',
@@ -191,7 +196,7 @@ export default {
           message_img: ['https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728']
         },
         {
-          user_id: 206,
+          user_id: '206',
           avatar: 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728',
           user_name: 'Little Fairy',
           time: '2020/11/17 20:28:57',
@@ -199,7 +204,7 @@ export default {
           message_img: ['https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728']
         },
         {
-          user_id: 147,
+          user_id: '147',
           avatar: 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728',
           user_name: 'TOM',
           time: '2020/11/16 20:28:57',
@@ -207,7 +212,7 @@ export default {
           message_img: ['https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728']
         },
         {
-          user_id: 206,
+          user_id: '206',
           avatar: 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728',
           user_name: 'Little Fairy',
           time: '2020/11/16 20:28:57',
@@ -215,6 +220,29 @@ export default {
           message_img: ['https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728']
         }
       ]
+    },
+    handleReply() {
+      this.isMessageRecord = false
+      const date = new Date()
+      const y = date.getFullYear()
+      const m = date.getMonth() + 1
+      const d = date.getDate()
+      const H = date.getHours()
+      const M = date.getMinutes()
+      const S = date.getSeconds()
+      const FormatDate = y + '/' + m + '/' + d + ' ' + H + ':' + M + ':' + S
+      const obj = {
+        user_id: '147',
+        avatar: 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728',
+        user_name: 'TOM',
+        time: FormatDate,
+        message_info: this.afterSaleInfo.template_content,
+        message_img: []
+      }
+      this.afterSaleInfo.messageList.push(obj)
+      this.$nextTick(() => {
+        this.isMessageRecord = true
+      })
     }
   }
 }
@@ -238,7 +266,7 @@ export default {
     }
   }
   .message_record {
-    height: 50vh;
+    height: 45vh;
     overflow-y: auto;
     .message-box {
       padding: 20px 30px 0;
@@ -299,6 +327,12 @@ export default {
       .title-user-name {
         color: #f6902c;
       }
+    }
+  }
+  .chat_box {
+    ::v-deep.el-card__body {
+      padding: 0!important;
+      height: 250px;
     }
   }
 }
