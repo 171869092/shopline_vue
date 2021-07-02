@@ -88,7 +88,7 @@
     <el-dialog title="Select Vendor" :visible.sync="vendorVisible" width="700px" :close-on-click-modal="false" center :before-close="providerAdd">
       <el-form ref="vendorForm" :model="vendorForm" size="small" label-width="170px" :rules="rules">
         <el-form-item label="Vendor:" prop="service_id">
-          <el-select v-model="vendorForm.service_id" filterable class="w-350">
+          <el-select v-model="vendorForm.service_id" multiple filterable class="w-350">
             <el-option v-for="item in ServiceList" :key="item.id" :label="item.service_name" :value="item.id" />
           </el-select>
         </el-form-item>
@@ -276,14 +276,12 @@ export default {
         this.$refs.vendorForm.validate((valid) => {
           if (valid) {
             const ids = []
-            const service = []
             this.productSelection.map(it => {
               ids.push(it.id)
             })
-            service.push(this.vendorForm.service_id)
             const formData = {
               product_id: ids,
-              service: service,
+              service: this.vendorForm.service_id,
               country: this.vendorForm.country
             }
             createQuoted(formData).then(res => {
@@ -324,11 +322,9 @@ export default {
     },
     Prompt(type) {
       if (type === 1) {
-        const service = []
-        service.push(this.vendorForm.service_id)
         const formData = {
           product_id: this.ids,
-          service: service,
+          service: this.vendorForm.service_id,
           country: this.vendorForm.country,
           type: 1
         }
