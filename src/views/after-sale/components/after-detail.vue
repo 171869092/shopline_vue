@@ -96,6 +96,30 @@
         <!-- After Sales Reply -->
         <el-card class="chat_box mt20">
           <tinymce ref="tinymces" v-model="customerAfterSaleInfo.template_content" menubar :height="250" @reply="handleCustomerReply" />
+          <div class="upload-box">
+            <el-upload
+              ref="upload"
+              accept="image/png, image/jpeg"
+              class="upload-photos"
+              action
+              :show-file-list="false"
+              :http-request="customerUpload"
+              :before-upload="handleCustomerBeforeUpload"
+              :on-change="handleCustomerChange">
+              <div class="el-upload__text">
+                <i class="el-icon-picture"/>
+              </div>
+            </el-upload>
+          </div>
+          <div class="image-box">
+            <el-image
+              v-for="(fit, key) in customerAfterSaleInfo.template_image"
+              :key="key"
+              class="image"
+              :src="fit"
+              :preview-src-list="[fit]"
+            />
+          </div>
         </el-card>
       </div>
       <div v-show="isForward && !isCustomer" class="mt20 HMain">
@@ -145,6 +169,30 @@
         <!-- After Sales Reply -->
         <el-card class="chat_box mt20">
           <tinymce ref="tinymces" v-model="vendorAfterSaleInfo.template_content" menubar :height="250" @reply="handleVendorReply" />
+          <div class="upload-box">
+            <el-upload
+              ref="upload"
+              accept="image/png, image/jpeg"
+              class="upload-photos"
+              action
+              :show-file-list="false"
+              :http-request="vendorUpload"
+              :before-upload="handleVendorBeforeUpload"
+              :on-change="handleVendorChange">
+              <div class="el-upload__text">
+                <i class="el-icon-picture"/>
+              </div>
+            </el-upload>
+          </div>
+          <div class="image-box">
+            <el-image
+              v-for="(fit, key) in vendorAfterSaleInfo.template_image"
+              :key="key"
+              class="image"
+              :src="fit"
+              :preview-src-list="[fit]"
+            />
+          </div>
         </el-card>
       </div>
     </div>
@@ -153,6 +201,7 @@
 <script>
 import { afterSalesChanngedStatus, afterSalesDetail } from '@/api/after'
 import { getCookies } from '@/utils/cookies'
+import { uploadImage } from '@/api/product'
 export default {
   name: 'after-detail',
   components: {
@@ -187,7 +236,8 @@ export default {
         id: '',
         third_order_no: '',
         messageList: [],
-        template_content: ''
+        template_content: '',
+        template_image: []
       },
       vendorAfterSaleInfo: {
         customer_name: '',
@@ -202,7 +252,8 @@ export default {
         id: '',
         third_order_no: '',
         messageList: [],
-        template_content: ''
+        template_content: '',
+        template_image: []
       }
     }
   },
@@ -368,12 +419,14 @@ export default {
         user_name: 'TOM',
         time: FormatDate,
         message_info: this.customerAfterSaleInfo.template_content,
-        message_img: []
+        message_img: this.customerAfterSaleInfo.template_image
       }
       this.customerAfterSaleInfo.messageList.push(obj)
       this.$nextTick(() => {
         this.isCustomerMessageRecord = true
       })
+      this.customerAfterSaleInfo.template_content = ''
+      this.customerAfterSaleInfo.template_image = []
     },
     handleVendorReply() {
       this.isVendorMessageRecord = false
@@ -391,12 +444,86 @@ export default {
         user_name: 'TOM',
         time: FormatDate,
         message_info: this.vendorAfterSaleInfo.template_content,
-        message_img: []
+        message_img: this.vendorAfterSaleInfo.template_image
       }
       this.vendorAfterSaleInfo.messageList.push(obj)
       this.$nextTick(() => {
         this.isVendorMessageRecord = true
       })
+      this.vendorAfterSaleInfo.template_content = ''
+      this.vendorAfterSaleInfo.template_image = []
+    },
+    customerUpload(fileObj) {
+      const file = { showProgress: true, url: '', percent: 0 }
+      const formData = new FormData()
+      formData.append('file', fileObj.file)
+      uploadImage(formData, (progress) => {
+        file.percent = Math.round((progress.loaded / progress.total) * 100)
+      }).then(res => {
+        if (res.code === 200) {
+          const data = JSON.parse(JSON.stringify(res.data))
+          file.url = data['data-service-file']
+          file.showProgress = false
+          this.customerAfterSaleInfo.template_image.push(data['data-service-file'])
+          this.showImg = false
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    handleCustomerBeforeUpload(file, fileList) {
+      // console.log('change', file)
+    },
+    handleCustomerChange(file) {
+      const isSize = new Promise((resolve, reject) => {
+        const isLt2M = file.size / 1024 / 1024 < 2
+        isLt2M ? resolve() : reject(new Error('Error'))
+      }).then(
+        () => {
+          return file
+        },
+        () => {
+          this.$message.error('The uploaded image size exceeds 2M！')
+          return Promise.reject(new Error('Error'))
+        }
+      )
+      return isSize
+    },
+    vendorUpload(fileObj) {
+      const file = { showProgress: true, url: '', percent: 0 }
+      const formData = new FormData()
+      formData.append('file', fileObj.file)
+      uploadImage(formData, (progress) => {
+        file.percent = Math.round((progress.loaded / progress.total) * 100)
+      }).then(res => {
+        if (res.code === 200) {
+          const data = JSON.parse(JSON.stringify(res.data))
+          file.url = data['data-service-file']
+          file.showProgress = false
+          this.vendorAfterSaleInfo.template_image.push(data['data-service-file'])
+          this.showImg = false
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    handleVendorBeforeUpload(file, fileList) {
+      // console.log('change', file)
+    },
+    handleVendorChange(file) {
+      const isSize = new Promise((resolve, reject) => {
+        const isLt2M = file.size / 1024 / 1024 < 2
+        isLt2M ? resolve() : reject(new Error('Error'))
+      }).then(
+        () => {
+          return file
+        },
+        () => {
+          this.$message.error('The uploaded image size exceeds 2M！')
+          return Promise.reject(new Error('Error'))
+        }
+      )
+      return isSize
     }
   }
 }
@@ -502,9 +629,39 @@ export default {
       }
     }
     .chat_box {
+      position: relative;
       ::v-deep.el-card__body {
         padding: 0!important;
         height: 250px;
+      }
+      .upload-box {
+        z-index: 99999;
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        top: 6px;
+        left: 267px;
+        background-color: #fff;
+        .upload-photos {
+          font-size: 18px;
+          position: absolute;
+          top: 0;
+          left: 0;
+          color: #585858;
+        }
+      }
+      .image-box {
+        width: 100%;
+        height: 60px;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        text-align: right;
+        .image {
+          width: 50px;
+          height: 50px;
+          margin: 0 10px;
+        }
       }
     }
   }

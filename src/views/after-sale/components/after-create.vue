@@ -95,6 +95,30 @@
       <!-- After Sales Reply -->
       <el-card class="chat_box mt20">
         <tinymce ref="tinymces" v-model="afterSaleInfo.template_content" menubar :height="250" @reply="handleReply" />
+        <div class="upload-box">
+          <el-upload
+            ref="upload"
+            accept="image/png, image/jpeg"
+            class="upload-photos"
+            action
+            :show-file-list="false"
+            :http-request="Upload"
+            :before-upload="handleBeforeUpload"
+            :on-change="handleChange">
+            <div class="el-upload__text">
+              <i class="el-icon-picture"/>
+            </div>
+          </el-upload>
+        </div>
+        <div class="image-box">
+          <el-image
+            v-for="(fit, key) in afterSaleInfo.template_image"
+            :key="key"
+            class="image"
+            :src="fit"
+            :preview-src-list="[fit]"
+          />
+        </div>
       </el-card>
     </div>
   </div>
@@ -103,6 +127,7 @@
 <script>
 import { afterSalesType } from '@/api/after'
 import { getCookies } from '@/utils/cookies'
+import { uploadImage } from '@/api/product'
 export default {
   name: 'after-create',
   components: {
@@ -129,7 +154,8 @@ export default {
         id: '',
         third_order_no: '',
         messageList: [],
-        template_content: ''
+        template_content: '',
+        template_image: []
       }
     }
   },
@@ -237,12 +263,50 @@ export default {
         user_name: 'TOM',
         time: FormatDate,
         message_info: this.afterSaleInfo.template_content,
-        message_img: []
+        message_img: this.afterSaleInfo.template_image
       }
       this.afterSaleInfo.messageList.push(obj)
       this.$nextTick(() => {
         this.isMessageRecord = true
       })
+      this.afterSaleInfo.template_content = ''
+      this.afterSaleInfo.template_image = []
+    },
+    Upload(fileObj) {
+      const file = { showProgress: true, url: '', percent: 0 }
+      const formData = new FormData()
+      formData.append('file', fileObj.file)
+      uploadImage(formData, (progress) => {
+        file.percent = Math.round((progress.loaded / progress.total) * 100)
+      }).then(res => {
+        if (res.code === 200) {
+          const data = JSON.parse(JSON.stringify(res.data))
+          file.url = data['data-service-file']
+          file.showProgress = false
+          this.afterSaleInfo.template_image.push(data['data-service-file'])
+          this.showImg = false
+        }
+      }).catch(err => {
+        console.log(err)
+      })
+    },
+    handleBeforeUpload(file, fileList) {
+      // console.log('change', file)
+    },
+    handleChange(file) {
+      const isSize = new Promise((resolve, reject) => {
+        const isLt2M = file.size / 1024 / 1024 < 2
+        isLt2M ? resolve() : reject(new Error('Error'))
+      }).then(
+        () => {
+          return file
+        },
+        () => {
+          this.$message.error('The uploaded image size exceeds 2M！')
+          return Promise.reject(new Error('Error'))
+        }
+      )
+      return isSize
     }
   }
 }
@@ -330,9 +394,39 @@ export default {
     }
   }
   .chat_box {
+    position: relative;
     ::v-deep.el-card__body {
       padding: 0!important;
       height: 250px;
+    }
+    .upload-box {
+      z-index: 99999;
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      top: 6px;
+      left: 267px;
+      background-color: #fff;
+      .upload-photos {
+        font-size: 18px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        color: #585858;
+      }
+    }
+    .image-box {
+      width: 100%;
+      height: 60px;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      text-align: right;
+      .image {
+        width: 50px;
+        height: 50px;
+        margin: 0 10px;
+      }
     }
   }
 }
