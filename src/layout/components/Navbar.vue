@@ -87,7 +87,8 @@ export default {
       await this.$store.dispatch('user/logout')
       window.clearInterval(window.timer)
       this.clearWifiInterval()
-      this.$router.push({ name: 'home' })
+      // this.$router.push({ name: 'home' })
+      window.open('https://fbali.co/', '_self')
     },
     errorHandler() {
       return true
