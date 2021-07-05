@@ -14,10 +14,7 @@
             <el-input v-model="formData.product_title" placeholder="Title" readonly />
           </el-form-item>
           <el-form-item label="Source URL" prop="url">
-            <el-link v-if="platform_index_id" :href="`https://aliexpress.com/item/${platform_index_id}.html`" type="primary" target="_blank" style="margin-left:20px">
-              {{ `https://aliexpress.com/item/${platform_index_id}.html` }}
-            </el-link>
-            <el-input v-if="!platform_index_id" v-model="formData.url" placeholder="Source URL" readonly />
+            <el-input v-model="formData.url" placeholder="Source URL" readonly />
           </el-form-item>
         </div>
       </el-card>
@@ -175,7 +172,7 @@
 
 <script>
 import draggable from 'vuedraggable'
-import { getQuotedEdit, getAllProductEdit, getServiceList, upStatusQuoted } from '@/api/product'
+import { getQuotedEdit, upStatusQuoted } from '@/api/product'
 export default {
   name: 'quoted-detail',
   components: {
@@ -209,9 +206,12 @@ export default {
       draggableList: [],
       id: '',
       product_id: '',
-      platform_index_id: '',
-      storeList: [],
       dayList: []
+    }
+  },
+  computed: {
+    storeList() {
+      return this.$route.query.storeList
     }
   },
   created() {
@@ -222,11 +222,6 @@ export default {
   methods: {
     init() {
       this.loading = true
-      getServiceList().then(res => {
-        if (res.code === 200) {
-          this.storeList = res.data
-        }
-      })
       const data = {
         id: this.id
       }
@@ -328,11 +323,6 @@ export default {
             this.dayList = heavenArr
           }
           this.loading = false
-        }
-      })
-      getAllProductEdit({ id: this.product_id }).then(res => {
-        if (res.code === 200) {
-          this.platform_index_id = res.data.platform_index_id
         }
       })
     },
