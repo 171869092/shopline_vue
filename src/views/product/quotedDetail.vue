@@ -3,8 +3,8 @@
     <div class="box-card">
       <div class="btn-box p20">
         <el-button class="mr30" size="small" icon="el-icon-back" @click="$router.back()" />
-<!--        <el-button v-if="!someThingAdopt" type="primary" size="small" @click="cancellation">Cancellation</el-button>-->
-<!--        <el-button v-if="someThingAdopt" type="primary" size="small" @click="handleSave">Save</el-button>-->
+        <!--        <el-button v-if="!someThingAdopt" type="primary" size="small" @click="cancellation">Cancellation</el-button>-->
+        <!--        <el-button v-if="someThingAdopt" type="primary" size="small" @click="handleSave">Save</el-button>-->
       </div>
     </div>
     <el-form v-loading="loading" :model="formData" :rules="formDataRules" label-width="160px" label-position="top">
@@ -14,10 +14,7 @@
             <el-input v-model="formData.product_title" placeholder="Title" readonly />
           </el-form-item>
           <el-form-item label="Source URL" prop="url">
-            <el-link v-if="platform_index_id" :href="`https://aliexpress.com/item/${platform_index_id}.html`" type="primary" target="_blank" style="margin-left:20px">
-              {{ `https://aliexpress.com/item/${platform_index_id}.html` }}
-            </el-link>
-            <el-input v-if="!platform_index_id" v-model="formData.url" placeholder="Source URL" readonly />
+            <el-input v-model="formData.url" placeholder="Source URL" readonly />
           </el-form-item>
         </div>
       </el-card>
@@ -65,10 +62,10 @@
                   <span v-if="item.type === 'dollar'">$ {{ scope.row[item.value] ? scope.row[item.value] : 0 }}</span>
                   <span v-if="item.type === 'serial'">
                     <span>{{ scope.row[item.value] }}</span>
-<!--                    <span v-if="scope.row.someThingAdopt">-->
-<!--                      <el-checkbox v-model="item.check" @click="handleClickCheckbox(item)" @change="handleChangeCheckbox(item)" />-->
-<!--                    </span>-->
-<!--                    <span v-if="!scope.row.someThingAdopt">{{ scope.row[item.value] }}</span>-->
+                    <!--                    <span v-if="scope.row.someThingAdopt">-->
+                    <!--                      <el-checkbox v-model="item.check" @click="handleClickCheckbox(item)" @change="handleChangeCheckbox(item)" />-->
+                    <!--                    </span>-->
+                    <!--                    <span v-if="!scope.row.someThingAdopt">{{ scope.row[item.value] }}</span>-->
                   </span>
                   <span v-if="item.type === 'img'">
                     <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img" fit="cover">
@@ -175,7 +172,7 @@
 
 <script>
 import draggable from 'vuedraggable'
-import { getQuotedEdit, getAllProductEdit, getServiceList, upStatusQuoted } from '@/api/product'
+import { getQuotedEdit, upStatusQuoted } from '@/api/product'
 export default {
   name: 'quoted-detail',
   components: {
@@ -209,9 +206,12 @@ export default {
       draggableList: [],
       id: '',
       product_id: '',
-      platform_index_id: '',
-      storeList: [],
       dayList: []
+    }
+  },
+  computed: {
+    storeList() {
+      return this.$route.query.storeList
     }
   },
   created() {
@@ -222,11 +222,6 @@ export default {
   methods: {
     init() {
       this.loading = true
-      getServiceList().then(res => {
-        if (res.code === 200) {
-          this.storeList = res.data
-        }
-      })
       const data = {
         id: this.id
       }
@@ -328,11 +323,6 @@ export default {
             this.dayList = heavenArr
           }
           this.loading = false
-        }
-      })
-      getAllProductEdit({ id: this.product_id }).then(res => {
-        if (res.code === 200) {
-          this.platform_index_id = res.data.platform_index_id
         }
       })
     },

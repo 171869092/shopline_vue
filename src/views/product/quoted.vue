@@ -136,7 +136,7 @@ export default {
     },
     // Product details page
     productDetails(type, row) {
-      this.$router.push({ name: 'quoted-detail', query: { type: type, id: row.id, product_id: row.product_id }})
+      this.$router.push({ name: 'quoted-detail', query: { type: type, id: row.id, product_id: row.product_id, storeList: this.storeList }})
     },
     // init list
     Inquire() {
