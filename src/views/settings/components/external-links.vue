@@ -2,6 +2,7 @@
   <div class="external-links-box">
     <el-table
       ref="multipleTable"
+      empty-text="No Data"
       :data="tableData"
       style="width: 100%"
     >

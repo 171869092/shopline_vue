@@ -53,6 +53,7 @@
       <el-table
         ref="multipleTable"
         :data="tableData"
+        empty-text="No Data"
         style="width: 100%"
         highlight-current-row
         fit

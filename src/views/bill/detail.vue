@@ -58,7 +58,7 @@
           </div>
         </div>
         <div class="box-card create-box ml20 mr20 mb20">
-          <el-table :data="billDetailForm.order_list" class="material-table">
+          <el-table :data="billDetailForm.order_list" empty-text="No Data" class="material-table">
             <el-table-column prop="ltem" label="ltem" min-width="320" />
             <el-table-column prop="quantity" label="Quantity" width="260" />
             <el-table-column prop="rate" label="Rate" width="260"></el-table-column>

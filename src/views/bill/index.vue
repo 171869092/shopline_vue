@@ -43,6 +43,7 @@
             ref="multipleTable"
             v-loading="loading"
             v-sticky="{top: 0, parent: '#app_main' }"
+            empty-text="No Data"
             :data="tableData"
             style="width: 100%"
             highlight-current-row

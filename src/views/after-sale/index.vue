@@ -59,6 +59,7 @@
             highlight-current-row
             fit
             stripe
+            empty-text="No Data"
             :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}"
             @select="shiftMultiple"
             @select-all="selectAll"
@@ -139,10 +140,11 @@ export default {
         page: 0,
         limit: 10
       },
-      afterStatus: { 0: 'ALL', 2: 'In Processing', 3: 'Completed' },
+      afterStatus: { 0: 'ALL', 1: 'Pending', 2: 'In process', 3: 'Completed' },
       tabList: [
         { label: 'ALL', name: '0' },
-        { label: 'In Processing', name: '2' },
+        { label: 'Pending', name: '1' },
+        { label: 'In process', name: '2' },
         { label: 'Completed', name: '3' }
       ],
       labelList: [
@@ -198,7 +200,7 @@ export default {
           // }else{
           //   this.product = []
           // }
-          console.log('product: ',this.tableData)
+          console.log('product:', this.tableData)
         }
       }).catch(err => {
         console.log('err', err)
@@ -208,8 +210,8 @@ export default {
     },
 
     getAfterSalesType() {
-      afterSalesType().then( res => {
-        if (res.code == 200){
+      afterSalesType().then(res => {
+        if (res.code === 200) {
           this.salesType = res.data
         }
       }).catch(err => {

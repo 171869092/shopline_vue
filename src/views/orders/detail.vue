@@ -31,6 +31,7 @@
         <el-table
           ref="productTable"
           fit
+          empty-text="No Data"
           :data="info.goods_info"
           style="width: 100%"
           highlight-current-row

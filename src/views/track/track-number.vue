@@ -40,6 +40,7 @@
       <el-table
         v-if="labelIsShow"
         :data="tableData"
+        empty-text="No Data"
         style="width: 100%"
         highlight-current-row
         fit
@@ -219,6 +220,7 @@
     <el-dialog :visible.sync="recordVisible" width="60%" class="p20" @close="handleRecordClose">
       <div class="record-box">
         <el-table
+          empty-text="No Data"
           :data="recordForm.seller"
           style="width: 100%"
           highlight-current-row
@@ -233,6 +235,7 @@
           </el-table-column>
         </el-table>
         <el-table
+          empty-text="No Data"
           :data="recordForm.reacl"
           style="width: 100%"
           highlight-current-row

@@ -49,6 +49,7 @@
               v-if="item.newData"
               ref="multipleTable"
               :data="item.next"
+              empty-text="No Data"
               style="width: 100%"
               :span-method="objectSpanMethod"
               highlight-current-row
@@ -109,6 +110,7 @@
               v-if="item.pre.length > 0 && !item.newData"
               ref="multipleTable"
               :data="item.pre"
+              empty-text="No Data"
               style="width: 100%"
               highlight-current-row
               :span-method="objectSpanMethod"

@@ -21,6 +21,7 @@
       <el-table
         ref="multipleTable"
         v-loading="loading"
+        empty-text="No Data"
         :data="tableData"
         style="width: 100%"
         highlight-current-row

@@ -6,7 +6,7 @@
           size="small"
           class="button-border"
           icon="el-icon-back"
-          @click="$router.back()"
+          @click="handleRouteBack"
         />
         <div class="order-id ml20">
           Order No：<span class="primary">{{ order_no }}</span>
@@ -52,33 +52,33 @@
       <!-- After Sales Message record -->
       <el-card class="box-card mt20">
         <div v-if="isMessageRecord" id="h_message_record" class="message_record">
-          <div v-for="(item, idx) in afterSaleInfo.messageList" :key="idx" class="message-box" :class="[item.user_id === user_id ? 'right' : 'left']">
+          <div v-for="(item, idx) in afterSaleInfo.reply" :key="idx" class="message-box" :class="[item.reply_user === user_id ? 'right' : 'left']">
             <div class="title">
               <el-image
-                v-if="item.user_id !== user_id"
+                v-if="item.reply_user !== user_id"
                 class="avatar"
-                :src="item.avatar"
-                :preview-src-list="[item.avatar]"
+                :src="item.reply_user_image"
+                :preview-src-list="[item.reply_user_image]"
               />
               <div class="title-text">
-                <p class="title-user-name">{{ item.user_name }}</p>
-                <p class="title-time">{{ item.time }}</p>
+                <p class="title-user-name">{{ item.reply_user_name }}</p>
+                <p class="title-time">{{ item.reply_time }}</p>
               </div>
               <el-image
-                v-if="item.user_id === user_id"
+                v-if="item.reply_user === user_id"
                 class="avatar"
-                :src="item.avatar"
-                :preview-src-list="[item.avatar]"
+                :src="item.reply_user_image"
+                :preview-src-list="[item.reply_user_image]"
               />
             </div>
-            <div class="line" :class="[item.user_id === user_id ? 'line-right' : 'line-left']">
+            <div class="line" :class="[item.reply_user === user_id ? 'line-right' : 'line-left']">
               <el-divider />
             </div>
             <div class="contain">
-              <div class="mb10" v-html="item.message_info" />
+              <div class="mb10" v-html="item.reply_info" />
               <div>
                 <el-image
-                  v-for="(it,i) in item.message_img"
+                  v-for="(it,i) in item.reply_img"
                   :key="i"
                   class="image"
                   :src="it"
@@ -86,7 +86,7 @@
                 />
               </div>
             </div>
-            <div class="line" :class="[item.user_id === user_id ? 'line-right' : 'line-left']">
+            <div class="line" :class="[item.reply_user === user_id ? 'line-right' : 'line-left']">
               <el-divider />
             </div>
           </div>
@@ -94,7 +94,7 @@
       </el-card>
       <!-- After Sales Reply -->
       <el-card class="chat_box mt20">
-        <tinymce ref="tinymces" v-model="afterSaleInfo.template_content" menubar :height="250" @reply="handleReply" />
+        <tinymce ref="tinymces" v-model="afterChat.reply_info" menubar :height="250" @reply="handleReply" />
         <div class="upload-box">
           <el-upload
             ref="upload"
@@ -111,9 +111,10 @@
             </div>
           </el-upload>
         </div>
+        <div class="tick-box">{{ message }}</div>
         <div class="image-box">
           <el-image
-            v-for="(fit, key) in afterSaleInfo.template_image"
+            v-for="(fit, key) in afterChat.reply_img"
             :key="key"
             class="image"
             :src="fit"
@@ -126,9 +127,11 @@
 </template>
 
 <script>
+import io from 'socket.io-client'
 import { afterSalesType } from '@/api/after'
 import { getCookies } from '@/utils/cookies'
 import { uploadImage } from '@/api/product'
+import { getToken } from '@/utils/auth'
 export default {
   name: 'after-create',
   components: {
@@ -142,6 +145,7 @@ export default {
       SubmitLoading: false,
       isMessageRecord: true,
       user_id: '',
+      after_id: '',
       afterSaleInfo: {
         customer_name: '',
         order_no: '',
@@ -154,10 +158,19 @@ export default {
         sku_name: '',
         id: '',
         third_order_no: '',
-        messageList: [],
-        template_content: '',
-        template_image: []
-      }
+        reply: []
+      },
+      afterChat: {
+        after_id: '',
+        reply_info: '',
+        reply_img: []
+      },
+      socket: null,
+      socketType: 1,
+      message: '',
+      bInformation: {},
+      HSocket: false,
+      msg: ''
     }
   },
   computed: {
@@ -180,13 +193,16 @@ export default {
   updated() {
     this.$nextTick(() => {
       const scr = document.getElementById('h_message_record')
-      scr.scrollTop = scr.scrollHeight
+      if (scr !== null) {
+        scr.scrollTop = scr.scrollHeight
+      }
     })
   },
-  created() {
+  mounted() {
     this.getAfterSalesType()
     this.user_id = getCookies('uid')
-    this.init()
+    this.initWebSocket()
+    this.socket.emit('after-read', { after_id: this.after_id, type: this.socketType })
   },
   methods: {
     // 获取售后类型
@@ -202,58 +218,6 @@ export default {
     // complete
     complete() {
     },
-    init() {
-      this.afterSaleInfo.messageList = [
-        {
-          user_id: '147',
-          avatar: 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728',
-          user_name: 'TOM',
-          time: '2020/11/18 20:28:57',
-          message_info: 'I want to become rich',
-          message_img: ['https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728']
-        },
-        {
-          user_id: '206',
-          avatar: 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728',
-          user_name: 'Little Fairy',
-          time: '2020/11/18 20:28:57',
-          message_info: '我要变有钱',
-          message_img: ['https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728']
-        },
-        {
-          user_id: '147',
-          avatar: 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728',
-          user_name: 'TOM',
-          time: '2020/11/17 20:28:57',
-          message_info: 'I want to become rich',
-          message_img: ['https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728']
-        },
-        {
-          user_id: '206',
-          avatar: 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728',
-          user_name: 'Little Fairy',
-          time: '2020/11/17 20:28:57',
-          message_info: '我要变有钱',
-          message_img: ['https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728']
-        },
-        {
-          user_id: '147',
-          avatar: 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728',
-          user_name: 'TOM',
-          time: '2020/11/16 20:28:57',
-          message_info: 'I want to become rich',
-          message_img: ['https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728']
-        },
-        {
-          user_id: '206',
-          avatar: 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728',
-          user_name: 'Little Fairy',
-          time: '2020/11/16 20:28:57',
-          message_info: '我要变有钱',
-          message_img: ['https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728', 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728']
-        }
-      ]
-    },
     handleReply() {
       this.isMessageRecord = false
       const date = new Date()
@@ -265,19 +229,37 @@ export default {
       const S = date.getSeconds()
       const FormatDate = y + '/' + m + '/' + d + ' ' + H + ':' + M + ':' + S
       const obj = {
-        user_id: '147',
-        avatar: 'https://cdn.shopify.com/s/files/1/0503/0137/0529/products/202101120848112159e02a875670f10fc0407846a04af687a_35bee0ab-acdb-4d2e-9948-43c51aa579bb.jpg?v=1610447728',
-        user_name: 'TOM',
+        type: this.bInformation.type,
+        after_id: this.after_id,
+        reply_user: this.bInformation.user_id.toString(),
+        reply_user_image: this.bInformation.icon,
+        reply_user_name: this.bInformation.username,
         time: FormatDate,
-        message_info: this.afterSaleInfo.template_content,
-        message_img: this.afterSaleInfo.template_image
+        reply_info: this.afterChat.reply_info,
+        reply_img: this.afterChat.reply_img
       }
-      this.afterSaleInfo.messageList.push(obj)
-      this.$nextTick(() => {
-        this.isMessageRecord = true
+      this.$set(this.afterChat, 'after_id', this.after_id)
+      this.$set(this.afterChat, 'type', this.socketType)
+      this.socket.emit('after-reply', this.afterChat)
+      this.socket.on('send-error', (e) => {
+        if (e.code === 400) {
+          console.log('消息发送失败', e.msg)
+          this.msg = e.msg
+          this.HSocket = true
+          this.socket.emit('join-after', { after_id: this.after_id })
+        }
       })
-      this.afterSaleInfo.template_content = ''
-      this.afterSaleInfo.template_image = []
+      if (this.HSocket === true) {
+        this.$message.warning(this.msg)
+      } else {
+        this.isMessageRecord = false
+        this.afterSaleInfo.reply.push(obj)
+        this.$nextTick(() => {
+          this.isMessageRecord = true
+        })
+        this.afterChat = this.$options.data().afterChat
+        this.reply_img = []
+      }
     },
     Upload(fileObj) {
       const file = { showProgress: true, url: '', percent: 0 }
@@ -314,6 +296,49 @@ export default {
         }
       )
       return isSize
+    },
+    initWebSocket() {
+      const url = 'wss://m.fbali.co/?type=1&user_id=' + this.user_id + '&token=' + getToken()
+      this.socket = io.connect(url, {
+        timeout: 60000,
+        reconnectionDelayMax: 1000,
+        reconnectionDelay: 500,
+        httpCompress: false,
+        wsEngine: 'wss',
+        origins: '*',
+        transports: ['websocket'],
+        allowRequest: true,
+        allowUpgraders: true
+      })
+      this.socket.on('connect', (e) => {
+        this.message = '正在建立链接，请稍后...'
+        console.log('建立链接', e)
+        this.socket.emit('join-after', { after_id: this.after_id })
+      })
+      this.socket.on('join-after', (e) => {
+        if (e.code === 200) {
+          this.message = ''
+          this.bInformation = e.data
+        }
+      })
+      this.socket.on('after-reply', (e) => {
+        if (e.code === 200) {
+          console.log('e---', e)
+          this.afterSaleInfo.reply.push(e.data)
+          this.isMessageRecord = false
+          this.$nextTick(() => {
+            this.isMessageRecord = true
+          })
+        }
+      })
+      this.socket.on('connect_timeout', () => {
+        console.log('连接超时')
+      })
+      this.socket.on('disconnect', () => {
+        console.log('连接断开，尝试重新链接')
+        this.message = '连接断开，尝试重新链接...'
+        this.socket.emit('join-after', { after_id: this.after_id })
+      })
     }
   }
 }
