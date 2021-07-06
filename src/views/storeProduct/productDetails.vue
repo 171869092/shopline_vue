@@ -81,6 +81,7 @@
           ref="vendorTable"
           v-loading="vendorLoading"
           :data="formData.cost_vender_list"
+          empty-text="No Data"
           style="width: 100%"
           highlight-current-row
           fit
@@ -144,6 +145,7 @@
           v-if="variantsCheck"
           ref="optionsTable"
           :data="optionsList"
+          empty-text="No Data"
           :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
           class="mt20 variantsTabel"
           style="width:850px"

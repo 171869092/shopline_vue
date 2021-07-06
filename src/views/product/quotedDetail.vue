@@ -48,6 +48,7 @@
             <el-table
               v-if="item.newData"
               ref="multipleTable"
+              empty-text="No Data"
               :data="item.next"
               style="width: 100%"
               :span-method="objectSpanMethod"
@@ -108,6 +109,7 @@
             <el-table
               v-if="item.pre.length > 0 && !item.newData"
               ref="multipleTable"
+              empty-text="No Data"
               :data="item.pre"
               style="width: 100%"
               highlight-current-row

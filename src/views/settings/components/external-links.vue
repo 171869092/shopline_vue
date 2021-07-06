@@ -3,6 +3,7 @@
     <el-table
       ref="multipleTable"
       :data="tableData"
+      empty-text="No Data"
       style="width: 100%"
     >
       <el-table-column label="Title">

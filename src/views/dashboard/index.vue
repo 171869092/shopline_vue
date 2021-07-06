@@ -82,6 +82,7 @@
             <el-table
               :data="dashboardForm.after_sales"
               :header-cell-style="{background: '#f6f5fb'}"
+              empty-text="No Data"
             >
               <el-table-column
                 prop="order_name"

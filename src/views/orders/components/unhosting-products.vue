@@ -13,6 +13,7 @@
       ref="multipleTable"
       v-loading="loading"
       :data="tableData"
+      empty-text="No Data"
       tooltip-effect="dark"
       height="500"
       style="width: 100%"

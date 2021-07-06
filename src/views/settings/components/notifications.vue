@@ -1,7 +1,7 @@
 
 <template>
   <div class="notifications-box">
-    <el-table v-loading="loading" :data="tableData" style="width: 100%">
+    <el-table v-loading="loading" :data="tableData" empty-text="No Data" style="width: 100%">
       <el-table-column label="Store name" prop="store_name" show-overflow-tooltip />
       <el-table-column label="Store Url" prop="store_url" />
       <el-table-column label="Platform" prop="platform" />

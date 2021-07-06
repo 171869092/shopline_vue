@@ -18,6 +18,7 @@
         ref="multipleTable"
         v-loading="loading"
         :data="tableData"
+        empty-text="No Data"
         style="width: 100%"
         :row-class-name="tableRowClassName"
         border
