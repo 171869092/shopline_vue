@@ -9,7 +9,7 @@
         </div>
       </el-col>
       <el-col :span="20">
-        <el-table v-loading="loading" :data="tableData" style="width: 100%">
+        <el-table v-loading="loading" :data="tableData" empty-text="No Data" style="width: 100%">
           <el-table-column prop="template_name" label="Title" width="300">
             <template slot-scope="scope">
               <span class="link" @click="editTemplate(scope.row)">{{ scope.row.template_name }}</span>
