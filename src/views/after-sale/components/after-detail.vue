@@ -95,7 +95,7 @@
           </div>
         </el-card>
         <!-- After Sales Reply -->
-        <el-card class="chat_box mt20">
+        <el-card v-if="client_status !== 3" class="chat_box mt20">
           <tinymce ref="tinymces" v-model="customerAfterChat.reply_info" menubar :height="250" @reply="handleCustomerReply" />
           <div class="upload-box">
             <el-upload
@@ -169,7 +169,7 @@
           </div>
         </el-card>
         <!-- After Sales Reply -->
-        <el-card class="chat_box mt20">
+        <el-card v-if="status !== 3" class="chat_box mt20">
           <tinymce ref="tinymces" v-model="vendorAfterChat.reply_info" menubar :height="250" @reply="handleVendorReply" />
           <div class="upload-box">
             <el-upload
