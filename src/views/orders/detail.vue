@@ -196,9 +196,9 @@ export default {
       selectedProduct: '',
       platForm: '',
       afterDialog: {
-        type: '',
-        mode: '',
-        products: ''
+        after_type: '',
+        after_model: '',
+        product_json: ''
       },
       typeList: [],
       modeList: ['Resend', 'Refund', 'Return/Refund', 'Other'],
@@ -316,7 +316,8 @@ export default {
                   sku_name: it.third_goods_name,
                   sku_image: it.sku_image,
                   sale_money: it.sale_money,
-                  sku_id: it.shopify_sku_id
+                  sku_id: it.shopify_sku_id,
+                  id: item
                 })
               }
             })

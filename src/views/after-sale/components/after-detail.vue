@@ -14,6 +14,7 @@
       </div>
       <div>
         <el-button v-if="type === 2 && is_push !== 3" size="small" type="primary" @click="confirmAfterSales">Forward</el-button>
+<!--        <el-button size="small" type="primary" @click="confirmAfterSales">Forward</el-button>-->
         <el-button v-if="client_status !== 3 || status !== 3" size="small" type="primary" @click="complete">Completed</el-button>
       </div>
     </div>
@@ -46,8 +47,8 @@
         </div>
       </el-card>
       <div class="mt20">
-        <el-button v-if="client_reply.length > 0" size="small" :type="isCustomer ? 'primary' : ''" class="w-300" @click="handleCustomer">Customer</el-button>
-        <el-button v-if="is_push === 3" size="small" :type="isCustomer ? '' : 'primary'" class="w-300" style="margin-left: 0" @click="handleVendor">Vendor</el-button>
+        <el-button v-if="client_reply.length > 0" size="small" :type="isCustomer ? 'primary' : ''" class="w-300" @click="handleCustomer">Customer ({{ client_name }})</el-button>
+        <el-button v-if="is_push === 3" size="small" :type="isCustomer ? '' : 'primary'" class="w-300" style="margin-left: 0" @click="handleVendor">Vendor ({{ server_name }})</el-button>
       </div>
       <div v-show="isCustomer" class="mt20 HMain">
         <!-- After Sales Message record -->
@@ -209,12 +210,39 @@
         <el-button v-if="client_status !== 3 && status !== 3" type="primary" style="background-color:#f68a1d;border: 0 none;" @click="handleComplete(5)">All</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="After sales"
+      :visible.sync="forwardVisible"
+      width="30%"
+    >
+      <el-form ref="afterDialog" label-position="right" label-width="100px" :model="afterDialog" :rules="formRule">
+        <el-form-item label="Type" prop="after_type">
+          <el-select v-model="afterDialog.after_type" style="width: 95%">
+            <el-option v-for="(item,idx) in typeList" :key="idx" :label="item" :value="idx" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Mode" prop="after_model">
+          <el-select v-model="afterDialog.after_model" style="width: 95%">
+            <el-option v-for="(item,idx) in modeList" :key="idx" :label="item" :value="String(idx + 1)" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Products" prop="product_json">
+          <el-select v-model="afterDialog.product_json" multiple style="width: 95%">
+            <el-option v-for="item in productsList" :key="item.id" :label="item.sku_name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="forwardVisible = false">取 消</el-button>
+        <el-button type="primary" @click="handleAfterSales">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
 import io from 'socket.io-client'
 import { getToken } from '@/utils/auth'
-import { afterSalesChanngedStatus, afterSalesDetail, afterSalesConfirmSend } from '@/api/after'
+import { afterSalesChanngedStatus, afterSalesDetail, afterSalesConfirmSend, afterSalesType } from '@/api/after'
 import { getCookies } from '@/utils/cookies'
 import { uploadImage } from '@/api/product'
 export default {
@@ -263,7 +291,29 @@ export default {
       is_push: 1,
       client_status: 1,
       status: 1,
-      client_reply: []
+      client_reply: [],
+      client_name: 'Customer',
+      server_name: 'Vendor',
+      forwardVisible: false,
+      afterDialog: {
+        after_type: '',
+        after_model: '',
+        product_json: ''
+      },
+      typeList: [],
+      modeList: ['Resend', 'Refund', 'Return/Refund', 'Other'],
+      productsList: [],
+      formRule: {
+        after_type: [
+          { required: true, message: 'Please enter a after type', trigger: 'blur' }
+        ],
+        after_model: [
+          { required: true, message: 'Please enter a after mode', trigger: 'blur' }
+        ],
+        product_json: [
+          { required: true, message: 'Please enter a Products', trigger: 'blur' }
+        ]
+      }
     }
   },
   computed: {
@@ -309,7 +359,22 @@ export default {
           this.client_reply = res.data.client_reply
           if (this.client_reply.length === 0) {
             this.handleVendor()
+          } else {
+            this.client_reply.map(it => {
+              if (it.reply_user !== this.user_id) {
+                this.client_name = it.reply_user_name
+              }
+            })
           }
+          if (res.data.service_reply.length > 0) {
+            res.data.service_reply.map(it => {
+              if (it.reply_user !== this.user_id) {
+                this.server_name = it.reply_user_name
+              }
+            })
+          }
+          this.productsList = res.data.product_json
+          console.log('productsList--', this.productsList)
           this.status = res.data.status
           this.customerAfterSaleInfo.reply = res.data.client_reply ? res.data.client_reply : []
           this.vendorAfterSaleInfo.reply = res.data.service_reply ? res.data.service_reply : []
@@ -590,11 +655,31 @@ export default {
     },
     // 推送到b端
     confirmAfterSales() {
+      afterSalesType().then(res => {
+        if (res.code === 200) {
+          this.typeList = res.data
+        }
+      })
+      this.forwardVisible = true
+    },
+    handleAfterSales() {
+      const products = []
+      this.afterDialog.product_json.map(it => {
+        this.productsList.map(item => {
+          if (it === item.id) {
+            products.push(item)
+          }
+        })
+      })
       const formData = {
-        id: Number(this.after_id)
+        id: Number(this.after_id),
+        after_type: this.afterDialog.after_type,
+        after_model: this.afterDialog.after_model,
+        product_json: products
       }
       afterSalesConfirmSend(formData).then(res => {
         if (res.code === 200) {
+          this.forwardVisible = false
           this.$message.success(res.message)
           this.getAfterSalesDetail()
         }
