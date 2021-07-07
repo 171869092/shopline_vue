@@ -113,9 +113,9 @@
             </el-table-column>-->
             <el-table-column label="Source">
               <template slot-scope="scope">
-                <span>Vendor ({{ scope.row.consignee }})</span>
+                <span v-if="scope.row.vendor !== ''">Vendor ({{ scope.row.vendor }})</span>
                 <br />
-                <span>Customer ({{ scope.row.vendor }})</span>
+                <span v-if="scope.row.consignee !== ''">Customer ({{ scope.row.consignee }})</span>
               </template>
             </el-table-column>
             <el-table-column label="Timeline">
