@@ -70,7 +70,7 @@
               <template slot-scope="scope">
                 <span class="primary pointer" @click="toLink(scope.row)">
                   {{ scope.row.order_name }}
-                  <img v-if="scope.row.is_read === '0'" class="ml10" src="NewIcon">
+                  <img v-if="scope.row.is_read === '0'" class="imgIcon" :src="NewIcon">
                 </span>
               </template>
             </el-table-column>
@@ -113,7 +113,7 @@
             </el-table-column>-->
             <el-table-column label="Source">
               <template slot-scope="scope">
-                <span>Vendor ({{ scope.row.vendor }})</span>
+                <span>Vendor ({{ scope.row.consignee }})</span>
                 <br />
                 <span>Customer ({{ scope.row.vendor }})</span>
               </template>
@@ -418,5 +418,11 @@ export default {
     border-radius: 50%;
     background-color: #f60d0f;
   }
+}
+.imgIcon {
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+  margin-top: -8px;
 }
 </style>
