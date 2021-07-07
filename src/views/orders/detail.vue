@@ -176,7 +176,7 @@
 </template>
 <script>
 import { getOrderInfo } from '@/api/orders'
-import { afterSalesType } from '@/api/after'
+import { afterSalesType, afterSalesCreate } from '@/api/after'
 export default {
   name: 'orders-detail',
   props: {},
@@ -283,14 +283,85 @@ export default {
       this.productsList = []
       this.dialogVisible = false
     },
+    // 获取cookie
+    getCookie: function(cname) {
+      var name = cname + '='
+      var ca = document.cookie.split(';')
+      // console.log("获取cookie,现在循环")
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i]
+        // console.log(c)
+        while (c.charAt(0) === ' ') c = c.substring(1)
+        if (c.indexOf(name) !== -1) {
+          return c.substring(name.length, c.length)
+        }
+      }
+      return ''
+    },
     handleAfterSales() {
       this.$refs.afterDialog.validate((valid) => {
         if (valid) {
+          const products = []
+          const productArr = []
+          this.orderInfo.goods_info.forEach((item, index) => {
+            productArr.push(item)
+          })
+          this.afterDialog.product_json.map(item => {
+            productArr.forEach(it => {
+              if (it.id === item) {
+                products.push({
+                  logistics_cost: it.logistics_cost,
+                  cost: it.purchase_price,
+                  sku_num: it.sku_num,
+                  sku_name: it.third_goods_name,
+                  sku_image: it.sku_image,
+                  sale_money: it.sale_money,
+                  sku_id: it.shopify_sku_id
+                })
+              }
+            })
+          })
+          const formData = {
+            vendor: this.orderInfo.vendor.service_name,
+            state: '',
+            order_no: this.orderInfo.order_no,
+            total: this.orderInfo.total_price,
+            store_url: this.orderInfo.store_url,
+            third_order_no: this.orderInfo.thirdParty_order_on,
+            order_name: this.orderInfo.order_name,
+            import_people: this.orderInfo.import_people,
+            receive_json: {
+              address: this.orderInfo.address1,
+              city: this.orderInfo.city,
+              country: this.orderInfo.country,
+              consignee: this.orderInfo.consignee,
+              first_name: this.orderInfo.first_name,
+              last_name: this.orderInfo.last_name,
+              mobile: this.orderInfo.mobile,
+              email: this.orderInfo.email
+            },
+            shipping_json: {
+              logistics_company: this.orderInfo.logistics_company,
+              logistics_no: this.orderInfo.logistics_no,
+              logistics_status: this.orderInfo.logistics_status
+            },
+            server_id: this.orderInfo.service_id,
+            customer_name: this.getCookie('name'),
+            product_json: products,
+            order_create: this.orderInfo.order_create_time,
+            after_model: this.afterDialog.after_model,
+            after_type: this.afterDialog.after_type
+          }
           const after_type = this.typeList[this.afterDialog.after_type]
           const after_model = this.modeList[this.afterDialog.after_model]
           const product_json = this.getValueOfLabel(this.afterDialog.product_json, this.productsList)
-          this.$router.push({ name: 'after-create', query: { id: this.order_id, order_no: this.$route.query.order_no, after_type: after_type, after_model: after_model, product_json: product_json }})
-          this.handleClose()
+          afterSalesCreate(formData).then(res => {
+            this.$message({ message: res.message, type: 'success' })
+            this.$router.push({ name: 'after-create', query: { id: this.order_id, order_no: this.$route.query.order_no, after_type: after_type, after_model: after_model, product_json: product_json }})
+            this.handleClose()
+          }).catch(e => {
+            console.log(e)
+          })
         } else {
           this.$message.warning('Please complete the required fields first!')
         }
