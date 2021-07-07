@@ -145,7 +145,6 @@ export default {
       SubmitLoading: false,
       isMessageRecord: true,
       user_id: '',
-      after_id: '',
       afterSaleInfo: {
         customer_name: '',
         order_no: '',
@@ -188,6 +187,9 @@ export default {
     },
     product_json() {
       return this.$route.query.product_json
+    },
+    after_id() {
+      return this.$route.query.after_id
     }
   },
   updated() {
@@ -318,7 +320,10 @@ export default {
       this.socket.on('join-after', (e) => {
         if (e.code === 200) {
           this.message = ''
-          this.bInformation = e.data
+          e.data.user_id = e.data.user_id.toString()
+          if (this.user_id === e.data.user_id) {
+            this.bInformation = e.data
+          }
         }
       })
       this.socket.on('after-reply', (e) => {
@@ -339,6 +344,10 @@ export default {
         this.message = '连接断开，尝试重新链接...'
         this.socket.emit('join-after', { after_id: this.after_id })
       })
+    },
+    handleRouteBack() {
+      this.socket.emit('leave-after', { after_id: this.after_id })
+      this.$router.push({ name: 'after' })
     }
   }
 }

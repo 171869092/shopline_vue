@@ -46,7 +46,7 @@
         </div>
       </el-card>
       <div class="mt20">
-        <el-button size="small" :type="isCustomer ? 'primary' : ''" class="w-300" @click="handleCustomer">Customer</el-button>
+        <el-button v-if="client_reply.length > 0" size="small" :type="isCustomer ? 'primary' : ''" class="w-300" @click="handleCustomer">Customer</el-button>
         <el-button v-if="is_push === 3" size="small" :type="isCustomer ? '' : 'primary'" class="w-300" style="margin-left: 0" @click="handleVendor">Vendor</el-button>
       </div>
       <div v-show="isCustomer" class="mt20 HMain">
@@ -262,7 +262,8 @@ export default {
       msg: '',
       is_push: 1,
       client_status: 1,
-      status: 1
+      status: 1,
+      client_reply: []
     }
   },
   computed: {
@@ -305,6 +306,10 @@ export default {
           this.type = res.data.type
           this.is_push = res.data.is_push
           this.client_status = res.data.client_status
+          this.client_reply = res.data.client_reply
+          if (this.client_reply.length === 0) {
+            this.handleVendor()
+          }
           this.status = res.data.status
           this.customerAfterSaleInfo.reply = res.data.client_reply ? res.data.client_reply : []
           this.vendorAfterSaleInfo.reply = res.data.service_reply ? res.data.service_reply : []
