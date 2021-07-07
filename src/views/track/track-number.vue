@@ -136,7 +136,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
 <!--          <el-button type="primary" @click="submit">{{ $t('track.detail.informationActive.sub') }}</el-button>-->
-          <el-button type="primary" @click="submit">{{ Submit }}</el-button>
+          <el-button type="primary" @click="submit">Submit</el-button>
         </div>
       </el-dialog>
     </div>
