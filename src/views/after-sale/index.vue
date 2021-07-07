@@ -49,6 +49,7 @@
           </div>
         </div>
         <el-button type="primary" size="small" class="mb10" @click="complete">Completed</el-button>
+        <el-button type="primary" size="small" class="mb10 father" @click="handleNew">New information <span v-if="unreadCount !== '0'" class="son">{{ unreadCount }}</span></el-button>
         <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.label" :name="tab.name">
           <el-table
             ref="multipleTable"
@@ -67,7 +68,10 @@
             <el-table-column type="selection" width="55" />
             <el-table-column label="Order">
               <template slot-scope="scope">
-                <span class="primary pointer" @click="toLink(scope.row)">{{ scope.row.order_name }}</span>
+                <span class="primary pointer" @click="toLink(scope.row)">
+                  {{ scope.row.order_name }}
+                  <img v-if="scope.row.is_read === '0'" class="ml10" src="NewIcon">
+                </span>
               </template>
             </el-table-column>
             <el-table-column label="Products">
@@ -75,9 +79,9 @@
                 <div>{{ scope.row.product_json }}</div>
               </template>
             </el-table-column>
-            <el-table-column label="Application Time">
+            <el-table-column label="Update time">
               <template slot-scope="scope">
-                <div>{{ scope.row.after_create_time }}</div>
+                <div>{{ scope.row.update_time }}</div>
               </template>
             </el-table-column>
             <!-- <el-table-column label="Cost">
@@ -85,19 +89,38 @@
                 <div>{{ scope.row.cost }}</div>
               </template>
             </el-table-column> -->
-            <el-table-column label="After Sales Type">
+<!--            <el-table-column label="After Sales Type">
               <template slot-scope="scope">
                 <span>{{ salesType[scope.row.after_type] }}</span>
+              </template>
+            </el-table-column>-->
+            <el-table-column label="After Sales Mode">
+              <template slot-scope="scope">
+                <span>{{ modeList[scope.row.after_model] }}</span>
               </template>
             </el-table-column>
             <el-table-column label="Status">
               <template slot-scope="scope">
-                <span>{{ scope.row.status }}</span>
+                <span v-if="scope.row.status === 'Pending'" style="color: #e41b1b">{{ scope.row.status }}</span>
+                <span v-if="scope.row.status === 'Completed'" style="color: #50cd83">{{ scope.row.status }}</span>
+                <span v-if="scope.row.status === 'In process'" style="color: #f6cd46">{{ scope.row.status }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="Vendor">
+<!--            <el-table-column label="Vendor">
               <template slot-scope="scope">
                 <span>{{ scope.row.vendor }}</span>
+              </template>
+            </el-table-column>-->
+            <el-table-column label="Source">
+              <template slot-scope="scope">
+                <span>Vendor ({{ scope.row.vendor }})</span>
+                <br />
+                <span>Customer ({{ scope.row.vendor }})</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="Timeline">
+              <template slot-scope="scope">
+                <span style="color: #f69432;cursor: pointer;" @click="handleTrack(scope.row)">Track</span>
               </template>
             </el-table-column>
           </el-table>
@@ -105,6 +128,27 @@
         </el-tab-pane>
       </el-tabs>
     </el-card>
+    <el-dialog
+      :visible.sync="timelineVisible"
+      width="30%"
+      :show-close="false"
+    >
+      <div>
+        <el-timeline>
+          <el-timeline-item
+            v-for="(activity, index) in activities"
+            :key="index"
+            :timestamp="activity.timestamp"
+            placement="top"
+            :color="'#f68a1d'">
+            <p v-if="activity.title === 'completed'" style="color: #43c87a">{{ activity.title }}</p>
+            <p v-if="activity.title === 'In process'" style="color: #f6c219">{{ activity.title }}</p>
+            <p v-if="activity.title === 'Pending'" style="color: #ce3333">{{ activity.title }}</p>
+            <p>{{ activity.content }}</p>
+          </el-timeline-item>
+        </el-timeline>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -156,7 +200,28 @@ export default {
       loading: false,
       storeList: [],
       salesType: [],
-      product: []
+      modeList: ['Resend', 'Refund', 'Return/Refund', 'Other'],
+      product: [],
+      timelineVisible: false,
+      NewIcon: require('@/assets/home/new.png'), // 我的消息new图标
+      unreadCount: '0',
+      activities: [
+        {
+          title: 'completed',
+          content: 'Complete after sales / automatically complete after sales',
+          timestamp: '2020.06.22 06:00:00'
+        },
+        {
+          title: 'In process',
+          content: 'Reply to customer information',
+          timestamp: '2020.06.21 06:00:00'
+        },
+        {
+          title: 'Pending',
+          content: 'Customer after sales application',
+          timestamp: '2020.06.22 06:00:00'
+        }
+      ]
     }
   },
   computed: {},
@@ -190,6 +255,7 @@ export default {
             return item
           })
           this.listQuery.total = +res.total.totalCount
+          this.unreadCount = res.total.unreadCount
 
           // if (res.data.product_json && res.data.product_json.length > 0) {
           //   console.log(1111)
@@ -291,6 +357,35 @@ export default {
       }).finally(() => {
 
       })
+    },
+    handleNew() {
+      this.loading = true
+      const formQuery = {
+        unread: '1',
+        status: this.formQuery.status,
+        store_url: this.formQuery.store_url,
+        iDisplayLength: this.listQuery.limit,
+        iDisplayStart: (this.listQuery.page - 1) * this.listQuery.limit
+      }
+      afterSalesList(formQuery).then(res => {
+        if (res.code === 200) {
+          this.tableData = res.data.map((item, index) => {
+            item.product_json = item.product_json.map((da, ik) => {
+              return da.sku_name
+            }).join(',')
+            item.index = index
+            return item
+          })
+          this.listQuery.total = +res.total.totalCount
+        }
+      }).catch(err => {
+        console.log('err', err)
+      }).finally(() => {
+        this.loading = false
+      })
+    },
+    handleTrack(row) {
+      this.timelineVisible = true
     }
   }
 }
@@ -308,6 +403,20 @@ export default {
       margin-left: 0;
     }
     margin-left: 15px;
+  }
+}
+.father {
+  position: relative;
+  .son {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    display: inline-block;
+    border-radius: 50%;
+    background-color: #f60d0f;
   }
 }
 </style>
