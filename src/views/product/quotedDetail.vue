@@ -3,8 +3,8 @@
     <div class="box-card">
       <div class="btn-box p20">
         <el-button class="mr30" size="small" icon="el-icon-back" @click="$router.back()" />
-<!--        <el-button v-if="!someThingAdopt" type="primary" size="small" @click="cancellation">Cancellation</el-button>-->
-<!--        <el-button v-if="someThingAdopt" type="primary" size="small" @click="handleSave">Save</el-button>-->
+        <!--        <el-button v-if="!someThingAdopt" type="primary" size="small" @click="cancellation">Cancellation</el-button>-->
+        <!--        <el-button v-if="someThingAdopt" type="primary" size="small" @click="handleSave">Save</el-button>-->
       </div>
     </div>
     <el-form v-loading="loading" :model="formData" :rules="formDataRules" label-width="160px" label-position="top">
@@ -48,8 +48,8 @@
             <el-table
               v-if="item.newData"
               ref="multipleTable"
-              empty-text="No Data"
               :data="item.next"
+              empty-text="No Data"
               style="width: 100%"
               :span-method="objectSpanMethod"
               highlight-current-row
@@ -60,13 +60,16 @@
               <el-table-column v-for="(item, idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width" :min-width="item.width ? item.width : '150'" fixed="left">
                 <template slot-scope="scope">
                   <span v-if="item.type === undefined">{{ scope.row[item.value] }}</span>
-                  <span v-if="item.type === 'dollar'">$ {{ scope.row[item.value] ? scope.row[item.value] : 0 }}</span>
+                  <span v-if="item.type === 'dollar'">
+                    <span v-if="scope.row[item.value]">$ {{ scope.row[item.value] }}</span>
+                    <span v-if="!scope.row[item.value]">/</span>
+                  </span>
                   <span v-if="item.type === 'serial'">
                     <span>{{ scope.row[item.value] }}</span>
-<!--                    <span v-if="scope.row.someThingAdopt">-->
-<!--                      <el-checkbox v-model="item.check" @click="handleClickCheckbox(item)" @change="handleChangeCheckbox(item)" />-->
-<!--                    </span>-->
-<!--                    <span v-if="!scope.row.someThingAdopt">{{ scope.row[item.value] }}</span>-->
+                    <!--                    <span v-if="scope.row.someThingAdopt">-->
+                    <!--                      <el-checkbox v-model="item.check" @click="handleClickCheckbox(item)" @change="handleChangeCheckbox(item)" />-->
+                    <!--                    </span>-->
+                    <!--                    <span v-if="!scope.row.someThingAdopt">{{ scope.row[item.value] }}</span>-->
                   </span>
                   <span v-if="item.type === 'img'">
                     <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img" fit="cover">
@@ -83,17 +86,32 @@
                 </template>
                 <template slot-scope="scope">
                   <span v-if="item2.type === 'dynamic'">
-                    <span v-if="!isTotal">$ {{ scope.row[item2.value].total ? scope.row[item2.value].total : 0 }}</span>
+                    <span v-if="!isTotal">
+                      <span v-if="scope.row[item2.value].total !== null && scope.row[item2.value].total !== undefined && scope.row[item2.value].total !== ''">$ {{ scope.row[item2.value].total }}</span>
+                      <span v-if="scope.row[item2.value].total === null || scope.row[item2.value].total === undefined || scope.row[item2.value].total === ''">/</span>
+                    </span>
                     <span v-if="isTotal" class="change-style">
                       <span class="left">
                         <span class="title">Total</span>
-                        <span>$ {{ scope.row[item2.value].total ? scope.row[item2.value].total : 0 }}</span>
+                        <span>
+                          <span v-if="scope.row[item2.value].total !== null && scope.row[item2.value].total !== undefined && scope.row[item2.value].total !== ''">$ {{ scope.row[item2.value].total }}</span>
+                          <span v-if="scope.row[item2.value].total === null || scope.row[item2.value].total === undefined || scope.row[item2.value].total === ''">/</span>
+                        </span>
                       </span>
                       <span class="right">
                         <span class="title">Details</span>
-                        <span class="spanOneLine"><span style="font-weight: 600">Product: </span>$ {{ scope.row[item2.value].product_price ? scope.row[item2.value].product_price : 0 }}</span>
-                        <span class="spanOneLine"><span style="font-weight: 600">Service: </span>$ {{ scope.row[item2.value].service_price ? scope.row[item2.value].service_price : 0 }}</span>
-                        <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>$ {{ scope.row[item2.value].logistics_fee ? scope.row[item2.value].logistics_fee : 0 }}</span>
+                        <span class="spanOneLine"><span style="font-weight: 600">Product: </span>
+                          <span v-if="scope.row[item2.value].product_price">$ {{ scope.row[item2.value].product_price }}</span>
+                          <span v-if="!scope.row[item2.value].product_price">/</span>
+                        </span>
+                        <span class="spanOneLine"><span style="font-weight: 600">Service: </span>
+                          <span v-if="scope.row[item2.value].service_price">$ {{ scope.row[item2.value].service_price }}</span>
+                          <span v-if="!scope.row[item2.value].service_price">/</span>
+                        </span>
+                        <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>
+                          <span v-if="scope.row[item2.value].logistics_fee !== null && scope.row[item2.value].logistics_fee !== undefined && scope.row[item2.value].logistics_fee !== ''">$ {{ scope.row[item2.value].logistics_fee }}</span>
+                          <span v-if="scope.row[item2.value].logistics_fee === null || scope.row[item2.value].logistics_fee === undefined || scope.row[item2.value].logistics_fee === ''">/</span>
+                        </span>
                       </span>
                     </span>
                   </span>
@@ -109,8 +127,8 @@
             <el-table
               v-if="item.pre.length > 0 && !item.newData"
               ref="multipleTable"
-              empty-text="No Data"
               :data="item.pre"
+              empty-text="No Data"
               style="width: 100%"
               highlight-current-row
               :span-method="objectSpanMethod"
@@ -124,7 +142,10 @@
                 </template>
                 <template slot-scope="scope">
                   <span v-if="item.type === undefined">{{ scope.row[item.value] }}</span>
-                  <span v-if="item.type === 'dollar'">$ {{ scope.row[item.value] ? scope.row[item.value] : 0 }}</span>
+                  <span v-if="item.type === 'dollar'">
+                    <span v-if="scope.row[item.value]">$ {{ scope.row[item.value] }}</span>
+                    <span v-if="!scope.row[item.value]">/</span>
+                  </span>
                   <span v-if="item.type === 'serial'">
                     <span>{{ scope.$index + 1 }}</span>
                   </span>
@@ -143,17 +164,32 @@
                 </template>
                 <template slot-scope="scope">
                   <span v-if="item2.type === 'dynamic'">
-                    <span v-if="!isTotal">$ {{ scope.row[item2.value].total ? scope.row[item2.value].total : 0 }}</span>
+                    <span v-if="!isTotal">
+                      <span v-if="scope.row[item2.value].total !== null && scope.row[item2.value].total !== undefined && scope.row[item2.value].total !== ''">$ {{ scope.row[item2.value].total }}</span>
+                      <span v-if="scope.row[item2.value].total === null || scope.row[item2.value].total === undefined || scope.row[item2.value].total === ''">/</span>
+                    </span>
                     <span v-if="isTotal" class="change-style">
                       <span class="left">
                         <span class="title">Total</span>
-                        <span>$ {{ scope.row[item2.value].total ? scope.row[item2.value].total : 0 }}</span>
+                        <span>
+                          <span v-if="scope.row[item2.value].total !== null && scope.row[item2.value].total !== undefined && scope.row[item2.value].total !== ''">$ {{ scope.row[item2.value].total }}</span>
+                          <span v-if="scope.row[item2.value].total === null || scope.row[item2.value].total === undefined || scope.row[item2.value].total === ''">/</span>
+                        </span>
                       </span>
                       <span class="right">
                         <span class="title">Details</span>
-                        <span class="spanOneLine"><span style="font-weight: 600">Product: </span>$ {{ scope.row[item2.value].product_price ? scope.row[item2.value].product_price : 0 }}</span>
-                        <span class="spanOneLine"><span style="font-weight: 600">Service: </span>$ {{ scope.row[item2.value].service_price ? scope.row[item2.value].service_price : 0 }}</span>
-                        <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>$ {{ scope.row[item2.value].logistics_fee ? scope.row[item2.value].logistics_fee : 0 }}</span>
+                        <span class="spanOneLine"><span style="font-weight: 600">Product: </span>
+                          <span v-if="scope.row[item2.value].product_price">$ {{ scope.row[item2.value].product_price }}</span>
+                          <span v-if="!scope.row[item2.value].product_price">/</span>
+                        </span>
+                        <span class="spanOneLine"><span style="font-weight: 600">Service: </span>
+                          <span v-if="scope.row[item2.value].service_price">$ {{ scope.row[item2.value].service_price }}</span>
+                          <span v-if="!scope.row[item2.value].service_price">/</span>
+                        </span>
+                        <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>
+                          <span v-if="scope.row[item2.value].logistics_fee !== null && scope.row[item2.value].logistics_fee !== undefined && scope.row[item2.value].logistics_fee !== ''">$ {{ scope.row[item2.value].logistics_fee }}</span>
+                          <span v-if="scope.row[item2.value].logistics_fee === null || scope.row[item2.value].logistics_fee === undefined || scope.row[item2.value].logistics_fee === ''">/</span>
+                        </span>
                       </span>
                     </span>
                   </span>
