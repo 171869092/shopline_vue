@@ -75,7 +75,9 @@
               </div>
               <div class="contain">
                 <div v-if="item.reply_info" class="mb10">
-                  <span :class="[item.reply_user === user_id ? 'reply-right' : 'reply-left']" v-html="item.reply_info"/>
+                  <span :class="[item.reply_user === user_id ? 'reply-right' : 'reply-left']">
+                    <p v-html="item.reply_info" />
+                  </span>
                 </div>
                 <div>
                   <el-image
@@ -145,7 +147,9 @@
               </div>
               <div class="contain">
                 <div v-if="item.reply_info" class="mb10">
-                  <span :class="[item.reply_user === user_id ? 'reply-right' : 'reply-left']" v-html="item.reply_info"/>
+                  <span :class="[item.reply_user === user_id ? 'reply-right' : 'reply-left']">
+                    <p v-html="item.reply_info"/>
+                  </span>
                 </div>
                 <div>
                   <el-image
