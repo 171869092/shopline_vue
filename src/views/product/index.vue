@@ -332,9 +332,9 @@ export default {
         if ((value == null) || (value.length === 0)) {
           callback('please choose!')
         }
-        if (value.length > 5) {
-          callback('Choose no more than 5 countries')
-        }
+        // if (value.length > 5) {
+        //   callback('Choose no more than 5 countries')
+        // }
       }
       callback()
     },
