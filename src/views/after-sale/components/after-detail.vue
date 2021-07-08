@@ -535,7 +535,7 @@ export default {
           const data = JSON.parse(JSON.stringify(res.data))
           file.url = data['data-service-file']
           file.showProgress = false
-          this.customerAfterSaleInfo.reply.push(data['data-service-file'])
+          this.customerAfterChat.reply_img.push(data['data-service-file'])
           this.showImg = false
         }
       }).catch(err => {
@@ -571,7 +571,7 @@ export default {
           const data = JSON.parse(JSON.stringify(res.data))
           file.url = data['data-service-file']
           file.showProgress = false
-          this.vendorAfterSaleInfo.reply.push(data['data-service-file'])
+          this.vendorAfterChat.reply_img.push(data['data-service-file'])
           this.showImg = false
         }
       }).catch(err => {
