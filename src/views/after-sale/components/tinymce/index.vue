@@ -190,6 +190,12 @@ export default {
           editor.on('FullscreenStateChanged', (e) => {
             this.fullscreen = e.state
           })
+          editor.on('keydown', (e) => {
+            if (e.keyCode === 13) {
+              this.$emit('reply')
+              window.tinymce.get(this.tinymceId).setContent('')
+            }
+          })
         },
         readonly: this.readonly
       })

@@ -49,7 +49,7 @@
           </div>
         </div>
         <el-button type="primary" size="small" class="mb10" @click="complete">Completed</el-button>
-        <el-button type="primary" size="small" class="mb10 father" @click="handleNew">New information <span v-if="unreadCount !== '0'" class="son">{{ unreadCount }}</span></el-button>
+        <el-button type="primary" size="small" class="mb10 father" :disabled="unreadCount === '0'" @click="handleNew">New information <span v-if="unreadCount !== '0'" class="son">{{ unreadCount }}</span></el-button>
         <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.label" :name="tab.name">
           <el-table
             ref="multipleTable"
@@ -138,13 +138,13 @@
           <el-timeline-item
             v-for="(activity, index) in activities"
             :key="index"
-            :timestamp="activity.timestamp"
+            :timestamp="activity.date_time"
             placement="top"
             :color="'#f68a1d'">
-            <p v-if="activity.title === 'completed'" style="color: #43c87a">{{ activity.title }}</p>
-            <p v-if="activity.title === 'In process'" style="color: #f6c219">{{ activity.title }}</p>
-            <p v-if="activity.title === 'Pending'" style="color: #ce3333">{{ activity.title }}</p>
-            <p>{{ activity.content }}</p>
+            <p v-if="activity.status_name === 'completed'" style="color: #43c87a">{{ activity.status_name }}</p>
+            <p v-if="activity.status_name === 'In process'" style="color: #f6c219">{{ activity.status_name }}</p>
+            <p v-if="activity.status_name === 'Pending'" style="color: #ce3333">{{ activity.status_name }}</p>
+            <p>{{ activity.info }}</p>
           </el-timeline-item>
         </el-timeline>
       </div>
@@ -155,7 +155,7 @@
 import { debounce } from '@/utils'
 import Sticky from '@/directive/fix-table-header'
 import { getStoreList } from '@/api/product'
-import { afterSalesList, afterSalesChanngedStatus, afterSalesType } from '@/api/after'
+import { afterSalesList, afterSalesChanngedStatus, afterSalesType, afterSalesTimeline } from '@/api/after'
 export default {
   name: 'after-sale',
   components: {
@@ -205,23 +205,7 @@ export default {
       timelineVisible: false,
       NewIcon: require('@/assets/home/new.png'), // 我的消息new图标
       unreadCount: '0',
-      activities: [
-        {
-          title: 'completed',
-          content: 'Complete after sales / automatically complete after sales',
-          timestamp: '2020.06.22 06:00:00'
-        },
-        {
-          title: 'In process',
-          content: 'Reply to customer information',
-          timestamp: '2020.06.21 06:00:00'
-        },
-        {
-          title: 'Pending',
-          content: 'Customer after sales application',
-          timestamp: '2020.06.22 06:00:00'
-        }
-      ]
+      activities: []
     }
   },
   computed: {},
@@ -385,7 +369,19 @@ export default {
       })
     },
     handleTrack(row) {
-      this.timelineVisible = true
+      const formData = {
+        after_id: row.id
+      }
+      afterSalesTimeline(formData).then(res => {
+        if (res.code === 200) {
+          if (res.data.length > 0) {
+            this.activities = res.data
+            this.timelineVisible = true
+          } else {
+            this.$message.warning('No timeline')
+          }
+        }
+      })
     }
   }
 }

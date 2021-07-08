@@ -73,11 +73,10 @@
                   :preview-src-list="[item.reply_user_image]"
                 />
               </div>
-              <div class="line" :class="[item.reply_user === user_id ? 'line-right' : 'line-left']">
-                <el-divider />
-              </div>
               <div class="contain">
-                <div class="mb10" v-html="item.reply_info" />
+                <div v-if="item.reply_info" class="mb10">
+                  <span :class="[item.reply_user === user_id ? 'reply-right' : 'reply-left']" v-html="item.reply_info"/>
+                </div>
                 <div>
                   <el-image
                     v-for="(it,i) in item.reply_img"
@@ -87,9 +86,6 @@
                     :preview-src-list="[it]"
                   />
                 </div>
-              </div>
-              <div class="line" :class="[item.reply_user === user_id ? 'line-right' : 'line-left']">
-                <el-divider />
               </div>
             </div>
           </div>
@@ -147,11 +143,10 @@
                   :preview-src-list="[item.reply_user_image]"
                 />
               </div>
-              <div class="line" :class="[item.reply_user === user_id ? 'line-right' : 'line-left']">
-                <el-divider />
-              </div>
               <div class="contain">
-                <div class="mb10" v-html="item.reply_info" />
+                <div v-if="item.reply_info" class="mb10">
+                  <span :class="[item.reply_user === user_id ? 'reply-right' : 'reply-left']" v-html="item.reply_info"/>
+                </div>
                 <div>
                   <el-image
                     v-for="(it,i) in item.reply_img"
@@ -161,9 +156,6 @@
                     :preview-src-list="[it]"
                   />
                 </div>
-              </div>
-              <div class="line" :class="[item.reply_user === user_id ? 'line-right' : 'line-left']">
-                <el-divider />
               </div>
             </div>
           </div>
@@ -374,7 +366,6 @@ export default {
             })
           }
           this.productsList = res.data.product_json
-          console.log('productsList--', this.productsList)
           this.status = res.data.status
           this.customerAfterSaleInfo.reply = res.data.client_reply ? res.data.client_reply : []
           this.vendorAfterSaleInfo.reply = res.data.service_reply ? res.data.service_reply : []
@@ -441,87 +432,95 @@ export default {
       }
     },
     handleCustomerReply() {
-      const date = new Date()
-      const y = date.getFullYear()
-      const m = date.getMonth() + 1
-      const d = date.getDate()
-      const H = date.getHours()
-      const M = date.getMinutes()
-      const S = date.getSeconds()
-      const FormatDate = y + '/' + m + '/' + d + ' ' + H + ':' + M + ':' + S
-      const obj = {
-        type: this.bInformation.type,
-        after_id: this.after_id,
-        reply_user: this.bInformation.user_id,
-        reply_user_image: this.bInformation.icon,
-        reply_user_name: this.bInformation.username,
-        reply_time: FormatDate,
-        reply_info: this.customerAfterChat.reply_info,
-        reply_img: this.customerAfterChat.reply_img
-      }
-      this.$set(this.customerAfterChat, 'after_id', this.after_id)
-      this.$set(this.customerAfterChat, 'type', this.socketType)
-      this.socket.emit('after-reply', this.customerAfterChat)
-      this.socket.on('send-error', (e) => {
-        if (e.code === 400) {
-          console.log('消息发送失败', e.msg)
-          this.msg = e.msg
-          this.HSocket = true
-          this.socket.emit('join-after', { after_id: this.after_id })
-        }
-      })
-      if (this.HSocket === true) {
-        this.$message.warning(this.msg)
+      if (this.customerAfterChat.reply_info === '' && this.customerAfterChat.reply_img.length === 0) {
+        this.$message.warning('Please enter the reply content or picture！')
       } else {
-        this.isCustomerMessageRecord = false
-        this.customerAfterSaleInfo.reply.push(obj)
-        this.$nextTick(() => {
-          this.isCustomerMessageRecord = true
+        const date = new Date()
+        const y = date.getFullYear()
+        const m = date.getMonth() + 1
+        const d = date.getDate()
+        const H = date.getHours()
+        const M = date.getMinutes()
+        const S = date.getSeconds()
+        const FormatDate = y + '/' + m + '/' + d + ' ' + H + ':' + M + ':' + S
+        const obj = {
+          type: this.bInformation.type,
+          after_id: this.after_id,
+          reply_user: this.bInformation.user_id,
+          reply_user_image: this.bInformation.icon,
+          reply_user_name: this.bInformation.username,
+          reply_time: FormatDate,
+          reply_info: this.customerAfterChat.reply_info,
+          reply_img: this.customerAfterChat.reply_img
+        }
+        this.$set(this.customerAfterChat, 'after_id', this.after_id)
+        this.$set(this.customerAfterChat, 'type', this.socketType)
+        this.socket.emit('after-reply', this.customerAfterChat)
+        this.socket.on('send-error', (e) => {
+          if (e.code === 400) {
+            console.log('消息发送失败', e.msg)
+            this.msg = e.msg
+            this.HSocket = true
+            this.socket.emit('join-after', { after_id: this.after_id })
+          }
         })
-        this.customerAfterChat = this.$options.data().customerAfterChat
-        this.reply_img = []
+        if (this.HSocket === true) {
+          this.$message.warning(this.msg)
+        } else {
+          this.isCustomerMessageRecord = false
+          this.customerAfterSaleInfo.reply.push(obj)
+          this.$nextTick(() => {
+            this.isCustomerMessageRecord = true
+          })
+          this.customerAfterChat = this.$options.data().customerAfterChat
+          this.reply_img = []
+        }
       }
     },
     handleVendorReply() {
-      const date = new Date()
-      const y = date.getFullYear()
-      const m = date.getMonth() + 1
-      const d = date.getDate()
-      const H = date.getHours()
-      const M = date.getMinutes()
-      const S = date.getSeconds()
-      const FormatDate = y + '/' + m + '/' + d + ' ' + H + ':' + M + ':' + S
-      const obj = {
-        type: this.bInformation.type,
-        after_id: this.after_id,
-        reply_user: this.bInformation.user_id,
-        reply_user_image: this.bInformation.icon,
-        reply_user_name: this.bInformation.username,
-        reply_time: FormatDate,
-        reply_info: this.vendorAfterChat.reply_info,
-        reply_img: this.vendorAfterChat.reply_img
-      }
-      this.$set(this.vendorAfterChat, 'after_id', this.after_id)
-      this.$set(this.vendorAfterChat, 'type', this.socketType)
-      this.socket.emit('after-reply', this.vendorAfterChat)
-      this.socket.on('send-error', (e) => {
-        if (e.code === 400) {
-          console.log('消息发送失败', e.msg)
-          this.msg = e.msg
-          this.HSocket = true
-          this.socket.emit('join-after', { after_id: this.after_id })
-        }
-      })
-      if (this.HSocket === true) {
-        this.$message.warning(this.msg)
+      if (this.vendorAfterChat.reply_info === '' && this.vendorAfterChat.reply_img.length === 0) {
+        this.$message.warning('Please enter the reply content or picture！')
       } else {
-        this.isVendorMessageRecord = false
-        this.vendorAfterSaleInfo.reply.push(obj)
-        this.$nextTick(() => {
-          this.isVendorMessageRecord = true
+        const date = new Date()
+        const y = date.getFullYear()
+        const m = date.getMonth() + 1
+        const d = date.getDate()
+        const H = date.getHours()
+        const M = date.getMinutes()
+        const S = date.getSeconds()
+        const FormatDate = y + '/' + m + '/' + d + ' ' + H + ':' + M + ':' + S
+        const obj = {
+          type: this.bInformation.type,
+          after_id: this.after_id,
+          reply_user: this.bInformation.user_id,
+          reply_user_image: this.bInformation.icon,
+          reply_user_name: this.bInformation.username,
+          reply_time: FormatDate,
+          reply_info: this.vendorAfterChat.reply_info,
+          reply_img: this.vendorAfterChat.reply_img
+        }
+        this.$set(this.vendorAfterChat, 'after_id', this.after_id)
+        this.$set(this.vendorAfterChat, 'type', this.socketType)
+        this.socket.emit('after-reply', this.vendorAfterChat)
+        this.socket.on('send-error', (e) => {
+          if (e.code === 400) {
+            console.log('消息发送失败', e.msg)
+            this.msg = e.msg
+            this.HSocket = true
+            this.socket.emit('join-after', { after_id: this.after_id })
+          }
         })
-        this.vendorAfterChat = this.$options.data().vendorAfterChat
-        this.reply_img = []
+        if (this.HSocket === true) {
+          this.$message.warning(this.msg)
+        } else {
+          this.isVendorMessageRecord = false
+          this.vendorAfterSaleInfo.reply.push(obj)
+          this.$nextTick(() => {
+            this.isVendorMessageRecord = true
+          })
+          this.vendorAfterChat = this.$options.data().vendorAfterChat
+          this.reply_img = []
+        }
       }
     },
     customerUpload(fileObj) {
@@ -734,6 +733,7 @@ export default {
       overflow-y: auto;
       .message-box {
         padding: 20px 30px 0;
+        overflow-x: hidden;
         .title {
           display: flex;
           .avatar {
@@ -752,18 +752,6 @@ export default {
             }
           }
         }
-        .line {
-          width: 95%;
-          ::v-deep.el-divider--horizontal {
-            margin: 0!important;
-          }
-        }
-        .line-right {
-          margin-right: 60px;
-        }
-        .line-left {
-          margin-left: 60px;
-        }
         .contain {
           padding: 20px 70px;
           .image {
@@ -774,6 +762,53 @@ export default {
           .info-image {
             width: 30px;
             height: 30px;
+          }
+          .reply-left {
+            max-width: 80%;
+            position: relative;
+            display: inline-block;
+            word-wrap: break-word;
+            word-break: normal;
+            background-color: #4b89bc;
+            color: #fff;
+            box-sizing: border-box;
+            padding: 16px 10px 0;
+            border-radius: 8px;
+            ::after {
+              content: '';
+              display: inline-block;
+              width: 12px;
+              height: 12px;
+              background-color: #4b89bc;
+              position: absolute;
+              top: 50%;
+              left: -6px;
+              transform: rotate(45deg)  translate(-50%, -50%);
+            }
+          }
+          .reply-right {
+            max-width: 80%;
+            position: relative;
+            display: inline-block;
+            word-wrap: break-word;
+            word-break: break-all;
+            text-align: left;
+            background-color: #e56e02;
+            color: #fff;
+            box-sizing: border-box;
+            padding: 16px 10px 0;
+            border-radius: 8px;
+            ::after {
+              content: '';
+              display: inline-block;
+              width: 12px;
+              height: 12px;
+              background-color: #e56e02;
+              position: absolute;
+              top: 50%;
+              right: -6px;
+              transform: rotate(45deg)  translate(-50%, -50%);
+            }
           }
         }
       }
@@ -805,7 +840,7 @@ export default {
         height: 20px;
         position: absolute;
         top: 6px;
-        left: 267px;
+        left: 200px;
         background-color: #fff;
         .upload-photos {
           font-size: 18px;

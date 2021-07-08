@@ -61,3 +61,12 @@ export function afterSalesReply(data) {
     data: data
   })
 }
+
+// . after sale Timeline
+export function afterSalesTimeline(params) {
+  return request({
+    url: '/after/after-sales/timeline',
+    method: 'get',
+    params
+  })
+}

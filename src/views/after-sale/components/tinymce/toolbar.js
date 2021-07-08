@@ -2,7 +2,7 @@
 // Detail list see https://www.tinymce.com/docs/advanced/editor-control-identifiers/#toolbarcontrols
 
 const toolbar = [
-  'bold italic strikethrough bullist numlist outdent indent image link emoticons'
+  'bold italic strikethrough bullist numlist image emoticons'
 ]
 
 export default toolbar
