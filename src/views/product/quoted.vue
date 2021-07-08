@@ -164,7 +164,13 @@ export default {
     },
     // 删除
     handleDelete(row) {
-      deleteQuoted({ id: row.id }).then(res => {
+      let server_id = ''
+      this.storeList.map(it => {
+        if (it.service_name === row.server_id[0]) {
+          server_id = it.id
+        }
+      })
+      deleteQuoted({ id: row.id, server_id: Number(server_id) }).then(res => {
         if (res.code === 200) {
           this.$message.success(res.message)
           this.Inquire()
