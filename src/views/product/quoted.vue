@@ -170,7 +170,9 @@ export default {
           server_id = it.id
         }
       })
-      deleteQuoted({ id: row.id, server_id: Number(server_id) }).then(res => {
+      const arr = []
+      arr.push(Number(server_id))
+      deleteQuoted({ id: row.id, server_id: arr }).then(res => {
         if (res.code === 200) {
           this.$message.success(res.message)
           this.Inquire()
