@@ -197,9 +197,9 @@
       width="30%">
       <p style="text-align: center">Are you sure to complete the current after sales information ?</p>
       <span slot="footer" class="dialog-footer">
-        <el-button v-if="client_status !== 3" type="primary" style="background-color:#2c7fdd;border: 0 none;" @click="handleComplete(3)">Vendor</el-button>
-        <el-button v-if="status !== 3" type="primary" style="background-color:#f6be02;border: 0 none;" @click="handleComplete(4)">Customer</el-button>
-        <el-button v-if="client_status !== 3 && status !== 3" type="primary" style="background-color:#f68a1d;border: 0 none;" @click="handleComplete(5)">All</el-button>
+        <el-button type="primary" style="background-color:#2c7fdd;border: 0 none;" @click="handleComplete(3)">Vendor</el-button>
+        <el-button type="primary" style="background-color:#f6be02;border: 0 none;" @click="handleComplete(4)">Customer</el-button>
+        <el-button type="primary" style="background-color:#f68a1d;border: 0 none;" @click="handleComplete(5)">All</el-button>
       </span>
     </el-dialog>
     <el-dialog
@@ -379,7 +379,26 @@ export default {
     },
     // complete
     complete() {
-      this.dialogVisible = true
+      const ids = []
+      ids.push(this.tableData.id)
+      if (this.client_status === 3 || this.status === 3) {
+        afterSalesChanngedStatus({ id: ids, status: 5 }).then(res => {
+          let type = ''
+          if (res.code === 200) {
+            type = 'success'
+          } else {
+            type = 'error'
+          }
+          this.dialogVisible = false
+          this.$message({ message: res.message, type: type })
+        }).catch(err => {
+          console.log(err)
+        }).finally(() => {
+
+        })
+      } else {
+        this.dialogVisible = true
+      }
     },
     handleComplete(type) {
       const ids = []

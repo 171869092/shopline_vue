@@ -149,6 +149,17 @@
         </el-timeline>
       </div>
     </el-dialog>
+    <el-dialog
+      title="Tips"
+      :visible.sync="dialogVisible"
+      width="30%">
+      <p style="text-align: center">Are you sure to complete the current after sales information ?</p>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" style="background-color:#2c7fdd;border: 0 none;" @click="handleComplete(3)">Vendor</el-button>
+        <el-button type="primary" style="background-color:#f6be02;border: 0 none;" @click="handleComplete(4)">Customer</el-button>
+        <el-button type="primary" style="background-color:#f68a1d;border: 0 none;" @click="handleComplete(5)">All</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
@@ -205,7 +216,8 @@ export default {
       timelineVisible: false,
       NewIcon: require('@/assets/home/new.png'), // 我的消息new图标
       unreadCount: '0',
-      activities: []
+      activities: [],
+      dialogVisible: false
     }
   },
   computed: {},
@@ -326,21 +338,55 @@ export default {
         this.$message.error('Please select a piece of data')
         return false
       }
-      afterSalesChanngedStatus({ id: this.selectAfter }).then(res => {
-        let type = ''
-        if (res.code === 200) {
-          type = 'success'
-        } else {
-          type = 'error'
-        }
-        this.$message({ message: res.message, type: type })
-        // this.$router.go(0)
-        this.Inquire()
-      }).catch(err => {
-        console.log(err)
-      }).finally(() => {
+      this.dialogVisible = true
+    },
+    handleComplete(type) {
+      if (type === 3) {
+        afterSalesChanngedStatus({ id: this.selectAfter, status: type }).then(res => {
+          let type = ''
+          if (res.code === 200) {
+            type = 'success'
+          } else {
+            type = 'error'
+          }
+          this.dialogVisible = false
+          this.$message({ message: res.message, type: type })
+        }).catch(err => {
+          console.log(err)
+        }).finally(() => {
 
-      })
+        })
+      } else if (type === 4) {
+        afterSalesChanngedStatus({ id: this.selectAfter, status: type }).then(res => {
+          let type = ''
+          if (res.code === 200) {
+            type = 'success'
+          } else {
+            type = 'error'
+          }
+          this.dialogVisible = false
+          this.$message({ message: res.message, type: type })
+        }).catch(err => {
+          console.log(err)
+        }).finally(() => {
+
+        })
+      } else {
+        afterSalesChanngedStatus({ id: this.selectAfter, status: type }).then(res => {
+          let type = ''
+          if (res.code === 200) {
+            type = 'success'
+          } else {
+            type = 'error'
+          }
+          this.dialogVisible = false
+          this.$message({ message: res.message, type: type })
+        }).catch(err => {
+          console.log(err)
+        }).finally(() => {
+
+        })
+      }
     },
     handleNew() {
       this.loading = true
