@@ -336,6 +336,11 @@ export default {
           })
         }
       })
+      this.socket.on('send-error', (e) => {
+        if (e.code === 400) {
+          this.socket.emit('join-after', { after_id: this.after_id })
+        }
+      })
       this.socket.on('connect_timeout', () => {
         console.log('连接超时')
       })
