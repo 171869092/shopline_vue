@@ -30,6 +30,22 @@
                 />
               </el-select>
             </div>
+            <div class="filter-item w-250">
+              <el-select
+                v-model="formQuery.order_status"
+                collapse-tags
+                placeholder="Payment"
+                style="width:100%"
+                @change="filterOrderPayment"
+              >
+                <el-option
+                  v-for="(item, key) in orderPaymentList"
+                  :key="key"
+                  :label="item"
+                  :value="key"
+                />
+              </el-select>
+            </div>
             <!-- <div class="filter-item w-250">
             <el-select
               v-model="queryForm.logistics_status"
@@ -119,6 +135,11 @@
                 <span>{{ orderStatus[scope.row.order_status_client] }}</span>
               </template>
             </el-table-column>
+            <el-table-column label="Payment">
+              <template slot-scope="scope">
+                <span>{{ orderPaymentList[scope.row.order_status] }}</span>
+              </template>
+            </el-table-column>
             <el-table-column label="Vendor">
               <template slot-scope="scope">
                 <span>{{ scope.row.service_name }}</span>
@@ -184,7 +205,7 @@ export default {
       // logisticsStatus: { 1: 'Waiting For Delivery', 2: 'Received', 3: 'In Transit', 4: 'Delivered', 5: 'Rejected', 6: 'Canceled', 7: 'Returned', 8: 'Pending Transfer', 9: 'Return Goods In Stock' },
       // orderStatus: {1: "待支付", 2: "金额处理", 3: "完成支付", 4: "退款", 5: "异常", 6: "部分支付", 7: "部分退款", 8: "订单取消"},
       // orderStatus: { 1: 'Pending payment', 2: 'Processing', 3: 'Complete payment', 4: 'Refunded', 5: 'Order exception', 6: 'Partially payment', 7: 'Partially refunded', 8: 'Order canceled' },
-      orderStatus: { 0: 'ALL', 1: 'Pending', 2: 'Processing', 3: 'In transit', 4: 'Exception', 5: 'Delivered' },
+      orderStatus: { 0: 'Ship Status', 1: 'Pending', 2: 'Processing', 3: 'In transit', 4: 'Exception', 5: 'Delivered' },
       tabList: [
         { label: 'ALL', name: '0' },
         { label: 'Pending', name: '1' },
@@ -215,7 +236,8 @@ export default {
       keepDown: false, // 是否按住shift键
       pin: false, // 这里给一个变量，默认为false，不按住
       jumpRoute: '1',
-      platForm: ''
+      platForm: '',
+      orderPaymentList: { '': 'ALL', '3': 'Payment', '4': 'Refunded', '7': 'Partially Refunded' }
     }
   },
   computed: {},
@@ -414,6 +436,10 @@ export default {
     }, 500),
     filterStoreUrl: debounce(function() {
       // this.formQuery.store_url = this.queryForm.store_url
+      this.resetPageLimit()
+      this.Inquire()
+    }, 500),
+    filterOrderPayment: debounce(function() {
       this.resetPageLimit()
       this.Inquire()
     }, 500)
