@@ -123,6 +123,7 @@ export default {
       getServiceList().then(res => {
         if (res.code === 200) {
           this.storeList = res.data
+          this.$store.commit('user/SET_STORELIST', this.storeList)
         }
       })
       getQuotedLabel().then(res => {
