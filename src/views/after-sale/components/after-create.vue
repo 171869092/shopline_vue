@@ -330,8 +330,8 @@ export default {
       })
       this.socket.on('after-reply', (e) => {
         if (e.code === 200) {
-          console.log('e---', e)
           this.afterSaleInfo.reply.push(e.data)
+          this.socket.emit('after-read', { after_id: this.after_id, type: this.socketType })
           this.isMessageRecord = false
           this.$nextTick(() => {
             this.isMessageRecord = true

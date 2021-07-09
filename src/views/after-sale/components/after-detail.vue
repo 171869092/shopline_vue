@@ -162,6 +162,7 @@
                 </div>
               </div>
             </div>
+            <div v-if="status === 3" class="service-tips"><i class="el-icon-warning-outline" /> The service provider applies to complete the current after-sales service</div>
           </div>
         </el-card>
         <!-- After Sales Reply -->
@@ -648,6 +649,7 @@ export default {
       this.socket.on('after-reply', (e) => {
         if (e.code === 200) {
           this.vendorAfterSaleInfo.reply.push(e.data)
+          this.socket.emit('after-read', { after_id: this.after_id, type: this.socketType })
           this.isMessageRecord = false
           this.$nextTick(() => {
             this.isMessageRecord = true
@@ -848,6 +850,17 @@ export default {
         text-align: left;
         .title-user-name {
           color: #f6902c;
+        }
+      }
+      .service-tips {
+        width: 700px;
+        border-radius: 20px;
+        margin: 0 auto;
+        text-align: center;
+        background-color: #e7e7e7;
+        color: #9f9fa0;
+        i {
+          margin-right: 20px;
         }
       }
     }
