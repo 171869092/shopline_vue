@@ -37,11 +37,11 @@
             <div class="title-box">
               <div class="title" :style="{'background-color': item.newData ? item.titleStyle : '#ccc'}" @click="item.newData = true">
                 <img src="@/assets/home/drag.png" width="25px" height="25px">
-                <span style="margin: 0 20px">{{ getValueOfLabel(item.title, storeList) }}</span>
+                <span style="margin: 0 20px">{{ item.title }}</span>
                 <span>{{ item.time }}</span>
               </div>
               <div v-if="item.pre.length > 0" class="title" :style="{'background-color': item.newData ? '#ccc' : item.titleStyle}" @click="item.newData = false">
-                <span style="margin: 0 20px">{{ getValueOfLabel(item.title, storeList) }}</span>
+                <span style="margin: 0 20px">{{ item.title }}</span>
                 <span>{{ item.time }}</span>
               </div>
             </div>
@@ -57,26 +57,31 @@
               border
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
             >
-              <el-table-column v-for="(item, idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width" :min-width="item.width ? item.width : '150'" fixed="left">
+              <el-table-column v-for="item1 in labelListOne" :key="item1.label" :label="item1.label" :prop="item1.value" :width="item1.width" :min-width="item1.width ? item1.width : '150'" fixed="left">
                 <template slot-scope="scope">
-                  <span v-if="item.type === undefined">{{ scope.row[item.value] }}</span>
-                  <span v-if="item.type === 'dollar'">
-                    <span v-if="scope.row[item.value]">$ {{ scope.row[item.value] }}</span>
-                    <span v-if="!scope.row[item.value]">/</span>
+                  <span v-if="item1.type === 'serial'">
+                    <span>{{ scope.row[item1.value] }}</span>
                   </span>
-                  <span v-if="item.type === 'serial'">
-                    <span>{{ scope.row[item.value] }}</span>
-                    <!--                    <span v-if="scope.row.someThingAdopt">-->
-                    <!--                      <el-checkbox v-model="item.check" @click="handleClickCheckbox(item)" @change="handleChangeCheckbox(item)" />-->
-                    <!--                    </span>-->
-                    <!--                    <span v-if="!scope.row.someThingAdopt">{{ scope.row[item.value] }}</span>-->
-                  </span>
-                  <span v-if="item.type === 'img'">
+                  <span v-if="item1.type === 'img'">
                     <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img" fit="cover">
                       <div slot="error" class="image-slot">
                         <i class="el-icon-picture-outline" style="font-size: 30px;" />
                       </div>
                     </el-image>
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column v-for="item1 in optionList" :key="item1.label" :label="item1.label" :prop="item1.value" :width="item1.width" :min-width="item1.width ? item1.width : '150'" fixed="left">
+                <template slot-scope="scope">
+                  <span v-if="item1.type === undefined">{{ scope.row[item1.value] }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column v-for="item1 in labelListTow" :key="item1.label" :label="item1.label" :prop="item1.value" :width="item1.width" :min-width="item1.width ? item1.width : '150'" fixed="left">
+                <template slot-scope="scope">
+                  <span v-if="item1.type === undefined">{{ scope.row[item1.value] }}</span>
+                  <span v-if="item1.type === 'dollar'">
+                    <span v-if="scope.row[item1.value]">$ {{ scope.row[item1.value] }}</span>
+                    <span v-if="!scope.row[item1.value]">/</span>
                   </span>
                 </template>
               </el-table-column>
@@ -136,25 +141,37 @@
               border
               :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
             >
-              <el-table-column v-for="(item, idx) in labelList" :key="idx" :label="item.label" :prop="item.value" :width="item.width" fixed="left">
+              <el-table-column v-for="item1 in labelListOne" :key="item1.label" :label="item1.label" :prop="item1.value" :width="item1.width" fixed="left">
                 <template slot="header" slot-scope="scope">
                   <div>{{ scope.column.label }}</div>
                 </template>
                 <template slot-scope="scope">
-                  <span v-if="item.type === undefined">{{ scope.row[item.value] }}</span>
-                  <span v-if="item.type === 'dollar'">
-                    <span v-if="scope.row[item.value]">$ {{ scope.row[item.value] }}</span>
-                    <span v-if="!scope.row[item.value]">/</span>
-                  </span>
-                  <span v-if="item.type === 'serial'">
+                  <span v-if="item1.type === 'serial'">
                     <span>{{ scope.$index + 1 }}</span>
                   </span>
-                  <span v-if="item.type === 'img'">
+                  <span v-if="item1.type === 'img'">
                     <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img" fit="cover">
                       <div slot="error" class="image-slot">
                         <i class="el-icon-picture-outline" style="font-size: 30px;" />
                       </div>
                     </el-image>
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column v-for="item1 in optionList" :key="item1.label" :label="item1.label" :prop="item1.value" :width="item1.width" :min-width="item1.width ? item1.width : '150'" fixed="left">
+                <template slot-scope="scope">
+                  <span v-if="item1.type === undefined">{{ scope.row[item1.value] }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column v-for="item1 in labelListTow" :key="item1.label" :label="item1.label" :prop="item1.value" :width="item1.width" fixed="left">
+                <template slot="header" slot-scope="scope">
+                  <div>{{ scope.column.label }}</div>
+                </template>
+                <template slot-scope="scope">
+                  <span v-if="item1.type === undefined">{{ scope.row[item1.value] }}</span>
+                  <span v-if="item1.type === 'dollar'">
+                    <span v-if="scope.row[item1.value]">$ {{ scope.row[item1.value] }}</span>
+                    <span v-if="!scope.row[item1.value]">/</span>
                   </span>
                 </template>
               </el-table-column>
@@ -219,14 +236,17 @@ export default {
   data() {
     return {
       loading: false,
-      labelList: [
+      labelListOne: [
         { label: 'Serial', value: 'serial', type: 'serial', width: '80' },
         { label: 'Picture', value: 'img', type: 'img', width: '120' },
+      ],
+      labelListTow: [
         { label: 'Size', value: 'size', width: '120' },
         { label: 'Weight(G)', value: 'weight', width: '120' },
         { label: 'Product_price', value: 'product_price', type: 'dollar' },
         { label: 'Service_price', value: 'service_price', type: 'dollar' }
       ],
+      optionList: [],
       countryLabelList: [],
       formData: {
         product_title: '',
@@ -249,7 +269,7 @@ export default {
   },
   computed: {
     storeList() {
-      return this.$route.query.storeList
+      return this.$store.state.user.storeList
     }
   },
   created() {
@@ -264,7 +284,7 @@ export default {
         id: this.id
       }
       getQuotedEdit(data).then(res => {
-        if (res.code === 200) {
+        if (res.codes === 200) {
           this.formData = res.data
           const temporary = res.data.sub_data
           for (const key in temporary) {
@@ -276,9 +296,12 @@ export default {
           const country = res.data.country.split(',')
           const labelList = []
           const imgList = []
+          this.draggableList[0].next.map(item => {
+            imgList.push(item.img)
+          })
           this.draggableList.map(it => {
+            this.getValueOfLabel(it.title, this.storeList)
             it.next.map((item, inx) => {
-              imgList.push(item.img)
               this.$set(item, 'serial', inx + 1)
               this.$set(item, 'check', false)
               this.$set(item, 'someThingAdopt', false)
@@ -292,6 +315,16 @@ export default {
                 labelList.push(sum)
               })
             })
+            if (it.next[0].option) {
+              for (const key in it.next[0].option) {
+                const labelList = {
+                  label: key,
+                  value: key,
+                  width: '150'
+                }
+                this.optionList.push(labelList)
+              }
+            }
           })
           this.formData.img = imgList
           const newobj = {}
@@ -328,6 +361,11 @@ export default {
                   this.$set(item, arr[inx].label, obj)
                 })
               }
+              if (item.option) {
+                for (const key in item.option) {
+                  this.$set(item, key, item.option[key])
+                }
+              }
             })
             it.pre.map(item => {
               if (item.result !== null) {
@@ -349,6 +387,11 @@ export default {
                   this.$set(item, arr[inx].label, obj)
                 })
               }
+              if (item.option) {
+                for (const key in item.option) {
+                  this.$set(item, key, item.option[key])
+                }
+              }
             })
           })
           if (heaven.length > 0) {
@@ -362,6 +405,10 @@ export default {
           }
           this.loading = false
         }
+      }).catch(() => {
+        this.loading = false
+      }).finally(() => {
+        this.loading = false
       })
     },
     // Cancellation

@@ -9,7 +9,8 @@ const getDefaultState = () => {
     uid: getCookies('uid'),
     name: '',
     email: getCookies('email'),
-    avatar: ''
+    avatar: '',
+    storeList: []
   }
 }
 
@@ -33,6 +34,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_STORELIST: (state, storeList) => {
+    state.storeList = storeList
   }
 }
 
