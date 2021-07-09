@@ -34,7 +34,7 @@
               <el-select
                 v-model="formQuery.order_status"
                 collapse-tags
-                placeholder="Payment"
+                placeholder="Payment Status"
                 style="width:100%"
                 @change="filterOrderPayment"
               >
@@ -237,7 +237,7 @@ export default {
       pin: false, // 这里给一个变量，默认为false，不按住
       jumpRoute: '1',
       platForm: '',
-      orderPaymentList: { '': 'ALL', '3': 'Payment', '4': 'Refunded', '7': 'Partially Refunded' }
+      orderPaymentList: { '': 'ALL', '3': 'Paid', '4': 'Refunded', '7': 'Partially Refunded' }
     }
   },
   computed: {},
