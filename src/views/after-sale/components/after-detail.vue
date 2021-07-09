@@ -859,17 +859,17 @@ export default {
       }
       .upload-box {
         z-index: 99999;
-        width: 20px;
-        height: 20px;
+        width: 40px;
+        height: 34px;
         position: absolute;
-        top: 6px;
-        left: 200px;
+        top: 2px;
+        left: 195px;
         background-color: #fff;
         .upload-photos {
           font-size: 18px;
           position: absolute;
-          top: 0;
-          left: 0;
+          top: 4px;
+          left: 8px;
           color: #585858;
         }
       }
