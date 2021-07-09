@@ -208,6 +208,7 @@ export default {
       tableData: [],
       selectRows: [],
       selectAfter: [],
+      selectAfterList: [],
       loading: false,
       storeList: [],
       salesType: [],
@@ -311,14 +312,17 @@ export default {
 
     shiftMultiple(selections, row) {
       this.selectAfter = selections.map(item => (item.id))
+      this.selectAfterList = selections
     },
 
     // . 选择框数据
     selectAll(selecttion) {
       if (selecttion.length > 0) {
         this.selectAfter = selecttion.map(item => (item.id))
+        this.selectAfterList = selecttion
       } else {
         this.selectAfter = []
+        this.selectAfterList = []
       }
       console.log('all selectAfter:', this.selectAfter)
     },
@@ -336,9 +340,51 @@ export default {
     complete() {
       if (this.selectAfter.length < 1) {
         this.$message.error('Please select a piece of data')
-        return false
+      } else {
+        const vendorList = []
+        const consigneeList = []
+        this.selectAfterList.map(item => {
+          vendorList.push(item.vendor)
+          consigneeList.push(item.consignee)
+        })
+        const isVendor = vendorList.every(it => it === '')
+        const isConsignee = consigneeList.every(it => it === '')
+        if (isVendor === false && isConsignee === false) {
+          this.dialogVisible = true
+        }
+        if (isVendor === false && isConsignee === true) {
+          afterSalesChanngedStatus({ id: this.selectAfter, status: 3 }).then(res => {
+            let type = ''
+            if (res.code === 200) {
+              type = 'success'
+            } else {
+              type = 'error'
+            }
+            this.$message({ message: res.message, type: type })
+            this.Inquire()
+          }).catch(err => {
+            console.log(err)
+          }).finally(() => {
+
+          })
+        }
+        if (isVendor === true && isConsignee === false) {
+          afterSalesChanngedStatus({ id: this.selectAfter, status: 4 }).then(res => {
+            let type = ''
+            if (res.code === 200) {
+              type = 'success'
+            } else {
+              type = 'error'
+            }
+            this.$message({ message: res.message, type: type })
+            this.Inquire()
+          }).catch(err => {
+            console.log(err)
+          }).finally(() => {
+
+          })
+        }
       }
-      this.dialogVisible = true
     },
     handleComplete(type) {
       if (type === 3) {
@@ -351,6 +397,7 @@ export default {
           }
           this.dialogVisible = false
           this.$message({ message: res.message, type: type })
+          this.Inquire()
         }).catch(err => {
           console.log(err)
         }).finally(() => {
@@ -366,6 +413,7 @@ export default {
           }
           this.dialogVisible = false
           this.$message({ message: res.message, type: type })
+          this.Inquire()
         }).catch(err => {
           console.log(err)
         }).finally(() => {
@@ -381,6 +429,7 @@ export default {
           }
           this.dialogVisible = false
           this.$message({ message: res.message, type: type })
+          this.Inquire()
         }).catch(err => {
           console.log(err)
         }).finally(() => {
