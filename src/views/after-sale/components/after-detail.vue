@@ -162,7 +162,7 @@
                 </div>
               </div>
             </div>
-            <div v-if="status === 3 && client_status !== 3" class="service-tips"><i class="el-icon-warning-outline" /> The service provider applies to complete the current after-sales service</div>
+            <div v-if="service_is_finish === 1" class="service-tips"><i class="el-icon-warning-outline" /> The service provider applies to complete the current after-sales service</div>
           </div>
         </el-card>
         <!-- After Sales Reply -->
@@ -310,7 +310,8 @@ export default {
         product_json: [
           { required: true, message: 'Please enter a Products', trigger: 'blur' }
         ]
-      }
+      },
+      service_is_finish: 0
     }
   },
   computed: {
@@ -354,6 +355,7 @@ export default {
           this.is_push = res.data.is_push
           this.client_status = res.data.client_status
           this.client_reply = res.data.client_reply
+          this.service_is_finish = res.data.service_is_finish
           if (this.client_reply.length === 0) {
             this.handleVendor()
           } else {
