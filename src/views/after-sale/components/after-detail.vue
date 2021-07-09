@@ -162,7 +162,7 @@
                 </div>
               </div>
             </div>
-            <div v-if="status === 3" class="service-tips"><i class="el-icon-warning-outline" /> The service provider applies to complete the current after-sales service</div>
+            <div v-if="status === 3 && client_status !== 3" class="service-tips"><i class="el-icon-warning-outline" /> The service provider applies to complete the current after-sales service</div>
           </div>
         </el-card>
         <!-- After Sales Reply -->
