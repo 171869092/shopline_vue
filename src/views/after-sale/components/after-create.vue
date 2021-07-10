@@ -12,7 +12,7 @@
           Order No：<span class="primary">{{ order_no }}</span>
         </div>
       </div>
-      <el-button size="small" type="primary" :loading="SubmitLoading" @click="submit">Submit</el-button>
+      <el-button v-throttle="[submit]" size="small" type="primary" :loading="SubmitLoading">Submit</el-button>
     </div>
     <div class="order-cell">
       <el-form ref="formData" :model="formData" :rules="formRule" label-width="140px" label-position="top">

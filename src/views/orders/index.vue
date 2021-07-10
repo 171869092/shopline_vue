@@ -162,7 +162,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="tipDialogVisible = false">Cancel</el-button>
-        <el-button size="small" type="primary" :loading="submitLoading" @click="next">OK</el-button>
+        <el-button v-throttle="[next]" size="small" type="primary" :loading="submitLoading">OK</el-button>
       </span>
     </el-dialog>
   </div>

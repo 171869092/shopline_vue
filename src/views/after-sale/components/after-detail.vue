@@ -14,7 +14,7 @@
       </div>
       <div>
         <el-button v-if="type === '2' && is_push !== '3'" size="small" type="primary" @click="confirmAfterSales">confirm after sales</el-button>
-        <el-button size="small" type="primary" @click="complete">Completed</el-button>
+        <el-button v-throttle="[complete]" size="small" type="primary">Completed</el-button>
       </div>
     </div>
     <div class="order-cell">

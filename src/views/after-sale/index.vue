@@ -48,7 +48,7 @@
             </div>
           </div>
         </div>
-        <el-button type="primary" size="small" class="mb10" @click="complete">Completed</el-button>
+        <el-button v-throttle="[complete]" type="primary" size="small" class="mb10">Completed</el-button>
         <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.label" :name="tab.name">
           <el-table
             ref="multipleTable"
