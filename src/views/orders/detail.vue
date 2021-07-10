@@ -152,24 +152,24 @@
     >
       <el-form ref="afterDialog" label-position="right" label-width="100px" :model="afterDialog" :rules="formRule">
         <el-form-item label="Type" prop="after_type">
-          <el-select v-model="afterDialog.after_type" style="width: 95%">
+          <el-select v-model="afterDialog.after_type" style="width: 95%" placeholder="please choose">
             <el-option v-for="(item,idx) in typeList" :key="idx" :label="item" :value="idx" />
           </el-select>
         </el-form-item>
         <el-form-item label="Mode" prop="after_model">
-          <el-select v-model="afterDialog.after_model" style="width: 95%">
+          <el-select v-model="afterDialog.after_model" style="width: 95%" placeholder="please choose">
             <el-option v-for="(item,idx) in modeList" :key="idx" :label="item" :value="String(idx + 1)" />
           </el-select>
         </el-form-item>
         <el-form-item label="Products" prop="product_json">
-          <el-select v-model="afterDialog.product_json" multiple style="width: 95%">
+          <el-select v-model="afterDialog.product_json" multiple style="width: 95%" placeholder="please choose">
             <el-option v-for="item in productsList" :key="item.id" :label="item.third_goods_name" :value="item.id" />
           </el-select>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="handleClose">取 消</el-button>
-        <el-button type="primary" @click="handleAfterSales">确 定</el-button>
+        <el-button @click="handleClose">Cancel</el-button>
+        <el-button type="primary" @click="handleAfterSales">Determine</el-button>
       </span>
     </el-dialog>
   </div>

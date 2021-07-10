@@ -3,12 +3,12 @@
     <el-dialog :title="$parent.providerTitle" :visible.sync="visible" width="700px" :before-close="providerAdd" center>
       <el-form ref="providerForm" :model="providerForm" size="small" label-width="170px" :rules="rules">
         <el-form-item label="Vendor:" prop="service_id">
-          <el-select v-model="providerForm.service_id" filterable class="w-350">
+          <el-select v-model="providerForm.service_id" filterable class="w-350" placeholder="please choose">
             <el-option v-for="item in ServiceList" :key="item.id" :label="item.service_name" :value="item.id" />
           </el-select>
         </el-form-item>
         <el-form-item label="Countries:" prop="country" :rules="[{required: true,validator: country,trigger: 'change'}]">
-          <el-select v-model="providerForm.country" multiple filterable class="w-350">
+          <el-select v-model="providerForm.country" multiple filterable class="w-350" placeholder="please choose">
             <el-option v-for="item in countriesList" :key="item.two_code" :label="item.name_en" :value="item.two_code" />
           </el-select>
         </el-form-item>
