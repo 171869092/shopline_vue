@@ -109,7 +109,7 @@
         <span class="mt20">There is no associated store. Please click <router-link class="primary" :to="{name: 'store'}">here</router-link> to connect to your store</span>
       </div>
     </el-card>
-    <provider :visible="providerVisible" @providerAdd="closeprovider" :store_url="formInline.store_url"/>
+    <provider :visible="providerVisible" :store_url="formInline.store_url" @providerAdd="closeprovider"/>
   </div>
 </template>
 <script>

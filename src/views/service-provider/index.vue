@@ -34,7 +34,7 @@
         </div>
         <div class="filter-control flexbox mb20">
           <div class="filter-item">
-            <el-date-picker v-model="formQuery.data" type="daterange" value-format="yyyy-MM-dd" range-separator="至" start-placeholder="startDate" end-placeholder="endDate" />
+            <el-date-picker v-model="formQuery.data" type="daterange" value-format="yyyy-MM-dd" range-separator="-" start-placeholder="startDate" end-placeholder="endDate" />
           </div>
         </div>
       </div>
