@@ -358,7 +358,7 @@ export default {
           const product_json = this.getValueOfLabel(this.afterDialog.product_json, this.productsList)
           afterSalesCreate(formData).then(res => {
             this.$message({ message: res.message, type: 'success' })
-            this.$router.push({ name: 'after-create', query: { id: this.order_id, order_no: this.$route.query.order_no, after_type: after_type, after_model: after_model, product_json: product_json, after_id: res.data.id }})
+            this.$router.push({ name: 'after-create', query: { id: this.order_id, order_no: this.$route.query.order_no, after_type: after_type, after_model: after_model, product_json: product_json, after_id: res.data.id, server_name: res.data.vendor }})
             this.handleClose()
           }).catch(e => {
             console.log(e)

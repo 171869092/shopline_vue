@@ -47,7 +47,7 @@
         </div>
       </el-card>
       <div class="mt20">
-        <el-button size="small" type="primary" class="w-300" @click="isCustomer = false">Vendor(服务商名称)</el-button>
+        <el-button size="small" type="primary" class="w-300" @click="isCustomer = false">Vendor({{server_name}})</el-button>
       </div>
       <!-- After Sales Message record -->
       <el-card class="box-card mt20">
@@ -189,6 +189,9 @@ export default {
     },
     after_id() {
       return this.$route.query.after_id
+    },
+    server_name() {
+      return this.$route.query.server_name
     }
   },
   updated() {
