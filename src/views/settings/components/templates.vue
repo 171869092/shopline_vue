@@ -91,7 +91,7 @@
 
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">Close</el-button>
-        <el-button type="primary" @click="saveTemplate('templateForm')">Save</el-button>
+        <el-button v-throttle="[() => saveTemplate('templateForm')]" type="primary">Save</el-button>
       </div>
     </el-dialog>
     <el-dialog title="Variable specification" :visible.sync="dialogTableVisible">

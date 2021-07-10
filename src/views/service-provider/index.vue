@@ -91,7 +91,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleCancel">Cancel</el-button>
-        <el-button type="primary" @click="handleDetermine">Confirm</el-button>
+        <el-button v-throttle="[handleDetermine]" type="primary">Confirm</el-button>
       </span>
     </el-dialog>
     <el-dialog

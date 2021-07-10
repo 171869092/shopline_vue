@@ -9,7 +9,7 @@
         </div>
         <div>
           <el-button type="primary" size="small" @click="ExportSavePdf(htmlTitle, nowTime)">ExportDetails</el-button>
-          <el-button type="primary" size="small" @click="settlement">Settlement</el-button>
+          <el-button v-throttle="[settlement]" type="primary" size="small">Settlement</el-button>
         </div>
       </div>
     </div>

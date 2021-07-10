@@ -114,7 +114,7 @@
       <div slot="footer" class="dialog-footer">
         <!-- <el-button size="small" type="success" :loading="testLoading" @click="testConnect">Test Connect</el-button> -->
         <el-button size="small" @click="closeDialog">Cancel</el-button>
-        <el-button size="small" type="primary" :disabled="storeForm.store_url === ''" :loading="submitLoading" @click="submitConnect">Connect</el-button>
+        <el-button v-throttle="[submitConnect]" size="small" type="primary" :disabled="storeForm.store_url === ''" :loading="submitLoading">Connect</el-button>
       </div>
     </el-dialog>
     <el-dialog :title="Connect" width="650px" :visible.sync="dialogConnectVisible" :close-on-click-modal="false" :destroy-on-close="true" @close="closeConnectDialog">
@@ -134,7 +134,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="closeConnectDialog">Cancel</el-button>
-        <el-button size="small" type="primary" :loading="ConnectSubmitLoading" @click="newSubmitConnect">determine</el-button>
+        <el-button v-throttle="[newSubmitConnect]" size="small" type="primary" :loading="ConnectSubmitLoading">determine</el-button>
       </div>
     </el-dialog>
     <el-dialog

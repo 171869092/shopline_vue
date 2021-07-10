@@ -11,7 +11,7 @@
       </div>
       <div class="submit-box">
         <el-form-item>
-          <el-button type="primary" @click="submitForm">Confirm change</el-button>
+          <el-button v-throttle="[submitForm]" type="primary">Confirm change</el-button>
         </el-form-item>
       </div>
     </el-form>

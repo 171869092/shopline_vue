@@ -3,7 +3,7 @@
     <el-card class="box-card">
       <div class="flexbox justify-space-between">
         <p>Personal</p>
-        <el-button type="primary" size="small" @click="modifyUserInformation" class="mr10 mb10">Storage</el-button>
+        <el-button v-throttle="[modifyUserInformation]" type="primary" size="small" class="mr10 mb10">Storage</el-button>
       </div>
       <el-divider class="line"/>
       <el-form ref="personal" :model="basicsForm" status-icon :rules="personalRules" label-width="150px" class="form-box">
