@@ -55,7 +55,7 @@
                 <div><h2>Text Content</h2></div>
               </div>
             </div>
-            <textarea v-model="tableData.content" class="el-textarea__inner" :disabled="true" autosize placeholder="请输入内容" />
+            <textarea v-model="tableData.content" class="el-textarea__inner" :disabled="true" autosize placeholder="please input" />
           </el-tab-pane>
 
           <el-tab-pane label="Picture Content" name="second">
@@ -88,7 +88,7 @@
                   <div><h2>Reply Message</h2></div>
                 </div>
               </div>
-              <textarea v-model="item.reply_info" class="el-textarea__inner" :disabled="true" autosize placeholder="请输入内容" />
+              <textarea v-model="item.reply_info" class="el-textarea__inner" :disabled="true" autosize placeholder="please input" />
             </el-tab-pane>
             <el-tab-pane label="Reply Message" name="second">
               <div slot="header">
