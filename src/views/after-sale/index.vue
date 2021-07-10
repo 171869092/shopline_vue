@@ -115,7 +115,7 @@
               <template slot-scope="scope">
                 <span v-if="scope.row.vendor !== ''">Vendor ({{ scope.row.vendor }})</span>
                 <br />
-                <span v-if="scope.row.consignee !== ''">Customer ({{ scope.row.consignee }})</span>
+                <span v-if="scope.row.consignee !== '' && scope.row.type === '2'">Customer ({{ scope.row.consignee }})</span>
               </template>
             </el-table-column>
             <el-table-column label="Timeline">
@@ -345,7 +345,9 @@ export default {
         const consigneeList = []
         this.selectAfterList.map(item => {
           vendorList.push(item.vendor)
-          consigneeList.push(item.consignee)
+          if (item.type === '2') {
+            consigneeList.push(item.consignee)
+          }
         })
         const isVendor = vendorList.every(it => it === '')
         const isConsignee = consigneeList.every(it => it === '')
