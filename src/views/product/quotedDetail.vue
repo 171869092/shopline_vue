@@ -37,11 +37,11 @@
             <div class="title-box">
               <div class="title" :style="{'background-color': item.newData ? item.titleStyle : '#ccc'}" @click="item.newData = true">
                 <img src="@/assets/home/drag.png" width="25px" height="25px">
-                <span style="margin: 0 20px">{{ item.title }}</span>
+                <span style="margin: 0 20px">{{ getValueOfLabel(item.title, storeList) }}</span>
                 <span>{{ item.time }}</span>
               </div>
               <div v-if="item.pre.length > 0" class="title" :style="{'background-color': item.newData ? '#ccc' : item.titleStyle}" @click="item.newData = false">
-                <span style="margin: 0 20px">{{ item.title }}</span>
+                <span style="margin: 0 20px">{{ getValueOfLabel(item.title, storeList) }}</span>
                 <span>{{ item.time }}</span>
               </div>
             </div>
@@ -228,6 +228,7 @@
 <script>
 import draggable from 'vuedraggable'
 import { getQuotedEdit, upStatusQuoted } from '@/api/product'
+import { getCookies } from '@/utils/cookies'
 export default {
   name: 'quoted-detail',
   components: {
@@ -264,14 +265,15 @@ export default {
       draggableList: [],
       id: '',
       product_id: '',
-      dayList: []
+      dayList: [],
+      storeList: []
     }
   },
-  computed: {
+ /* computed: {
     storeList() {
-      return this.$store.state.user.storeList
+      return getCookies('storeList')
     }
-  },
+  },*/
   created() {
     this.id = this.$route.query.id
     this.product_id = this.$route.query.product_id
@@ -283,6 +285,7 @@ export default {
       const data = {
         id: this.id
       }
+      this.storeList = getCookies('storeList')
       getQuotedEdit(data).then(res => {
         if (res.codes === 200) {
           this.formData = res.data
@@ -296,11 +299,11 @@ export default {
           const country = res.data.country.split(',')
           const labelList = []
           const imgList = []
+          const optionList = []
           this.draggableList[0].next.map(item => {
             imgList.push(item.img)
           })
           this.draggableList.map(it => {
-            this.getValueOfLabel(it.title, this.storeList)
             it.next.map((item, inx) => {
               this.$set(item, 'serial', inx + 1)
               this.$set(item, 'check', false)
@@ -322,7 +325,7 @@ export default {
                   value: key,
                   width: '150'
                 }
-                this.optionList.push(labelList)
+                optionList.push(labelList)
               }
             }
           })
@@ -335,6 +338,12 @@ export default {
           arr.map(it => {
             this.dayList.push('0-0')
           })
+          const newOp = {}
+          const newOptionList = optionList.reduce((preVal, curVal) => {
+            newOp[curVal.label] ? '' : newOp[curVal.label] = preVal.push(curVal)
+            return preVal
+          }, [])
+          this.optionList = newOptionList
           this.countryLabelList = arr
           const heaven = []
           this.draggableList.map(it => {
@@ -478,7 +487,7 @@ export default {
       })
     },
     getValueOfLabel(num, sum) {
-      const obj = sum.find(it => it.id === num)
+      const obj = JSON.parse(sum).find(it => Number(it.id) === Number(num))
       if (obj) {
         return obj.service_name
       } else {
