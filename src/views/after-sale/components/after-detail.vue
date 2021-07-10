@@ -294,6 +294,7 @@ export default {
       client_status: 1,
       status: 1,
       client_reply: [],
+      service_reply: [],
       client_name: 'Customer',
       server_name: 'Vendor',
       forwardVisible: false,
@@ -360,6 +361,7 @@ export default {
           this.is_push = res.data.is_push
           this.client_status = res.data.client_status
           this.client_reply = res.data.client_reply
+          this.service_reply = res.data.service_reply
           this.service_is_finish = res.data.service_is_finish
           if (this.client_reply.length === 0) {
             this.handleVendor()
@@ -393,8 +395,23 @@ export default {
     complete() {
       const ids = []
       ids.push(this.tableData.id)
-      if (this.client_status === 3 || this.status === 3) {
-        afterSalesChanngedStatus({ id: ids, status: 5 }).then(res => {
+      if (this.client_reply.length === 0 && this.service_reply.length > 0) {
+        afterSalesChanngedStatus({ id: ids, status: 3 }).then(res => {
+          let type = ''
+          if (res.code === 200) {
+            type = 'success'
+          } else {
+            type = 'error'
+          }
+          this.dialogVisible = false
+          this.$message({ message: res.message, type: type })
+        }).catch(err => {
+          console.log(err)
+        }).finally(() => {
+
+        })
+      } else if (this.client_reply.length > 0 && this.service_reply.length === 0) {
+        afterSalesChanngedStatus({ id: ids, status: 4 }).then(res => {
           let type = ''
           if (res.code === 200) {
             type = 'success'
@@ -409,7 +426,24 @@ export default {
 
         })
       } else {
-        this.dialogVisible = true
+        if (this.client_status === 3 || this.status === 3) {
+          afterSalesChanngedStatus({ id: ids, status: 5 }).then(res => {
+            let type = ''
+            if (res.code === 200) {
+              type = 'success'
+            } else {
+              type = 'error'
+            }
+            this.dialogVisible = false
+            this.$message({ message: res.message, type: type })
+          }).catch(err => {
+            console.log(err)
+          }).finally(() => {
+
+          })
+        } else {
+          this.dialogVisible = true
+        }
       }
     },
     handleComplete(type) {
