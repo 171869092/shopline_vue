@@ -62,7 +62,7 @@
               <span>{{ scope.row.server_id.toString() }}</span>
             </div>
             <div v-if="item.type === 'Operation'">
-              <span style="color: #c45354;cursor: pointer;" @click="handleDelete(scope.row)">Delete</span>
+              <span v-throttle="[() => handleDelete(scope.row)]" style="color: #c45354;cursor: pointer;">Delete</span>
             </div>
           </template>
         </el-table-column>

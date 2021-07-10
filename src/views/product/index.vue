@@ -83,7 +83,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogvisible = false">Cancel</el-button>
-        <el-button type="primary" :loading="submitLoading" @click="submit('dialogForm')">Submit</el-button>
+        <el-button v-throttle="[() => submit('dialogForm')]" type="primary" :loading="submitLoading">Submit</el-button>
       </div>
     </el-dialog>
     <el-dialog title="Select Vendor" :visible.sync="vendorVisible" width="700px" :close-on-click-modal="false" center :before-close="providerAdd">
