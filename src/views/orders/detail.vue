@@ -10,24 +10,21 @@
       <div class="order-id ml20">
         Order No：<span class="primary">{{ order_no }}</span>
       </div>
-      <el-select v-model="selectedProduct" v-if="isShowProductIndex" @change="handleChange(selectedProduct)" placeholder="Select Product">
+      <el-select v-if="isShowProductIndex" v-model="selectedProduct" placeholder="Select Product" @change="handleChange(selectedProduct)">
         <el-option
           v-for="item in options"
           :key="item.value"
           :label="item.label"
-          :value="item.value">
-        </el-option>
+          :value="item.value"
+        />
       </el-select>
-      <!-- <div style="float:right;" class="order-id ml20">
-       <el-button type="primary" size="small" @click="afterSales">Confirm After Sales</el-button>
-      </div> -->
     </div>
-    <div v-for="(info,key) in detailInfo" :key="key" class="order-cell" :id="'product'+key">
+    <div v-for="(info,key) in detailInfo" :id="'product'+key" :key="key" class="order-cell">
       <el-card class="box-card mt20">
         <div slot="header">
           <div class="detail-block-title">
-            <div >
-              <h2>Product <span v-if="isShowProductIndex">{{ key+1 }} </span><span style="float:right;"><el-button type="primary" size="small" @click="afterSales(info)">Confirm After Sales</el-button></span></h2>
+            <div>
+              <h2>Product <span v-if="isShowProductIndex">{{ key+1 }} </span><span style="float:right;"><el-button type="primary" size="small" style="margin-top: -10px" @click="afterSales(info)">After Sales</el-button></span></h2>
             </div>
           </div>
         </div>
@@ -49,7 +46,7 @@
               </el-image>
             </template>
           </el-table-column>
-          <el-table-column prop="third_goods_name" label="Products" min-width="150"/>
+          <el-table-column prop="third_goods_name" label="Products" min-width="150" />
           <el-table-column prop="third_sku_name" label="Price&Amount" width="200">
             <template slot-scope="scope">
               <span>{{ `${scope.row.third_price} x ${scope.row.sku_num}` }}</span>
@@ -147,10 +144,39 @@
         </div>
       </el-card>
     </div>
+    <el-dialog
+      title="After sales"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <el-form ref="afterDialog" label-position="right" label-width="100px" :model="afterDialog" :rules="formRule">
+        <el-form-item label="Type" prop="after_type">
+          <el-select v-model="afterDialog.after_type" style="width: 95%" placeholder="please choose">
+            <el-option v-for="(item,idx) in typeList" :key="idx" :label="item" :value="idx" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Mode" prop="after_model">
+          <el-select v-model="afterDialog.after_model" style="width: 95%" placeholder="please choose">
+            <el-option v-for="(item,idx) in modeList" :key="idx" :label="item" :value="String(idx + 1)" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Products" prop="product_json">
+          <el-select v-model="afterDialog.product_json" multiple style="width: 95%" placeholder="please choose">
+            <el-option v-for="item in productsList" :key="item.id" :label="item.third_goods_name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">Cancel</el-button>
+        <el-button v-throttle="[handleAfterSales]" type="primary">Determine</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { getOrderInfo } from '@/api/orders'
+import { afterSalesType, afterSalesCreate } from '@/api/after'
 export default {
   name: 'orders-detail',
   props: {},
@@ -166,8 +192,29 @@ export default {
       ],
       detailInfo: {},
       loading: false,
+      dialogVisible: false,
       selectedProduct: '',
-      platForm: ''
+      platForm: '',
+      afterDialog: {
+        after_type: '',
+        after_model: '',
+        product_json: ''
+      },
+      typeList: [],
+      modeList: ['Resend', 'Refund', 'Return/Refund', 'Other'],
+      productsList: [],
+      orderInfo: {},
+      formRule: {
+        after_type: [
+          { required: true, message: 'Please enter a after type', trigger: 'blur' }
+        ],
+        after_model: [
+          { required: true, message: 'Please enter a after mode', trigger: 'blur' }
+        ],
+        product_json: [
+          { required: true, message: 'Please enter a Products', trigger: 'blur' }
+        ]
+      }
     }
   },
   computed: {
@@ -199,16 +246,9 @@ export default {
   },
   methods: {
     init() {
-      // const loading = this.$loading({
-      //   lock: true,
-      //   text: 'Loading',
-      //   spinner: 'el-icon-loading',
-      //   background: 'rgba(0, 0, 0, 0.7)'
-      // })
       this.loading = true
       getOrderInfo({ orders_id: this.order_id, plat_form: this.platForm })
         .then((res) => {
-          console.log(res.data)
           if (res.code === 200) {
             this.detailInfo = res.data
           }
@@ -217,9 +257,13 @@ export default {
           console.log(err)
         })
         .finally(() => {
-          // loading.close()
           this.loading = false
         })
+      afterSalesType().then(res => {
+        if (res.code === 200) {
+          this.typeList = res.data
+        }
+      })
     },
     handleChange(index) {
       const id = 'product' + index
@@ -228,8 +272,115 @@ export default {
       })
     },
     afterSales(info) {
-      // console.log(info)
-      this.$router.push({ name: 'after-create', query: { type: 'create', id: this.order_id, order_no: this.$route.query.order_no, detailInfo: info }})
+      this.orderInfo = info
+      info.goods_info.forEach(item => {
+        this.productsList.push(item)
+      })
+      this.dialogVisible = true
+    },
+    handleClose() {
+      this.afterDialog = this.$options.data().afterDialog
+      this.productsList = []
+      this.dialogVisible = false
+    },
+    // 获取cookie
+    getCookie: function(cname) {
+      var name = cname + '='
+      var ca = document.cookie.split(';')
+      // console.log("获取cookie,现在循环")
+      for (var i = 0; i < ca.length; i++) {
+        var c = ca[i]
+        // console.log(c)
+        while (c.charAt(0) === ' ') c = c.substring(1)
+        if (c.indexOf(name) !== -1) {
+          return c.substring(name.length, c.length)
+        }
+      }
+      return ''
+    },
+    handleAfterSales() {
+      this.$refs.afterDialog.validate((valid) => {
+        if (valid) {
+          const products = []
+          const productArr = []
+          this.orderInfo.goods_info.forEach((item, index) => {
+            productArr.push(item)
+          })
+          this.afterDialog.product_json.map(item => {
+            productArr.forEach(it => {
+              if (it.id === item) {
+                products.push({
+                  logistics_cost: it.logistics_cost,
+                  cost: it.purchase_price,
+                  sku_num: it.sku_num,
+                  sku_name: it.third_goods_name,
+                  sku_image: it.sku_image,
+                  sale_money: it.sale_money,
+                  sku_id: it.shopify_sku_id,
+                  id: item
+                })
+              }
+            })
+          })
+          const formData = {
+            vendor: this.orderInfo.vendor.service_name,
+            state: '',
+            order_no: this.orderInfo.order_no,
+            total: this.orderInfo.total_price,
+            store_url: this.orderInfo.store_url,
+            third_order_no: this.orderInfo.thirdParty_order_on,
+            order_name: this.orderInfo.order_name,
+            import_people: this.orderInfo.import_people,
+            receive_json: {
+              address: this.orderInfo.address1,
+              city: this.orderInfo.city,
+              country: this.orderInfo.country,
+              consignee: this.orderInfo.consignee,
+              first_name: this.orderInfo.first_name,
+              last_name: this.orderInfo.last_name,
+              mobile: this.orderInfo.mobile,
+              email: this.orderInfo.email
+            },
+            shipping_json: {
+              logistics_company: this.orderInfo.logistics_company,
+              logistics_no: this.orderInfo.logistics_no,
+              logistics_status: this.orderInfo.logistics_status
+            },
+            server_id: this.orderInfo.service_id,
+            customer_name: this.getCookie('name'),
+            product_json: products,
+            order_create: this.orderInfo.order_create_time,
+            after_model: this.afterDialog.after_model,
+            after_type: this.afterDialog.after_type
+          }
+          const after_type = this.typeList[this.afterDialog.after_type]
+          const after_model = this.modeList[this.afterDialog.after_model]
+          const product_json = this.getValueOfLabel(this.afterDialog.product_json, this.productsList)
+          afterSalesCreate(formData).then(res => {
+            this.$message({ message: res.message, type: 'success' })
+            this.$router.push({ name: 'after-create', query: { id: this.order_id, order_no: this.$route.query.order_no, after_type: after_type, after_model: after_model, product_json: product_json, after_id: res.data.id, server_name: res.data.vendor }})
+            this.handleClose()
+          }).catch(e => {
+            console.log(e)
+          })
+        } else {
+          this.$message.warning('Please complete the required fields first!')
+        }
+      })
+    },
+    // 转换product_json
+    getValueOfLabel(num, sum) {
+      let obj = {}
+      let arr = []
+      num.map(it => {
+        obj = sum.find(item => item.id === it)
+      })
+      if (obj) {
+        arr.push(obj.third_goods_name)
+      } else {
+        arr = num
+      }
+      return arr
     }
   }
 }

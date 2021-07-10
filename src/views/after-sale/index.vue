@@ -48,18 +48,19 @@
             </div>
           </div>
         </div>
-        <el-button v-throttle="[complete]" type="primary" size="small" class="mb10">Completed</el-button>
+        <el-button type="primary" size="small" class="mb10" @click="complete">Completed</el-button>
+        <el-button type="primary" size="small" class="mb10 father" :disabled="unreadCount === '0'" @click="handleNew">New information <span v-if="unreadCount !== '0'" class="son">{{ unreadCount }}</span></el-button>
         <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.label" :name="tab.name">
           <el-table
             ref="multipleTable"
             v-loading="loading"
             v-sticky="{top: 0, parent: '#app_main' }"
-            empty-text="No Data"
             :data="tableData"
             style="width: 100%"
             highlight-current-row
             fit
             stripe
+            empty-text="No Data"
             :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}"
             @select="shiftMultiple"
             @select-all="selectAll"
@@ -67,7 +68,10 @@
             <el-table-column type="selection" width="55" />
             <el-table-column label="Order">
               <template slot-scope="scope">
-                <span class="primary pointer" @click="toLink(scope.row)">{{ scope.row.order_name }}</span>
+                <span class="primary pointer" @click="toLink(scope.row)">
+                  {{ scope.row.order_name }}
+                  <img v-if="scope.row.is_read === '0'" class="imgIcon" :src="NewIcon">
+                </span>
               </template>
             </el-table-column>
             <el-table-column label="Products">
@@ -75,9 +79,9 @@
                 <div>{{ scope.row.product_json }}</div>
               </template>
             </el-table-column>
-            <el-table-column label="Application Time">
+            <el-table-column label="Update time">
               <template slot-scope="scope">
-                <div>{{ scope.row.after_create_time }}</div>
+                <div>{{ scope.row.update_time }}</div>
               </template>
             </el-table-column>
             <!-- <el-table-column label="Cost">
@@ -85,19 +89,38 @@
                 <div>{{ scope.row.cost }}</div>
               </template>
             </el-table-column> -->
-            <el-table-column label="After Sales Type">
+<!--            <el-table-column label="After Sales Type">
               <template slot-scope="scope">
                 <span>{{ salesType[scope.row.after_type] }}</span>
+              </template>
+            </el-table-column>-->
+            <el-table-column label="After Sales Mode">
+              <template slot-scope="scope">
+                <span>{{ modeList[scope.row.after_model] }}</span>
               </template>
             </el-table-column>
             <el-table-column label="Status">
               <template slot-scope="scope">
-                <span>{{ scope.row.status }}</span>
+                <span v-if="scope.row.status === 'Pending'" style="color: #e41b1b">{{ scope.row.status }}</span>
+                <span v-if="scope.row.status === 'Completed'" style="color: #50cd83">{{ scope.row.status }}</span>
+                <span v-if="scope.row.status === 'In process'" style="color: #f6cd46">{{ scope.row.status }}</span>
               </template>
             </el-table-column>
-            <el-table-column label="Vendor">
+<!--            <el-table-column label="Vendor">
               <template slot-scope="scope">
                 <span>{{ scope.row.vendor }}</span>
+              </template>
+            </el-table-column>-->
+            <el-table-column label="Source">
+              <template slot-scope="scope">
+                <span v-if="scope.row.vendor !== ''">Vendor ({{ scope.row.vendor }})</span>
+                <br />
+                <span v-if="scope.row.consignee !== ''">Customer ({{ scope.row.consignee }})</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="Timeline">
+              <template slot-scope="scope">
+                <span style="color: #f69432;cursor: pointer;" @click="handleTrack(scope.row)">Track</span>
               </template>
             </el-table-column>
           </el-table>
@@ -105,13 +128,45 @@
         </el-tab-pane>
       </el-tabs>
     </el-card>
+    <el-dialog
+      :visible.sync="timelineVisible"
+      width="30%"
+      :show-close="false"
+    >
+      <div>
+        <el-timeline>
+          <el-timeline-item
+            v-for="(activity, index) in activities"
+            :key="index"
+            :timestamp="activity.date_time"
+            placement="top"
+            :color="'#f68a1d'">
+            <p v-if="activity.status_name === 'completed'" style="color: #43c87a">{{ activity.status_name }}</p>
+            <p v-if="activity.status_name === 'In process'" style="color: #f6c219">{{ activity.status_name }}</p>
+            <p v-if="activity.status_name === 'Pending'" style="color: #ce3333">{{ activity.status_name }}</p>
+            <p>{{ activity.info }}</p>
+          </el-timeline-item>
+        </el-timeline>
+      </div>
+    </el-dialog>
+    <el-dialog
+      title="Tips"
+      :visible.sync="dialogVisible"
+      width="30%">
+      <p style="text-align: center">Are you sure to complete the current after sales information ?</p>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" style="background-color:#2c7fdd;border: 0 none;" @click="handleComplete(3)">Vendor</el-button>
+        <el-button type="primary" style="background-color:#f6be02;border: 0 none;" @click="handleComplete(4)">Customer</el-button>
+        <el-button type="primary" style="background-color:#f68a1d;border: 0 none;" @click="handleComplete(5)">All</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
 import { debounce } from '@/utils'
 import Sticky from '@/directive/fix-table-header'
 import { getStoreList } from '@/api/product'
-import { afterSalesList, afterSalesChanngedStatus, afterSalesType } from '@/api/after'
+import { afterSalesList, afterSalesChanngedStatus, afterSalesType, afterSalesTimeline } from '@/api/after'
 export default {
   name: 'after-sale',
   components: {
@@ -140,10 +195,11 @@ export default {
         page: 0,
         limit: 10
       },
-      afterStatus: { 0: 'ALL', 2: 'In Processing', 3: 'Completed' },
+      afterStatus: { 0: 'ALL', 1: 'Pending', 2: 'In process', 3: 'Completed' },
       tabList: [
         { label: 'ALL', name: '0' },
-        { label: 'In Processing', name: '2' },
+        { label: 'Pending', name: '1' },
+        { label: 'In process', name: '2' },
         { label: 'Completed', name: '3' }
       ],
       labelList: [
@@ -152,10 +208,17 @@ export default {
       tableData: [],
       selectRows: [],
       selectAfter: [],
+      selectAfterList: [],
       loading: false,
       storeList: [],
       salesType: [],
-      product: []
+      modeList: ['Resend', 'Refund', 'Return/Refund', 'Other'],
+      product: [],
+      timelineVisible: false,
+      NewIcon: require('@/assets/home/new.png'), // 我的消息new图标
+      unreadCount: '0',
+      activities: [],
+      dialogVisible: false
     }
   },
   computed: {},
@@ -189,6 +252,7 @@ export default {
             return item
           })
           this.listQuery.total = +res.total.totalCount
+          this.unreadCount = res.total.unreadCount
 
           // if (res.data.product_json && res.data.product_json.length > 0) {
           //   console.log(1111)
@@ -199,7 +263,7 @@ export default {
           // }else{
           //   this.product = []
           // }
-          console.log('product: ',this.tableData)
+          console.log('product:', this.tableData)
         }
       }).catch(err => {
         console.log('err', err)
@@ -209,8 +273,8 @@ export default {
     },
 
     getAfterSalesType() {
-      afterSalesType().then( res => {
-        if (res.code == 200){
+      afterSalesType().then(res => {
+        if (res.code === 200) {
           this.salesType = res.data
         }
       }).catch(err => {
@@ -248,14 +312,17 @@ export default {
 
     shiftMultiple(selections, row) {
       this.selectAfter = selections.map(item => (item.id))
+      this.selectAfterList = selections
     },
 
     // . 选择框数据
     selectAll(selecttion) {
       if (selecttion.length > 0) {
         this.selectAfter = selecttion.map(item => (item.id))
+        this.selectAfterList = selecttion
       } else {
         this.selectAfter = []
+        this.selectAfterList = []
       }
       console.log('all selectAfter:', this.selectAfter)
     },
@@ -273,22 +340,142 @@ export default {
     complete() {
       if (this.selectAfter.length < 1) {
         this.$message.error('Please select a piece of data')
-        return false
-      }
-      afterSalesChanngedStatus({ id: this.selectAfter }).then(res => {
-        let type = ''
-        if (res.code === 200) {
-          type = 'success'
-        } else {
-          type = 'error'
+      } else {
+        const vendorList = []
+        const consigneeList = []
+        this.selectAfterList.map(item => {
+          vendorList.push(item.vendor)
+          consigneeList.push(item.consignee)
+        })
+        const isVendor = vendorList.every(it => it === '')
+        const isConsignee = consigneeList.every(it => it === '')
+        if (isVendor === false && isConsignee === false) {
+          this.dialogVisible = true
         }
-        this.$message({ message: res.message, type: type })
-        // this.$router.go(0)
-        this.Inquire()
-      }).catch(err => {
-        console.log(err)
-      }).finally(() => {
+        if (isVendor === false && isConsignee === true) {
+          afterSalesChanngedStatus({ id: this.selectAfter, status: 3 }).then(res => {
+            let type = ''
+            if (res.code === 200) {
+              type = 'success'
+            } else {
+              type = 'error'
+            }
+            this.$message({ message: res.message, type: type })
+            this.Inquire()
+          }).catch(err => {
+            console.log(err)
+          }).finally(() => {
 
+          })
+        }
+        if (isVendor === true && isConsignee === false) {
+          afterSalesChanngedStatus({ id: this.selectAfter, status: 4 }).then(res => {
+            let type = ''
+            if (res.code === 200) {
+              type = 'success'
+            } else {
+              type = 'error'
+            }
+            this.$message({ message: res.message, type: type })
+            this.Inquire()
+          }).catch(err => {
+            console.log(err)
+          }).finally(() => {
+
+          })
+        }
+      }
+    },
+    handleComplete(type) {
+      if (type === 3) {
+        afterSalesChanngedStatus({ id: this.selectAfter, status: type }).then(res => {
+          let type = ''
+          if (res.code === 200) {
+            type = 'success'
+          } else {
+            type = 'error'
+          }
+          this.dialogVisible = false
+          this.$message({ message: res.message, type: type })
+          this.Inquire()
+        }).catch(err => {
+          console.log(err)
+        }).finally(() => {
+
+        })
+      } else if (type === 4) {
+        afterSalesChanngedStatus({ id: this.selectAfter, status: type }).then(res => {
+          let type = ''
+          if (res.code === 200) {
+            type = 'success'
+          } else {
+            type = 'error'
+          }
+          this.dialogVisible = false
+          this.$message({ message: res.message, type: type })
+          this.Inquire()
+        }).catch(err => {
+          console.log(err)
+        }).finally(() => {
+
+        })
+      } else {
+        afterSalesChanngedStatus({ id: this.selectAfter, status: type }).then(res => {
+          let type = ''
+          if (res.code === 200) {
+            type = 'success'
+          } else {
+            type = 'error'
+          }
+          this.dialogVisible = false
+          this.$message({ message: res.message, type: type })
+          this.Inquire()
+        }).catch(err => {
+          console.log(err)
+        }).finally(() => {
+
+        })
+      }
+    },
+    handleNew() {
+      this.loading = true
+      const formQuery = {
+        unread: '1',
+        status: this.formQuery.status,
+        store_url: this.formQuery.store_url,
+        iDisplayLength: this.listQuery.limit,
+        iDisplayStart: (this.listQuery.page - 1) * this.listQuery.limit
+      }
+      afterSalesList(formQuery).then(res => {
+        if (res.code === 200) {
+          this.tableData = res.data.map((item, index) => {
+            item.product_json = item.product_json.map((da, ik) => {
+              return da.sku_name
+            }).join(',')
+            item.index = index
+            return item
+          })
+          this.listQuery.total = +res.total.totalCount
+        }
+      }).catch(err => {
+        console.log('err', err)
+      }).finally(() => {
+        this.loading = false
+      })
+    },
+    handleTrack(row) {
+      const formData = {
+        after_id: row.id
+      }
+      afterSalesTimeline(formData).then(res => {
+        if (res.code === 200) {
+          if (res.data.length > 0) {
+            this.activities = res.data
+            this.timelineVisible = true
+          } else {
+            this.$message.warning('No timeline')
+          }
+        }
       })
     }
   }
@@ -308,5 +495,25 @@ export default {
     }
     margin-left: 15px;
   }
+}
+.father {
+  position: relative;
+  .son {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    display: inline-block;
+    border-radius: 50%;
+    background-color: #f60d0f;
+  }
+}
+.imgIcon {
+  width: 30px;
+  height: 30px;
+  margin-left: 10px;
+  margin-top: -8px;
 }
 </style>
