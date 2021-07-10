@@ -10,6 +10,7 @@ import App from './App'
 import store from './store'
 import router from './router'
 
+import '@/directive' // 节流指令
 import i18n from './lang' // internationalization
 import '@/icons' // icon
 import '@/permission' // permission control

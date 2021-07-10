@@ -101,7 +101,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="providerAdd">Cancel</el-button>
-        <el-button size="small" type="primary" @click="providerAdd(1)">Confirm</el-button>
+        <el-button v-throttle="[() => providerAdd(1)]" size="small" type="primary">Confirm</el-button>
       </div>
     </el-dialog>
     <el-dialog :visible.sync="PromptVisible" width="700px" :close-on-click-modal="false" :before-close="Prompt">
@@ -112,7 +112,7 @@
       <div style="text-align: center">Please add pictures to SKU variants</div>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" style="background-color:#f68a1d; color: #fff; border: 0 none" @click="Prompt(2)">Add</el-button>
-        <el-button size="small" type="primary" @click="Prompt(1)">Submit</el-button>
+        <el-button v-throttle="[() => Prompt(1)]" size="small" type="primary">Submit</el-button>
       </div>
     </el-dialog>
   </div>
