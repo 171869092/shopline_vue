@@ -76,6 +76,7 @@
 <script>
 import { debounce } from '@/utils'
 import { getServiceList, getQuotedList, getQuotedLabel, deleteQuoted } from '@/api/product'
+import { setCookies } from '@/utils/cookies'
 
 export default {
   name: 'quoted',
@@ -124,6 +125,7 @@ export default {
         if (res.code === 200) {
           this.storeList = res.data
           this.$store.commit('user/SET_STORELIST', this.storeList)
+          setCookies('storeList', JSON.stringify(this.storeList))
         }
       })
       getQuotedLabel().then(res => {

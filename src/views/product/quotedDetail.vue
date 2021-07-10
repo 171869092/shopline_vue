@@ -228,6 +228,7 @@
 <script>
 import draggable from 'vuedraggable'
 import { getQuotedEdit, upStatusQuoted } from '@/api/product'
+import { getCookies } from '@/utils/cookies'
 export default {
   name: 'quoted-detail',
   components: {
@@ -264,14 +265,15 @@ export default {
       draggableList: [],
       id: '',
       product_id: '',
-      dayList: []
+      dayList: [],
+      storeList: []
     }
   },
-  computed: {
+ /* computed: {
     storeList() {
-      return this.$store.state.user.storeList
+      return getCookies('storeList')
     }
-  },
+  },*/
   created() {
     this.id = this.$route.query.id
     this.product_id = this.$route.query.product_id
@@ -283,6 +285,7 @@ export default {
       const data = {
         id: this.id
       }
+      this.storeList = getCookies('storeList')
       getQuotedEdit(data).then(res => {
         if (res.codes === 200) {
           this.formData = res.data
@@ -484,7 +487,7 @@ export default {
       })
     },
     getValueOfLabel(num, sum) {
-      const obj = sum.find(it => Number(it.id) === Number(num))
+      const obj = JSON.parse(sum).find(it => Number(it.id) === Number(num))
       if (obj) {
         return obj.service_name
       } else {
