@@ -125,7 +125,7 @@
               <el-table-column label="Operation" width="120" fixed="right">
                 <template slot-scope="scope">
                   <span v-if="formData.status === 1">Adopt</span>
-                  <span v-if="formData.status !== 1" style="color: #ef6f38; cursor: pointer" @click="handleAdopt(scope.row, item)">Adopt</span>
+                  <span v-if="formData.status !== 1" v-throttle="[() => handleAdopt(scope.row, item)]" style="color: #ef6f38; cursor: pointer">Adopt</span>
                 </template>
               </el-table-column>
             </el-table>
