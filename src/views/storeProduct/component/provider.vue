@@ -15,7 +15,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="providerAdd">Cancel</el-button>
-        <el-button size="small" type="primary" :loading="loading" @click="providerAdd(1)">Submit</el-button>
+        <el-button v-throttle="[() => providerAdd(1)]" size="small" type="primary" :loading="loading">Submit</el-button>
       </div>
     </el-dialog>
   </div>

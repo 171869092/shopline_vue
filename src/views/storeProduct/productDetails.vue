@@ -8,7 +8,7 @@
         <el-col :span="5">
           <div style="float: right;">
             <el-button v-if="$route.query.type == 'edit' && $route.query.stroeType == 'all'" size="small" class="button-border" @click="ProductDelete">Delete product</el-button>
-            <el-button size="small" type="primary" :loading="SubmitLoading" @click="submit">Save</el-button>
+            <el-button v-throttle="[submit]" size="small" type="primary" :loading="SubmitLoading">Save</el-button>
           </div>
         </el-col>
       </el-row>

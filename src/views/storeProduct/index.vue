@@ -5,7 +5,7 @@
         <!-- <el-button type="primary" icon="el-icon-plus" size="small" class="f-r mr50 mt20" @click="productAdd('add')">Add products</el-button> -->
         <el-button size="small" class="button-border" @click="providerClick">Hosting</el-button>
         <el-button size="small" type="danger" @click="CancleHostClick">Unhosting</el-button>
-        <el-button size="small" type="primary" icon="el-icon-top" :loading="shopifyLoading" @click="pushShopify">Push to shopify</el-button>
+        <el-button v-throttle="[pushShopify]" size="small" type="primary" icon="el-icon-top" :loading="shopifyLoading">Push to shopify</el-button>
       </div>
     </div>
     <el-card v-loading="tabloading" class="dataloading box-card min_height">
@@ -42,7 +42,7 @@
                 />
               </el-select>
             </div>
-            <el-button class="ml20" size="small" type="primary" @click="syncData">Sync Data</el-button>
+            <el-button v-throttle="[syncData]" class="ml20" size="small" type="primary">Sync Data</el-button>
           </div>
           <el-row v-if="typeClose && formInline.store_url === store_url" class="row-bg mb10">
             <el-col :span="2"><span>Data syncing:</span></el-col>
