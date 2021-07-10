@@ -14,7 +14,7 @@
       </div>
       <div>
         <el-button v-if="type === 2 && is_push !== 3" size="small" type="primary" @click="confirmAfterSales">Forward</el-button>
-<!--        <el-button size="small" type="primary" @click="confirmAfterSales">Forward</el-button>-->
+        <!--        <el-button size="small" type="primary" @click="confirmAfterSales">Forward</el-button>-->
         <el-button v-if="client_status !== 3 || status !== 3" size="small" type="primary" @click="complete">Completed</el-button>
       </div>
     </div>
@@ -104,21 +104,23 @@
               :show-file-list="false"
               :http-request="customerUpload"
               :before-upload="handleCustomerBeforeUpload"
-              :on-change="handleCustomerChange">
+              :on-change="handleCustomerChange"
+            >
               <div class="el-upload__text">
-                <i class="el-icon-picture"/>
+                <i class="el-icon-picture" />
               </div>
             </el-upload>
           </div>
           <div class="tick-box">{{ message }}</div>
           <div class="image-box">
-            <el-image
-              v-for="(fit, key) in customerAfterChat.reply_img"
-              :key="key"
-              class="image"
-              :src="fit"
-              :preview-src-list="[fit]"
-            />
+            <span v-for="(fit, key) in customerAfterChat.reply_img" :key="key" class="image-span">
+              <el-image
+                class="image"
+                :src="fit"
+                :preview-src-list="[fit]"
+              />
+              <i class="el-icon-circle-close hIcon" @click="handleCustomerClose(key)" />
+            </span>
           </div>
         </el-card>
       </div>
@@ -148,7 +150,7 @@
               <div class="contain">
                 <div v-if="item.reply_info" class="mb10">
                   <span :class="[item.reply_user === user_id ? 'reply-right' : 'reply-left']">
-                    <p v-html="item.reply_info"/>
+                    <p v-html="item.reply_info" />
                   </span>
                 </div>
                 <div>
@@ -177,21 +179,23 @@
               :show-file-list="false"
               :http-request="vendorUpload"
               :before-upload="handleVendorBeforeUpload"
-              :on-change="handleVendorChange">
+              :on-change="handleVendorChange"
+            >
               <div class="el-upload__text">
-                <i class="el-icon-picture"/>
+                <i class="el-icon-picture" />
               </div>
             </el-upload>
           </div>
           <div class="tick-box">{{ message }}</div>
           <div class="image-box">
-            <el-image
-              v-for="(fit, key) in vendorAfterChat.reply_img"
-              :key="key"
-              class="image"
-              :src="fit"
-              :preview-src-list="[fit]"
-            />
+            <span v-for="(fit, key) in vendorAfterChat.reply_img" :key="key" class="image-span">
+              <el-image
+                class="image"
+                :src="fit"
+                :preview-src-list="[fit]"
+              />
+              <i class="el-icon-circle-close hIcon" @click="handleVendorClose(key)" />
+            </span>
           </div>
         </el-card>
       </div>
@@ -199,7 +203,8 @@
     <el-dialog
       title="Tips"
       :visible.sync="dialogVisible"
-      width="30%">
+      width="30%"
+    >
       <p style="text-align: center">Are you sure to complete the current after sales information ?</p>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" style="background-color:#2c7fdd;border: 0 none;" @click="handleComplete(3)">Vendor</el-button>
@@ -550,22 +555,26 @@ export default {
       }
     },
     customerUpload(fileObj) {
-      const file = { showProgress: true, url: '', percent: 0 }
-      const formData = new FormData()
-      formData.append('file', fileObj.file)
-      uploadImage(formData, (progress) => {
-        file.percent = Math.round((progress.loaded / progress.total) * 100)
-      }).then(res => {
-        if (res.code === 200) {
-          const data = JSON.parse(JSON.stringify(res.data))
-          file.url = data['data-service-file']
-          file.showProgress = false
-          this.customerAfterChat.reply_img.push(data['data-service-file'])
-          this.showImg = false
-        }
-      }).catch(err => {
-        console.log(err)
-      })
+      if (this.customerAfterChat.reply_img.length <= 4) {
+        const file = { showProgress: true, url: '', percent: 0 }
+        const formData = new FormData()
+        formData.append('file', fileObj.file)
+        uploadImage(formData, (progress) => {
+          file.percent = Math.round((progress.loaded / progress.total) * 100)
+        }).then(res => {
+          if (res.code === 200) {
+            const data = JSON.parse(JSON.stringify(res.data))
+            file.url = data['data-service-file']
+            file.showProgress = false
+            this.customerAfterChat.reply_img.push(data['data-service-file'])
+            this.showImg = false
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      } else {
+        this.$message.warning('Upload up to 5 pictures!')
+      }
     },
     handleCustomerBeforeUpload(file, fileList) {
       // console.log('change', file)
@@ -586,22 +595,26 @@ export default {
       return isSize
     },
     vendorUpload(fileObj) {
-      const file = { showProgress: true, url: '', percent: 0 }
-      const formData = new FormData()
-      formData.append('file', fileObj.file)
-      uploadImage(formData, (progress) => {
-        file.percent = Math.round((progress.loaded / progress.total) * 100)
-      }).then(res => {
-        if (res.code === 200) {
-          const data = JSON.parse(JSON.stringify(res.data))
-          file.url = data['data-service-file']
-          file.showProgress = false
-          this.vendorAfterChat.reply_img.push(data['data-service-file'])
-          this.showImg = false
-        }
-      }).catch(err => {
-        console.log(err)
-      })
+      if (this.vendorAfterChat.reply_img.length <= 4) {
+        const file = { showProgress: true, url: '', percent: 0 }
+        const formData = new FormData()
+        formData.append('file', fileObj.file)
+        uploadImage(formData, (progress) => {
+          file.percent = Math.round((progress.loaded / progress.total) * 100)
+        }).then(res => {
+          if (res.code === 200) {
+            const data = JSON.parse(JSON.stringify(res.data))
+            file.url = data['data-service-file']
+            file.showProgress = false
+            this.vendorAfterChat.reply_img.push(data['data-service-file'])
+            this.showImg = false
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      } else {
+        this.$message.warning('Upload up to 5 pictures!')
+      }
     },
     handleVendorBeforeUpload(file, fileList) {
       // console.log('change', file)
@@ -715,6 +728,12 @@ export default {
           this.getAfterSalesDetail()
         }
       })
+    },
+    handleCustomerClose(index) {
+      this.customerAfterChat.reply_img.splice(index, 1)
+    },
+    handleVendorClose(index) {
+      this.vendorAfterChat.reply_img.splice(index, 1)
     }
   }
 }
@@ -873,7 +892,7 @@ export default {
         height: 250px;
       }
       .upload-box {
-        z-index: 99999;
+        z-index: 1998;
         width: 40px;
         height: 34px;
         position: absolute;
@@ -900,10 +919,21 @@ export default {
         bottom: 0;
         right: 0;
         text-align: right;
-        .image {
-          width: 50px;
-          height: 50px;
-          margin: 0 10px;
+        .image-span {
+          display: inline-block;
+          position: relative;
+          .image {
+            width: 50px;
+            height: 50px;
+            margin: 0 10px;
+          }
+          .hIcon {
+            position: absolute;
+            top: -7px;
+            right: 2px;
+            cursor: pointer;
+            color: #666;
+          }
         }
       }
     }

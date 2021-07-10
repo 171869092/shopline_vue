@@ -74,7 +74,7 @@
             <div class="contain">
               <div v-if="item.reply_info" class="mb10">
                 <span :class="[item.reply_user === user_id ? 'reply-right' : 'reply-left']">
-                  <p v-html="item.reply_info"/>
+                  <p v-html="item.reply_info" />
                 </span>
               </div>
               <div>
@@ -111,13 +111,14 @@
         </div>
         <div class="tick-box">{{ message }}</div>
         <div class="image-box">
-          <el-image
-            v-for="(fit, key) in afterChat.reply_img"
-            :key="key"
-            class="image"
-            :src="fit"
-            :preview-src-list="[fit]"
-          />
+          <span v-for="(fit, key) in afterChat.reply_img" :key="key" class="image-span">
+            <el-image
+              class="image"
+              :src="fit"
+              :preview-src-list="[fit]"
+            />
+            <i class="el-icon-circle-close hIcon" @click="handleClickClose(key)" />
+          </span>
         </div>
       </el-card>
     </div>
@@ -126,7 +127,7 @@
 
 <script>
 import io from 'socket.io-client'
-import { afterSalesType } from '@/api/after'
+import { afterSalesChanngedStatus, afterSalesType } from '@/api/after'
 import { getCookies } from '@/utils/cookies'
 import { uploadImage } from '@/api/product'
 import { getToken } from '@/utils/auth'
@@ -217,6 +218,22 @@ export default {
     },
     // complete
     complete() {
+      const ids = []
+      ids.push(this.after_id)
+      afterSalesChanngedStatus({ id: ids, status: 5 }).then(res => {
+        let type = ''
+        if (res.code === 200) {
+          type = 'success'
+        } else {
+          type = 'error'
+        }
+        this.dialogVisible = false
+        this.$message({ message: res.message, type: type })
+      }).catch(err => {
+        console.log(err)
+      }).finally(() => {
+
+      })
     },
     handleReply() {
       if (this.afterChat.reply_info === '' && this.afterChat.reply_img.length === 0) {
@@ -266,22 +283,26 @@ export default {
       }
     },
     Upload(fileObj) {
-      const file = { showProgress: true, url: '', percent: 0 }
-      const formData = new FormData()
-      formData.append('file', fileObj.file)
-      uploadImage(formData, (progress) => {
-        file.percent = Math.round((progress.loaded / progress.total) * 100)
-      }).then(res => {
-        if (res.code === 200) {
-          const data = JSON.parse(JSON.stringify(res.data))
-          file.url = data['data-service-file']
-          file.showProgress = false
-          this.afterChat.reply_img.push(data['data-service-file'])
-          this.showImg = false
-        }
-      }).catch(err => {
-        console.log(err)
-      })
+      if (this.afterChat.reply_img.length <= 4) {
+        const file = { showProgress: true, url: '', percent: 0 }
+        const formData = new FormData()
+        formData.append('file', fileObj.file)
+        uploadImage(formData, (progress) => {
+          file.percent = Math.round((progress.loaded / progress.total) * 100)
+        }).then(res => {
+          if (res.code === 200) {
+            const data = JSON.parse(JSON.stringify(res.data))
+            file.url = data['data-service-file']
+            file.showProgress = false
+            this.afterChat.reply_img.push(data['data-service-file'])
+            this.showImg = false
+          }
+        }).catch(err => {
+          console.log(err)
+        })
+      } else {
+        this.$message.warning('Upload up to 5 pictures!')
+      }
     },
     handleBeforeUpload(file, fileList) {
       // console.log('change', file)
@@ -355,6 +376,9 @@ export default {
     handleRouteBack() {
       this.socket.emit('leave-after', { after_id: this.after_id })
       this.$router.push({ name: 'after' })
+    },
+    handleClickClose(index) {
+      this.afterChat.reply_img.splice(index, 1)
     }
   }
 }
@@ -484,7 +508,7 @@ export default {
       height: 250px;
     }
     .upload-box {
-      z-index: 99999;
+      z-index: 1998;
       width: 40px;
       height: 34px;
       position: absolute;
@@ -506,10 +530,21 @@ export default {
       bottom: 0;
       right: 0;
       text-align: right;
-      .image {
-        width: 50px;
-        height: 50px;
-        margin: 0 10px;
+      .image-span {
+        display: inline-block;
+        position: relative;
+        .image {
+          width: 50px;
+          height: 50px;
+          margin: 0 10px;
+        }
+        .hIcon {
+          position: absolute;
+          top: -7px;
+          right: 2px;
+          cursor: pointer;
+          color: #666;
+        }
       }
     }
   }
