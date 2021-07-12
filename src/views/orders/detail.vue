@@ -195,7 +195,7 @@ export default {
         { label: 'The Logistics Cost', value: 'logistics_cost' },
         { label: 'Service Fee', value: 'service_fee' }
       ],
-      detailInfo: {},
+      detailInfo: [],
       loading: false,
       dialogVisible: false,
       selectedProduct: '',
@@ -277,11 +277,15 @@ export default {
       })
     },
     afterSales(info) {
-      this.orderInfo = info
-      info.goods_info.forEach(item => {
-        this.productsList.push(item)
-      })
-      this.dialogVisible = true
+      if (info.after_id !== '') {
+        this.$router.push({ name: 'after-detail', query: { type: 'edit', id: info.after_id, order_no: info.order_name }})
+      } else {
+        this.orderInfo = info
+        info.goods_info.forEach(item => {
+          this.productsList.push(item)
+        })
+        this.dialogVisible = true
+      }
     },
     handleClose() {
       this.afterDialog = this.$options.data().afterDialog
