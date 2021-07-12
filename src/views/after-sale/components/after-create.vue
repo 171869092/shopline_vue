@@ -27,19 +27,24 @@
         <div class="detail-block-title custul">
           <el-form>
             <el-row :gutter="77">
-              <el-col :span="8">
+              <el-col :span="6">
                 <el-form-item label="After Sales Type:" prop="after_type" class="custItem">
                   <span class="inx_text">{{ after_type }}</span>
                 </el-form-item>
               </el-col>
-              <el-col :span="8">
+              <el-col :span="6">
                 <el-form-item label="After Sales Mode:" prop="after_model">
                   <span class="inx_text">{{ after_model }}</span>
                 </el-form-item>
               </el-col>
-              <el-col :span="8">
+              <el-col :span="6">
                 <el-form-item label="After Sales Products:" prop="product_json">
                   <span v-for="(item, idx) in product_json" :key="idx" class="inx_text">{{ item }}</span>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="Creation time:" prop="after_model">
+                  <span class="inx_text">{{ after_create_time }}</span>
                 </el-form-item>
               </el-col>
             </el-row>
@@ -192,6 +197,9 @@ export default {
     },
     server_name() {
       return this.$route.query.server_name
+    },
+    after_create_time() {
+      return this.$route.query.after_create_time
     }
   },
   updated() {
