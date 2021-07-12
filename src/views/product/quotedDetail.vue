@@ -27,7 +27,7 @@
           </el-form-item>
         </div>
       </el-card>
-      <el-card class="m20 mt0 pb20">
+      <el-card class="m20 mt0">
         <div class="btn-box p20">
           <h5>Quoted price</h5>
           <el-button type="primary" size="small" @click="isTotal = !isTotal">{{ isTotal ? 'Total' : 'Details' }}</el-button>
@@ -45,90 +45,92 @@
                 <span>{{ item.time }}</span>
               </div>
             </div>
-            <el-table
-              v-if="item.newData"
-              ref="multipleTable"
-              :data="item.next"
-              empty-text="No Data"
-              style="width: 100%"
-              :span-method="objectSpanMethod"
-              highlight-current-row
-              fit
-              border
-              :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
-            >
-              <el-table-column v-for="item1 in labelListOne" :key="item1.label" :label="item1.label" :prop="item1.value" :width="item1.width" :min-width="item1.width ? item1.width : '150'" fixed="left">
-                <template slot-scope="scope">
-                  <span v-if="item1.type === 'serial'">
-                    <span>{{ scope.row[item1.value] }}</span>
-                  </span>
-                  <span v-if="item1.type === 'img'">
-                    <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img" fit="cover">
-                      <div slot="error" class="image-slot">
-                        <i class="el-icon-picture-outline" style="font-size: 30px;" />
-                      </div>
-                    </el-image>
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column v-for="item1 in optionList" :key="item1.label" :label="item1.label" :prop="item1.value" :width="item1.width" :min-width="item1.width ? item1.width : '150'" fixed="left">
-                <template slot-scope="scope">
-                  <span v-if="item1.type === undefined">{{ scope.row[item1.value] }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column v-for="item1 in labelListTow" :key="item1.label" :label="item1.label" :prop="item1.value" :width="item1.width" :min-width="item1.width ? item1.width : '150'" fixed="left">
-                <template slot-scope="scope">
-                  <span v-if="item1.type === undefined">{{ scope.row[item1.value] }}</span>
-                  <span v-if="item1.type === 'dollar'">
-                    <span v-if="scope.row[item1.value]">$ {{ scope.row[item1.value] }}</span>
-                    <span v-if="!scope.row[item1.value]">/</span>
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column v-for="item2 in countryLabelList" :key="item2.label" :label="item2.label" :prop="item2.value" :width="isTotal ? item2.width : '150'">
-                <template slot="header" slot-scope="scope">
-                  <div>{{ scope.column.label }}( {{ dayList[key] }} day)</div>
-                </template>
-                <template slot-scope="scope">
-                  <span v-if="item2.type === 'dynamic'">
-                    <span v-if="!isTotal">
-                      <span v-if="scope.row[item2.value].total !== null && scope.row[item2.value].total !== undefined && scope.row[item2.value].total !== ''">$ {{ scope.row[item2.value].total }}</span>
-                      <span v-if="scope.row[item2.value].total === null || scope.row[item2.value].total === undefined || scope.row[item2.value].total === ''">/</span>
+            <div class="table-box">
+              <el-table
+                v-if="item.newData"
+                ref="multipleTable"
+                :data="item.next"
+                empty-text="No Data"
+                style="width: 100%"
+                :span-method="objectSpanMethod"
+                fit
+                border
+                :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
+              >
+                <el-table-column v-for="item1 in labelListOne" :key="item1.label" :label="item1.label" :prop="item1.value" :width="item1.width" :min-width="item1.width ? item1.width : '150'" fixed="left">
+                  <template slot-scope="scope">
+                    <span v-if="item1.type === 'serial'">
+                      <span>{{ scope.row[item1.value] }}</span>
                     </span>
-                    <span v-if="isTotal" class="change-style">
-                      <span class="left">
-                        <span class="title">Total</span>
-                        <span>
-                          <span v-if="scope.row[item2.value].total !== null && scope.row[item2.value].total !== undefined && scope.row[item2.value].total !== ''">$ {{ scope.row[item2.value].total }}</span>
-                          <span v-if="scope.row[item2.value].total === null || scope.row[item2.value].total === undefined || scope.row[item2.value].total === ''">/</span>
+                    <span v-if="item1.type === 'img'">
+                      <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img" fit="cover">
+                        <div slot="error" class="image-slot">
+                          <i class="el-icon-picture-outline" style="font-size: 30px;" />
+                        </div>
+                      </el-image>
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column v-for="item1 in optionList" :key="item1.label" :label="item1.label" :prop="item1.value" :width="item1.width" :min-width="item1.width ? item1.width : '150'" fixed="left">
+                  <template slot-scope="scope">
+                    <span v-if="item1.type === undefined">{{ scope.row[item1.value] }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column v-for="item1 in labelListTow" :key="item1.label" :label="item1.label" :prop="item1.value" :width="item1.width" :min-width="item1.width ? item1.width : '150'" fixed="left">
+                  <template slot-scope="scope">
+                    <span v-if="item1.type === undefined">{{ scope.row[item1.value] }}</span>
+                    <span v-if="item1.type === 'dollar'">
+                      <span v-if="scope.row[item1.value]">$ {{ scope.row[item1.value] }}</span>
+                      <span v-if="!scope.row[item1.value]">/</span>
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column v-for="item2 in countryLabelList" :key="item2.label" :label="item2.label" :prop="item2.value" :width="isTotal ? item2.width : '150'">
+                  <template slot="header" slot-scope="scope">
+                    <div>{{ scope.column.label }}( {{ dayList[key] }} day)</div>
+                  </template>
+                  <template slot-scope="scope">
+                    <span v-if="item2.type === 'dynamic'">
+                      <span v-if="!isTotal">
+                        <span v-if="scope.row[item2.value].total !== null && scope.row[item2.value].total !== undefined && scope.row[item2.value].total !== ''">$ {{ scope.row[item2.value].total }}</span>
+                        <span v-if="scope.row[item2.value].total === null || scope.row[item2.value].total === undefined || scope.row[item2.value].total === ''">/</span>
+                      </span>
+                      <span v-if="isTotal" class="change-style">
+                        <span class="left">
+                          <span class="title">Total</span>
+                          <span>
+                            <span v-if="scope.row[item2.value].total !== null && scope.row[item2.value].total !== undefined && scope.row[item2.value].total !== ''">$ {{ scope.row[item2.value].total }}</span>
+                            <span v-if="scope.row[item2.value].total === null || scope.row[item2.value].total === undefined || scope.row[item2.value].total === ''">/</span>
+                          </span>
+                        </span>
+                        <span class="right">
+                          <span class="title">Details</span>
+                          <span class="spanOneLine"><span style="font-weight: 600">Product: </span>
+                            <span v-if="scope.row[item2.value].product_price">$ {{ scope.row[item2.value].product_price }}</span>
+                            <span v-if="!scope.row[item2.value].product_price">/</span>
+                          </span>
+                          <span class="spanOneLine"><span style="font-weight: 600">Service: </span>
+                            <span v-if="scope.row[item2.value].service_price">$ {{ scope.row[item2.value].service_price }}</span>
+                            <span v-if="!scope.row[item2.value].service_price">/</span>
+                          </span>
+                          <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>
+                            <span v-if="scope.row[item2.value].logistics_fee !== null && scope.row[item2.value].logistics_fee !== undefined && scope.row[item2.value].logistics_fee !== ''">$ {{ scope.row[item2.value].logistics_fee }}</span>
+                            <span v-if="scope.row[item2.value].logistics_fee === null || scope.row[item2.value].logistics_fee === undefined || scope.row[item2.value].logistics_fee === ''">/</span>
+                          </span>
                         </span>
                       </span>
-                      <span class="right">
-                        <span class="title">Details</span>
-                        <span class="spanOneLine"><span style="font-weight: 600">Product: </span>
-                          <span v-if="scope.row[item2.value].product_price">$ {{ scope.row[item2.value].product_price }}</span>
-                          <span v-if="!scope.row[item2.value].product_price">/</span>
-                        </span>
-                        <span class="spanOneLine"><span style="font-weight: 600">Service: </span>
-                          <span v-if="scope.row[item2.value].service_price">$ {{ scope.row[item2.value].service_price }}</span>
-                          <span v-if="!scope.row[item2.value].service_price">/</span>
-                        </span>
-                        <span class="spanOneLine"><span style="font-weight: 600">Logistics: </span>
-                          <span v-if="scope.row[item2.value].logistics_fee !== null && scope.row[item2.value].logistics_fee !== undefined && scope.row[item2.value].logistics_fee !== ''">$ {{ scope.row[item2.value].logistics_fee }}</span>
-                          <span v-if="scope.row[item2.value].logistics_fee === null || scope.row[item2.value].logistics_fee === undefined || scope.row[item2.value].logistics_fee === ''">/</span>
-                        </span>
-                      </span>
                     </span>
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column label="Operation" width="120" fixed="right">
-                <template slot-scope="scope">
-                  <span v-if="formData.status === 1">Adopt</span>
-                  <span v-if="formData.status !== 1" v-throttle="[() => handleAdopt(scope.row, item)]" style="color: #ef6f38; cursor: pointer">Adopt</span>
-                </template>
-              </el-table-column>
-            </el-table>
+                  </template>
+                </el-table-column>
+                <el-table-column label="Operation" width="120" fixed="right">
+                  <template slot-scope="scope">
+                    <span v-if="formData.status === 1">Adopt</span>
+                    <span v-if="formData.status !== 1" v-throttle="[() => handleAdopt(scope.row, item)]" class="hOperation"/>
+                  </template>
+                </el-table-column>
+              </el-table>
+              <div v-if="formData.status !== 1" class="hOperation-box" @click="handleMYAdopt(item)">Adopt</div>
+            </div>
             <el-table
               v-if="item.pre.length > 0 && !item.newData"
               ref="multipleTable"
@@ -239,7 +241,7 @@ export default {
       loading: false,
       labelListOne: [
         { label: 'Serial', value: 'serial', type: 'serial', width: '80' },
-        { label: 'Picture', value: 'img', type: 'img', width: '120' },
+        { label: 'Picture', value: 'img', type: 'img', width: '120' }
       ],
       labelListTow: [
         { label: 'Size', value: 'size', width: '120' },
@@ -266,10 +268,12 @@ export default {
       id: '',
       product_id: '',
       dayList: [],
-      storeList: []
+      storeList: [],
+      hRow: {},
+      hItem: {}
     }
   },
- /* computed: {
+  /* computed: {
     storeList() {
       return getCookies('storeList')
     }
@@ -426,6 +430,8 @@ export default {
     allowDrop(draggingNode, dropNode, type) {},
     // Adopt
     handleAdopt(row, item) {
+      this.hRow = row
+      this.hItem = item
       const formData = {
         id: row.quoted_id,
         service_id: Number(item.title)
@@ -438,6 +444,9 @@ export default {
           this.$message.error(res.message)
         }
       })
+    },
+    handleMYAdopt(item) {
+      this.handleAdopt(item.next[0], item)
     },
     // Dynamically generate random colors
     getColorRender() {
@@ -565,6 +574,28 @@ export default {
     }
     ::v-deep.el-table--medium td {
       padding: 0;
+    }
+  }
+  .table-box {
+    position: relative;
+    .hOperation {
+      color: #ef6f38;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .hOperation-box {
+      display: flex;
+      color: #ef6f38;
+      cursor: pointer;
+      width: 120px;
+      height: 80%;
+      justify-content: center;
+      align-items: center;
+      position: absolute;
+      top: 45px;
+      right: 0;
+      background-color: #fff;
+      z-index: 99;
     }
   }
 }
