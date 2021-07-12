@@ -347,7 +347,7 @@ export default {
               logistics_status: this.orderInfo.logistics_status
             },
             server_id: this.orderInfo.service_id,
-            customer_name: this.getCookie('name'),
+            customer_name: decodeURI(this.getCookie('name')),
             product_json: products,
             order_create: this.orderInfo.order_create_time,
             after_model: this.afterDialog.after_model,
