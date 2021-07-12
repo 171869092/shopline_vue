@@ -192,7 +192,7 @@ export default {
       },
       listQuery: {
         total: 0,
-        page: 0,
+        page: 1,
         limit: 10
       },
       afterStatus: { 0: 'ALL', 1: 'Pending', 2: 'In process', 3: 'Completed' },
