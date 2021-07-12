@@ -38,11 +38,11 @@
               <div class="title" :style="{'background-color': item.newData ? item.titleStyle : '#ccc'}" @click="item.newData = true">
                 <img src="@/assets/home/drag.png" width="25px" height="25px">
                 <span style="margin: 0 20px">{{ getValueOfLabel(item.title, storeList) }}</span>
-                <span>{{ item.time }}</span>
+                <span>{{ item.next ? item.next[0].update_time : '' }}</span>
               </div>
-              <div v-if="item.pre.length > 0" class="title" :style="{'background-color': item.newData ? '#ccc' : item.titleStyle}" @click="item.newData = false">
+              <div v-if="item.pre.length > 0 && item.pre[0].server_id !== undefined" class="title" :style="{'background-color': item.newData ? '#ccc' : item.titleStyle}" @click="item.newData = false">
                 <span style="margin: 0 20px">{{ getValueOfLabel(item.title, storeList) }}</span>
-                <span>{{ item.time }}</span>
+                <span>{{ item.pre ? item.pre[0].update_time : '' }}</span>
               </div>
             </div>
             <div class="table-box">
@@ -129,7 +129,7 @@
                   </template>
                 </el-table-column>
               </el-table>
-              <div v-if="formData.status !== 1" class="hOperation-box" @click="handleMYAdopt(item)">Adopt</div>
+              <div v-if="formData.status !== 1 && item.newData" class="hOperation-box" @click="handleMYAdopt(item)">Adopt</div>
             </div>
             <el-table
               v-if="item.pre.length > 0 && !item.newData"
@@ -380,32 +380,34 @@ export default {
                 }
               }
             })
-            it.pre.map(item => {
-              if (item.result !== null) {
-                item.result.map((it, inx) => {
-                  if (item.result[inx].country_code === arr[inx].label) {
-                    this.$set(item, arr[inx].label, item.result[inx])
-                  }
-                })
-              } else {
-                arr.map((it, inx) => {
-                  const obj = {
-                    country_code: arr[inx].label,
-                    id: null,
-                    logistics_fee: null,
-                    product_price: null,
-                    service_price: null,
-                    total: null
-                  }
-                  this.$set(item, arr[inx].label, obj)
-                })
-              }
-              if (item.option) {
-                for (const key in item.option) {
-                  this.$set(item, key, item.option[key])
+            if (it.pre.length > 0 && it.pre[0].server_id !== undefined) {
+              it.pre.map(item => {
+                if (item.result !== null) {
+                  item.result.map((it, inx) => {
+                    if (item.result[inx].country_code === arr[inx].label) {
+                      this.$set(item, arr[inx].label, item.result[inx])
+                    }
+                  })
+                } else {
+                  arr.map((it, inx) => {
+                    const obj = {
+                      country_code: arr[inx].label,
+                      id: null,
+                      logistics_fee: null,
+                      product_price: null,
+                      service_price: null,
+                      total: null
+                    }
+                    this.$set(item, arr[inx].label, obj)
+                  })
                 }
-              }
-            })
+                if (item.option) {
+                  for (const key in item.option) {
+                    this.$set(item, key, item.option[key])
+                  }
+                }
+              })
+            }
           })
           if (heaven.length > 0) {
             const heavenArr = Array.from(new Set(heaven))
@@ -466,7 +468,6 @@ export default {
         this.adoptTureList.map(it => {
           this.adoptList.push(...it.value)
         })
-        console.log('this.adoptList', this.adoptList)
       }
     },
     // Select to adopt

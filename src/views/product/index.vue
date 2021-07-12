@@ -112,7 +112,7 @@
       <div style="text-align: center">Please add pictures to SKU variants</div>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" style="background-color:#f68a1d; color: #fff; border: 0 none" @click="Prompt(2)">Add</el-button>
-        <el-button v-throttle="[() => Prompt(1)]" size="small" type="primary">Submit</el-button>
+<!--        <el-button v-throttle="[() => Prompt(1)]" size="small" type="primary">Submit</el-button>-->
       </div>
     </el-dialog>
   </div>
