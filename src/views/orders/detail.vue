@@ -63,6 +63,11 @@
               <span>{{ scope.row.purchase_price || '--' }}</span>
             </template>
           </el-table-column>
+          <el-table-column prop="purchase_price" label="Status" width="200">
+            <template slot-scope="scope">
+              <span>{{ scope.row.goods_type === 1 ? 'Normal' : 'Refund' || '--' }}</span>
+            </template>
+          </el-table-column>
         </el-table>
       </el-card>
 
