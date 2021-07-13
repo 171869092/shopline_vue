@@ -2,19 +2,19 @@
   <div class="my-orders">
     <el-card class="box-card">
       <el-tabs v-model="formQuery.order_status_client" @tab-click="handleClick">
-        <div class="flexbox justify-space-between">
+        <div class="flexbox justify-space-between btn-box">
           <div class="filter-control flexbox mb20">
             <div class="filter-item">
               <el-input
                 v-model="formQuery.order_name"
                 clearable
-                class="w-400"
+                class="w-300"
                 prefix-icon="el-icon-search"
                 placeholder="Filter orders"
                 @change="filterOrders"
               />
             </div>
-            <div class="filter-item w-250">
+            <div class="filter-item w_20">
               <el-select
                 v-model="formQuery.order_status_client"
                 collapse-tags
@@ -30,7 +30,7 @@
                 />
               </el-select>
             </div>
-            <div class="filter-item w-250">
+            <div class="filter-item w_20">
               <el-select
                 v-model="formQuery.order_status"
                 collapse-tags
@@ -64,7 +64,7 @@
               />
             </el-select>
           </div> -->
-            <div class="filter-item w-250">
+            <div class="filter-item w_20">
               <el-select
                 v-model="formQuery.store_url"
                 clearable
@@ -449,6 +449,9 @@ export default {
 <style lang="scss" scoped>
 .my-orders {
   padding: 30px;
+  .btn-box {
+    overflow-x: auto;
+  }
 }
 .logistics-timeline {
   padding-left: 20px;
