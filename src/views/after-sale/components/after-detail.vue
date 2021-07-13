@@ -85,13 +85,24 @@
                   </span>
                 </div>
                 <div>
-                  <el-image
-                    v-for="(it,i) in item.reply_img"
-                    :key="i"
-                    class="image"
-                    :src="it"
-                    :preview-src-list="[it]"
-                  />
+                  <span v-for="(it,i) in item.reply_img" :key="i">
+                    <span v-if="it.type">
+                      <el-image
+                        v-if="it.type !== 'video/mp4'"
+                        class="image"
+                        :src="it.url"
+                        :preview-src-list="[it.url]"
+                      />
+                      <video v-if="it.type === 'video/mp4'" class="image" preload="metadata" :src="it.url" @click="handlePreview(it.url, it.type)" />
+                    </span>
+                    <span v-else>
+                      <el-image
+                        class="image"
+                        :src="it"
+                        :preview-src-list="[it]"
+                      />
+                    </span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -103,7 +114,7 @@
           <div class="upload-box">
             <el-upload
               ref="upload"
-              accept="image/png, image/jpeg"
+              accept="image/png, image/jpeg, video/mp4"
               class="upload-photos"
               action
               :show-file-list="false"
@@ -120,10 +131,12 @@
           <div class="image-box">
             <span v-for="(fit, key) in customerAfterChat.reply_img" :key="key" class="image-span">
               <el-image
+                v-if="fit.type !== 'video/mp4'"
                 class="image"
-                :src="fit"
-                :preview-src-list="[fit]"
+                :src="fit.url"
+                :preview-src-list="[fit.url]"
               />
+              <video v-if="fit.type === 'video/mp4'" class="image" preload="metadata" :src="fit.url" @click="handlePreview(fit.url, fit.type)" />
               <i class="el-icon-circle-close hIcon" @click="handleCustomerClose(key)" />
             </span>
           </div>
@@ -159,13 +172,24 @@
                   </span>
                 </div>
                 <div>
-                  <el-image
-                    v-for="(it,i) in item.reply_img"
-                    :key="i"
-                    class="image"
-                    :src="it"
-                    :preview-src-list="[it]"
-                  />
+                  <span v-for="(it,i) in item.reply_img" :key="i">
+                    <span v-if="it.type">
+                      <el-image
+                        v-if="it.type !== 'video/mp4'"
+                        class="image"
+                        :src="it.url"
+                        :preview-src-list="[it.url]"
+                      />
+                      <video v-if="it.type === 'video/mp4'" class="image" preload="metadata" :src="it.url" @click="handlePreview(it.url, it.type)" />
+                    </span>
+                    <span v-else>
+                      <el-image
+                        class="image"
+                        :src="it"
+                        :preview-src-list="[it]"
+                      />
+                    </span>
+                  </span>
                 </div>
               </div>
             </div>
@@ -178,7 +202,7 @@
           <div class="upload-box">
             <el-upload
               ref="upload"
-              accept="image/png, image/jpeg"
+              accept="image/png, image/jpeg, video/mp4"
               class="upload-photos"
               action
               :show-file-list="false"
@@ -195,10 +219,12 @@
           <div class="image-box">
             <span v-for="(fit, key) in vendorAfterChat.reply_img" :key="key" class="image-span">
               <el-image
+                v-if="fit.type !== 'video/mp4'"
                 class="image"
-                :src="fit"
-                :preview-src-list="[fit]"
+                :src="fit.url"
+                :preview-src-list="[fit.url]"
               />
+              <video v-if="fit.type === 'video/mp4'" class="image" preload="metadata" :src="fit.url" @click="handlePreview(fit.url, fit.type)" />
               <i class="el-icon-circle-close hIcon" @click="handleVendorClose(key)" />
             </span>
           </div>
@@ -243,6 +269,20 @@
         <el-button @click="forwardVisible = false">取 消</el-button>
         <el-button type="primary" @click="handleAfterSales">确 定</el-button>
       </span>
+    </el-dialog>
+    <el-dialog
+      title="Video preview"
+      :visible.sync="videoVisible"
+      width="30%"
+    >
+      <iframe
+        width="100%"
+        height="500px"
+        :src="previewUrl"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      />
     </el-dialog>
   </div>
 </template>
@@ -335,7 +375,10 @@ export default {
           { required: true, message: 'Please enter a Products', trigger: 'blur' }
         ]
       },
-      service_is_finish: 0
+      service_is_finish: 0,
+      // 视屏弹窗
+      videoVisible: false,
+      previewUrl: ''
     }
   },
   computed: {
@@ -369,6 +412,11 @@ export default {
     this.initWebSocket()
   },
   methods: {
+    // 视频大图查看
+    handlePreview(file, type) {
+      this.previewUrl = file
+      this.videoVisible = true
+    },
     getAfterSalesDetail() {
       this.loading = true
       afterSalesDetail({ id: this.$route.query.id }).then(res => {
@@ -608,6 +656,7 @@ export default {
       }
     },
     customerUpload(fileObj) {
+      this.loading = true
       if (this.customerAfterChat.reply_img.length <= 4) {
         const file = { showProgress: true, url: '', percent: 0 }
         const formData = new FormData()
@@ -619,14 +668,21 @@ export default {
             const data = JSON.parse(JSON.stringify(res.data))
             file.url = data['data-service-file']
             file.showProgress = false
-            this.customerAfterChat.reply_img.push(data['data-service-file'])
+            const obj = {
+              url: data['data-service-file'],
+              type: fileObj.file.type
+            }
+            this.customerAfterChat.reply_img.push(obj)
             this.showImg = false
+            this.loading = false
           }
         }).catch(err => {
           console.log(err)
+          this.loading = false
         })
       } else {
         this.$message.warning('Upload up to 5 pictures!')
+        this.loading = false
       }
     },
     handleCustomerBeforeUpload(file, fileList) {
@@ -648,6 +704,7 @@ export default {
       return isSize
     },
     vendorUpload(fileObj) {
+      this.loading = true
       if (this.vendorAfterChat.reply_img.length <= 4) {
         const file = { showProgress: true, url: '', percent: 0 }
         const formData = new FormData()
@@ -659,14 +716,21 @@ export default {
             const data = JSON.parse(JSON.stringify(res.data))
             file.url = data['data-service-file']
             file.showProgress = false
-            this.vendorAfterChat.reply_img.push(data['data-service-file'])
+            const obj = {
+              url: data['data-service-file'],
+              type: fileObj.file.type
+            }
+            this.vendorAfterChat.reply_img.push(obj)
             this.showImg = false
+            this.loading = false
           }
         }).catch(err => {
           console.log(err)
+          this.loading = false
         })
       } else {
         this.$message.warning('Upload up to 5 pictures!')
+        this.loading = false
       }
     },
     handleVendorBeforeUpload(file, fileList) {
