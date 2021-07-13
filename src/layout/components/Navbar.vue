@@ -51,6 +51,7 @@ import Breadcrumb from '@/components/Breadcrumb'
 import Logo from './Sidebar/Logo'
 import { getUnreadMessage } from '@/api/notice'
 import { getBaseMonitor } from '@/api/wifi'
+import { findUserInfo } from '@/api/user'
 
 export default {
   components: {
@@ -62,13 +63,13 @@ export default {
     return {
       notice: [],
       realTime: '0',
-      wifiTime: ''
+      wifiTime: '',
+      avatar: ''
     }
   },
   computed: {
     ...mapGetters([
       'sidebar',
-      'avatar',
       'email'
     ]),
     showLogo() {
@@ -78,6 +79,11 @@ export default {
   created() {
     this.initNotice()
     this.wifiSetInterval()
+    findUserInfo().then(res => {
+      if (res.code === 200) {
+        this.avatar = res.data.icon
+      }
+    })
   },
   methods: {
     toggleSideBar() {
