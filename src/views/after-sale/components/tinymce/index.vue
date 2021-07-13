@@ -175,10 +175,11 @@ export default {
         // branding: false,
         elementpath: false, // 左下角的当前标签路径
         statusbar: false,
+        remove_linebreaks: false,
         force_br_newlines: true,
         force_p_newlines: false, // 清除换行符
         gecko_spellcheck: true,
-        forced_root_block: '', // Needed for 3.x
+        forced_root_block: 'p', // Needed for 3.x
         entity_encoding: 'raw', // 禁止转义
         init_instance_callback: editor => {
           if (this.value) {
@@ -195,9 +196,16 @@ export default {
             this.fullscreen = e.state
           })
           editor.on('keydown', (e) => {
-            if (e.keyCode === 13) {
+            if (e.shiftKey && e.keyCode === 13) {
+              window.tinymce.execCommand('mceInsertContent', false, '<br><br>')
+              window.tinymce.dom.Event.cancel(e)
+              return
+            }
+            if (e.keyCode === 13 && !e.shiftKey) {
+              window.tinymce.execCommand('mceInsertContent', false, '<br>')
+              window.tinymce.dom.Event.cancel(e)
               this.$emit('reply')
-              window.tinymce.get(this.tinymceId).setContent('')
+              return
             }
           })
         },

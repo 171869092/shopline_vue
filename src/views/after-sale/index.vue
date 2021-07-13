@@ -251,7 +251,6 @@ export default {
                 arr.push(it.sku_name)
               }
             })
-            console.log('arr', arr)
             item.index = index
             item.product_json = arr.join(',')
           })

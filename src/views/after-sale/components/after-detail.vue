@@ -230,7 +230,7 @@
         </el-form-item>
         <el-form-item label="Mode" prop="after_model">
           <el-select v-model="afterDialog.after_model" style="width: 95%">
-            <el-option v-for="(item,idx) in modeList" :key="idx" :label="item" :value="String(idx + 1)" />
+            <el-option v-for="item in modeList" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="Products" prop="product_json">
@@ -309,7 +309,20 @@ export default {
         product_json: ''
       },
       typeList: [],
-      modeList: ['Resend', 'Refund', 'Return/Refund', 'Other'],
+      modeList: [
+        {
+          label: 'Resend',
+          value: '1'
+        },
+        {
+          label: 'Refund',
+          value: '2'
+        },
+        {
+          label: 'Other',
+          value: '4'
+        }
+      ],
       productsList: [],
       formRule: {
         after_type: [
