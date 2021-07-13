@@ -54,7 +54,6 @@
           <el-table
             ref="multipleTable"
             v-loading="loading"
-            v-sticky="{top: 0, parent: '#app_main' }"
             :data="tableData"
             style="width: 100%"
             highlight-current-row
@@ -244,26 +243,20 @@ export default {
       this.formQuery.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
       afterSalesList(this.formQuery).then(res => {
         if (res.code === 200) {
-          this.tableData = res.data.map((item, index) => {
-            item.product_json = item.product_json.map((da,ik) => {
-              return da.sku_name
-            }).join(',')
+          this.tableData = res.data
+          this.tableData.map((item, index) => {
+            const arr = []
+            item.product_json.map(it => {
+              if (it.sku_name) {
+                arr.push(it.sku_name)
+              }
+            })
+            console.log('arr', arr)
             item.index = index
-            return item
+            item.product_json = arr.join(',')
           })
           this.listQuery.total = +res.total.totalCount
           this.unreadCount = res.total.unreadCount
-
-          // if (res.data.product_json && res.data.product_json.length > 0) {
-          //   console.log(1111)
-          //   this.product = res.data.product_json.map((item,idx) => {
-          //     console.log('item: ',item)
-          //     return item.sku_name
-          //   })
-          // }else{
-          //   this.product = []
-          // }
-          console.log('product:', this.tableData)
         }
       }).catch(err => {
         console.log('err', err)
