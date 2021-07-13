@@ -47,7 +47,7 @@
         </div>
       </el-card>
       <div class="mt20">
-        <el-button size="small" type="primary" class="w-300" @click="isCustomer = false">Vendor({{server_name}})</el-button>
+        <el-button size="small" type="primary" class="w-300" @click="isCustomer = false">Vendor({{ server_name }})</el-button>
       </div>
       <!-- After Sales Message record -->
       <el-card class="box-card mt20">
@@ -78,13 +78,15 @@
                 </span>
               </div>
               <div>
-                <el-image
-                  v-for="(it,i) in item.reply_img"
-                  :key="i"
-                  class="image"
-                  :src="it"
-                  :preview-src-list="[it]"
-                />
+                <span v-for="(it,i) in item.reply_img" :key="i">
+                  <el-image
+                    v-if="it.type !== 'video/mp4'"
+                    class="image"
+                    :src="it.url"
+                    :preview-src-list="[it.url]"
+                  />
+                  <video v-if="it.type === 'video/mp4'" class="image" preload="metadata" :src="it.url" @click="handlePreview(it.url, it.type)" />
+                </span>
               </div>
             </div>
           </div>
@@ -96,7 +98,7 @@
         <div class="upload-box">
           <el-upload
             ref="upload"
-            accept="image/png, image/jpeg"
+            accept="image/png, image/jpeg, video/mp4"
             class="upload-photos"
             action
             :show-file-list="false"
@@ -113,15 +115,31 @@
         <div class="image-box">
           <span v-for="(fit, key) in afterChat.reply_img" :key="key" class="image-span">
             <el-image
+              v-if="fit.type !== 'video/mp4'"
               class="image"
-              :src="fit"
-              :preview-src-list="[fit]"
+              :src="fit.url"
+              :preview-src-list="[fit.url]"
             />
+            <video v-if="fit.type === 'video/mp4'" class="image" preload="metadata" :src="fit.url" @click="handlePreview(fit.url, fit.type)" />
             <i class="el-icon-circle-close hIcon" @click="handleClickClose(key)" />
           </span>
         </div>
       </el-card>
     </div>
+    <el-dialog
+      title="Video preview"
+      :visible.sync="videoVisible"
+      width="30%"
+    >
+      <iframe
+        width="100%"
+        height="500px"
+        :src="previewUrl"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      />
+    </el-dialog>
   </div>
 </template>
 
@@ -168,7 +186,10 @@ export default {
       message: '',
       bInformation: {},
       HSocket: false,
-      msg: ''
+      msg: '',
+      // 视屏弹窗
+      videoVisible: false,
+      previewUrl: ''
     }
   },
   computed: {
@@ -209,6 +230,11 @@ export default {
     this.socket.emit('after-read', { after_id: this.after_id, type: this.socketType })
   },
   methods: {
+    // 视频大图查看
+    handlePreview(file, type) {
+      this.previewUrl = file
+      this.videoVisible = true
+    },
     // 获取售后类型
     getAfterSalesType() {
       afterSalesType().then(res => {
@@ -286,6 +312,7 @@ export default {
       }
     },
     Upload(fileObj) {
+      this.loading = true
       if (this.afterChat.reply_img.length <= 4) {
         const file = { showProgress: true, url: '', percent: 0 }
         const formData = new FormData()
@@ -297,14 +324,21 @@ export default {
             const data = JSON.parse(JSON.stringify(res.data))
             file.url = data['data-service-file']
             file.showProgress = false
-            this.afterChat.reply_img.push(data['data-service-file'])
+            const obj = {
+              url: data['data-service-file'],
+              type: fileObj.file.type
+            }
+            this.afterChat.reply_img.push(obj)
             this.showImg = false
+            this.loading = false
           }
         }).catch(err => {
           console.log(err)
+          this.loading = false
         })
       } else {
         this.$message.warning('Upload up to 5 pictures!')
+        this.loading = false
       }
     },
     handleBeforeUpload(file, fileList) {
