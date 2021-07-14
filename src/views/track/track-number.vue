@@ -279,10 +279,8 @@
 </template>
 
 <script>
-import { realInfo, afterSalesReal, updateAfterInfo } from '@/api/user'
+import { realInfo, afterSalesReal, updateAfterInfo, afterSalesType, afterSalesReply } from '@/api/user'
 import { getCookies, setCookies } from '@/utils/cookies'
-import { afterSalesType, afterSalesReply } from '@/api/after'
-// import { uploadImage } from '@/api/product'
 export default {
   name: 'track-number',
   data() {
