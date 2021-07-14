@@ -279,10 +279,10 @@
 </template>
 
 <script>
-import { realInfo, afterSalesReal } from '@/api/user'
+import { realInfo, afterSalesReal, updateAfterInfo } from '@/api/user'
 import { getCookies } from '@/utils/cookies'
 import { afterSalesType, afterSalesReply } from '@/api/after'
-import { uploadImage } from '@/api/product'
+// import { uploadImage } from '@/api/product'
 export default {
   name: 'track-number',
   data() {
@@ -599,7 +599,7 @@ export default {
       const file = { showProgress: true, url: '', percent: 0 }
       const formData = new FormData()
       formData.append('file', fileObj.file)
-      uploadImage(formData, (progress) => {
+        updateAfterInfo(formData, (progress) => {
         file.percent = Math.round((progress.loaded / progress.total) * 100)
       }).then(res => {
         if (res.code === 200) {
@@ -637,7 +637,7 @@ export default {
       const file = { showProgress: true, url: '', percent: 0 }
       const formData = new FormData()
       formData.append('file', fileObj.file)
-      uploadImage(formData, (progress) => {
+      updateAfterInfo(formData, (progress) => {
         file.percent = Math.round((progress.loaded / progress.total) * 100)
       }).then(res => {
         if (res.code === 200) {

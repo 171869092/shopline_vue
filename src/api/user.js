@@ -119,3 +119,11 @@ export function afterSalesReal(data) {
     data: data
   })
 }
+// 真实用户售后上传图片
+export function updateAfterInfo(data) {
+  return request({
+    url: '/after/after-sales/upload',
+    method: 'post',
+    data: data
+  })
+}
