@@ -282,10 +282,8 @@
 </template>
 
 <script>
-import { realInfo, afterSalesReal, updateAfterInfo } from '@/api/user'
+import { realInfo, afterSalesReal, updateAfterInfo, afterSalesType, afterSalesReply } from '@/api/user'
 import { getCookies, setCookies } from '@/utils/cookies'
-import { afterSalesType, afterSalesReply } from '@/api/after'
-// import { uploadImage } from '@/api/product'
 export default {
   name: 'track-number',
   data() {
@@ -603,9 +601,11 @@ export default {
     },
     // 售后文件自定义上传
     upload(fileObj) {
+      console.log('fileObj', fileObj.file)
       const file = { showProgress: true, url: '', percent: 0 }
       const formData = new FormData()
       formData.append('file', fileObj.file)
+      console.log('formData', formData)
       updateAfterInfo(formData, (progress) => {
         file.percent = Math.round((progress.loaded / progress.total) * 100)
       }).then(res => {

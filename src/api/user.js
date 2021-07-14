@@ -106,7 +106,7 @@ export function updateUserInfo(data) {
 // 真实用户售后
 export function realInfo(data) {
   return request({
-    url: '/base/index/reacl-info',
+    url: '/after/after/reacl-info',
     method: 'get',
     params: data
   })
@@ -114,15 +114,33 @@ export function realInfo(data) {
 // 真实用户售后提交
 export function afterSalesReal(data) {
   return request({
-    url: '/after/after-sales/reacl',
+    url: '/after/after/reacl',
     method: 'post',
     data: data
   })
 }
 // 真实用户售后上传图片
-export function updateAfterInfo(data) {
+export function updateAfterInfo(data, cb) {
   return request({
-    url: '/after/after-sales/upload',
+    url: '/after/after/upload',
+    method: 'post',
+    data: data,
+    headers: { 'Content-Type': 'multipart/form-data;charset=UTF-8' },
+    onUploadProgress: progressEvent => cb(progressEvent)
+  })
+}
+// . after sale type
+export function afterSalesType() {
+  return request({
+    url: '/after/after/type',
+    method: 'get'
+  })
+}
+
+// . after sale reply
+export function afterSalesReply(data) {
+  return request({
+    url: '/after/after/reply',
     method: 'post',
     data: data
   })
