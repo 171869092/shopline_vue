@@ -281,6 +281,26 @@
       </div>
     </el-dialog>
     <el-dialog
+      title="Authentication"
+      :visible.sync="AuThenDialogVisible"
+      width="50%"
+      top="30vh">
+      <div slot="title">
+        Authentication
+        <el-tooltip class="item" effect="dark" content="in order to ensure that the information is correct, we need to conduct a brief authentication. please understand the inconvenience caused" placement="right">
+          <i class="el-icon-question" />
+        </el-tooltip>
+      </div>
+      <el-form ref="AuthenticationForm" label-position="top" :model="AuthenticationForm" :rules="AuthenticationRules">
+        <el-form-item label="Please enter the email information you filled in when you purchased the product" prop="product">
+          <el-input v-model="AuthenticationForm.product" size="large" placeholder="Please enter the email information you filled in when you purchased the product"/>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="handleSubmit">Submit</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
       title="Video preview"
       :visible.sync="videoVisible"
       width="30%"
@@ -410,7 +430,8 @@ export default {
       },
       // 视屏弹窗
       videoVisible: false,
-      previewUrl: ''
+      previewUrl: '',
+      AuThenDialogVisible: false
     }
   },
   computed: {
@@ -479,16 +500,12 @@ export default {
     submitTrack() {
       this.$refs['trackNumberForm'].validate((valid) => {
         if (valid) {
-          // 测试数据： 3794727502003
-          const obj = {
-            params: this.trackNumberForm.number,
-            customer_id: this.customerId
-          }
-          this.initTrack(obj)
+          this.AuThenDialogVisible = true
         }
       })
     },
     initTrack(val) {
+      this.AuThenDialogVisible = false
       realInfo(val).then(res => {
         if (res.code === 200) {
           if (res.data.good.length > 0) {
@@ -702,6 +719,18 @@ export default {
     handleRecordClose() {
       this.recordVisible = false
       this.recordForm = this.$options.data().recordForm
+    },
+    handleSubmit() {
+      this.$refs['AuthenticationForm'].validate((valid) => {
+        if (valid) {
+          const obj = {
+            params: this.trackNumberForm.number,
+            customer_id: this.customerId,
+            email: this.AuthenticationForm.product
+          }
+          this.initTrack(obj)
+        }
+      })
     }
   }
 }
