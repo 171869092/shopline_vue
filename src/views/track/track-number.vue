@@ -117,7 +117,7 @@
             <el-upload
               ref="upload"
               class="img-reply"
-              accept="image/png, image/jpeg"
+              accept="image/png, image/jpeg, video/mp4"
               drag
               multiple
               action
@@ -130,7 +130,8 @@
             </el-upload>
             <div v-if="dialogForm.image">
               <span v-for="(item, index) in dialogForm.image" :key="index">
-                <el-image :src="item.url" style="height: 100px;width: 120px" class="mt10 mr10" />
+                <el-image v-if="item.type !== 'video/mp4'" :src="item.url" style="height: 100px;width: 120px" class="mt10 mr10" />
+                <video v-if="item.type === 'video/mp4'" class="mt10 mr10" preload="metadata" :src="item.url" style="height: 100px;width: 120px" @click="handlePreview(item.url, item.type)" />
               </span>
             </div>
           </el-form-item>
@@ -219,7 +220,7 @@
           <el-upload
             ref="upload"
             class="img-reply"
-            accept="image/png, image/jpeg"
+            accept="image/png, image/jpeg, video/mp4"
             drag
             multiple
             action
@@ -232,7 +233,8 @@
           </el-upload>
           <div v-if="replyForm.image">
             <span v-for="(item, index) in replyForm.image" :key="index">
-              <el-image :src="item.url" style="height: 100px;width: 120px" class="mt10 mr10" />
+              <el-image v-if="item.type !== 'video/mp4'" :src="item.url" style="height: 100px;width: 120px" class="mt10 mr10" />
+              <video v-if="item.type === 'video/mp4'" class="mt10 mr10" preload="metadata" :src="item.url" style="height: 100px;width: 120px" @click="handlePreview(item.url, item.type)" />
             </span>
           </div>
         </el-form-item>
@@ -277,6 +279,20 @@
           </el-table-column>
         </el-table>
       </div>
+    </el-dialog>
+    <el-dialog
+      title="Video preview"
+      :visible.sync="videoVisible"
+      width="30%"
+    >
+      <iframe
+        width="100%"
+        height="500px"
+        :src="previewUrl"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+      />
     </el-dialog>
   </div>
 </template>
@@ -391,7 +407,10 @@ export default {
         reply_img: [],
         reply_user: '',
         type: 3
-      }
+      },
+      // 视屏弹窗
+      videoVisible: false,
+      previewUrl: ''
     }
   },
   computed: {
@@ -420,6 +439,11 @@ export default {
     this.customerId = getCookies('uid')
   },
   methods: {
+    // 视频大图查看
+    handlePreview(file, type) {
+      this.previewUrl = file
+      this.videoVisible = true
+    },
     // 获取售后类型
     getAfterSalesType() {
       afterSalesType().then(res => {
@@ -523,9 +547,7 @@ export default {
           this.formData.after_model = this.dialogForm.after_model
           this.formData.content = this.dialogForm.content
           this.formData.user_id = this.customerId
-          this.dialogForm.image.map(it => {
-            this.formData.image.push(it.url)
-          })
+          this.formData.image = this.dialogForm.image
           this.formData.order_name = this.selectionList[0].order.order_name
           this.formData.order_no = this.selectionList[0].order.order_no
           // this.formData.order_no = '123456'
@@ -601,18 +623,20 @@ export default {
     },
     // 售后文件自定义上传
     upload(fileObj) {
-      console.log('fileObj', fileObj.file)
       const file = { showProgress: true, url: '', percent: 0 }
       const formData = new FormData()
       formData.append('file', fileObj.file)
-      console.log('formData', formData)
       updateAfterInfo(formData, (progress) => {
         file.percent = Math.round((progress.loaded / progress.total) * 100)
       }).then(res => {
         if (res.code === 200) {
           file.url = res.data['data-service-file']
           file.showProgress = false
-          this.dialogForm.image.push(file)
+          const obj = {
+            url: file.url,
+            type: fileObj.file.type
+          }
+          this.dialogForm.image.push(obj)
         }
       }).catch(err => {
         console.log(err)
@@ -650,7 +674,11 @@ export default {
         if (res.code === 200) {
           file.url = res.data['data-service-file']
           file.showProgress = false
-          this.replyForm.image.push(file)
+          const obj = {
+            url: file.url,
+            type: fileObj.file.type
+          }
+          this.replyForm.image.push(obj)
         }
       }).catch(err => {
         console.log(err)
@@ -664,9 +692,7 @@ export default {
     // 回复提交
     handleReplySubmit() {
       this.replyFormData.reply_info = this.replyForm.reply
-      this.replyForm.image.map(it => {
-        this.replyFormData.reply_img.push(it.url)
-      })
+      this.replyFormData.reply_img = this.replyForm.image
       afterSalesReply(this.replyFormData).then(res => {
         this.$message.success(res.message)
         this.handleClose()
