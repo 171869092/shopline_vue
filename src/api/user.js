@@ -145,3 +145,11 @@ export function afterSalesReply(data) {
     data: data
   })
 }
+
+// afterSalesGenerateKey
+export function afterSalesGenerateKey() {
+  return request({
+    url: '/after/after-sales/generate-key',
+    method: 'get'
+  })
+}

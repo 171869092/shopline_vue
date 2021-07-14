@@ -44,6 +44,7 @@
       <el-table
         v-if="labelIsShow"
         :data="tableData"
+        empty-text="No Data"
         style="width: 100%"
         highlight-current-row
         fit
@@ -148,31 +149,31 @@
             <!--            <el-tab-pane :label="$t('track.detail.informationActive.firstLabel')" name="first">-->
             <el-tab-pane label="After sales information" name="first">
               <el-form ref="information" :model="item.afterSalesInformation" label-width="160px" label-position="left">
+                <!--                <el-form-item :label="$t('track.detail.informationActive.products') + ':'">-->
                 <el-form-item label="After sale products :">
-                  <!--                <el-form-item :label="$t('track.detail.informationActive.products') + ':'">-->
                   <span class="in_txt">{{ item.afterSalesInformation.product_json[0].product_json }}</span>
                 </el-form-item>
                 <el-row :gutter="77">
                   <el-col :span="10">
+                    <!--                    <el-form-item :label="$t('track.detail.informationActive.type') + ':'">-->
                     <el-form-item label="After sales type :">
-                      <!--                    <el-form-item :label="$t('track.detail.informationActive.type') + ':'">-->
                       <span class="in_txt">{{ item.afterSalesInformation.after_type }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="10" :offset="4">
+                    <!--                    <el-form-item :label="$t('track.detail.informationActive.mode') + ':'">-->
                     <el-form-item label="After sales mode :">
-                      <!--                    <el-form-item :label="$t('track.detail.informationActive.mode') + ':'">-->
                       <span class="in_txt">{{ item.afterSalesInformation.after_model }}</span>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-tabs v-model="item.afterSalesInformation.innerAfterSalesActive" type="card">
+                  <!--                  <el-tab-pane :label="$t('track.detail.informationActive.textReply')" name="first">-->
                   <el-tab-pane label="Text reply" name="first">
-                    <!--                  <el-tab-pane :label="$t('track.detail.informationActive.textReply')" name="first">-->
                     <el-input v-model="item.afterSalesInformation.content" type="textarea" :rows="4" placeholder="Seriously damaged products need to be returned and replaced" />
                   </el-tab-pane>
+                  <!--                  <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">-->
                   <el-tab-pane label="Picture reply" name="second">
-                    <!--                  <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">-->
                     <span v-for="(it, inx) in item.afterSalesInformation.image" :key="inx">
                       <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="it" />
                     </span>
@@ -202,8 +203,8 @@
         </div>
         <div v-if="item.afterSalesActive === 'second'" class="after-btn-box">
           <!--          <el-button type="text" class="btn" @click="handleClickReply(item)">{{ $t('track.detail.reply') }}</el-button>-->
-          <!--          <el-button type="text" class="btn" @click="handleClickRecord">{{ $t('track.detail.record') }}</el-button>-->
           <el-button type="text" class="btn" @click="handleClickReply(item)">reply</el-button>
+          <!--          <el-button type="text" class="btn" @click="handleClickRecord">{{ $t('track.detail.record') }}</el-button>-->
           <el-button type="text" class="btn" @click="handleClickRecord">record</el-button>
         </div>
       </div>
@@ -246,6 +247,7 @@
     <el-dialog :visible.sync="recordVisible" width="60%" class="p20" @close="handleRecordClose">
       <div class="record-box">
         <el-table
+          empty-text="No Data"
           :data="recordForm.seller"
           style="width: 100%"
           highlight-current-row
@@ -261,6 +263,7 @@
           </el-table-column>
         </el-table>
         <el-table
+          empty-text="No Data"
           :data="recordForm.reacl"
           style="width: 100%"
           highlight-current-row
@@ -281,7 +284,8 @@
       title="Authentication"
       :visible.sync="AuThenDialogVisible"
       width="50%"
-      top="30vh">
+      top="30vh"
+    >
       <div slot="title">
         Authentication
         <el-tooltip class="item" effect="dark" content="in order to ensure that the information is correct, we need to conduct a brief authentication. please understand the inconvenience caused" placement="right">
@@ -290,7 +294,7 @@
       </div>
       <el-form ref="AuthenticationForm" label-position="top" :model="AuthenticationForm" :rules="AuthenticationRules">
         <el-form-item label="Please enter the email information you filled in when you purchased the product" prop="product">
-          <el-input v-model="AuthenticationForm.product" size="large" placeholder="Please enter the email information you filled in when you purchased the product"/>
+          <el-input v-model="AuthenticationForm.product" size="large" placeholder="Please enter the email information you filled in when you purchased the product" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -316,7 +320,6 @@
 
 <script>
 import { realInfo, afterSalesReal, updateAfterInfo, afterSalesType, afterSalesReply } from '@/api/user'
-import { getCookies, setCookies } from '@/utils/cookies'
 export default {
   name: 'track-number',
   data() {
@@ -428,7 +431,8 @@ export default {
       // 视屏弹窗
       videoVisible: false,
       previewUrl: '',
-      AuThenDialogVisible: false
+      AuThenDialogVisible: false,
+      decoding: {}
     }
   },
   computed: {
@@ -451,10 +455,12 @@ export default {
     }
   },
   created() {
-    const search = window.location.search
-    setCookies('uid', search.split('=')[1])
+    const search = window.location.href
+    const sum = decodeURI(search.split('=')[1])
+    const str = sum.replaceAll('%3A', ':')
+    this.decoding = JSON.parse(str)
+    console.log('decoding', this.decoding)
     this.getAfterSalesType()
-    this.customerId = getCookies('uid')
   },
   methods: {
     // 视频大图查看
@@ -508,8 +514,9 @@ export default {
           if (res.data.good.length > 0) {
             this.showDetails = true
             this.tableData = res.data.good
+            this.customerId = res.data.user_id
           } else {
-            this.$message.warning('res.data.message')
+            this.$message.warning(res.message)
           }
           if (res.data.after.length > 0) {
             this.showAfterSale = true
@@ -523,8 +530,8 @@ export default {
             this.showAfterSaleBtn = true
           }
         }
-      }).catch(e => {
-        this.$message.warning(e)
+      }).catch((e) => {
+        console.log(e)
       })
     },
     // 打开弹窗
@@ -720,7 +727,8 @@ export default {
         if (valid) {
           const obj = {
             params: this.trackNumberForm.number,
-            customer_id: this.customerId,
+            safe: this.decoding.safe,
+            secret: this.decoding.secret,
             email: this.AuthenticationForm.product
           }
           this.initTrack(obj)
