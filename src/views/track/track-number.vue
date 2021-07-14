@@ -13,7 +13,7 @@
             </div>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="en" :disabled="language==='en'">English</el-dropdown-item>
-<!--              <el-dropdown-item command="zh" :disabled="language==='zh'">简体中文</el-dropdown-item>-->
+              <!--              <el-dropdown-item command="zh" :disabled="language==='zh'">简体中文</el-dropdown-item>-->
             </el-dropdown-menu>
           </el-dropdown>
         </el-col>
@@ -24,7 +24,7 @@
       <el-form ref="trackNumberForm" label-position="top" :model="trackNumberForm" :rules="trackNumberFormRules">
         <el-row>
           <el-col :offset="6" :span="12">
-<!--            <el-form-item :label="$t('track.trackNumberForm.label')" prop="number" class="mt5">
+            <!--            <el-form-item :label="$t('track.trackNumberForm.label')" prop="number" class="mt5">
               <el-input v-model="trackNumberForm.number" size="large" :placeholder="$t('track.trackNumberForm.placeholder')" />
             </el-form-item>-->
             <el-form-item label="Enter the order number to query the order information for after-sales-service" prop="number" class="mt5">
@@ -33,7 +33,7 @@
           </el-col>
           <el-col :span="6">
             <el-form-item label="" class="ml20 mt50">
-<!--              <el-button type="primary" size="large" @click="submitTrack">{{ $t('track.trackNumberForm.track') }}</el-button>-->
+              <!--              <el-button type="primary" size="large" @click="submitTrack">{{ $t('track.trackNumberForm.track') }}</el-button>-->
               <el-button type="primary" size="large" @click="submitTrack">Track</el-button>
             </el-form-item>
           </el-col>
@@ -68,7 +68,7 @@
       </el-table>
       <el-dialog :visible.sync="dialogVisible" width="60%" class="p20 dialog-box">
         <el-form ref="dialogForm" :rules="dialogFormRules" :model="dialogForm" label-width="160px" label-position="left">
-<!--          <el-form-item :label="$t('track.detail.informationActive.products') + ':'" prop="product_json">-->
+          <!--          <el-form-item :label="$t('track.detail.informationActive.products') + ':'" prop="product_json">-->
           <el-form-item label="After sale products :" prop="product_json">
             <el-input v-model="dialogForm.product_json" disabled />
             <!-- <el-select v-model="dialogForm.product_json" disabled :placeholder="$t('track.detail.informationActive.selectProducts')" multiple style="width:100%">
@@ -82,9 +82,9 @@
           </el-form-item>
           <el-row :gutter="77">
             <el-col :span="10">
-<!--              <el-form-item :label="$t('track.detail.informationActive.type') + ':'" prop="after_type">-->
+              <!--              <el-form-item :label="$t('track.detail.informationActive.type') + ':'" prop="after_type">-->
               <el-form-item label="After sales type :" prop="after_type">
-<!--                <el-select v-model="dialogForm.after_type" :placeholder="$t('track.detail.informationActive.selectType')" style="width:100%">-->
+                <!--                <el-select v-model="dialogForm.after_type" :placeholder="$t('track.detail.informationActive.selectType')" style="width:100%">-->
                 <el-select v-model="dialogForm.after_type" placeholder="Please Select Type" style="width:100%">
                   <el-option
                     v-for="(item, key) in typeList"
@@ -96,9 +96,9 @@
               </el-form-item>
             </el-col>
             <el-col :span="10" :offset="4">
-<!--              <el-form-item :label="$t('track.detail.informationActive.mode') + ':'" prop="after_model">-->
+              <!--              <el-form-item :label="$t('track.detail.informationActive.mode') + ':'" prop="after_model">-->
               <el-form-item label="After sales mode :" prop="after_model">
-<!--                <el-select v-model="dialogForm.after_model" :placeholder="$t('track.detail.informationActive.selectMode')" style="width:100%">-->
+                <!--                <el-select v-model="dialogForm.after_model" :placeholder="$t('track.detail.informationActive.selectMode')" style="width:100%">-->
                 <el-select v-model="dialogForm.after_model" placeholder="Please Select Mode" style="width:100%">
                   <el-option
                     v-for="(item, key) in modeList"
@@ -110,9 +110,9 @@
               </el-form-item>
             </el-col>
           </el-row>
-<!--          <el-form-item :label="$t('track.detail.informationActive.description')" prop="content" class="reply-box">-->
+          <!--          <el-form-item :label="$t('track.detail.informationActive.description')" prop="content" class="reply-box">-->
           <el-form-item label="Description" prop="content" class="reply-box">
-<!--            <el-input v-model="dialogForm.content" type="textarea" :rows="8" :placeholder="$t('track.detail.informationActive.selectTextReply')" />-->
+            <!--            <el-input v-model="dialogForm.content" type="textarea" :rows="8" :placeholder="$t('track.detail.informationActive.selectTextReply')" />-->
             <el-input v-model="dialogForm.content" type="textarea" :rows="8" placeholder="Please enter your reply..." />
             <el-upload
               ref="upload"
@@ -137,7 +137,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-<!--          <el-button type="primary" @click="submit">{{ $t('track.detail.informationActive.sub') }}</el-button>-->
+          <!--          <el-button type="primary" @click="submit">{{ $t('track.detail.informationActive.sub') }}</el-button>-->
           <el-button type="primary" @click="submit">Submit</el-button>
         </div>
       </el-dialog>
@@ -146,33 +146,33 @@
       <div v-for="(item,index) in afterList" :key="index" class="tabs-box">
         <div v-if="showAfterSale">
           <el-tabs v-model="item.afterSalesActive" type="card" class="tabs" @tab-click="handleAfterSalesClick">
-<!--            <el-tab-pane :label="$t('track.detail.informationActive.firstLabel')" name="first">-->
+            <!--            <el-tab-pane :label="$t('track.detail.informationActive.firstLabel')" name="first">-->
             <el-tab-pane label="After sales information" name="first">
               <el-form ref="information" :model="item.afterSalesInformation" label-width="160px" label-position="left">
-<!--                <el-form-item :label="$t('track.detail.informationActive.products') + ':'">-->
+                <!--                <el-form-item :label="$t('track.detail.informationActive.products') + ':'">-->
                 <el-form-item label="After sale products :">
                   <span class="in_txt">{{ item.afterSalesInformation.product_json[0].product_json }}</span>
                 </el-form-item>
                 <el-row :gutter="77">
                   <el-col :span="10">
-<!--                    <el-form-item :label="$t('track.detail.informationActive.type') + ':'">-->
+                    <!--                    <el-form-item :label="$t('track.detail.informationActive.type') + ':'">-->
                     <el-form-item label="After sales type :">
                       <span class="in_txt">{{ item.afterSalesInformation.after_type }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="10" :offset="4">
-<!--                    <el-form-item :label="$t('track.detail.informationActive.mode') + ':'">-->
+                    <!--                    <el-form-item :label="$t('track.detail.informationActive.mode') + ':'">-->
                     <el-form-item label="After sales mode :">
                       <span class="in_txt">{{ item.afterSalesInformation.after_model }}</span>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-tabs v-model="item.afterSalesInformation.innerAfterSalesActive" type="card">
-<!--                  <el-tab-pane :label="$t('track.detail.informationActive.textReply')" name="first">-->
+                  <!--                  <el-tab-pane :label="$t('track.detail.informationActive.textReply')" name="first">-->
                   <el-tab-pane label="Text reply" name="first">
                     <el-input v-model="item.afterSalesInformation.content" type="textarea" :rows="4" placeholder="Seriously damaged products need to be returned and replaced" />
                   </el-tab-pane>
-<!--                  <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">-->
+                  <!--                  <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">-->
                   <el-tab-pane label="Picture reply" name="second">
                     <span v-for="(it, inx) in item.afterSalesInformation.image" :key="inx">
                       <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="it" />
@@ -181,15 +181,15 @@
                 </el-tabs>
               </el-form>
             </el-tab-pane>
-<!--            <el-tab-pane :label="$t('track.detail.informationActive.secondLabel')" name="second">-->
+            <!--            <el-tab-pane :label="$t('track.detail.informationActive.secondLabel')" name="second">-->
             <el-tab-pane label="Feedback information" name="second">
               <el-form ref="information" :model="item.feedBackInformation" label-width="160px" label-position="left">
                 <el-tabs v-model="item.feedBackInformation.innerAfterSalesActive" type="card">
-<!--                  <el-tab-pane :label="$t('track.detail.informationActive.textReply')" name="first">-->
+                  <!--                  <el-tab-pane :label="$t('track.detail.informationActive.textReply')" name="first">-->
                   <el-tab-pane label="Text reply" name="first">
                     <el-input v-model="item.feedBackInformation.reply_info" type="textarea" readonly :rows="4" placeholder="Seriously damaged products need to be returned and replaced" />
                   </el-tab-pane>
-<!--                  <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">-->
+                  <!--                  <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">-->
                   <el-tab-pane label="Picture reply" name="second">
                     <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="item.feedBackInformation.reply_img" />
                     <!--                    <span v-for="(it, inx) in item.feedBackInformation.image" :key="inx">-->
@@ -202,14 +202,14 @@
           </el-tabs>
         </div>
         <div v-if="item.afterSalesActive === 'second'" class="after-btn-box">
-<!--          <el-button type="text" class="btn" @click="handleClickReply(item)">{{ $t('track.detail.reply') }}</el-button>-->
+          <!--          <el-button type="text" class="btn" @click="handleClickReply(item)">{{ $t('track.detail.reply') }}</el-button>-->
           <el-button type="text" class="btn" @click="handleClickReply(item)">reply</el-button>
-<!--          <el-button type="text" class="btn" @click="handleClickRecord">{{ $t('track.detail.record') }}</el-button>-->
+          <!--          <el-button type="text" class="btn" @click="handleClickRecord">{{ $t('track.detail.record') }}</el-button>-->
           <el-button type="text" class="btn" @click="handleClickRecord">record</el-button>
         </div>
       </div>
       <div v-if="showAfterSaleBtn" class="btn-box">
-<!--        <el-button type="primary" class="btn" @click="handleClickAfterSales">{{ $t('track.detail.afterSales') }}</el-button>-->
+        <!--        <el-button type="primary" class="btn" @click="handleClickAfterSales">{{ $t('track.detail.afterSales') }}</el-button>-->
         <el-button type="primary" class="btn" @click="handleClickAfterSales">After sales</el-button>
       </div>
     </div>
@@ -240,7 +240,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer">
-<!--        <el-button type="primary" @click="handleReplySubmit">{{ $t('track.detail.replySubmit') }}</el-button>-->
+        <!--        <el-button type="primary" @click="handleReplySubmit">{{ $t('track.detail.replySubmit') }}</el-button>-->
         <el-button type="primary" @click="handleReplySubmit">submit</el-button>
       </div>
     </el-dialog>
@@ -254,7 +254,7 @@
           fit
           :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
         >
-<!--          <el-table-column :label="$t('track.detail.recordForm.seller')" prop="seller">-->
+          <!--          <el-table-column :label="$t('track.detail.recordForm.seller')" prop="seller">-->
           <el-table-column label="Seller" prop="seller">
             <template slot-scope="scope">
               <span>{{ scope.row.reply_info }}</span>
@@ -270,7 +270,7 @@
           fit
           :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"
         >
-<!--          <el-table-column :label="$t('track.detail.recordForm.oneself')" prop="oneself">-->
+          <!--          <el-table-column :label="$t('track.detail.recordForm.oneself')" prop="oneself">-->
           <el-table-column label="Oneself" prop="oneself">
             <template slot-scope="scope">
               <span>{{ scope.row.reply_info }}</span>
@@ -284,7 +284,8 @@
       title="Authentication"
       :visible.sync="AuThenDialogVisible"
       width="50%"
-      top="30vh">
+      top="30vh"
+    >
       <div slot="title">
         Authentication
         <el-tooltip class="item" effect="dark" content="in order to ensure that the information is correct, we need to conduct a brief authentication. please understand the inconvenience caused" placement="right">
@@ -293,7 +294,7 @@
       </div>
       <el-form ref="AuthenticationForm" label-position="top" :model="AuthenticationForm" :rules="AuthenticationRules">
         <el-form-item label="Please enter the email information you filled in when you purchased the product" prop="product">
-          <el-input v-model="AuthenticationForm.product" size="large" placeholder="Please enter the email information you filled in when you purchased the product"/>
+          <el-input v-model="AuthenticationForm.product" size="large" placeholder="Please enter the email information you filled in when you purchased the product" />
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -319,7 +320,6 @@
 
 <script>
 import { realInfo, afterSalesReal, updateAfterInfo, afterSalesType, afterSalesReply } from '@/api/user'
-import { getCookies, setCookies } from '@/utils/cookies'
 export default {
   name: 'track-number',
   data() {
@@ -431,7 +431,8 @@ export default {
       // 视屏弹窗
       videoVisible: false,
       previewUrl: '',
-      AuThenDialogVisible: false
+      AuThenDialogVisible: false,
+      decoding: {}
     }
   },
   computed: {
@@ -454,10 +455,12 @@ export default {
     }
   },
   created() {
-    const search = window.location.search
-    setCookies('uid', search.split('=')[1])
+    const search = window.location.href
+    const sum = decodeURI(search.split('=')[1])
+    const str = sum.replaceAll('%3A', ':')
+    this.decoding = JSON.parse(str)
+    console.log('decoding', this.decoding)
     this.getAfterSalesType()
-    this.customerId = getCookies('uid')
   },
   methods: {
     // 视频大图查看
@@ -511,6 +514,7 @@ export default {
           if (res.data.good.length > 0) {
             this.showDetails = true
             this.tableData = res.data.good
+            this.customerId = res.data.user_id
           } else {
             this.$message.warning(res.message)
           }
@@ -725,7 +729,8 @@ export default {
         if (valid) {
           const obj = {
             params: this.trackNumberForm.number,
-            customer_id: this.customerId,
+            safe: this.decoding.safe,
+            secret: this.decoding.secret,
             email: this.AuthenticationForm.product
           }
           this.initTrack(obj)
