@@ -19,7 +19,7 @@
       </el-table-column>
       <el-table-column label="Operation">
         <template slot-scope="scope">
-          <span id="copy_text" class="pointer" :data-clipboard-text="'https://fbali.co/track?uid=' + scope.row.uid" @click="copy">{{ scope.row.operation }}</span>
+          <span id="copy_text" class="pointer" :data-clipboard-text="'https://app.fbali.co/track?uid=' + scope.row.uid" @click="copy">{{ scope.row.operation }}</span>
         </template>
       </el-table-column>
     </el-table>
