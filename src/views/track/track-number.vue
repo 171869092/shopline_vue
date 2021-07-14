@@ -283,7 +283,7 @@
 
 <script>
 import { realInfo, afterSalesReal, updateAfterInfo } from '@/api/user'
-import { getCookies } from '@/utils/cookies'
+import { getCookies, setCookies } from '@/utils/cookies'
 import { afterSalesType, afterSalesReply } from '@/api/after'
 // import { uploadImage } from '@/api/product'
 export default {
@@ -416,8 +416,10 @@ export default {
     }
   },
   created() {
-    this.customerId = getCookies('uid')
+    const search = window.location.search
+    setCookies('uid', search.split('=')[1])
     this.getAfterSalesType()
+    this.customerId = getCookies('uid')
   },
   methods: {
     // 获取售后类型
