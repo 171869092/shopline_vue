@@ -81,7 +81,11 @@ export default {
     this.wifiSetInterval()
     findUserInfo().then(res => {
       if (res.code === 200) {
-        this.avatar = res.data.icon
+        if (res.data.icon !== null && res.data.icon !== '' && res.data.icon !== undefined) {
+          this.avatar = res.data.icon
+        } else {
+          this.avatar = 'https://dx-tech-bucket.s3.amazonaws.com/20210713181701248c21f969b5f03d33d43e04f8f136e7682'
+        }
       }
     })
   },
