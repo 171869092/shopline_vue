@@ -1,5 +1,5 @@
 <template>
-  <div class="track-number-box">
+  <div v-if="trackUp" class="track-number-box">
     <div class="language-change-box">
       <el-row>
         <el-col :offset="11" :span="5">
@@ -101,19 +101,19 @@
                 <!--                <el-select v-model="dialogForm.after_model" :placeholder="$t('track.detail.informationActive.selectMode')" style="width:100%">-->
                 <el-select v-model="dialogForm.after_model" placeholder="Please Select Mode" style="width:100%">
                   <el-option
-                    v-for="(item, key) in modeList"
-                    :key="key"
-                    :label="item"
-                    :value="String(key + 1)"
+                    v-for="item in modeList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
                   />
                 </el-select>
               </el-form-item>
             </el-col>
           </el-row>
           <!--          <el-form-item :label="$t('track.detail.informationActive.description')" prop="content" class="reply-box">-->
-          <el-form-item label="Description" prop="content" class="reply-box">
+          <el-form-item label="Description" prop="reply_info" class="reply-box">
             <!--            <el-input v-model="dialogForm.content" type="textarea" :rows="8" :placeholder="$t('track.detail.informationActive.selectTextReply')" />-->
-            <el-input v-model="dialogForm.content" type="textarea" :rows="8" placeholder="Please enter your reply..." />
+            <el-input v-model="dialogForm.reply_info" type="textarea" :rows="8" placeholder="Please enter your reply..." />
             <el-upload
               ref="upload"
               class="img-reply"
@@ -128,8 +128,8 @@
             >
               <el-button size="small" type="text">Upload pictures</el-button>
             </el-upload>
-            <div v-if="dialogForm.image">
-              <span v-for="(item, index) in dialogForm.image" :key="index">
+            <div v-if="dialogForm.reply_img">
+              <span v-for="(item, index) in dialogForm.reply_img" :key="index">
                 <el-image v-if="item.type !== 'video/mp4'" :src="item.url" style="height: 100px;width: 120px" class="mt10 mr10" />
                 <video v-if="item.type === 'video/mp4'" class="mt10 mr10" preload="metadata" :src="item.url" style="height: 100px;width: 120px" @click="handlePreview(item.url, item.type)" />
               </span>
@@ -157,25 +157,26 @@
                   <el-col :span="10">
                     <!--                    <el-form-item :label="$t('track.detail.informationActive.type') + ':'">-->
                     <el-form-item label="After sales type :">
-                      <span class="in_txt">{{ item.afterSalesInformation.after_type }}</span>
+                      <span class="in_txt">{{ typeList[item.afterSalesInformation.after_type] }}</span>
                     </el-form-item>
                   </el-col>
                   <el-col :span="10" :offset="4">
                     <!--                    <el-form-item :label="$t('track.detail.informationActive.mode') + ':'">-->
                     <el-form-item label="After sales mode :">
-                      <span class="in_txt">{{ item.afterSalesInformation.after_model }}</span>
+                      <span class="in_txt">{{ getValueOfLabel(item.afterSalesInformation.after_model, modeList) }}</span>
                     </el-form-item>
                   </el-col>
                 </el-row>
                 <el-tabs v-model="item.afterSalesInformation.innerAfterSalesActive" type="card">
                   <!--                  <el-tab-pane :label="$t('track.detail.informationActive.textReply')" name="first">-->
                   <el-tab-pane label="Text reply" name="first">
-                    <el-input v-model="item.afterSalesInformation.content" type="textarea" :rows="4" placeholder="Seriously damaged products need to be returned and replaced" />
+                    <el-input v-model="item.afterSalesInformation.reply_info" type="textarea" :rows="4" placeholder="Seriously damaged products need to be returned and replaced" />
                   </el-tab-pane>
                   <!--                  <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">-->
                   <el-tab-pane label="Picture reply" name="second">
-                    <span v-for="(it, inx) in item.afterSalesInformation.image" :key="inx">
-                      <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="it" />
+                    <span v-for="(it, inx) in item.afterSalesInformation.reply_img" :key="inx">
+                      <el-image v-if="it.type !== 'video/mp4'" :src="it.url" style="height: 100px;width: 120px" class="mt10 mr10" />
+                      <video v-if="it.type === 'video/mp4'" class="mt10 mr10" preload="metadata" :src="it.url" style="height: 100px;width: 120px" @click="handlePreview(it.url, it.type)" />
                     </span>
                   </el-tab-pane>
                 </el-tabs>
@@ -191,7 +192,10 @@
                   </el-tab-pane>
                   <!--                  <el-tab-pane :label="$t('track.detail.informationActive.pictureReply')" name="second">-->
                   <el-tab-pane label="Picture reply" name="second">
-                    <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="item.feedBackInformation.reply_img" />
+                    <span v-for="(it, inx) in item.feedBackInformation.reply_img" :key="inx">
+                      <el-image v-if="it.type !== 'video/mp4'" :src="it.url" style="height: 100px;width: 120px" class="mt10 mr10" />
+                      <video v-if="it.type === 'video/mp4'" class="mt10 mr10" preload="metadata" :src="it.url" style="height: 100px;width: 120px" @click="handlePreview(it.url, it.type)" />
+                    </span>
                     <!--                    <span v-for="(it, inx) in item.feedBackInformation.image" :key="inx">-->
                     <!--                      <el-image class="mt10 mr10" style="width: 50px; height: 50px" :src="it"></el-image>-->
                     <!--                    </span>-->
@@ -231,8 +235,8 @@
           >
             <el-button size="small" type="text">Upload pictures</el-button>
           </el-upload>
-          <div v-if="replyForm.image">
-            <span v-for="(item, index) in replyForm.image" :key="index">
+          <div v-if="replyForm.reply_img">
+            <span v-for="(item, index) in replyForm.reply_img" :key="index">
               <el-image v-if="item.type !== 'video/mp4'" :src="item.url" style="height: 100px;width: 120px" class="mt10 mr10" />
               <video v-if="item.type === 'video/mp4'" class="mt10 mr10" preload="metadata" :src="item.url" style="height: 100px;width: 120px" @click="handlePreview(item.url, item.type)" />
             </span>
@@ -258,13 +262,16 @@
           <el-table-column label="Seller" prop="seller">
             <template slot-scope="scope">
               <span>{{ scope.row.reply_info }}</span>
-              <el-image v-if="scope.row.reply_img" :src="scope.row.reply_img" style="height: 23px;width: 28px;vertical-align: middle;" class="mt10 mr10" />
+              <span v-for="(item, index) in scope.row.reply_img" :key="index">
+                <el-image v-if="item.type !== 'video/mp4'" :src="item.url" :preview-src-list="[item.url]" style="height: 23px;width: 28px;vertical-align: middle;" class="mt10 mr10" />
+                <video v-if="item.type === 'video/mp4'" class="mt10 mr10" preload="metadata" :src="item.url" style="height: 23px;width: 28px;vertical-align: middle;" @click="handlePreview(item.url, item.type)" />
+              </span>
             </template>
           </el-table-column>
         </el-table>
         <el-table
           empty-text="No Data"
-          :data="recordForm.reacl"
+          :data="recordForm.Oneself"
           style="width: 100%"
           highlight-current-row
           fit
@@ -274,7 +281,10 @@
           <el-table-column label="Oneself" prop="oneself">
             <template slot-scope="scope">
               <span>{{ scope.row.reply_info }}</span>
-              <el-image v-if="scope.row.reply_img" :src="scope.row.reply_img" style="height: 23px;width: 28px;vertical-align: middle;" class="mr10 ml10" />
+              <span v-for="(item, index) in scope.row.reply_img" :key="index">
+                <el-image v-if="item.type !== 'video/mp4'" :src="item.url" :preview-src-list="[item.url]" style="height: 23px;width: 28px;vertical-align: middle;" class="mt10 mr10" />
+                <video v-if="item.type === 'video/mp4'" class="mt10 mr10" preload="metadata" :src="item.url" style="height: 23px;width: 28px;vertical-align: middle;" @click="handlePreview(item.url, item.type)" />
+              </span>
             </template>
           </el-table-column>
         </el-table>
@@ -283,6 +293,8 @@
     <el-dialog
       title="Authentication"
       :visible.sync="AuThenDialogVisible"
+      :close-on-click-modal="false"
+      :close-on-press-escape="false"
       width="50%"
       top="30vh"
     >
@@ -320,6 +332,7 @@
 
 <script>
 import { realInfo, afterSalesReal, updateAfterInfo, afterSalesType, afterSalesReply } from '@/api/user'
+import { getCookies, setCookies } from '@/utils/cookies'
 export default {
   name: 'track-number',
   data() {
@@ -360,18 +373,31 @@ export default {
         product_json: '',
         after_type: '',
         after_model: '',
-        content: '',
-        image: []
+        reply_info: '',
+        reply_img: []
       },
       dialogFormRules: {
         product_json: [{ required: true, message: 'After sale products is required', trigger: 'blur' }],
         after_type: [{ required: true, message: 'After sales type is required', trigger: 'blur' }],
         after_model: [{ required: true, message: 'After sales mode is required', trigger: 'blur' }],
-        content: [{ required: true, message: 'reply is required', trigger: 'blur' }]
+        reply_info: [{ required: true, message: 'reply is required', trigger: 'blur' }]
       },
       productsList: [],
       typeList: [],
-      modeList: ['Return/exchange', 'Return and refund', 'Refund only', 'Other'],
+      modeList: [
+        {
+          label: 'Resend',
+          value: '1'
+        },
+        {
+          label: 'Refund',
+          value: '2'
+        },
+        {
+          label: 'Other',
+          value: '4'
+        }
+      ],
       activeName: 'first',
       afterList: [
         {
@@ -381,21 +407,22 @@ export default {
             after_type: '',
             after_model: '',
             innerAfterSalesActive: 'first',
-            content: '',
-            image: []
+            reply_info: '',
+            reply_img: []
           },
           feedBackInformation: {
             innerAfterSalesActive: 'first',
-            content: '',
-            image: []
+            reply_info: '',
+            reply_img: []
           }
         }
       ],
       customerId: '',
+      consignee: '',
       replyVisible: false,
       replyForm: {
         reply: '',
-        image: []
+        reply_img: []
       },
       replyRules: {},
       selectionList: [],
@@ -404,7 +431,7 @@ export default {
         product_json: [],
         after_type: '',
         after_model: '',
-        content: '',
+        reply_info: '',
         image: [],
         order_name: '',
         order_no: '',
@@ -432,7 +459,9 @@ export default {
       videoVisible: false,
       previewUrl: '',
       AuThenDialogVisible: false,
-      decoding: {}
+      decoding: {},
+      after_id: 0,
+      trackUp: true
     }
   },
   computed: {
@@ -457,6 +486,7 @@ export default {
   created() {
     const search = window.location.href
     const sum = decodeURI(search.split('=')[1])
+    console.log('sum', sum)
     const str = sum.replaceAll('%3A', ':')
     this.decoding = JSON.parse(str)
     console.log('decoding', this.decoding)
@@ -515,22 +545,26 @@ export default {
             this.showDetails = true
             this.tableData = res.data.good
             this.customerId = res.data.user_id
+            this.consignee = res.data.consignee
           } else {
             this.$message.warning(res.message)
           }
-          if (res.data.after.length > 0) {
+          if (res.data.after.length === 0) {
+            this.showAfterSaleBtn = true
+          } else {
             this.showAfterSale = true
+            this.after_id = res.data.after[0].id
             res.data.after.map((it, inx) => {
-              this.afterList[inx].afterSalesInformation = { ...this.afterList[inx].afterSalesInformation, ...res.data.after[inx] }
+              this.afterList[inx].afterSalesInformation = { ...this.afterList[inx].afterSalesInformation, ...res.data.after[inx].reply.Oneself[res.data.after[inx].reply.Oneself.length - 1] }
+              this.$set(this.afterList[inx].afterSalesInformation, 'after_type', it.after_type)
+              this.$set(this.afterList[inx].afterSalesInformation, 'after_model', it.after_model)
+              this.$set(this.afterList[inx].afterSalesInformation, 'product_json', it.product_json)
+              this.$set(this.afterList[inx].afterSalesInformation, 'id', it.id)
+              this.$set(this.afterList[inx].afterSalesInformation, 'user_id', it.user_id)
               this.afterList[inx].feedBackInformation = { ...this.afterList[inx].feedBackInformation, ...res.data.after[inx].reply.seller[res.data.after[inx].reply.seller.length - 1] }
               this.recordForm = res.data.after[inx].reply
             })
           }
-          if (res.data.after.length === 0) {
-            this.showAfterSaleBtn = true
-          }
-        } else if (res.code === 400) {
-          this.$message.warning(res.message)
         }
       }).catch((e) => {
         console.log(e)
@@ -566,9 +600,9 @@ export default {
         if (valid) {
           this.formData.after_type = this.dialogForm.after_type
           this.formData.after_model = this.dialogForm.after_model
-          this.formData.content = this.dialogForm.content
+          this.formData.content = this.dialogForm.reply_info
           this.formData.user_id = this.customerId
-          this.formData.image = this.dialogForm.image
+          this.formData.image = this.dialogForm.reply_img
           this.formData.order_name = this.selectionList[0].order.order_name
           this.formData.order_no = this.selectionList[0].order.order_no
           // this.formData.order_no = '123456'
@@ -597,7 +631,11 @@ export default {
           afterSalesReal(this.formData).then(res => {
             if (res.code === 200) {
               this.dialogVisible = false
-              this.submitTrack()
+              this.after_id = res.data.id
+              this.trackUp = false
+              const obj = getCookies('obj')
+              this.initTrack(JSON.parse(obj))
+              this.trackUp = true
             }
           })
         }
@@ -657,7 +695,7 @@ export default {
             url: file.url,
             type: fileObj.file.type
           }
-          this.dialogForm.image.push(obj)
+          this.dialogForm.reply_img.push(obj)
         }
       }).catch(err => {
         console.log(err)
@@ -699,7 +737,7 @@ export default {
             url: file.url,
             type: fileObj.file.type
           }
-          this.replyForm.image.push(obj)
+          this.replyForm.reply_img.push(obj)
         }
       }).catch(err => {
         console.log(err)
@@ -712,17 +750,37 @@ export default {
     },
     // 回复提交
     handleReplySubmit() {
-      this.replyFormData.reply_info = this.replyForm.reply
-      this.replyFormData.reply_img = this.replyForm.image
-      afterSalesReply(this.replyFormData).then(res => {
+      const date = new Date()
+      const y = date.getFullYear()
+      const m = date.getMonth() + 1
+      const d = date.getDate()
+      const H = date.getHours()
+      const M = date.getMinutes()
+      const S = date.getSeconds()
+      const FormatDate = y + '/' + m + '/' + d + ' ' + H + ':' + M + ':' + S
+      const obj = {
+        type: 3,
+        a_id: this.after_id,
+        reply_user: 0,
+        reply_user_image: 'https://dx-tech-bucket.s3.amazonaws.com/20210713181701248c21f969b5f03d33d43e04f8f136e7682',
+        reply_user_name: this.consignee,
+        reply_time: FormatDate,
+        reply_info: this.replyForm.reply,
+        reply_img: this.replyForm.reply_img
+      }
+      afterSalesReply(obj).then(res => {
         this.$message.success(res.message)
         this.handleClose()
+        this.trackUp = false
+        const arr = getCookies('obj')
+        this.initTrack(JSON.parse(arr))
+        this.trackUp = true
       })
     },
     // 历史记录查询关闭
     handleRecordClose() {
       this.recordVisible = false
-      this.recordForm = this.$options.data().recordForm
+      // this.recordForm = this.$options.data().recordForm
     },
     handleSubmit() {
       this.$refs['AuthenticationForm'].validate((valid) => {
@@ -733,9 +791,18 @@ export default {
             secret: this.decoding.secret,
             email: this.AuthenticationForm.product
           }
+          setCookies('obj', JSON.stringify(obj))
           this.initTrack(obj)
         }
       })
+    },
+    getValueOfLabel(num, sum) {
+      const obj = sum.find(it => Number(it.value) === num)
+      if (obj) {
+        return obj.label
+      } else {
+        return num
+      }
     }
   }
 }
