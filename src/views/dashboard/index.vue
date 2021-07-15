@@ -331,10 +331,11 @@ export default {
           delivered.push(it.delivered)
           received.push(it.received)
           received_goods.push(it.received_goods)
-          store_name.push(it.store_url.split('.')[0])
+          store_name.push(it.store_url.split('.')[0] === 'www' ? it.store_url.split('.')[1] : it.store_url.split('.')[0])
         })
+        console.log('res.data.line', res.data.line)
         for (const key in res.data.line) {
-          lineStores.push(res.data.line[key].store_url.split('.')[0])
+          lineStores.push(res.data.line[key].store_url.split('.')[0] === 'www' ? res.data.line[key].store_url.split('.')[1] : res.data.line[key].store_url.split('.')[0])
           datas.push(res.data.line[key])
         }
         const lineStore = [...new Set(lineStores)]
