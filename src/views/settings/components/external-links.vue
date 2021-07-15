@@ -20,7 +20,7 @@
       <el-table-column label="Operation">
         <template slot-scope="scope">
           <span class="mr50 pointer text" @click="handleOpenConfigure(scope.row)">Configure</span>
-          <span id="copy_text" class="pointer text" :data-clipboard-text="'https://app.fbali.co/track?safe=' + copyClipboard + '&url' + scope.row.store_url + '&icon=' + scope.row.favicon" @click="copy">{{ scope.row.operation }}</span>
+          <span id="copy_text" class="pointer text" :data-clipboard-text="'https://app.fbali.co/track?safe=' + copyClipboard + '&url=' + scope.row.store_url + '&icon=' + scope.row.favicon" @click="copy">{{ scope.row.operation }}</span>
         </template>
       </el-table-column>
     </el-table>
