@@ -3,7 +3,7 @@
     <div class="language-change-box">
       <el-row>
         <el-col :offset="11" :span="5">
-          <img src="" style="width: 150px; height: 80px; background-color:#ccc;">
+          <img :src="icon" style="width: 150px; height: 80px; background-color:#ccc;">
         </el-col>
         <el-col :offset="4" :span="4">
           <el-dropdown trigger="click" class="international" @command="handleSetLanguage">
@@ -459,7 +459,9 @@ export default {
       videoVisible: false,
       previewUrl: '',
       AuThenDialogVisible: false,
-      decoding: {},
+      safe: '',
+      url: '',
+      icon: '',
       after_id: 0,
       trackUp: true
     }
@@ -485,11 +487,10 @@ export default {
   },
   created() {
     const search = window.location.href
-    const sum = decodeURI(search.split('=')[1])
-    console.log('sum', sum)
-    const str = sum.replaceAll('%3A', ':')
-    this.decoding = JSON.parse(str)
-    console.log('decoding', this.decoding)
+    this.safe = decodeURI(search.split('=')[1]).split('&')[0]
+    this.url = decodeURI(search.split('=')[2]).split('&')[0]
+    const icon = decodeURI(search.split('=')[3])
+    this.icon = icon.replaceAll('%3A', ':').replaceAll('%2F', '/')
     this.getAfterSalesType()
   },
   methods: {
@@ -787,8 +788,8 @@ export default {
         if (valid) {
           const obj = {
             params: this.trackNumberForm.number,
-            safe: this.decoding.safe,
-            secret: this.decoding.secret,
+            safe: this.safe,
+            store_url: this.url,
             email: this.AuthenticationForm.product
           }
           setCookies('obj', JSON.stringify(obj))

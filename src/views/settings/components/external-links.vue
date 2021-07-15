@@ -14,13 +14,13 @@
       </el-table-column>
       <el-table-column label="Links">
         <template slot-scope="scope">
-          <span class="pointer text" @click="handleOpenNewWindow(scope.row.favicon)">{{ scope.row.store_url }}</span>
+          <span class="pointer text" @click="handleOpenNewWindow(scope.row)">{{ scope.row.store_url }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Operation">
         <template slot-scope="scope">
           <span class="mr50 pointer text" @click="handleOpenConfigure(scope.row)">Configure</span>
-          <span id="copy_text" class="pointer text" :data-clipboard-text="'https://app.fbali.co/track?clipboard=' + copyClipboard + '&icon=' + scope.row.favicon" @click="copy">{{ scope.row.operation }}</span>
+          <span id="copy_text" class="pointer text" :data-clipboard-text="'https://app.fbali.co/track?safe=' + copyClipboard + '&url' + scope.row.store_url + '&icon=' + scope.row.favicon" @click="copy">{{ scope.row.operation }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -144,13 +144,13 @@ export default {
   methods: {
     // 打开新窗口
     handleOpenNewWindow(val) {
-      const routeUrl = this.$router.resolve({ path: '/track', query: { clipboard: this.copyClipboard, icon: val }})
+      const routeUrl = this.$router.resolve({ path: '/track', query: { safe: this.copyClipboard, url: val.store_url, icon: val.favicon }})
       window.open(routeUrl.href, '_blank')
     },
     init() {
       afterSalesGenerateKey().then(res => {
         if (res.code === 200) {
-          this.copyClipboard = JSON.stringify(res.data)
+          this.copyClipboard = res.data.safe
         }
       })
     },
