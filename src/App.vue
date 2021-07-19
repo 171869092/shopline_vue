@@ -40,7 +40,6 @@ export default {
     },
     websocketonmessage(e) { // 数据接收
       const redata = JSON.parse(e.data)
-      console.log('e.code', redata.code)
       if (redata.code !== -1) {
         this.dragText = redata.data
         this.dragFlag = true
