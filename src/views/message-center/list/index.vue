@@ -1,8 +1,11 @@
 <template>
   <div v-loading="loading" class="message-list-box">
     <div class="message-list-title">
-      <el-button size="small" :type="isSystem ? 'primary' : ''" class="w-300" @click="handleSystem">System Message</el-button>
-      <el-button size="small" :type="isSystem ? '' : 'primary'" class="w-300" style="margin-left: 0" @click="handleVendor">Vendor Message</el-button>
+      <div>
+        <el-button size="small" :type="isSystem ? 'primary' : ''" class="w-300" @click="handleSystem">System Message</el-button>
+        <el-button size="small" :type="isSystem ? '' : 'primary'" class="w-300" style="margin-left: 0" @click="handleVendor">Vendor Message</el-button>
+      </div>
+      <el-button type="primary" size="small">Mark all read</el-button>
     </div>
     <div class="message-list-main">
       <div v-if="messageList.length > 0">
@@ -125,6 +128,8 @@ export default {
 .message-list-box {
   padding: 30px;
  .message-list-title {
+   display: flex;
+   justify-content: space-between;
    margin-bottom: 30px;
  }
  .message-list-main {
