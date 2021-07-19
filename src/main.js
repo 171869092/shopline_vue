@@ -19,6 +19,7 @@ import 'xe-utils'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
 import htmlToPdf from '@/utils/html2pdf'
+import '@/directive' // 全局指令
 
 Vue.use(htmlToPdf)
 Vue.use(VXETable)
