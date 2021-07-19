@@ -399,7 +399,7 @@ export default {
     },
     // 初始化weosocket
     initWebSocket() {
-      const wsuri = 'wss://socket.fbali.co/wss/test'
+      const wsuri = 'wss://ts.fbali.co/wss/test'
       this.websock = new WebSocket(wsuri)
       this.websock.onmessage = this.websocketonmessage
       this.websock.onopen = this.websocketonopen

@@ -360,7 +360,7 @@ export default {
       return isSize
     },
     initWebSocket() {
-      const url = 'wss://m.fbali.co/?type=1&user_id=' + this.user_id + '&token=' + getToken()
+      const url = 'wss://ts.fbali.co/?type=1&user_id=' + this.user_id + '&token=' + getToken()
       this.socket = io.connect(url, {
         timeout: 60000,
         reconnectionDelayMax: 1000,
