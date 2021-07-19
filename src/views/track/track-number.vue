@@ -58,7 +58,7 @@
             <template slot-scope="scope">
               <span v-if="item.type === undefined">{{ scope.row[item.value] }}</span>
               <span v-if="item.type === 'image'">
-                <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.img_url" fit="cover">
+                <el-image class="sku_image" style="width: 50px; height: 50px" :src="scope.row.sku_image" fit="cover">
                   <div slot="error" class="image-slot">
                     <i class="el-icon-picture-outline" style="font-size: 30px;" />
                   </div>
@@ -283,7 +283,7 @@
               <template slot-scope="scope">
                 <span>{{ scope.row.reply_info }}</span>
                 <span v-for="(item, index) in scope.row.reply_img" :key="index">
-                  <el-image v-if="item.type !== 'video/mp4'" :src="item.url" :preview-src-list="[item.url]" style="height: 23px;width: 28px;vertical-align: middle;" class="mt10 mr10" />
+                  <el-image v-if="item.type !== 'video/mp4'" :src="item.url" style="height: 23px;width: 28px;vertical-align: middle;" class="mt10 mr10" @click="handlePreview(item.url, item.type)" />
                   <video v-if="item.type === 'video/mp4'" class="mt10 mr10" preload="metadata" :src="item.url" style="height: 23px;width: 28px;vertical-align: middle;" @click="handlePreview(item.url, item.type)" />
                 </span>
               </template>
@@ -480,7 +480,7 @@ export default {
         // { label: this.$t('track.detail.tableData.product'), value: 'third_sku_name', width: '500' },
         // { label: this.$t('track.detail.tableData.amount'), value: 'sku_num' },
         // { label: this.$t('track.detail.tableData.prices'), value: 'sale_money' }
-        { label: 'Picture', value: 'picture', type: 'image', width: '200' },
+        { label: 'Picture', value: 'sku_image', type: 'image', width: '200' },
         { label: 'Product', value: 'third_sku_name', width: '500' },
         { label: 'Amount', value: 'sku_num' },
         { label: 'Price', value: 'sale_money' }
@@ -618,14 +618,14 @@ export default {
           this.formData.content = this.dialogForm.reply_info
           this.formData.user_id = this.customerId
           this.formData.image = this.dialogForm.reply_img
-          this.formData.order_name = this.selectionList[0].order.order_name
-          this.formData.order_no = this.selectionList[0].order.order_no
+          this.formData.order_name = this.selectionList[0].order_sublist.order_name
+          this.formData.order_no = this.selectionList[0].order_sublist.order_no
           // this.formData.order_no = '123456'
-          this.formData.order_create = this.selectionList[0].order.order_create
-          this.formData.payment_time = this.selectionList[0].order.payment_time
-          this.formData.state = this.selectionList[0].order.state
-          this.formData.total = this.selectionList[0].order.total
-          this.formData.third_order_no = this.selectionList[0].order.thirdParty_order_on
+          this.formData.order_create = this.selectionList[0].order_sublist.order_create
+          this.formData.payment_time = this.selectionList[0].order_sublist.payment_time
+          this.formData.state = this.selectionList[0].order_sublist.state
+          this.formData.total = this.selectionList[0].order_sublist.total
+          this.formData.third_order_no = this.selectionList[0].order_sublist.thirdParty_order_on
           this.formData.store_url = this.selectionList[0].goods_cost_vender.store_url
           // this.formData.store_url = 'live-by-test.myshopify.com'
           const arr = []
