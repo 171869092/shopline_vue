@@ -292,7 +292,14 @@ export const constantRoutes = [
       {
         path: 'index',
         name: 'messages',
-        component: () => import('@/views/message-center/index'),
+        component: () => import('@/views/message-center/list/index'),
+        meta: { title: 'Messages', icon: 'el-icon-message-solid' },
+        hidden: true
+      },
+      {
+        path: 'detail',
+        name: 'messages-detail',
+        component: () => import('@/views/message-center/edit/index'),
         meta: { title: 'Messages', icon: 'el-icon-message-solid' },
         hidden: true
       },

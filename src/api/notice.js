@@ -39,3 +39,21 @@ export function refuseToChangeThePrice(data) {
     data: data
   })
 }
+
+// 消息状态
+export function getMapStatus(params) {
+  return request({
+    url: '/system/notifation/get-map-status',
+    method: 'get',
+    params
+  })
+}
+
+// 消息列表
+export function getList(data) {
+  return request({
+    url: '/system/notifation/get-list',
+    method: 'post',
+    data: data
+  })
+}
