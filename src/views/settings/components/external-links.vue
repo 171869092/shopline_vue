@@ -138,7 +138,6 @@ export default {
   }
   ,
   created() {
-    console.log(999)
     this.tableData.map(it => {
       this.$set(it, 'uid', getCookies('uid'))
     })
@@ -169,7 +168,6 @@ export default {
       this.formQuery.iDisplayLength = this.listQuery.limit
       this.formQuery.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
       shopList(this.formQuery).then(res => {
-        console.log(res.data)
         if (res.code === 200) {
           this.tableData = res.data.data
           this.tableData.map(it => {
@@ -268,6 +266,7 @@ export default {
       afterSalesEditIcon(obj).then(res => {
         if (res.code === 200) {
           this.$message.success(res.message)
+          this.Inquire()
           this.handleClose()
         }
       })
