@@ -20,7 +20,7 @@
       <el-table-column label="Operation">
         <template slot-scope="scope">
           <span class="mr50 pointer text" @click="handleOpenConfigure(scope.row)">Configure</span>
-          <span id="copy_text" class="pointer text" :data-clipboard-text="'https://app.fbali.co/track?safe=' + copyClipboard + '&url=' + scope.row.store_url + '&icon=' + scope.row.favicon" @click="copy">{{ scope.row.operation }}</span>
+          <span id="copy_text" class="pointer text" :data-clipboard-text="scope.row.cust_link  +'/track?safe=' + copyClipboard + '&url=' + scope.row.store_url + '&icon=' + scope.row.favicon" @click="copy">{{ scope.row.operation }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -93,7 +93,8 @@ export default {
         {
           title: 'After sales application',
           store_url: 'www.dkshoushenqing.com',
-          operation: 'copy'
+          operation: 'copy',
+          cust_link: process.env.VUE_APP_BASE_URLS
         }
       ],
       dialogVisible: false,
@@ -131,15 +132,25 @@ export default {
       formLabelAlign: {
         link: '',
         logo: ''
-      }
+      },
+      cust_link: '',
     }
-  },
+  }
+  ,
   created() {
+    console.log(999)
     this.tableData.map(it => {
       this.$set(it, 'uid', getCookies('uid'))
     })
     this.init()
     this.Inquire()
+    // 禁止复制
+    this.$nextTick( () => {
+      // 禁用右键
+      document.oncontextmenu = new Function("event.returnValue=false");
+      // 禁用选择
+      document.onselectstart = new Function("event.returnValue=false");
+    })
   },
   methods: {
     // 打开新窗口
@@ -163,6 +174,7 @@ export default {
           this.tableData = res.data.data
           this.tableData.map(it => {
             this.$set(it, 'operation', 'copy')
+            this.$set(it, 'cust_link', process.env.VUE_APP_BASE_URLS)
           })
           this.listQuery.total = +res.data.pagination.totalCount
         }
