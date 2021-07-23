@@ -463,6 +463,7 @@ export default {
       safe: '',
       url: '',
       icon: '',
+      store_url: '',
       after_id: 0,
       trackUp: true,
       loading: false
@@ -483,7 +484,7 @@ export default {
         { label: 'Picture', value: 'sku_image', type: 'image', width: '200' },
         { label: 'Product', value: 'third_sku_name', width: '500' },
         { label: 'Amount', value: 'sku_num' },
-        { label: 'Price', value: 'sale_money' }
+        { label: 'Price', value: 'third_price' }
       ]
     }
   },
@@ -555,7 +556,9 @@ export default {
             this.tableData = res.data.good
             this.customerId = res.data.user_id
             this.consignee = res.data.consignee
+            this.store_url = res.data.store_url
           } else {
+            this.showDetails = false
             this.$message.warning(res.message)
           }
           if (res.data.after.length === 0) {
@@ -568,8 +571,9 @@ export default {
             this.showAfterSaleBtn = false
             this.after_id = res.data.after[0].id
             res.data.after.map((it, inx) => {
+              let reply = res.data.after[inx].reply
               this.afterList[inx].afterSalesInformation = { ...this.afterList[inx].afterSalesInformation, ...res.data.after[inx] }
-              this.afterList[inx].feedBackInformation = { ...this.afterList[inx].feedBackInformation, ...res.data.after[inx].reply.seller[res.data.after[inx].reply.seller.length - 1] }
+              this.afterList[inx].feedBackInformation = { ...this.afterList[inx].feedBackInformation, ...(reply && reply.seller ? reply.seller[reply.seller.length - 1] : {}) }
               this.recordForm = res.data.after[inx].reply
             })
           }
@@ -578,6 +582,9 @@ export default {
         this.loading = false
       }).catch((e) => {
         console.log(e)
+        this.showDetails = false
+        this.showAfterSaleBtn = false
+        this.showAfterSale = false
         this.trackUp = true
         this.loading = false
       }).finally(() => {
@@ -626,22 +633,29 @@ export default {
           this.formData.state = this.selectionList[0].order_sublist.state
           this.formData.total = this.selectionList[0].order_sublist.total
           this.formData.third_order_no = this.selectionList[0].order_sublist.thirdParty_order_on
-          this.formData.store_url = this.selectionList[0].goods_cost_vender.store_url
+          this.formData.store_url = this.store_url
+          this.formData.product_json = []
           // this.formData.store_url = 'live-by-test.myshopify.com'
           const arr = []
           let newArr = []
+          let server_name = [];
           this.selectionList.map(it => {
-            it.goods_cost_vender.product_json = this.dialogForm.product_json
-            this.formData.product_json.push(it.goods_cost_vender)
-            arr.push(it.goods_cost_vender.service_id)
+            // it.goods_cost_vender.product_json = this.dialogForm.product_json
+            this.formData.product_json.push(it)
+            arr.push(it.order_sublist ? it.order_sublist.service_id : 0)
+            server_name.push(it.order_sublist ? it.order_sublist.service_name : "")
           })
           newArr = Array.from(new Set(arr))
           if (newArr.length > 1) {
-            this.formData.vendor = newArr.toString().replace(/,/g, '/')
             this.formData.server_id = newArr.toString()
           } else {
-            this.formData.vendor = newArr.toString()
             this.formData.server_id = newArr.toString()
+          }
+          let newServerArr = Array.from(new Set(server_name))
+          if (newServerArr.length > 1) {
+            this.formData.vendor = newServerArr.toString().replace(/,/g, '/')
+          } else {
+            this.formData.vendor = newServerArr.toString()
           }
           afterSalesReal(this.formData).then(res => {
             if (res.code === 200) {
