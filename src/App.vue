@@ -26,12 +26,13 @@ export default {
   },
   created() {
     this.initWebSocket()
+    console.log('start')
   },
   methods: {
     openNotice() {},
     // 初始化weosocket
     initWebSocket() {
-      const wsuri = 'wss://ts.fbali.co/wss/notifation'
+      const wsuri = process.env.VUE_APP_BASE_NOTIFATION_SOCKET +'/wss/notifation'
       this.webSock = new WebSocket(wsuri)
       this.webSock.onmessage = this.websocketonmessage
       this.webSock.onopen = this.websocketonopen
@@ -41,9 +42,13 @@ export default {
     websocketonmessage(e) { // 数据接收
       const redata = JSON.parse(e.data)
       if (redata.code !== -1) {
-        this.dragText = redata.data
-        this.dragFlag = true
+        if(redata != undefined && redata.data.msg_json){
+          this.dragText = redata.data.msg_json
+          this.dragFlag = true
+        } 
       } else {
+        console.log('我在关闭这里')
+        this.dragFlag = false
         this.websocketclose()
       }
     },
