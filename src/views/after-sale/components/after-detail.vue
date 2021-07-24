@@ -75,6 +75,7 @@
               </div>
               <div class="contain">
                 <div v-if="item.reply_info" class="mb10">
+                  <span v-if="item.message_uniq_id" class="message_push_status" v-loading="!item.is_push" @click="item.is_push ===2 && reReply(item)" :style="{color: 'red',cursor: item.is_push === 2 ?'pointer' : 'default'}" v-html="item.is_push === 2 ? 'Message sending failed ' :'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
                   <span :class="[item.reply_user === user_id ? 'reply-right' : 'reply-left']">
                     <p v-html="item.reply_info" />
                   </span>
@@ -105,7 +106,7 @@
         </el-card>
         <!-- After Sales Reply -->
         <el-card v-if="client_status !== 3" class="chat_box mt20">
-          <tinymce ref="tinymces" v-model="customerAfterChat.reply_info" menubar :height="250" @reply="handleCustomerReply" />
+          <tinymce ref="tinymces" v-model="customerAfterChat.reply_info" menubar :height="250" @reply="handleReply" />
           <div class="upload-box">
             <el-upload
               ref="upload"
@@ -162,6 +163,7 @@
               </div>
               <div class="contain">
                 <div v-if="item.reply_info" class="mb10">
+                  <span v-if="item.message_uniq_id" class="message_push_status" v-loading="!item.is_push" @click="item.is_push ===2 && reReply(item)" :style="{color: 'red',cursor: item.is_push === 2 ?'pointer' : 'default'}" v-html="item.is_push === 2 ? 'Message sending failed ' :'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
                   <span :class="[item.reply_user === user_id ? 'reply-right' : 'reply-left']">
                     <p v-html="item.reply_info" />
                   </span>
@@ -193,7 +195,7 @@
         </el-card>
         <!-- After Sales Reply -->
         <el-card v-if="status !== 3" class="chat_box mt20">
-          <tinymce ref="tinymces" v-model="vendorAfterChat.reply_info" menubar :height="250" @reply="handleVendorReply" />
+          <tinymce ref="tinymces" v-model="vendorAfterChat.reply_info" menubar :height="250" @reply="handleReply" />
           <div class="upload-box">
             <el-upload
               ref="upload"
@@ -320,20 +322,22 @@ export default {
         reply: []
       },
       customerAfterChat: {
+        message_uniq_id: '',
         after_id: '',
         reply_info: '',
         reply_img: []
       },
       vendorAfterChat: {
+        message_uniq_id: '',
         after_id: '',
         reply_info: '',
         reply_img: []
       },
+      afterPushStatus: {},
       socket: null,
       socketType: 4,
-      message: '',
+      message: 'Establishing link, please wait...',
       bInformation: {},
-      HSocket: false,
       msg: '',
       is_push: 1,
       client_status: 1,
@@ -513,57 +517,42 @@ export default {
       }
     },
     handleComplete(type) {
+      // 完成处理
       const ids = []
       ids.push(this.tableData.id)
-      if (type === 3) {
-        afterSalesChanngedStatus({ id: ids, status: type }).then(res => {
-          let type = ''
-          if (res.code === 200) {
-            type = 'success'
-          } else {
-            type = 'error'
-          }
-          this.dialogVisible = false
-          this.$message({ message: res.message, type: type })
-        }).catch(err => {
-          console.log(err)
-        }).finally(() => {
+      afterSalesChanngedStatus({ id: ids, status: type }).then(res => {
+        let type = ''
+        if (res.code === 200) {
+          type = 'success'
+        } else {
+          type = 'error'
+        }
+        this.dialogVisible = false
+        this.$message({ message: res.message, type: type })
+      }).catch(err => {
+        console.log(err)
+      }).finally(() => {
 
-        })
-      } else if (type === 4) {
-        afterSalesChanngedStatus({ id: ids, status: type }).then(res => {
-          let type = ''
-          if (res.code === 200) {
-            type = 'success'
-          } else {
-            type = 'error'
-          }
-          this.dialogVisible = false
-          this.$message({ message: res.message, type: type })
-        }).catch(err => {
-          console.log(err)
-        }).finally(() => {
-
-        })
-      } else {
-        afterSalesChanngedStatus({ id: ids, status: type }).then(res => {
-          let type = ''
-          if (res.code === 200) {
-            type = 'success'
-          } else {
-            type = 'error'
-          }
-          this.dialogVisible = false
-          this.$message({ message: res.message, type: type })
-        }).catch(err => {
-          console.log(err)
-        }).finally(() => {
-
-        })
-      }
+      })
     },
-    handleCustomerReply() {
-      if (this.customerAfterChat.reply_info === '' && this.customerAfterChat.reply_img.length === 0) {
+    handleReply() {
+      // 回复消息处理
+      let afterChat,afterSaleInfo
+      switch (this.socketType) {
+        case 4:
+          afterChat = this.customerAfterChat
+          afterSaleInfo = this.customerAfterSaleInfo
+          break
+        case 1:
+          afterChat = this.vendorAfterChat
+          afterSaleInfo = this.vendorAfterSaleInfo
+          break
+        default:
+          console.error("发送类型错误")
+          return
+          break
+      }
+      if (afterChat.reply_info === '' && afterChat.reply_img.length === 0) {
         this.$message.warning('Please enter the reply content or picture！')
       } else {
         const date = new Date()
@@ -574,85 +563,55 @@ export default {
         const M = date.getMinutes()
         const S = date.getSeconds()
         const FormatDate = y + '/' + m + '/' + d + ' ' + H + ':' + M + ':' + S
+        let uniqId = this.getUniqueId()
         const obj = {
-          type: this.bInformation.type,
+          message_uniq_id: uniqId,
+          is_push: 0,
+          type: 4,
           after_id: this.after_id,
-          reply_user: this.bInformation.user_id,
-          reply_user_image: this.bInformation.icon,
-          reply_user_name: this.bInformation.username,
+          reply_user: this.user_id,
+          reply_user_image: getCookies('icon'),
+          reply_user_name: getCookies('name'),
           reply_time: FormatDate,
-          reply_info: this.customerAfterChat.reply_info,
-          reply_img: this.customerAfterChat.reply_img
+          reply_info: afterChat.reply_info,
+          reply_img: afterChat.reply_img
         }
-        this.$set(this.customerAfterChat, 'after_id', this.after_id)
-        this.$set(this.customerAfterChat, 'type', this.socketType)
-        this.socket.emit('after-reply', this.customerAfterChat)
-        this.socket.on('send-error', (e) => {
-          if (e.code === 400) {
-            console.log('消息发送失败', e.msg)
-            this.msg = e.msg
-            this.HSocket = true
-            this.socket.emit('join-after', { after_id: this.after_id })
+        this.afterPushStatus[uniqId] = obj
+        this.$set(afterChat, 'message_uniq_id', uniqId)
+        this.$set(afterChat, 'after_id', this.after_id)
+        this.$set(afterChat, 'type', this.socketType)
+        this.socket.emit('after-reply', afterChat)
+        // 发送10秒后处理发送失败
+        setTimeout(() => {
+          if (!obj.is_push) {
+            obj.is_push = 2
           }
-        })
-        if (this.HSocket === true) {
-          this.$message.warning(this.msg)
-        } else {
-          this.isCustomerMessageRecord = false
-          this.customerAfterSaleInfo.reply.push(obj)
-          this.$nextTick(() => {
-            this.isCustomerMessageRecord = true
-          })
-          this.customerAfterChat = this.$options.data().customerAfterChat
-          this.reply_img = []
+        }, 10000)
+        // 消息上屏
+        afterSaleInfo.reply.push(obj)
+        // this.isCustomerMessageRecord = false
+        // this.$nextTick(() => {
+        //   this.isCustomerMessageRecord = true
+        // })
+        for (let key in afterChat) {
+          if (key === "reply_img") {
+            afterChat[key] = []
+          } else {
+            afterChat[key] = ""
+          }
         }
       }
     },
-    handleVendorReply() {
-      if (this.vendorAfterChat.reply_info === '' && this.vendorAfterChat.reply_img.length === 0) {
-        this.$message.warning('Please enter the reply content or picture！')
-      } else {
-        const date = new Date()
-        const y = date.getFullYear()
-        const m = date.getMonth() + 1
-        const d = date.getDate()
-        const H = date.getHours()
-        const M = date.getMinutes()
-        const S = date.getSeconds()
-        const FormatDate = y + '/' + m + '/' + d + ' ' + H + ':' + M + ':' + S
-        const obj = {
-          type: this.bInformation.type,
-          after_id: this.after_id,
-          reply_user: this.bInformation.user_id,
-          reply_user_image: this.bInformation.icon,
-          reply_user_name: this.bInformation.username,
-          reply_time: FormatDate,
-          reply_info: this.vendorAfterChat.reply_info,
-          reply_img: this.vendorAfterChat.reply_img
+    reReply(data) {
+      // 重新发出回复
+      data.is_push = 0
+      this.socket.emit('after-reply', data)
+      // 发送10秒后处理发送失败
+      setTimeout(() => {
+        if (!data.is_push) {
+          data.is_push = 2
         }
-        this.$set(this.vendorAfterChat, 'after_id', this.after_id)
-        this.$set(this.vendorAfterChat, 'type', this.socketType)
-        this.socket.emit('after-reply', this.vendorAfterChat)
-        this.socket.on('send-error', (e) => {
-          if (e.code === 400) {
-            console.log('消息发送失败', e.msg)
-            this.msg = e.msg
-            this.HSocket = true
-            this.socket.emit('join-after', { after_id: this.after_id })
-          }
-        })
-        if (this.HSocket === true) {
-          this.$message.warning(this.msg)
-        } else {
-          this.isVendorMessageRecord = false
-          this.vendorAfterSaleInfo.reply.push(obj)
-          this.$nextTick(() => {
-            this.isVendorMessageRecord = true
-          })
-          this.vendorAfterChat = this.$options.data().vendorAfterChat
-          this.reply_img = []
-        }
-      }
+      }, 10000)
     },
     customerUpload(fileObj) {
       this.loading = true
@@ -764,19 +723,18 @@ export default {
         allowUpgraders: true
       })
       this.socket.on('connect', (e) => {
-        this.message = '正在建立链接，请稍后...'
-        console.log('建立链接', e)
         this.socket.emit('join-after', { after_id: this.after_id })
       })
+      // 有人加入房间
       this.socket.on('join-after', (e) => {
         if (e.code === 200) {
-          this.message = ''
           e.data.user_id = e.data.user_id.toString()
           if (this.user_id === e.data.user_id) {
-            this.bInformation = e.data
+            this.message = ''
           }
         }
       })
+      // 收到回复信息
       this.socket.on('after-reply', (e) => {
         if (e.code === 200) {
           this.vendorAfterSaleInfo.reply.push(e.data)
@@ -787,18 +745,21 @@ export default {
           })
         }
       })
+      // 发送信息成功
+      this.socket.on("send-success", e => {
+        if (e.code === 200 && e.data && e.data.message_uniq_id) {
+          this.afterPushStatus[e.data.message_uniq_id]["is_push"] = 1
+          delete this.afterPushStatus[e.data.message_uniq_id]
+        }
+      })
       this.socket.on('send-error', (e) => {
         if (e.code === 400) {
+          // this.$message.warning(e.msg)
           this.socket.emit('join-after', { after_id: this.after_id })
         }
       })
-      this.socket.on('connect_timeout', () => {
-        console.log('连接超时')
-      })
       this.socket.on('disconnect', () => {
-        console.log('连接断开，尝试重新链接')
-        this.message = '连接断开，尝试重新链接...'
-        this.socket.emit('join-after', { after_id: this.after_id })
+        this.message = 'Establishing link, please wait...'
       })
     },
     handleCustomer() {
@@ -850,7 +811,15 @@ export default {
     },
     handleVendorClose(index) {
       this.vendorAfterChat.reply_img.splice(index, 1)
+    },
+    getUniqueId() {
+      let random = Math.random().toString(16);
+      random = random.split('.')[1];
+      return new Date().getTime().toString(16) + random;
     }
+  },
+  beforeDestroy() {
+    this.socket.close()
   }
 }
 </script>
@@ -1027,6 +996,8 @@ export default {
         position: absolute;
         top: 43px;
         left: 0;
+        color: #b1b1b1;
+        padding-left: 5px;
       }
       .image-box {
         width: 100%;
