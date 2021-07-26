@@ -49,7 +49,7 @@
           </div>
         </div>
         <el-button type="primary" size="small" class="mb10" @click="complete">Completed</el-button>
-        <el-button type="primary" size="small" class="mb10 father" :disabled="unreadCount === '0'" @click="handleNew">New information <span v-if="unreadCount !== '0'" class="son">{{ unreadCount }}</span></el-button>
+        <el-button type="primary" size="small" class="mb10 father" :disabled="!unreadCount" @click="handleNew">New information <span v-if="unreadCount" class="son">{{ unreadCount }}</span></el-button>
         <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.label" :name="tab.name">
           <el-table
             ref="multipleTable"
@@ -115,7 +115,7 @@
               <template slot-scope="scope">
                 <span v-if="parseInt(scope.row.type) !== 2 || parseInt(scope.row.is_push) === 3">Vendor ({{ scope.row.vendor }})</span>
                 <br />
-                <span v-if="scope.row.type === '2'">Customer ({{ scope.row.consignee }})</span>
+                <span v-if="parseInt(scope.row.type) === 2">Customer ({{ scope.row.consignee }})</span>
               </template>
             </el-table-column>
             <el-table-column label="Timeline">
@@ -341,103 +341,48 @@ export default {
       if (this.selectAfter.length < 1) {
         this.$message.error('Please select a piece of data')
       } else {
-        const vendorList = []
-        const consigneeList = []
+        let isVendor = false,isConsignee = false
         this.selectAfterList.map(item => {
-          vendorList.push(item.vendor)
-          if (item.type === '2') {
-            consigneeList.push(item.consignee)
+          if (parseInt(item.type) === 2) {
+            // 真实买家发起处理
+            if (parseInt(item.client_status) !== 3) {
+              isConsignee = true
+            }
+            if (parseInt(item.is_push) === 3 && parseInt(item.status) !== 3) {
+              isVendor = true
+            }
+          } else {
+            // C端发起处理
+            if (parseInt(item.status) !== 3) {
+              isVendor = true
+            }
           }
         })
-        const isVendor = vendorList.every(it => it === '')
-        const isConsignee = consigneeList.every(it => it === '')
+        // const isVendor = vendorList.every(it => it === '')
+        // const isConsignee = consigneeList.every(it => it === '')
         if (isVendor === false && isConsignee === false) {
           this.dialogVisible = true
+          return
         }
-        if (isVendor === false && isConsignee === true) {
-          afterSalesChanngedStatus({ id: this.selectAfter, status: 3 }).then(res => {
-            let type = ''
-            if (res.code === 200) {
-              type = 'success'
-            } else {
-              type = 'error'
-            }
-            this.$message({ message: res.message, type: type })
-            this.Inquire()
-          }).catch(err => {
-            console.log(err)
-          }).finally(() => {
-
-          })
-        }
-        if (isVendor === true && isConsignee === false) {
-          afterSalesChanngedStatus({ id: this.selectAfter, status: 4 }).then(res => {
-            let type = ''
-            if (res.code === 200) {
-              type = 'success'
-            } else {
-              type = 'error'
-            }
-            this.$message({ message: res.message, type: type })
-            this.Inquire()
-          }).catch(err => {
-            console.log(err)
-          }).finally(() => {
-
-          })
-        }
+        this.handleComplete(isVendor ? 3 : 4)
       }
     },
     handleComplete(type) {
-      if (type === 3) {
-        afterSalesChanngedStatus({ id: this.selectAfter, status: type }).then(res => {
-          let type = ''
-          if (res.code === 200) {
-            type = 'success'
-          } else {
-            type = 'error'
-          }
-          this.dialogVisible = false
-          this.$message({ message: res.message, type: type })
-          this.Inquire()
-        }).catch(err => {
-          console.log(err)
-        }).finally(() => {
+      afterSalesChanngedStatus({ id: this.selectAfter, status: type }).then(res => {
+        let type = ''
+        if (res.code === 200) {
+          type = 'success'
+        } else {
+          type = 'error'
+        }
+        this.dialogVisible = false
+        this.$message({ message: res.message, type: type })
+        this.Inquire()
+      }).catch(err => {
+        console.log(err)
+      }).finally(() => {
 
-        })
-      } else if (type === 4) {
-        afterSalesChanngedStatus({ id: this.selectAfter, status: type }).then(res => {
-          let type = ''
-          if (res.code === 200) {
-            type = 'success'
-          } else {
-            type = 'error'
-          }
-          this.dialogVisible = false
-          this.$message({ message: res.message, type: type })
-          this.Inquire()
-        }).catch(err => {
-          console.log(err)
-        }).finally(() => {
-
-        })
-      } else {
-        afterSalesChanngedStatus({ id: this.selectAfter, status: type }).then(res => {
-          let type = ''
-          if (res.code === 200) {
-            type = 'success'
-          } else {
-            type = 'error'
-          }
-          this.dialogVisible = false
-          this.$message({ message: res.message, type: type })
-          this.Inquire()
-        }).catch(err => {
-          console.log(err)
-        }).finally(() => {
-
-        })
-      }
+      })
     },
     handleNew() {
       this.loading = true

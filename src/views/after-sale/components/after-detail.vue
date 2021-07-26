@@ -15,7 +15,7 @@
       <div>
         <el-button v-if="type === 2 && is_push !== 3" size="small" type="primary" @click="confirmAfterSales">Forward</el-button>
         <!--        <el-button size="small" type="primary" @click="confirmAfterSales">Forward</el-button>-->
-        <el-button v-if="client_status !== 3 || status !== 3" size="small" type="primary" @click="complete">Completed</el-button>
+        <el-button v-if="(type === 2 && (client_status !== 3 || (is_push === 3 && status !== 3))) || (type === 1 && status !== 3)" size="small" type="primary" @click="complete">Completed</el-button>
       </div>
     </div>
     <div class="order-cell">
@@ -47,8 +47,8 @@
         </div>
       </el-card>
       <div class="mt20">
-        <el-button v-if="client_reply.length > 0" size="small" :type="isCustomer ? 'primary' : ''" class="w-300" @click="handleCustomer">Customer ({{ client_name }})</el-button>
-        <el-button v-if="is_push === 3" size="small" :type="isCustomer ? '' : 'primary'" class="w-300" style="margin-left: 0" @click="handleVendor">Vendor ({{ server_name }})</el-button>
+        <el-button v-if="type === 2" size="small" :type="isCustomer ? 'primary' : ''" class="w-300" @click="handleCustomer">Customer ({{ client_name }})</el-button>
+        <el-button v-if="type === 1 || (type === 2 && is_push === 3)" size="small" :type="isCustomer ? '' : 'primary'" class="w-300" style="margin-left: 0" @click="handleVendor">Vendor ({{ server_name }})</el-button>
       </div>
       <div v-show="isCustomer" class="mt20 HMain">
         <!-- After Sales Message record -->
@@ -138,7 +138,7 @@
           </div>
         </el-card>
       </div>
-      <div v-show="is_push === 3 && !isCustomer" class="mt20 HMain">
+      <div v-show="(type === 1 || (type === 2 && is_push === 3)) && !isCustomer" class="mt20 HMain">
         <!-- After Sales Message record -->
         <el-card class="box-card mt20">
           <div v-if="isVendorMessageRecord" id="hv_message_record" class="message_record">
@@ -433,7 +433,7 @@ export default {
           this.client_reply = res.data.client_reply
           this.service_reply = res.data.service_reply
           this.service_is_finish = res.data.service_is_finish
-          if (this.client_reply.length === 0) {
+          if (res.data.type === 1) {
             this.handleVendor()
           } else {
             this.client_reply.map(it => {
@@ -463,58 +463,27 @@ export default {
     },
     // complete
     complete() {
-      const ids = []
-      ids.push(this.tableData.id)
-      if (this.client_reply.length === 0 && this.service_reply.length > 0) {
-        afterSalesChanngedStatus({ id: ids, status: 3 }).then(res => {
-          let type = ''
-          if (res.code === 200) {
-            type = 'success'
-          } else {
-            type = 'error'
-          }
-          this.dialogVisible = false
-          this.$message({ message: res.message, type: type })
-        }).catch(err => {
-          console.log(err)
-        }).finally(() => {
-
-        })
-      } else if (this.client_reply.length > 0 && this.service_reply.length === 0) {
-        afterSalesChanngedStatus({ id: ids, status: 4 }).then(res => {
-          let type = ''
-          if (res.code === 200) {
-            type = 'success'
-          } else {
-            type = 'error'
-          }
-          this.dialogVisible = false
-          this.$message({ message: res.message, type: type })
-        }).catch(err => {
-          console.log(err)
-        }).finally(() => {
-
-        })
+      let data = this.tableData
+      let isVendor = false,isConsignee = false
+      if (parseInt(data.type) === 2) {
+        // 真实买家发起处理
+        if (parseInt(data.client_status) !== 3) {
+          isConsignee = true
+        }
+        if (parseInt(data.is_push) === 3 && parseInt(data.status) !== 3) {
+          isVendor = true
+        }
       } else {
-        if (this.client_status === 3 || this.status === 3) {
-          afterSalesChanngedStatus({ id: ids, status: 5 }).then(res => {
-            let type = ''
-            if (res.code === 200) {
-              type = 'success'
-            } else {
-              type = 'error'
-            }
-            this.dialogVisible = false
-            this.$message({ message: res.message, type: type })
-          }).catch(err => {
-            console.log(err)
-          }).finally(() => {
-
-          })
-        } else {
-          this.dialogVisible = true
+        // C端发起处理
+        if (parseInt(data.status) !== 3) {
+          isVendor = true
         }
       }
+      if (isVendor === false && isConsignee === false) {
+        this.dialogVisible = true
+        return
+      }
+      this.handleComplete(isVendor ? 3 : 4)
     },
     handleComplete(type) {
       // 完成处理
