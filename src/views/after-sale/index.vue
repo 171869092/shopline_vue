@@ -113,9 +113,9 @@
             </el-table-column>-->
             <el-table-column label="Source">
               <template slot-scope="scope">
-                <span v-if="scope.row.vendor !== ''">Vendor ({{ scope.row.vendor }})</span>
+                <span v-if="parseInt(scope.row.type) !== 2 || parseInt(scope.row.is_push) === 3">Vendor ({{ scope.row.vendor }})</span>
                 <br />
-                <span v-if="scope.row.consignee !== '' && scope.row.type === '2'">Customer ({{ scope.row.consignee }})</span>
+                <span v-if="scope.row.type === '2'">Customer ({{ scope.row.consignee }})</span>
               </template>
             </el-table-column>
             <el-table-column label="Timeline">
