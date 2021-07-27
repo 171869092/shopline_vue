@@ -377,6 +377,8 @@ export default {
         }
         this.dialogVisible = false
         this.$message({ message: res.message, type: type })
+        this.selectAfter = []
+        this.selectAfterList = []
         this.Inquire()
       }).catch(err => {
         console.log(err)
