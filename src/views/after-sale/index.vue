@@ -70,7 +70,7 @@
               <template slot-scope="scope">
                 <span class="primary pointer" @click="toLink(scope.row)">
                   {{ scope.row.order_name }}
-                  <img v-if="scope.row.is_read === '0'" class="imgIcon" :src="NewIcon">
+                  <img v-if="!scope.row.is_read" class="imgIcon" :src="NewIcon">
                 </span>
               </template>
             </el-table-column>
