@@ -212,11 +212,11 @@ export default {
       loading: false,
       storeList: [],
       salesType: [],
-      modeList: ['Resend', 'Refund', 'Return/Refund', 'Other'],
+      modeList: {"1": 'Resend', "2": 'Refund', "3": 'Return/Refund', "4": 'Other'},
       product: [],
       timelineVisible: false,
       NewIcon: require('@/assets/home/new.png'), // 我的消息new图标
-      unreadCount: '0',
+      unreadCount: 0,
       activities: [],
       dialogVisible: false
     }
