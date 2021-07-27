@@ -633,7 +633,7 @@
           this.formData.order_create = order_sublist.order_create
           this.formData.payment_time = order_sublist.payment_time
           this.formData.state = order_sublist.state
-          this.formData.total = order_sublist.total
+          this.formData.total = order_sublist.total_price
           this.formData.third_order_no = order_sublist.thirdParty_order_on
           this.formData.store_url = this.store_url
           this.formData.product_json = []
