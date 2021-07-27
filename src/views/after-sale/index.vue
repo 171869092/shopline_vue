@@ -101,9 +101,9 @@
             </el-table-column>
             <el-table-column label="Status">
               <template slot-scope="scope">
-                <span v-if="scope.row.status === 'Pending'" style="color: #e41b1b">{{ scope.row.status }}</span>
-                <span v-if="scope.row.status === 'Completed'" style="color: #50cd83">{{ scope.row.status }}</span>
-                <span v-if="scope.row.status === 'In process'" style="color: #f6cd46">{{ scope.row.status }}</span>
+                <span v-if="scope.row.status_name === 'Pending'" style="color: #e41b1b">{{ scope.row.status_name }}</span>
+                <span v-if="scope.row.status_name === 'Completed'" style="color: #50cd83">{{ scope.row.status_name }}</span>
+                <span v-if="scope.row.status_name === 'In process'" style="color: #f6cd46">{{ scope.row.status_name }}</span>
               </template>
             </el-table-column>
 <!--            <el-table-column label="Vendor">
@@ -360,7 +360,7 @@ export default {
         })
         // const isVendor = vendorList.every(it => it === '')
         // const isConsignee = consigneeList.every(it => it === '')
-        if (isVendor === false && isConsignee === false) {
+        if (isVendor === true && isConsignee === true) {
           this.dialogVisible = true
           return
         }
