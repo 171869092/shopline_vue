@@ -442,13 +442,7 @@ export default {
               }
             })
           }
-          if (res.data.service_reply.length > 0) {
-            res.data.service_reply.map(it => {
-              if (it.reply_user !== this.user_id) {
-                this.server_name = it.reply_user_name
-              }
-            })
-          }
+          this.server_name = res.data.vendor
           this.productsList = res.data.product_json
           this.status = res.data.status
           this.customerAfterSaleInfo.reply = res.data.client_reply ? res.data.client_reply : []
