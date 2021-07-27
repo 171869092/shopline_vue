@@ -152,7 +152,7 @@
                 <el-form ref="information" :model="item.afterSalesInformation" label-width="160px" label-position="left">
                   <!--                <el-form-item :label="$t('track.detail.informationActive.products') + ':'">-->
                   <el-form-item label="After sale products :">
-                    <span class="in_txt">{{ item.afterSalesInformation.product_json[0].sku_name }}</span>
+                    <span class="in_txt" v-for="product in item.afterSalesInformation.product_json">{{ product.sku_name }}<br/></span>
                   </el-form-item>
                   <el-row :gutter="77">
                     <el-col :span="10">
