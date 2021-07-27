@@ -641,7 +641,17 @@ export default {
           let server_name = [];
           this.selectionList.map(it => {
             // it.goods_cost_vender.product_json = this.dialogForm.product_json
-            this.formData.product_json.push(it)
+            this.formData.product_json.push({
+              logistics_cost: it.logistics_cost,
+              cost: it.purchase_price,
+              sku_num: it.sku_num,
+              sku_name: it.third_goods_name,
+              sku_image: it.sku_image,
+              sale_money: it.sale_money,
+              sku_id: it.shopify_sku_id,
+              id: it.id,
+              server_id: it.order_sublist ? it.order_sublist.service_id : 0
+            })
             arr.push(it.order_sublist ? it.order_sublist.service_id : 0)
             server_name.push(it.order_sublist ? it.order_sublist.service_name : "")
           })
