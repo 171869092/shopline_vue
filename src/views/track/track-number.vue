@@ -332,9 +332,10 @@
 </template>
 
 <script>
-import { realInfo, afterSalesReal, updateAfterInfo, afterSalesType, afterSalesReply } from '@/api/user'
-import { getCookies, setCookies } from '@/utils/cookies'
-export default {
+  import {afterSalesReal, afterSalesReply, afterSalesType, realInfo, updateAfterInfo} from '@/api/user'
+  import {getCookies, setCookies} from '@/utils/cookies'
+
+  export default {
   name: 'track-number',
   data() {
     return {
@@ -620,21 +621,37 @@ export default {
     submit() {
       this.$refs['dialogForm'].validate((valid) => {
         if (valid) {
+          let order_sublist = this.selectionList[0] && this.selectionList[0].order_sublist ? this.selectionList[0].order_sublist : {}
           this.formData.after_type = this.dialogForm.after_type
           this.formData.after_model = this.dialogForm.after_model
           this.formData.content = this.dialogForm.reply_info
           this.formData.user_id = this.customerId
           this.formData.image = this.dialogForm.reply_img
-          this.formData.order_name = this.selectionList[0].order_sublist.order_name
-          this.formData.order_no = this.selectionList[0].order_sublist.order_no
+          this.formData.order_name = order_sublist.order_name
+          this.formData.order_no = order_sublist.order_no
           // this.formData.order_no = '123456'
-          this.formData.order_create = this.selectionList[0].order_sublist.order_create
-          this.formData.payment_time = this.selectionList[0].order_sublist.payment_time
-          this.formData.state = this.selectionList[0].order_sublist.state
-          this.formData.total = this.selectionList[0].order_sublist.total
-          this.formData.third_order_no = this.selectionList[0].order_sublist.thirdParty_order_on
+          this.formData.order_create = order_sublist.order_create
+          this.formData.payment_time = order_sublist.payment_time
+          this.formData.state = order_sublist.state
+          this.formData.total = order_sublist.total
+          this.formData.third_order_no = order_sublist.thirdParty_order_on
           this.formData.store_url = this.store_url
           this.formData.product_json = []
+          this.formData.receive_json = {
+            address: order_sublist.address1,
+            city: order_sublist.city,
+            country: order_sublist.country,
+            consignee: order_sublist.consignee,
+            first_name: order_sublist.first_name,
+            last_name: order_sublist.last_name,
+            mobile: order_sublist.mobile,
+            email: order_sublist.email
+          }
+          this.formData.shipping_json = {
+            logistics_company: order_sublist.logistics_company,
+            logistics_no: order_sublist.logistics_no,
+            logistics_status: order_sublist.logistics_status
+          }
           // this.formData.store_url = 'live-by-test.myshopify.com'
           const arr = []
           let newArr = []
