@@ -43,6 +43,11 @@
                 <span v-for="(item,ids) in (!isCustomer && tableData.push_product ? tableData.push_product : tableData.product_json)" :key="ids" class="inx_text">{{ item.sku_name }}</span>
               </el-form-item>
             </el-col>
+            <el-col :span="6">
+              <el-form-item label="Creation time:">
+                <span class="inx_text">{{ tableData.after_create_time }}</span>
+              </el-form-item>
+            </el-col>
           </el-form>
         </div>
       </el-card>
