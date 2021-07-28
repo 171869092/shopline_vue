@@ -28,19 +28,24 @@
         </div>
         <div class="detail-block-title custul">
           <el-form>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item label="After Sales Type:">
                 <span class="inx_text">{{ !isCustomer && tableData.push_type ? tableData.push_type : tableData.after_type }}</span>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item label="After Sales Mode:">
                 <span class="inx_text">{{ !isCustomer && tableData.push_type ? tableData.push_model : tableData.after_model }}</span>
               </el-form-item>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <el-form-item label="After Sales Products:">
                 <span v-for="(item,ids) in (!isCustomer && tableData.push_product ? tableData.push_product : tableData.product_json)" :key="ids" class="inx_text">{{ item.sku_name }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="Creation time:">
+                <span class="inx_text">{{ tableData.after_create_time }}</span>
               </el-form-item>
             </el-col>
           </el-form>
