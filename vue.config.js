@@ -50,8 +50,8 @@ module.exports = {
       }
     },
     output: {
-      filename: 'static/js/[name].[hash].js',
-      chunkFilename: 'static/js/[name].[hash].js'
+      filename: 'static/js/[name].[contenthash].js',
+      chunkFilename: 'static/js/[name].[contenthash].js'
     }
   },
   chainWebpack(config) {
