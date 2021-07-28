@@ -28,6 +28,7 @@ module.exports = {
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
+  filenameHashing: false,
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
@@ -47,6 +48,10 @@ module.exports = {
       alias: {
         '@': resolve('src')
       }
+    },
+    output: {
+      filename: 'static/js/[name].[hash].js',
+      chunkFilename: 'static/js/[name].[hash].js'
     }
   },
   chainWebpack(config) {

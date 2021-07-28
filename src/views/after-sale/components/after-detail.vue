@@ -59,8 +59,8 @@
                 <el-image
                   v-if="item.reply_user !== user_id"
                   class="avatar"
-                  :src="item.reply_user_image"
-                  :preview-src-list="[item.reply_user_image]"
+                  :src="item.reply_user_image ? item.reply_user_image : default_user_image"
+                  :preview-src-list="[item.reply_user_image ? item.reply_user_image : default_user_image]"
                 />
                 <div class="title-text">
                   <p class="title-user-name">{{ item.reply_user_name }}</p>
@@ -69,13 +69,13 @@
                 <el-image
                   v-if="item.reply_user === user_id"
                   class="avatar"
-                  :src="item.reply_user_image"
-                  :preview-src-list="[item.reply_user_image]"
+                  :src="item.reply_user_image ? item.reply_user_image : default_user_image"
+                  :preview-src-list="[item.reply_user_image ? item.reply_user_image : default_user_image]"
                 />
               </div>
               <div class="contain">
                 <div v-if="item.reply_info" class="mb10">
-                  <span v-if="item.message_uniq_id" class="message_push_status" v-loading="!item.is_push" @click="item.is_push ===2 && reReply(item)" :style="{color: 'red',cursor: item.is_push === 2 ?'pointer' : 'default'}" v-html="item.is_push === 2 ? 'Message sending failed ' :'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
+                  <span v-if="item.message_uniq_id" v-loading="!item.is_push" class="message_push_status" :style="{color: 'red',cursor: item.is_push === 2 ?'pointer' : 'default'}" @click="item.is_push ===2 && reReply(item)" v-html="item.is_push === 2 ? 'Message sending failed ' :'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'" />
                   <span :class="[item.reply_user === user_id ? 'reply-right' : 'reply-left']">
                     <p v-html="item.reply_info" />
                   </span>
@@ -147,8 +147,8 @@
                 <el-image
                   v-if="item.reply_user !== user_id"
                   class="avatar"
-                  :src="item.reply_user_image"
-                  :preview-src-list="[item.reply_user_image]"
+                  :src="item.reply_user_image ? item.reply_user_image : default_user_image"
+                  :preview-src-list="[item.reply_user_image ? item.reply_user_image : default_user_image]"
                 />
                 <div class="title-text">
                   <p class="title-user-name">{{ item.reply_user_name }}</p>
@@ -157,13 +157,13 @@
                 <el-image
                   v-if="item.reply_user === user_id"
                   class="avatar"
-                  :src="item.reply_user_image"
-                  :preview-src-list="[item.reply_user_image]"
+                  :src="item.reply_user_image ? item.reply_user_image : default_user_image"
+                  :preview-src-list="[item.reply_user_image ? item.reply_user_image : default_user_image]"
                 />
               </div>
               <div class="contain">
                 <div v-if="item.reply_info" class="mb10">
-                  <span v-if="item.message_uniq_id" class="message_push_status" v-loading="!item.is_push" @click="item.is_push ===2 && reReply(item)" :style="{color: 'red',cursor: item.is_push === 2 ?'pointer' : 'default'}" v-html="item.is_push === 2 ? 'Message sending failed ' :'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'"></span>
+                  <span v-if="item.message_uniq_id" v-loading="!item.is_push" class="message_push_status" :style="{color: 'red',cursor: item.is_push === 2 ?'pointer' : 'default'}" @click="item.is_push ===2 && reReply(item)" v-html="item.is_push === 2 ? 'Message sending failed ' :'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'" />
                   <span :class="[item.reply_user === user_id ? 'reply-right' : 'reply-left']">
                     <p v-html="item.reply_info" />
                   </span>
@@ -303,6 +303,7 @@ export default {
     return {
       user_id: '',
       after_id: '',
+      default_user_image: 'https://dx-tech-bucket.s3.amazonaws.com/20210713181701248c21f969b5f03d33d43e04f8f136e7682',
       isCustomerMessageRecord: true,
       isVendorMessageRecord: true,
       loading: false,
@@ -415,6 +416,9 @@ export default {
     }
     this.initWebSocket()
   },
+  beforeDestroy() {
+    this.socket.close()
+  },
   methods: {
     // 视频大图查看
     handlePreview(file, type) {
@@ -457,8 +461,8 @@ export default {
     },
     // complete
     complete() {
-      let data = this.tableData
-      let isVendor = false,isConsignee = false
+      const data = this.tableData
+      let isVendor = false; let isConsignee = false
       if (parseInt(data.type) === 2) {
         // 真实买家发起处理
         if (parseInt(data.client_status) !== 3) {
@@ -500,7 +504,7 @@ export default {
     },
     handleReply() {
       // 回复消息处理
-      let afterChat,afterSaleInfo
+      let afterChat, afterSaleInfo
       switch (this.socketType) {
         case 4:
           afterChat = this.customerAfterChat
@@ -511,9 +515,8 @@ export default {
           afterSaleInfo = this.vendorAfterSaleInfo
           break
         default:
-          console.error("发送类型错误")
+          console.error('发送类型错误')
           return
-          break
       }
       if (afterChat.reply_info === '' && afterChat.reply_img.length === 0) {
         this.$message.warning('Please enter the reply content or picture！')
@@ -526,7 +529,7 @@ export default {
         const M = date.getMinutes()
         const S = date.getSeconds()
         const FormatDate = y + '/' + m + '/' + d + ' ' + H + ':' + M + ':' + S
-        let uniqId = this.getUniqueId()
+        const uniqId = this.getUniqueId()
         const obj = {
           message_uniq_id: uniqId,
           is_push: 0,
@@ -556,11 +559,11 @@ export default {
         // this.$nextTick(() => {
         //   this.isCustomerMessageRecord = true
         // })
-        for (let key in afterChat) {
-          if (key === "reply_img") {
+        for (const key in afterChat) {
+          if (key === 'reply_img') {
             afterChat[key] = []
           } else {
-            afterChat[key] = ""
+            afterChat[key] = ''
           }
         }
       }
@@ -709,9 +712,9 @@ export default {
         }
       })
       // 发送信息成功
-      this.socket.on("send-success", e => {
+      this.socket.on('send-success', e => {
         if (e.code === 200 && e.data && e.data.message_uniq_id) {
-          this.afterPushStatus[e.data.message_uniq_id]["is_push"] = 1
+          this.afterPushStatus[e.data.message_uniq_id]['is_push'] = 1
           delete this.afterPushStatus[e.data.message_uniq_id]
         }
       })
@@ -776,13 +779,10 @@ export default {
       this.vendorAfterChat.reply_img.splice(index, 1)
     },
     getUniqueId() {
-      let random = Math.random().toString(16);
-      random = random.split('.')[1];
-      return new Date().getTime().toString(16) + random;
+      let random = Math.random().toString(16)
+      random = random.split('.')[1]
+      return new Date().getTime().toString(16) + random
     }
-  },
-  beforeDestroy() {
-    this.socket.close()
   }
 }
 </script>

@@ -152,7 +152,7 @@
                 <el-form ref="information" :model="item.afterSalesInformation" label-width="160px" label-position="left">
                   <!--                <el-form-item :label="$t('track.detail.informationActive.products') + ':'">-->
                   <el-form-item label="After sale products :">
-                    <span class="in_txt" v-for="product in item.afterSalesInformation.product_json">{{ product.sku_name }}<br/></span>
+                    <span v-for="(product, product_no) in item.afterSalesInformation.product_json" :key="product_no" class="in_txt">{{ product.sku_name }}<br></span>
                   </el-form-item>
                   <el-row :gutter="77">
                     <el-col :span="10">
@@ -264,7 +264,7 @@
               <template slot-scope="scope">
                 <span>{{ scope.row.reply_info }}</span>
                 <span v-for="(item, index) in scope.row.reply_img" :key="index">
-                  <el-image v-if="item.type !== 'video/mp4'" :src="item.url" style="height: 23px;width: 28px;vertical-align: middle;" class="mt10 mr10" @click="handlePreview(item.url, item.type)"/>
+                  <el-image v-if="item.type !== 'video/mp4'" :src="item.url" style="height: 23px;width: 28px;vertical-align: middle;" class="mt10 mr10" @click="handlePreview(item.url, item.type)" />
                   <video v-if="item.type === 'video/mp4'" class="mt10 mr10" preload="metadata" :src="item.url" style="height: 23px;width: 28px;vertical-align: middle;" @click="handlePreview(item.url, item.type)" />
                 </span>
               </template>
@@ -332,10 +332,10 @@
 </template>
 
 <script>
-  import {afterSalesReal, afterSalesReply, afterSalesType, realInfo, updateAfterInfo} from '@/api/user'
-  import {getCookies, setCookies} from '@/utils/cookies'
+import { afterSalesReal, afterSalesReply, afterSalesType, realInfo, updateAfterInfo } from '@/api/user'
+import { getCookies, setCookies } from '@/utils/cookies'
 
-  export default {
+export default {
   name: 'track-number',
   data() {
     return {
@@ -572,7 +572,7 @@
             this.showAfterSaleBtn = false
             this.after_id = res.data.after[0].id
             res.data.after.map((it, inx) => {
-              let reply = res.data.after[inx].reply
+              const reply = res.data.after[inx].reply
               this.afterList[inx].afterSalesInformation = { ...this.afterList[inx].afterSalesInformation, ...res.data.after[inx] }
               this.afterList[inx].feedBackInformation = { ...this.afterList[inx].feedBackInformation, ...(reply && reply.seller ? reply.seller[reply.seller.length - 1] : {}) }
               this.recordForm = res.data.after[inx].reply
@@ -621,7 +621,7 @@
     submit() {
       this.$refs['dialogForm'].validate((valid) => {
         if (valid) {
-          let order_sublist = this.selectionList[0] && this.selectionList[0].order_sublist ? this.selectionList[0].order_sublist : {}
+          const order_sublist = this.selectionList[0] && this.selectionList[0].order_sublist ? this.selectionList[0].order_sublist : {}
           this.formData.after_type = this.dialogForm.after_type
           this.formData.after_model = this.dialogForm.after_model
           this.formData.content = this.dialogForm.reply_info
@@ -655,7 +655,7 @@
           // this.formData.store_url = 'live-by-test.myshopify.com'
           const arr = []
           let newArr = []
-          let server_name = [];
+          const server_name = []
           this.selectionList.map(it => {
             // it.goods_cost_vender.product_json = this.dialogForm.product_json
             this.formData.product_json.push({
@@ -670,7 +670,7 @@
               server_id: it.order_sublist ? it.order_sublist.service_id : 0
             })
             arr.push(it.order_sublist ? it.order_sublist.service_id : 0)
-            server_name.push(it.order_sublist ? it.order_sublist.service_name : "")
+            server_name.push(it.order_sublist ? it.order_sublist.service_name : '')
           })
           newArr = Array.from(new Set(arr))
           if (newArr.length > 1) {
@@ -678,7 +678,7 @@
           } else {
             this.formData.server_id = newArr.toString()
           }
-          let newServerArr = Array.from(new Set(server_name))
+          const newServerArr = Array.from(new Set(server_name))
           if (newServerArr.length > 1) {
             this.formData.vendor = newServerArr.toString().replace(/,/g, '/')
           } else {
