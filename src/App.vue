@@ -13,6 +13,8 @@
 
 <script>
 import { getCookies } from '@/utils/cookies'
+import { getToken } from '@/utils/auth'
+import io from 'socket.io-client'
 
 export default {
   name: 'app',
@@ -21,24 +23,84 @@ export default {
       unreadCount: 9999,
       webSock: null,
       dragText: '',
-      dragFlag: false
+      dragFlag: false,
+      user_id: 147,
+      socket: null,
     }
   },
   created() {
-    this.initWebSocket()
-    console.log('start')
+    this.user_id = getCookies('uid')
+    if (this.user_id !== undefined && this.user_id) {
+       console.log('uid有值')
+       this.initWebSocket()
+    }
   },
   methods: {
     openNotice() {},
     // 初始化weosocket
     initWebSocket() {
-      const wsuri = process.env.VUE_APP_BASE_NOTIFATION_SOCKET +'/wss/notifation'
-      this.webSock = new WebSocket(wsuri)
-      this.webSock.onmessage = this.websocketonmessage
-      this.webSock.onopen = this.websocketonopen
-      this.webSock.onerror = this.websocketonerror
-      this.webSock.onclose = this.websocketclose
-    },
+      // const url = 'ws://localhost:9592/notifation/?type=1&user_id=' + this.user_id + '&token=' + getToken()
+      const url = process.env.VUE_APP_BASE_AFTER_SOCKET + '/notifation/?type=1&user_id=' + this.user_id + '&token=' + getToken()
+      this.socket = io.connect(url, {
+        timeout: 60000,
+        reconnectionDelayMax: 1000,
+        reconnectionDelay: 500,
+        httpCompress: false,
+        wsEngine: 'wss',
+        origins: '*',
+        transports: ['websocket'],
+        allowRequest: true,
+        allowUpgraders: true
+      })
+      console.log('sett', this.socket)
+      this.socket.on('connect', (e) => {
+        this.message = '正在建立链接，请稍后...'
+        console.log('建立链接', e)
+        this.socket.emit('join-notifation', { value: 147 })
+      })
+      this.socket.on('join-notifation', (e) => {
+        console.log('e', e)
+        // if (e.code === 200) {
+        //   this.message = ''
+        //   e.data.user_id = e.data.user_id.toString()
+        //   if (this.user_id === e.data.user_id) {
+        //     this.bInformation = e.data
+        //   }
+        // }
+      })
+      // this.socket.on('after-reply', (e) => {
+      //   if (e.code === 200) {
+      //     this.vendorAfterSaleInfo.reply.push(e.data)
+      //     this.socket.emit('after-read', { after_id: this.after_id, type: this.socketType })
+      //     this.isMessageRecord = false
+      //     this.$nextTick(() => {
+      //       this.isMessageRecord = true
+      //     })
+      //   }
+      // })
+      // this.socket.on('send-error', (e) => {
+      //   if (e.code === 400) {
+      //     this.socket.emit('join-after', { after_id: this.after_id })
+      //   }
+      // })
+      // this.socket.on('connect_timeout', () => {
+      //   console.log('连接超时')
+      // })
+      // this.socket.on('disconnect', () => {
+      //   console.log('连接断开，尝试重新链接')
+      //   this.message = '连接断开，尝试重新链接...'
+      //   this.socket.emit('join-after', { after_id: this.after_id })
+      // })
+    }
+    // initWebSocket() {
+    //   const wsuri = process.env.VUE_APP_BASE_NOTIFATION_SOCKET +'/wss/notifation'
+    //   this.webSock = new WebSocket(wsuri)
+    //   this.webSock.onmessage = this.websocketonmessage
+    //   this.webSock.onopen = this.websocketonopen
+    //   this.webSock.onerror = this.websocketonerror
+    //   this.webSock.onclose = this.websocketclose
+    // }
+    ,
     websocketonmessage(e) { // 数据接收
       const redata = JSON.parse(e.data)
       if (redata.code !== -1) {
@@ -65,7 +127,7 @@ export default {
       console.log(Data)
     },
     websocketclose(e) { // 关闭
-      console.log('断开连接', e)
+      console.log('app 断开连接', e)
     },
     handleClickDragClose() {
       this.dragFlag = false
