@@ -371,12 +371,9 @@ export default {
             after_model: this.afterDialog.after_model,
             after_type: this.afterDialog.after_type
           }
-          const after_type = this.typeList[this.afterDialog.after_type]
-          const after_model = this.modeList[this.afterDialog.after_model]
-          const product_json = this.getValueOfLabel(this.afterDialog.product_json, this.productsList)
           afterSalesCreate(formData).then(res => {
             this.$message({ message: res.message, type: 'success' })
-            this.$router.push({ name: 'after-create', query: { id: this.order_id, order_no: this.$route.query.order_no, after_type: after_type, after_model: after_model, product_json: product_json, after_id: res.data.id, server_name: res.data.vendor }})
+            this.$router.push({ name: 'after-detail', query: { type: 'edit', id: res.data.id, order_no: res.data.order_name }})
             this.handleClose()
           }).catch(e => {
             console.log(e)
@@ -385,20 +382,6 @@ export default {
           this.$message.warning('Please complete the required fields first!')
         }
       })
-    },
-    // 转换product_json
-    getValueOfLabel(num, sum) {
-      let obj = {}
-      let arr = []
-      num.map(it => {
-        obj = sum.find(item => item.id === it)
-      })
-      if (obj) {
-        arr.push(obj.third_goods_name)
-      } else {
-        arr = num
-      }
-      return arr
     }
   }
 }
