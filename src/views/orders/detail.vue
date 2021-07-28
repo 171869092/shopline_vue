@@ -63,6 +63,11 @@
               <span>{{ scope.row.purchase_price || '--' }}</span>
             </template>
           </el-table-column>
+          <el-table-column prop="purchase_price" label="Status" width="200">
+            <template slot-scope="scope">
+              <span>{{ scope.row.goods_type === 1 ? 'Normal' : 'Refund' || '--' }}</span>
+            </template>
+          </el-table-column>
         </el-table>
       </el-card>
 
@@ -174,7 +179,7 @@
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="handleClose">Cancel</el-button>
-        <el-button type="primary" @click="handleAfterSales">Determine</el-button>
+        <el-button v-throttle="[handleAfterSales]" type="primary">Determine</el-button>
       </span>
     </el-dialog>
   </div>
@@ -195,7 +200,7 @@ export default {
         { label: 'The Logistics Cost', value: 'logistics_cost' },
         { label: 'Service Fee', value: 'service_fee' }
       ],
-      detailInfo: {},
+      detailInfo: [],
       loading: false,
       dialogVisible: false,
       selectedProduct: '',
@@ -290,11 +295,15 @@ export default {
       })
     },
     afterSales(info) {
-      this.orderInfo = info
-      info.goods_info.forEach(item => {
-        this.productsList.push(item)
-      })
-      this.dialogVisible = true
+      if (info.after_id !== '') {
+        this.$router.push({ name: 'after-detail', query: { type: 'edit', id: info.after_id, order_no: info.order_name }})
+      } else {
+        this.orderInfo = info
+        info.goods_info.forEach(item => {
+          this.productsList.push(item)
+        })
+        this.dialogVisible = true
+      }
     },
     handleClose() {
       this.afterDialog = this.$options.data().afterDialog
