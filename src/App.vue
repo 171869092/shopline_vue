@@ -56,7 +56,8 @@ export default {
       this.socket.on('connect', (e) => {
         this.message = '正在建立链接，请稍后...'
         console.log('建立链接', e)
-        this.socket.emit('join-notifation', { value: this.user_id })
+        //. 2代表client, C端
+        this.socket.emit('join-notifation', { value: this.user_id, root_type: 2 })
       })
       this.socket.on('join-notifation', (e) => {
         if (e.code === 200) {
@@ -70,6 +71,14 @@ export default {
         //   }
         // }
       })
+      //. 收到消息
+      this.socket.on('send-msg', (e) => {
+        if (e.code === 200) {
+          this.dragText = e.data
+          this.dragFlag = true
+        }
+      })
+      
       // this.socket.on('after-reply', (e) => {
       //   if (e.code === 200) {
       //     this.vendorAfterSaleInfo.reply.push(e.data)
