@@ -52,14 +52,16 @@ export default {
         allowRequest: true,
         allowUpgraders: true
       })
-      console.log('sett', this.socket)
+      // console.log('sett', this.socket)
       this.socket.on('connect', (e) => {
         this.message = '正在建立链接，请稍后...'
         console.log('建立链接', e)
-        this.socket.emit('join-notifation', { value: 147 })
+        this.socket.emit('join-notifation', { value: this.user_id })
       })
       this.socket.on('join-notifation', (e) => {
-        console.log('e', e)
+        if (e.code === 200) {
+          console.log('成功加入房间')
+        }
         // if (e.code === 200) {
         //   this.message = ''
         //   e.data.user_id = e.data.user_id.toString()
@@ -83,14 +85,14 @@ export default {
       //     this.socket.emit('join-after', { after_id: this.after_id })
       //   }
       // })
-      // this.socket.on('connect_timeout', () => {
-      //   console.log('连接超时')
-      // })
-      // this.socket.on('disconnect', () => {
-      //   console.log('连接断开，尝试重新链接')
-      //   this.message = '连接断开，尝试重新链接...'
-      //   this.socket.emit('join-after', { after_id: this.after_id })
-      // })
+      this.socket.on('connect_timeout', () => {
+        console.log('连接超时')
+      })
+      this.socket.on('disconnect', () => {
+        console.log('连接断开，尝试重新链接')
+        this.message = '连接断开，尝试重新链接...'
+        this.socket.emit('exit-notifation', { value: this.user_id })
+      })
     }
     // initWebSocket() {
     //   const wsuri = process.env.VUE_APP_BASE_NOTIFATION_SOCKET +'/wss/notifation'
