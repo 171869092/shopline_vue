@@ -61,12 +61,12 @@ export default {
       })
       this.socket.on('join-notifation', (e) => {
         if (e.code === 200) {
-          console.log('加入房间')
+          console.log('加入房间11')
         }
       })
       //. 收到消息
       this.socket.on('send-msg', (e) => {
-        console.log('加入房间')
+        console.log('收到消息22')
         const data = JSON.parse(e.data)
         if (e.code === 200 && data) {
           this.dragText = data.msg_json
