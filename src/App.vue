@@ -66,7 +66,7 @@ export default {
       })
       //. 收到消息
       this.socket.on('send-msg', (e) => {
-        console.log('收到消息22')
+        console.log('收到消息222')
         const data = JSON.parse(e.data)
         if (e.code === 200 && data) {
           this.dragText = data.msg_json
@@ -94,7 +94,6 @@ export default {
     //     this.dragFlag = false
     //     this.websocketclose()
     //   }
-    },
     websocketonerror() { // 连接建立失败重连
       this.initWebSocket()
     },
