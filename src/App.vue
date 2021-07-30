@@ -67,9 +67,8 @@ export default {
       //. 收到消息
       this.socket.on('send-msg', (e) => {
         console.log('收到消息222')
-        const data = JSON.parse(e.data)
-        if (e.code === 200 && data) {
-          this.dragText = data.msg_json
+        if (e.code === 200) {
+          this.dragText = e.msg_json
           this.dragFlag = true
         }
       })
