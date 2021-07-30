@@ -50,9 +50,9 @@ export default {
         origins: '*',
         transports: ['websocket'],
         allowRequest: true,
-        allowUpgraders: true
+        allowUpgraders: true,
+        forcenew:true
       })
-      // console.log('sett', this.socket)
       this.socket.on('connect', (e) => {
         this.message = '正在建立链接，请稍后...'
         console.log('建立链接', e)
@@ -61,74 +61,39 @@ export default {
       })
       this.socket.on('join-notifation', (e) => {
         if (e.code === 200) {
-          console.log('成功加入房间')
+          console.log('加入房间')
         }
-        // if (e.code === 200) {
-        //   this.message = ''
-        //   e.data.user_id = e.data.user_id.toString()
-        //   if (this.user_id === e.data.user_id) {
-        //     this.bInformation = e.data
-        //   }
-        // }
       })
       //. 收到消息
       this.socket.on('send-msg', (e) => {
-        if (e.code === 200 && e.msg_json) {
-          this.dragText = e.msg_json
+        console.log('加入房间')
+        const data = JSON.parse(e.data)
+        if (e.code === 200 && data) {
+          this.dragText = data.msg_json
           this.dragFlag = true
         }
       })
-      
-      // this.socket.on('after-reply', (e) => {
-      //   if (e.code === 200) {
-      //     this.vendorAfterSaleInfo.reply.push(e.data)
-      //     this.socket.emit('after-read', { after_id: this.after_id, type: this.socketType })
-      //     this.isMessageRecord = false
-      //     this.$nextTick(() => {
-      //       this.isMessageRecord = true
-      //     })
-      //   }
-      // })
-      // this.socket.on('send-error', (e) => {
-      //   if (e.code === 400) {
-      //     this.socket.emit('join-after', { after_id: this.after_id })
-      //   }
-      // })
       this.socket.on('connect_timeout', () => {
         console.log('连接超时')
       })
       this.socket.on('disconnect', () => {
         console.log('连接断开，尝试重新链接')
         this.message = '连接断开，尝试重新链接...'
-        this.socket.emit('exit-notifation', { value: this.user_id })
+        this.socket.emit('exit-notifation', { value: this.user_id, root_type : 2 })
       })
-    }
-    // initWebSocket() {
-    //   const wsuri = process.env.VUE_APP_BASE_NOTIFATION_SOCKET +'/wss/notifation'
-    //   this.webSock = new WebSocket(wsuri)
-    //   this.webSock.onmessage = this.websocketonmessage
-    //   this.webSock.onopen = this.websocketonopen
-    //   this.webSock.onerror = this.websocketonerror
-    //   this.webSock.onclose = this.websocketclose
-    // }
-    ,
-    websocketonmessage(e) { // 数据接收
-      const redata = JSON.parse(e.data)
-      if (redata.code !== -1) {
-        if(redata != undefined && redata.data.msg_json){
-          this.dragText = redata.data.msg_json
-          this.dragFlag = true
-        } 
-      } else {
-        console.log('我在关闭这里')
-        this.dragFlag = false
-        this.websocketclose()
-      }
     },
-    websocketonopen() { // 连接建立之后执行send方法发送数据
-      const uid = getCookies('uid')
-      const actions = { uid: uid }
-      this.websocketsend(JSON.stringify(actions))
+    // websocketonmessage(e) { // 数据接收
+    //   const redata = JSON.parse(e.data)
+    //   if (redata.code !== -1) {
+    //     if(redata != undefined && redata.data.msg_json){
+    //       this.dragText = redata.data.msg_json
+    //       this.dragFlag = true
+    //     } 
+    //   } else {
+    //     console.log('我在关闭这里')
+    //     this.dragFlag = false
+    //     this.websocketclose()
+    //   }
     },
     websocketonerror() { // 连接建立失败重连
       this.initWebSocket()
