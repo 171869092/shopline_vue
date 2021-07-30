@@ -73,8 +73,8 @@ export default {
       })
       //. 收到消息
       this.socket.on('send-msg', (e) => {
-        if (e.code === 200) {
-          this.dragText = e.data
+        if (e.code === 200 && e.msg_json) {
+          this.dragText = e.msg_json
           this.dragFlag = true
         }
       })
