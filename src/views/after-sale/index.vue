@@ -89,14 +89,14 @@
                 <div>{{ scope.row.cost }}</div>
               </template>
             </el-table-column> -->
-<!--            <el-table-column label="After Sales Type">
+            <!--            <el-table-column label="After Sales Type">
               <template slot-scope="scope">
                 <span>{{ salesType[scope.row.after_type] }}</span>
               </template>
             </el-table-column>-->
             <el-table-column label="After Sales Mode">
               <template slot-scope="scope">
-                <span>{{ modeList[scope.row.after_model] }}</span>
+                <span>{{ scope.row.after_model ? modeList[scope.row.after_model] : modeList[scope.row.push_model]}}</span>
               </template>
             </el-table-column>
             <el-table-column label="Status">
@@ -106,7 +106,7 @@
                 <span v-if="scope.row.status_name === 'In process'" style="color: #f6cd46">{{ scope.row.status_name }}</span>
               </template>
             </el-table-column>
-<!--            <el-table-column label="Vendor">
+            <!--            <el-table-column label="Vendor">
               <template slot-scope="scope">
                 <span>{{ scope.row.vendor }}</span>
               </template>
@@ -114,7 +114,7 @@
             <el-table-column label="Source">
               <template slot-scope="scope">
                 <span v-if="parseInt(scope.row.type) !== 2 || parseInt(scope.row.is_push) === 3">Vendor ({{ scope.row.vendor }})</span>
-                <br />
+                <br>
                 <span v-if="parseInt(scope.row.type) === 2">Customer ({{ scope.row.consignee }})</span>
               </template>
             </el-table-column>
@@ -140,7 +140,8 @@
             :key="index"
             :timestamp="activity.date_time"
             placement="top"
-            :color="'#f68a1d'">
+            :color="'#f68a1d'"
+          >
             <p v-if="activity.status_name === 'completed'" style="color: #43c87a">{{ activity.status_name }}</p>
             <p v-if="activity.status_name === 'In process'" style="color: #f6c219">{{ activity.status_name }}</p>
             <p v-if="activity.status_name === 'Pending'" style="color: #ce3333">{{ activity.status_name }}</p>
@@ -152,7 +153,8 @@
     <el-dialog
       title="Tips"
       :visible.sync="dialogVisible"
-      width="30%">
+      width="30%"
+    >
       <p style="text-align: center">Are you sure to complete the current after sales information ?</p>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" style="background-color:#2c7fdd;border: 0 none;" @click="handleComplete(3)">Vendor</el-button>
@@ -212,7 +214,7 @@ export default {
       loading: false,
       storeList: [],
       salesType: [],
-      modeList: {"1": 'Resend', "2": 'Refund', "3": 'Return/Refund', "4": 'Other'},
+      modeList: { '1': 'Resend', '2': 'Refund', '3': 'Return/Refund', '4': 'Other' },
       product: [],
       timelineVisible: false,
       NewIcon: require('@/assets/home/new.png'), // 我的消息new图标
@@ -245,25 +247,20 @@ export default {
       afterSalesList(this.formQuery).then(res => {
         if (res.code === 200) {
           this.tableData = res.data.map((item, index) => {
-            item.product_json = item.product_json.map((da,ik) => {
-              return da.sku_name
-            }).join(',')
+            if (item.product_json) {
+              item.product_json = item.product_json.map((da, ik) => {
+                return da.sku_name
+              }).join(',')
+            } else if (item.push_product) {
+              item.product_json = item.push_product.map((da, ik) => {
+                return da.sku_name
+              }).join(',')
+            }
             item.index = index
             return item
           })
           this.listQuery.total = +res.total.totalCount
           this.unreadCount = res.total.unreadCount
-
-          // if (res.data.product_json && res.data.product_json.length > 0) {
-          //   console.log(1111)
-          //   this.product = res.data.product_json.map((item,idx) => {
-          //     console.log('item: ',item)
-          //     return item.sku_name
-          //   })
-          // }else{
-          //   this.product = []
-          // }
-          console.log('product:', this.tableData)
         }
       }).catch(err => {
         console.log('err', err)
@@ -341,7 +338,7 @@ export default {
       if (this.selectAfter.length < 1) {
         this.$message.error('Please select a piece of data')
       } else {
-        let isVendor = false,isConsignee = false
+        let isVendor = false; let isConsignee = false
         this.selectAfterList.map(item => {
           if (parseInt(item.type) === 2) {
             // 真实买家发起处理

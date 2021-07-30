@@ -35,7 +35,7 @@
             </el-col>
             <el-col :span="6">
               <el-form-item label="After Sales Mode:">
-                <span class="inx_text">{{ !isCustomer && tableData.push_type ? tableData.push_model : tableData.after_model }}</span>
+                <span class="inx_text">{{ !isCustomer && tableData.push_model ? tableData.push_model : tableData.after_model }}</span>
               </el-form-item>
             </el-col>
             <el-col :span="6">
