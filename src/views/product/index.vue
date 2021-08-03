@@ -115,6 +115,35 @@
 <!--        <el-button v-throttle="[() => Prompt(1)]" size="small" type="primary">Submit</el-button>-->
       </div>
     </el-dialog>
+    <el-dialog title="Select Vendor" :visible.sync="vendorVisible" width="700px" :close-on-click-modal="false" center :before-close="providerAdd">
+      <el-form ref="vendorForm" :model="vendorForm" size="small" label-width="170px" :rules="rules">
+        <el-form-item label="Vendor:" prop="service_id">
+          <el-select v-model="vendorForm.service_id" multiple filterable class="w-350" placeholder="please choose">
+            <el-option v-for="item in ServiceList" :key="item.id" :label="item.service_name" :value="item.id" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="Countries:" prop="country">
+          <el-select v-model="vendorForm.country" multiple filterable class="w-350" placeholder="please choose">
+            <el-option v-for="item in countriesList" :key="item.two_code" :label="item.name_en" :value="item.two_code" />
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" @click="providerAdd">Cancel</el-button>
+        <el-button size="small" type="primary" @click="providerAdd(1)">Confirm</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog :visible.sync="PromptVisible" width="700px" :close-on-click-modal="false" :before-close="Prompt">
+      <span slot="title">
+        <img src="@/assets/home/prompt.png" class="mr20" width="20px" height="20px">
+        <span>Prompt</span>
+      </span>
+      <div style="text-align: center">Please add pictures to SKU variants</div>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" style="background-color:#f68a1d; color: #fff; border: 0 none" @click="Prompt(2)">Add</el-button>
+        <el-button size="small" type="primary" @click="Prompt(1)">Submit</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>

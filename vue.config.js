@@ -28,6 +28,7 @@ module.exports = {
   publicPath: '/',
   outputDir: 'dist',
   assetsDir: 'static',
+  filenameHashing: false,
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
   devServer: {
@@ -57,6 +58,11 @@ module.exports = {
     config.plugins.delete('preload')
     config.plugins.delete('prefetch')
     // set svg-sprite-loader
+    if (process.argv[2] === 'build') {
+      config.output
+        .filename('static/js/[name].[contenthash].js')
+        .chunkFilename('static/js/[name].[chunkhash].js')
+    }
     config.module
       .rule('svg')
       .exclude.add(resolve('src/icons'))

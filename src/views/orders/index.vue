@@ -2,19 +2,19 @@
   <div class="my-orders">
     <el-card class="box-card">
       <el-tabs v-model="formQuery.order_status_client" @tab-click="handleClick">
-        <div class="flexbox justify-space-between btn-box">
+        <div class="flexbox justify-space-between">
           <div class="filter-control flexbox mb20">
             <div class="filter-item">
               <el-input
                 v-model="formQuery.order_name"
                 clearable
-                class="w-300"
+                class="w-400"
                 prefix-icon="el-icon-search"
                 placeholder="Filter orders"
                 @change="filterOrders"
               />
             </div>
-            <div class="filter-item w_20">
+            <div class="filter-item w-250">
               <el-select
                 v-model="formQuery.order_status_client"
                 collapse-tags
@@ -30,7 +30,7 @@
                 />
               </el-select>
             </div>
-            <div class="filter-item w_20">
+            <div class="filter-item w-250">
               <el-select
                 v-model="formQuery.order_status"
                 collapse-tags
@@ -64,7 +64,7 @@
               />
             </el-select>
           </div> -->
-            <div class="filter-item w_20">
+            <div class="filter-item w-250">
               <el-select
                 v-model="formQuery.store_url"
                 clearable
@@ -99,7 +99,6 @@
             ref="multipleTable"
             v-loading="loading"
             v-sticky="{top: 0, parent: '#app_main' }"
-            empty-text="No Data"
             :data="tableData"
             style="width: 100%"
             highlight-current-row
@@ -162,7 +161,7 @@
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button size="small" @click="tipDialogVisible = false">Cancel</el-button>
-        <el-button v-throttle="[next]" size="small" type="primary" :loading="submitLoading">OK</el-button>
+        <el-button size="small" type="primary" :loading="submitLoading" @click="next">OK</el-button>
       </span>
     </el-dialog>
   </div>
@@ -449,9 +448,6 @@ export default {
 <style lang="scss" scoped>
 .my-orders {
   padding: 30px;
-  .btn-box {
-    overflow-x: auto;
-  }
 }
 .logistics-timeline {
   padding-left: 20px;

@@ -189,8 +189,7 @@ export function createQuoted(data) {
 // 报价详情
 export function getQuotedEdit(params) {
   return request({
-    // url: '/goods/goods/quoted-edit',
-    url: '/shopify/index/quoted-edits',
+    url: '/goods/goods/quoted-edit',
     method: 'get',
     params
   })

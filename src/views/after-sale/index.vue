@@ -49,11 +49,12 @@
           </div>
         </div>
         <el-button type="primary" size="small" class="mb10" @click="complete">Completed</el-button>
-        <el-button type="primary" size="small" class="mb10 father" :disabled="unreadCount === '0'" @click="handleNew">New information <span v-if="unreadCount !== '0'" class="son">{{ unreadCount }}</span></el-button>
+        <el-button type="primary" size="small" class="mb10 father" :disabled="!unreadCount" @click="handleNew">New information <span v-if="unreadCount" class="son">{{ unreadCount }}</span></el-button>
         <el-tab-pane v-for="(tab, key) in tabList" :key="key" :label="tab.label" :name="tab.name">
           <el-table
             ref="multipleTable"
             v-loading="loading"
+            v-sticky="{top: 0, parent: '#app_main' }"
             :data="tableData"
             style="width: 100%"
             highlight-current-row
@@ -69,7 +70,7 @@
               <template slot-scope="scope">
                 <span class="primary pointer" @click="toLink(scope.row)">
                   {{ scope.row.order_name }}
-                  <img v-if="scope.row.is_read === '0'" class="imgIcon" :src="NewIcon">
+                  <img v-if="!scope.row.is_read" class="imgIcon" :src="NewIcon">
                 </span>
               </template>
             </el-table-column>
@@ -88,33 +89,33 @@
                 <div>{{ scope.row.cost }}</div>
               </template>
             </el-table-column> -->
-<!--            <el-table-column label="After Sales Type">
+            <!--            <el-table-column label="After Sales Type">
               <template slot-scope="scope">
                 <span>{{ salesType[scope.row.after_type] }}</span>
               </template>
             </el-table-column>-->
             <el-table-column label="After Sales Mode">
               <template slot-scope="scope">
-                <span>{{ modeList[scope.row.after_model] }}</span>
+                <span>{{ scope.row.after_model ? modeList[scope.row.after_model] : modeList[scope.row.push_model]}}</span>
               </template>
             </el-table-column>
             <el-table-column label="Status">
               <template slot-scope="scope">
-                <span v-if="scope.row.status === 'Pending'" style="color: #e41b1b">{{ scope.row.status }}</span>
-                <span v-if="scope.row.status === 'Completed'" style="color: #50cd83">{{ scope.row.status }}</span>
-                <span v-if="scope.row.status === 'In process'" style="color: #f6cd46">{{ scope.row.status }}</span>
+                <span v-if="scope.row.status_name === 'Pending'" style="color: #e41b1b">{{ scope.row.status_name }}</span>
+                <span v-if="scope.row.status_name === 'Completed'" style="color: #50cd83">{{ scope.row.status_name }}</span>
+                <span v-if="scope.row.status_name === 'In process'" style="color: #f6cd46">{{ scope.row.status_name }}</span>
               </template>
             </el-table-column>
-<!--            <el-table-column label="Vendor">
+            <!--            <el-table-column label="Vendor">
               <template slot-scope="scope">
                 <span>{{ scope.row.vendor }}</span>
               </template>
             </el-table-column>-->
             <el-table-column label="Source">
               <template slot-scope="scope">
-                <span v-if="scope.row.vendor !== ''">Vendor ({{ scope.row.vendor }})</span>
-                <br />
-                <span v-if="scope.row.consignee !== '' && scope.row.type === '2'">Customer ({{ scope.row.consignee }})</span>
+                <span v-if="parseInt(scope.row.type) !== 2 || parseInt(scope.row.is_push) === 3">Vendor ({{ scope.row.vendor }})</span>
+                <br>
+                <span v-if="parseInt(scope.row.type) === 2">Customer ({{ scope.row.consignee }})</span>
               </template>
             </el-table-column>
             <el-table-column label="Timeline">
@@ -139,7 +140,8 @@
             :key="index"
             :timestamp="activity.date_time"
             placement="top"
-            :color="'#f68a1d'">
+            :color="'#f68a1d'"
+          >
             <p v-if="activity.status_name === 'completed'" style="color: #43c87a">{{ activity.status_name }}</p>
             <p v-if="activity.status_name === 'In process'" style="color: #f6c219">{{ activity.status_name }}</p>
             <p v-if="activity.status_name === 'Pending'" style="color: #ce3333">{{ activity.status_name }}</p>
@@ -151,7 +153,8 @@
     <el-dialog
       title="Tips"
       :visible.sync="dialogVisible"
-      width="30%">
+      width="30%"
+    >
       <p style="text-align: center">Are you sure to complete the current after sales information ?</p>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" style="background-color:#2c7fdd;border: 0 none;" @click="handleComplete(3)">Vendor</el-button>
@@ -191,7 +194,7 @@ export default {
       },
       listQuery: {
         total: 0,
-        page: 1,
+        page: 0,
         limit: 10
       },
       afterStatus: { 0: 'ALL', 1: 'Pending', 2: 'In process', 3: 'Completed' },
@@ -211,11 +214,11 @@ export default {
       loading: false,
       storeList: [],
       salesType: [],
-      modeList: ['Resend', 'Refund', 'Return/Refund', 'Other'],
+      modeList: { '1': 'Resend', '2': 'Refund', '3': 'Return/Refund', '4': 'Other' },
       product: [],
       timelineVisible: false,
       NewIcon: require('@/assets/home/new.png'), // 我的消息new图标
-      unreadCount: '0',
+      unreadCount: 0,
       activities: [],
       dialogVisible: false
     }
@@ -243,16 +246,18 @@ export default {
       this.formQuery.iDisplayStart = (this.listQuery.page - 1) * this.listQuery.limit
       afterSalesList(this.formQuery).then(res => {
         if (res.code === 200) {
-          this.tableData = res.data
-          this.tableData.map((item, index) => {
-            const arr = []
-            item.product_json.map(it => {
-              if (it.sku_name) {
-                arr.push(it.sku_name)
-              }
-            })
+          this.tableData = res.data.map((item, index) => {
+            if (item.product_json) {
+              item.product_json = item.product_json.map((da, ik) => {
+                return da.sku_name
+              }).join(',')
+            } else if (item.push_product) {
+              item.product_json = item.push_product.map((da, ik) => {
+                return da.sku_name
+              }).join(',')
+            }
             item.index = index
-            item.product_json = arr.join(',')
+            return item
           })
           this.listQuery.total = +res.total.totalCount
           this.unreadCount = res.total.unreadCount
@@ -333,103 +338,50 @@ export default {
       if (this.selectAfter.length < 1) {
         this.$message.error('Please select a piece of data')
       } else {
-        const vendorList = []
-        const consigneeList = []
+        let isVendor = false; let isConsignee = false
         this.selectAfterList.map(item => {
-          vendorList.push(item.vendor)
-          if (item.type === '2') {
-            consigneeList.push(item.consignee)
+          if (parseInt(item.type) === 2) {
+            // 真实买家发起处理
+            if (parseInt(item.client_status) !== 3) {
+              isConsignee = true
+            }
+            if (parseInt(item.is_push) === 3 && parseInt(item.status) !== 3) {
+              isVendor = true
+            }
+          } else {
+            // C端发起处理
+            if (parseInt(item.status) !== 3) {
+              isVendor = true
+            }
           }
         })
-        const isVendor = vendorList.every(it => it === '')
-        const isConsignee = consigneeList.every(it => it === '')
-        if (isVendor === false && isConsignee === false) {
+        // const isVendor = vendorList.every(it => it === '')
+        // const isConsignee = consigneeList.every(it => it === '')
+        if (isVendor === true && isConsignee === true) {
           this.dialogVisible = true
+          return
         }
-        if (isVendor === false && isConsignee === true) {
-          afterSalesChanngedStatus({ id: this.selectAfter, status: 3 }).then(res => {
-            let type = ''
-            if (res.code === 200) {
-              type = 'success'
-            } else {
-              type = 'error'
-            }
-            this.$message({ message: res.message, type: type })
-            this.Inquire()
-          }).catch(err => {
-            console.log(err)
-          }).finally(() => {
-
-          })
-        }
-        if (isVendor === true && isConsignee === false) {
-          afterSalesChanngedStatus({ id: this.selectAfter, status: 4 }).then(res => {
-            let type = ''
-            if (res.code === 200) {
-              type = 'success'
-            } else {
-              type = 'error'
-            }
-            this.$message({ message: res.message, type: type })
-            this.Inquire()
-          }).catch(err => {
-            console.log(err)
-          }).finally(() => {
-
-          })
-        }
+        this.handleComplete(isVendor ? 3 : 4)
       }
     },
     handleComplete(type) {
-      if (type === 3) {
-        afterSalesChanngedStatus({ id: this.selectAfter, status: type }).then(res => {
-          let type = ''
-          if (res.code === 200) {
-            type = 'success'
-          } else {
-            type = 'error'
-          }
-          this.dialogVisible = false
-          this.$message({ message: res.message, type: type })
-          this.Inquire()
-        }).catch(err => {
-          console.log(err)
-        }).finally(() => {
+      afterSalesChanngedStatus({ id: this.selectAfter, status: type }).then(res => {
+        let type = ''
+        if (res.code === 200) {
+          type = 'success'
+        } else {
+          type = 'error'
+        }
+        this.dialogVisible = false
+        this.$message({ message: res.message, type: type })
+        this.selectAfter = []
+        this.selectAfterList = []
+        this.Inquire()
+      }).catch(err => {
+        console.log(err)
+      }).finally(() => {
 
-        })
-      } else if (type === 4) {
-        afterSalesChanngedStatus({ id: this.selectAfter, status: type }).then(res => {
-          let type = ''
-          if (res.code === 200) {
-            type = 'success'
-          } else {
-            type = 'error'
-          }
-          this.dialogVisible = false
-          this.$message({ message: res.message, type: type })
-          this.Inquire()
-        }).catch(err => {
-          console.log(err)
-        }).finally(() => {
-
-        })
-      } else {
-        afterSalesChanngedStatus({ id: this.selectAfter, status: type }).then(res => {
-          let type = ''
-          if (res.code === 200) {
-            type = 'success'
-          } else {
-            type = 'error'
-          }
-          this.dialogVisible = false
-          this.$message({ message: res.message, type: type })
-          this.Inquire()
-        }).catch(err => {
-          console.log(err)
-        }).finally(() => {
-
-        })
-      }
+      })
     },
     handleNew() {
       this.loading = true

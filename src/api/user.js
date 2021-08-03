@@ -153,3 +153,11 @@ export function afterSalesGenerateKey() {
     method: 'get'
   })
 }
+// . shop/store/edit-icon
+export function afterSalesEditIcon(data) {
+  return request({
+    url: '/shop/store/edit-icon',
+    method: 'post',
+    data: data
+  })
+}

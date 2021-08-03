@@ -96,7 +96,7 @@
     </el-dialog>
     <el-dialog title="Variable specification" :visible.sync="dialogTableVisible">
       <div class="mb20">The SMS template can contain variables, and the variables represent the content that the user wants to customize and change when the SMS is actually sent. A text description should be added before and after the variable to reflect the commercial intention of the template user.</div>
-      <el-table border :data="gridData" :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}">
+      <el-table border :data="gridData" empty-text="No Data" :header-cell-style="{background:'#F3F5F9FF',color:'#262B3EFF'}">
         <el-table-column property="type" label="Category" width="150" />
         <el-table-column property="description" label="Description" />
       </el-table>

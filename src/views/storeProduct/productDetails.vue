@@ -80,6 +80,7 @@
         <el-table
           ref="vendorTable"
           v-loading="vendorLoading"
+          empty-text="No Data"
           :data="formData.cost_vender_list"
           empty-text="No Data"
           style="width: 100%"
@@ -144,6 +145,7 @@
         <el-table
           v-if="variantsCheck"
           ref="optionsTable"
+          empty-text="No Data"
           :data="optionsList"
           empty-text="No Data"
           :header-cell-style="{background: '#F3F5F9',color:'#262B3EFF'}"

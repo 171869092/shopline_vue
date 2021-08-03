@@ -52,12 +52,13 @@ import Logo from './Sidebar/Logo'
 import { getUnreadMessage } from '@/api/notice'
 import { getBaseMonitor } from '@/api/wifi'
 import { findUserInfo } from '@/api/user'
+import { setCookies } from '@/utils/cookies'
 
 export default {
   components: {
     Breadcrumb,
     Logo
-    // Hamburger
+    //  Hamburger
   },
   data() {
     return {
@@ -86,6 +87,7 @@ export default {
         } else {
           this.avatar = 'https://dx-tech-bucket.s3.amazonaws.com/20210713181701248c21f969b5f03d33d43e04f8f136e7682'
         }
+        setCookies("icon", this.avatar)
       }
     })
   },
