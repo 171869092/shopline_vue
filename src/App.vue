@@ -1,13 +1,13 @@
 <template>
   <div id="app">
     <router-view />
-    <div v-if="unreadCount" id="dragBtn" v-drag class="un_read_icon" @click="openNotice">
+    <!-- <div v-if="unreadCount" id="dragBtn" v-drag class="un_read_icon" @click="openNotice">
       <div v-if="dragFlag" class="dragText">
         <span v-html="dragText" />
         <i class="el-icon-close dragClose" @click="handleClickDragClose"/>
       </div>
       <i class="el-icon-message-solid dragIcon" />
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -32,7 +32,7 @@ export default {
     this.user_id = getCookies('uid')
     if (this.user_id !== undefined && this.user_id) {
        console.log('uid有值')
-       this.initWebSocket()
+      //  this.initWebSocket()
     }
   },
   methods: {
