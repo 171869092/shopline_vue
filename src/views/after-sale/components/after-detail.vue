@@ -538,7 +538,7 @@ export default {
         const obj = {
           message_uniq_id: uniqId,
           is_push: 0,
-          type: 4,
+          type: this.socketType,
           after_id: this.after_id,
           reply_user: this.user_id,
           reply_user_image: getCookies('icon'),
