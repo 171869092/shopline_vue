@@ -168,7 +168,7 @@
               </div>
               <div class="contain">
                 <div v-if="item.reply_info" class="mb10">
-                  <span v-if="item.message_uniq_id" v-loading="!item.is_push" class="message_push_status" :style="{color: 'red',cursor: item.is_push === 2 ?'pointer' : 'default'}" @click="item.is_push ===2 && reReply(item)" v-html="item.is_push === 2 ? 'Message sending failed ' :'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'" />
+                  <span v-if="item.reply_user === user_id && item.message_uniq_id" v-loading="!item.is_push" class="message_push_status" :style="{color: 'red',cursor: item.is_push === 2 ?'pointer' : 'default'}" @click="item.is_push ===2 && reReply(item)" v-html="item.is_push === 2 ? 'Message sending failed ' :'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'" />
                   <span :class="[item.reply_user === user_id ? 'reply-right' : 'reply-left']">
                     <p v-html="item.reply_info" />
                   </span>
