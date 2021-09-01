@@ -420,7 +420,7 @@ export default {
         setCookies('shopify', shopifyQuery)
         setCookies('shop', shopifyQuery.shop)
         shopifyApi({ ...shopifyQuery })
-      } else if (redata.code === 5) {
+      } else if (redata.code === 5 && !redata.msg.includes('wait_timeout')) {
         this.dialogVisible = true
         this.shopifyUrl = redata.msg
       } else {
