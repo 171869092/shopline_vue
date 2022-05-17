@@ -11,7 +11,7 @@ import { shopifyApi } from '@/api/user'
 import { setCookies, getCookies } from '@/utils/cookies'
 // NProgress.configure({ showSpinner: false }) // NProgress Configuration
 
-const whiteList = ['/', '/login', '/register', '/auth', '/privacy-policy', '/about-us', '/faq', '/content', '/contact'] // no redirect whitelist
+const whiteList = ['/','dashboard','/login', '/register', '/auth', '/privacy-policy', '/about-us', '/faq', '/content', '/contact'] // no redirect whitelist
 
 router.beforeEach(async (to, from, next) => {
   const hasToken = getToken()
@@ -20,9 +20,9 @@ router.beforeEach(async (to, from, next) => {
   // }
   // next()
   if (to.path === '/track') {
-    next()
+    next('/dashboard')
   } else {
-    if (hasToken) { // 已经有token
+    if (!hasToken) { // 已经有token
       console.log('hastoken init dashboard')
       const query = to.query
       if (Object.hasOwnProperty.call(query, 'code') && Object.hasOwnProperty.call(query, 'hmac')) {
@@ -42,7 +42,7 @@ router.beforeEach(async (to, from, next) => {
           console.log('jump next')
           next()
         } else {
-          next('/login')
+          // next('/login')
         }
       } else {
         next()
@@ -72,7 +72,7 @@ router.beforeEach(async (to, from, next) => {
             next('/login')
           }
         } else {
-          next('/login')
+          next('/')
         }
         // NProgress.done()
       }
